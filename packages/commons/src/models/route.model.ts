@@ -18,7 +18,7 @@ export type RouteResponse = {
   statusCode: number;
   label: string;
   headers: Header[];
-  body?: string;
+  body: string;
   latency: number;
   bodyType: BodyTypes;
   filePath: string;

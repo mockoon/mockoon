@@ -91,7 +91,14 @@ export default tseslint.config(
       '@typescript-eslint/consistent-type-definitions': 'off',
       '@typescript-eslint/no-require-imports': [
         'error',
-        { allow: ['/package\\.json$'] }
+        { allow: ['/package\\.json$', 'crypto'] }
+      ],
+      '@typescript-eslint/dot-notation': 'off',
+      '@typescript-eslint/prefer-nullish-coalescing': [
+        'error',
+        {
+          ignorePrimitives: true
+        }
       ],
       'arrow-body-style': 'error',
       curly: 'error',

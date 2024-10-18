@@ -2,11 +2,6 @@
   "name": "@mockoon/cli",
   "description": "Mockoon's CLI. Deploy your mock APIs anywhere.",
   "version": "8.4.0",
-  "author": {
-    "name": "Guillaume Monnet",
-    "email": "guillaume@1kb.software",
-    "url": "https://1kb.software/"
-  },
   "bin": {
     "mockoon-cli": "./bin/run.js"
   },

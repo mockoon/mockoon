@@ -1,4 +1,5 @@
 import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
+import { describe, it } from 'node:test';
 import {
   BodyTypes,
   Migrations,
@@ -6,7 +7,7 @@ import {
   ResponseMode,
   RouteDefault,
   RouteResponseDefault
-} from '../src';
+} from '../../src';
 
 const applyMigration = (migrationId: number, environment: any) => {
   const migrationFunction = Migrations.find(
@@ -218,8 +219,8 @@ describe('Migrations', () => {
       applyMigration(21, environment);
 
       strictEqual(environment.routes[0]['responseMode'], null);
-      strictEqual(environment.routes[0]['sequentialResponse'], undefined);
-      strictEqual(environment.routes[0]['randomResponse'], undefined);
+      strictEqual(environment.routes[0].sequentialResponse, undefined);
+      strictEqual(environment.routes[0].randomResponse, undefined);
     });
 
     it('should add `responseMode` and remove `sequentialResponse` and `randomResponse`, initialized to SEQUENTIAL', () => {
@@ -233,8 +234,8 @@ describe('Migrations', () => {
         environment.routes[0]['responseMode'],
         ResponseMode.SEQUENTIAL
       );
-      strictEqual(environment.routes[0]['sequentialResponse'], undefined);
-      strictEqual(environment.routes[0]['randomResponse'], undefined);
+      strictEqual(environment.routes[0].sequentialResponse, undefined);
+      strictEqual(environment.routes[0].randomResponse, undefined);
     });
 
     it('should add `responseMode` and remove `sequentialResponse` and `randomResponse`, initialized to RANDOM', () => {
@@ -245,8 +246,8 @@ describe('Migrations', () => {
       applyMigration(21, environment);
 
       strictEqual(environment.routes[0]['responseMode'], ResponseMode.RANDOM);
-      strictEqual(environment.routes[0]['sequentialResponse'], undefined);
-      strictEqual(environment.routes[0]['randomResponse'], undefined);
+      strictEqual(environment.routes[0].sequentialResponse, undefined);
+      strictEqual(environment.routes[0].randomResponse, undefined);
     });
   });
 

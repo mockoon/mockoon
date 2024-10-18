@@ -2,11 +2,6 @@
   "name": "@mockoon/cloud",
   "description": "Mockoon's cloud sync library. Used in Mockoon desktop application and backend.",
   "version": "8.4.0",
-  "author": {
-    "name": "Guillaume Monnet",
-    "email": "guillaume@1kb.software",
-    "url": "https://1kb.software/"
-  },
   "license": "MIT",
   "scripts": {
     "lint": "eslint",

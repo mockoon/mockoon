@@ -29,7 +29,7 @@ export const GetContentType = (headers: Header[]): string | null => {
 export const GetRouteResponseContentType = (
   environment: Environment,
   routeResponse: RouteResponse
-) => {
+): string => {
   const routeResponseContentType = GetContentType(routeResponse.headers);
   const environmentContentType = GetContentType(environment.headers);
 
@@ -39,7 +39,7 @@ export const GetRouteResponseContentType = (
 export const GetResponseCallbackContentType = (
   environment: Environment,
   routeResponse: RouteResponse
-) => {
+): string => {
   const routeResponseContentType = GetContentType(routeResponse.headers);
   const environmentContentType = GetContentType(environment.headers);
 
@@ -53,10 +53,10 @@ export const GetResponseCallbackContentType = (
  */
 export const IsValidURL = (address: string): boolean => {
   try {
-    const myURL = new URL(address);
+    new URL(address);
 
     return true;
-  } catch (e) {
+  } catch (_error) {
     return false;
   }
 };
@@ -71,12 +71,13 @@ export const CloneObject = <T>(objectToClone: T): T =>
 /**
  * Compare two objects using JSON.Stringify
  */
-export const IsEqual = (firstObject: any, secondObject: any) =>
+export const IsEqual = (firstObject: unknown, secondObject: unknown): boolean =>
   JSON.stringify(firstObject) === JSON.stringify(secondObject);
 
-export const RemoveLeadingSlash = (str: string) => str.replace(/^\//g, '');
+export const RemoveLeadingSlash = (str: string): string =>
+  str.replace(/^\//g, '');
 
-export const GenerateUniqueID = () =>
+export const GenerateUniqueID = (): string =>
   (Math.random() + 1).toString(36).substring(2, 6);
 
 /**
@@ -87,7 +88,7 @@ export const GenerateUniqueID = () =>
  *
  * @param environment
  */
-export const repairRefs = (environment: Environment) => {
+export const repairRefs = (environment: Environment): Environment => {
   const routesUUIDs = environment.routes.reduce((set, route) => {
     set.add(route.uuid);
 
@@ -164,7 +165,7 @@ export const repairRefs = (environment: Environment) => {
  *
  * @returns
  */
-export const generateUUID = () =>
+export const generateUUID = (): string =>
   typeof window !== 'undefined'
     ? window.crypto.randomUUID()
     : require('crypto').randomUUID();
@@ -175,14 +176,14 @@ export const generateUUID = () =>
  * @param a
  * @param b
  */
-export const RandomInt = (a = 1, b = 0) => {
+export const RandomInt = (a = 1, b = 0): number => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
 
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-export const randomArrayItem = <T>(array: T[]) =>
+export const randomArrayItem = <T>(array: T[]): T =>
   array[RandomInt(0, array.length - 1)];
 
 /**
@@ -191,7 +192,7 @@ export const randomArrayItem = <T>(array: T[]) =>
  * @param obj
  * @returns
  */
-export const deterministicStringify = (obj: any) =>
+export const deterministicStringify = (obj: unknown): string =>
   JSON.stringify(obj, (_key, value) =>
     value instanceof Object && !(value instanceof Array)
       ? Object.keys(value)
@@ -224,7 +225,7 @@ export const stringIncludesArrayItems = (
  *
  * @param headers
  */
-export const isContentTypeApplicationJson = (headers: Header[]) => {
+export const isContentTypeApplicationJson = (headers: Header[]): boolean => {
   const contentType = GetContentType(headers)?.toLowerCase();
 
   return contentType
@@ -238,5 +239,7 @@ export const isContentTypeApplicationJson = (headers: Header[]) => {
  * @param latency
  * @param enableRandomLatency
  */
-export const getLatency = (latency: number, enableRandomLatency: boolean) =>
-  enableRandomLatency ? RandomInt(0, latency) : latency;
+export const getLatency = (
+  latency: number,
+  enableRandomLatency: boolean
+): number => (enableRandomLatency ? RandomInt(0, latency) : latency);

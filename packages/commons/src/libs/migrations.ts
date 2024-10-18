@@ -67,7 +67,7 @@ export const Migrations: {
   // v0.4.0beta
   {
     id: 1,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       // proxy settings
       if (!environment.proxyMode) {
         environment.proxyMode = false;
@@ -84,7 +84,7 @@ export const Migrations: {
   // 1.0.0
   {
     id: 2,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       if (!environment.cors) {
         environment.cors = true;
       }
@@ -120,7 +120,7 @@ export const Migrations: {
   // 1.2.0
   {
     id: 3,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route) => {
         // add missing uuid
         if (!route.uuid) {
@@ -133,7 +133,7 @@ export const Migrations: {
   // 1.3.0
   {
     id: 4,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       // add new headers property to environments
       if (!environment.headers) {
         (environment.headers as any) = [
@@ -164,7 +164,7 @@ export const Migrations: {
   // 1.4.0
   {
     id: 5,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       delete environment['duplicates'];
 
       (environment.routes as RouteWithFile[]).forEach((route) => {
@@ -184,12 +184,12 @@ export const Migrations: {
    */
   {
     id: 6,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       (environment.routes as RouteAsResponse[]).forEach((route) => {
         route.responses = [];
         (route.responses as RouteResponseWithStringStatus[]).push({
           uuid: generateUUID(),
-          statusCode: route.statusCode as string,
+          statusCode: route.statusCode ?? '200',
           label: '',
           latency: route.latency,
           filePath: route.filePath,
@@ -214,7 +214,7 @@ export const Migrations: {
    */
   {
     id: 7,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
         route.responses.forEach((routeResponse) => {
           routeResponse.uuid = generateUUID();
@@ -228,7 +228,7 @@ export const Migrations: {
    */
   {
     id: 8,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
         (route as any).enabled = true;
       });
@@ -240,7 +240,7 @@ export const Migrations: {
    */
   {
     id: 9,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
         route.responses.forEach((routeResponse) => {
           if (!routeResponse.label) {
@@ -256,7 +256,7 @@ export const Migrations: {
    */
   {
     id: 10,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       // add new proxy request/response headers property to environments
       if (!environment.proxyReqHeaders) {
         environment.proxyReqHeaders = [{ key: '', value: '' }];
@@ -273,7 +273,7 @@ export const Migrations: {
    */
   {
     id: 11,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
         route.responses.forEach((routeResponse) => {
           if (routeResponse.disableTemplating === undefined) {
@@ -294,7 +294,7 @@ export const Migrations: {
    */
   {
     id: 12,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
         route.responses.forEach((routeResponse) => {
           if (routeResponse.rulesOperator === undefined) {
@@ -310,7 +310,7 @@ export const Migrations: {
    */
   {
     id: 13,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route) => {
         if ((route as RouteWithResponseModes).randomResponse === undefined) {
           (route as RouteWithResponseModes).randomResponse = false;
@@ -324,7 +324,7 @@ export const Migrations: {
    */
   {
     id: 14,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
         if (
           (route as RouteWithResponseModes).sequentialResponse === undefined
@@ -340,7 +340,7 @@ export const Migrations: {
    */
   {
     id: 15,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       if (environment.proxyRemovePrefix === undefined) {
         environment.proxyRemovePrefix = false;
       }
@@ -352,7 +352,7 @@ export const Migrations: {
    */
   {
     id: 16,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       if (!environment.hostname) {
         environment.hostname = '0.0.0.0';
       }
@@ -363,7 +363,7 @@ export const Migrations: {
    */
   {
     id: 17,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
         route.responses.forEach((routeResponse) => {
           if (routeResponse.fallbackTo404 === undefined) {
@@ -378,11 +378,11 @@ export const Migrations: {
    */
   {
     id: 18,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
         route.responses.forEach((routeResponse) => {
           (
-            routeResponse.rules as Array<ResponseRule & { isRegex?: boolean }>
+            routeResponse.rules as (ResponseRule & { isRegex?: boolean })[]
           ).forEach((rule) => {
             if (rule.isRegex) {
               rule.operator = 'regex';
@@ -401,7 +401,7 @@ export const Migrations: {
    */
   {
     id: 19,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       if (!environment.tlsOptions) {
         environment.tlsOptions = {
           enabled: (environment as EnvironmentWithHttps).https,
@@ -422,7 +422,7 @@ export const Migrations: {
    */
   {
     id: 20,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
         route.responses.forEach((routeResponse, routeResponseIndex) => {
           if (routeResponse.default === undefined) {
@@ -441,7 +441,7 @@ export const Migrations: {
    */
   {
     id: 21,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
         if (route.responseMode === undefined) {
           route.responseMode = (route as RouteWithResponseModes)
@@ -462,7 +462,7 @@ export const Migrations: {
    */
   {
     id: 22,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
         route.responses.forEach((routeResponse) => {
           routeResponse.rules.forEach((rule) => {
@@ -479,7 +479,7 @@ export const Migrations: {
    */
   {
     id: 23,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       if (environment.data === undefined) {
         environment.data = EnvironmentDefault.data;
       }
@@ -490,7 +490,7 @@ export const Migrations: {
    */
   {
     id: 24,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
         route.responses.forEach((routeResponse) => {
           if (routeResponse.databucketID === undefined) {
@@ -513,7 +513,7 @@ export const Migrations: {
    */
   {
     id: 25,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       if (environment.folders === undefined) {
         environment.folders = EnvironmentDefault.folders;
       }
@@ -531,7 +531,7 @@ export const Migrations: {
    */
   {
     id: 26,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
         if (route.type === undefined) {
           route.type = RouteDefault.type;
@@ -544,7 +544,7 @@ export const Migrations: {
    */
   {
     id: 27,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       if (environment.hostname === '0.0.0.0') {
         environment.hostname = EnvironmentDefault.hostname;
       }
@@ -555,7 +555,7 @@ export const Migrations: {
    */
   {
     id: 28,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
         route.responses.forEach((routeResponse) => {
           if (routeResponse.crudKey === undefined) {
@@ -570,7 +570,7 @@ export const Migrations: {
    */
   {
     id: 29,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       if (environment.data) {
         environment.data.forEach((data: DataBucket) => {
           data.value = fakerV8Migration(data.value);
@@ -588,7 +588,7 @@ export const Migrations: {
    */
   {
     id: 30,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       if (!environment.callbacks) {
         environment.callbacks = EnvironmentDefault.callbacks;
       }
@@ -609,7 +609,7 @@ export const Migrations: {
    */
   {
     id: 31,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): PostMigrationAction => {
       const disabledRoutesUuids = (
         environment.routes as RouteWithEnabled[]
       ).reduce<string[]>((disabledRoutes, route) => {
@@ -630,7 +630,7 @@ export const Migrations: {
    */
   {
     id: 32,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): PostMigrationAction => {
       const collapsedFoldersUuids = (
         environment.folders as FolderWithCollapsed[]
       ).reduce<string[]>((disabledFolders, folder) => {
@@ -651,7 +651,7 @@ export const Migrations: {
    */
   {
     id: 33,
-    migrationFunction: (environment: Environment) => {
+    migrationFunction: (environment: Environment): void => {
       if (environment.routes) {
         environment.routes.forEach((route) => {
           route.streamingMode = RouteDefault.streamingMode;
