@@ -98,8 +98,8 @@ const AscSort = (a, b) => {
  *
  * @param obj
  */
-export const IsEmpty = (obj) =>
-  [Object, Array].includes((obj || {}).constructor) &&
+export const IsEmpty = (obj: any) =>
+  (Array.isArray(obj) || (obj instanceof Object && obj !== null)) &&
   !Object.entries(obj || {}).length;
 
 /**
@@ -136,7 +136,7 @@ export const DecompressBody = (response: Response) => {
  * @param method
  */
 export function isBodySupportingMethod(method: Methods): boolean {
-  return [Methods.put, Methods.post, Methods.patch].indexOf(method) >= 0;
+  return [Methods.put, Methods.post, Methods.patch].includes(method);
 }
 
 /**
@@ -224,7 +224,7 @@ export function CreateTransaction(
   let queryString = requestUrl.search.slice(1);
   try {
     queryString = decodeURI(queryString);
-  } catch (err) {}
+  } catch (_error) {}
 
   return {
     request: {
@@ -307,7 +307,7 @@ export const objectFromSafeString = (text: string | SafeString) => {
     .replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": ');
   try {
     return JSON.parse(objectText);
-  } catch (e) {
+  } catch (_error) {
     return null;
   }
 };
@@ -456,7 +456,7 @@ export const fullTextSearch = (object: unknown, query: string): boolean => {
  */
 
 export const isSafeJSONPath = (path: string) => {
-  const hasFilter = (path.match(/\((.*)\)/) || [])[1];
+  const hasFilter = (/\((.*)\)/.exec(path) ?? [])[1];
   if (!hasFilter) {
     return true;
   }

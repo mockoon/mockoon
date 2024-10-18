@@ -25,16 +25,14 @@ export function parseFilters(queryParams: Request['query']): FilterData[] {
   const result: FilterData[] = [];
 
   for (const key in queryParams) {
-    if (!queryParams.hasOwnProperty(key)) {
-      continue;
-    }
+    if (Object.prototype.hasOwnProperty.call(queryParams, key)) {
+      const value = queryParams[key] as string;
+      const match = key.match(FILTERS_REGEX);
 
-    const value = queryParams[key] as string;
-    const match = key.match(FILTERS_REGEX);
-
-    if (match) {
-      const [, path, filter] = match as [string, string, Filter];
-      result.push({ path, filter, value });
+      if (match) {
+        const [, path, filter] = match as [string, string, Filter];
+        result.push({ path, filter, value });
+      }
     }
   }
 

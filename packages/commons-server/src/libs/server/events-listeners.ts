@@ -28,7 +28,7 @@ export const listenServerEvents = function (
   environment: Environment,
   logger: Logger,
   logTransaction?: boolean
-) {
+): void {
   const defaultLogMeta: any = {
     environmentName: environment.name,
     environmentUUID: environment.uuid,
@@ -40,7 +40,7 @@ export const listenServerEvents = function (
       ...defaultLogMeta
     });
 
-    if (!!process.send) {
+    if (process.send) {
       process.send('ready');
     }
   });

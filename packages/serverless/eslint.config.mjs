@@ -75,7 +75,7 @@ export default tseslint.config(
       ],
       '@typescript-eslint/member-ordering': 'error',
       '@typescript-eslint/no-empty-interface': 'error',
-      '@typescript-eslint/explicit-module-boundary-types': 'warn',
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-non-null-assertion': 'error',
       '@typescript-eslint/no-shadow': ['error'],
       '@typescript-eslint/no-unused-vars': [
@@ -104,6 +104,7 @@ export default tseslint.config(
       curly: 'error',
       eqeqeq: ['error', 'smart'],
       'guard-for-in': 'error',
+      'no-empty': ['error', { allowEmptyCatch: true }],
       'no-bitwise': 'error',
       'no-caller': 'error',
       'no-console': 'error',

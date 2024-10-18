@@ -41,7 +41,8 @@ export const getSafeStreamingInterval = (givenInterval: number): number =>
  */
 export class WsRunningInstance {
   private closeable: NodeJS.Timeout;
-  private running = false;
+  private isRunning = false;
+
   constructor(
     private route: Route,
     private serverContext: ServerContext,
@@ -49,11 +50,11 @@ export class WsRunningInstance {
     private handler: DelegatedBroadcastHandler
   ) {}
 
-  public get _isRunning(): boolean {
-    return this.running;
+  public get running(): boolean {
+    return this.isRunning;
   }
 
-  public run() {
+  public run(): void {
     let responseNumber = 1;
 
     this.closeable = setInterval(() => {
@@ -76,13 +77,13 @@ export class WsRunningInstance {
       this.handler(responseNumber, enabledRouteResponse);
     }, getSafeStreamingInterval(this.route.streamingInterval));
 
-    this.running = true;
+    this.isRunning = true;
   }
 
-  public close() {
+  public close(): void {
     if (this.closeable) {
       clearInterval(this.closeable);
-      this.running = false;
+      this.isRunning = false;
     }
   }
 }
@@ -98,7 +99,7 @@ export class BroadcastContext {
   private readonly routeDataGenerators: Map<string, WsRunningInstance> =
     new Map<string, WsRunningInstance>();
 
-  public get _runningInstances(): Set<string> {
+  public get runningInstances(): Set<string> {
     return new Set<string>(this.routeDataGenerators.keys());
   }
 
@@ -138,14 +139,14 @@ export class BroadcastContext {
   /**
    * This will close all running contexts.
    */
-  public closeAll() {
+  public closeAll(): void {
     this.routeDataGenerators.forEach((runner) => {
       runner.close();
     });
     this.routeDataGenerators.clear();
   }
 
-  public closeRoute(route: Route) {
+  public closeRoute(route: Route): void {
     const ref = this.routeDataGenerators.get(route.endpoint);
     if (ref) {
       this.routeDataGenerators.delete(route.endpoint);
@@ -196,7 +197,7 @@ export const serveFileContentInWs = (
   eventEmitter: TypedEventEmitter<ServerEvents>,
   filePath: string,
   templateParser: DelegatedTemplateParser
-) => {
+): void => {
   readFile(filePath, (err, fileData) => {
     if (err) {
       eventEmitter.emit(

@@ -1,6 +1,6 @@
 import { fromSafeString } from '../../utils';
 
-const add = function (...args: any[]) {
+const add = function (...args: any[]): number | string {
   // Check if there are parameters
   if (args.length === 1) {
     return '';
