@@ -1,5 +1,5 @@
 import { Environment } from '@mockoon/commons';
-import AssertRequest from 'assert-request';
+import { equal } from 'node:assert';
 import { after, before, describe, it } from 'node:test';
 import { MockoonServer } from '../../../src';
 import { getEnvironment } from '../../libs/environment';
@@ -7,7 +7,6 @@ import { getEnvironment } from '../../libs/environment';
 describe('Server should follow Faker.js options', () => {
   let testEnv: Environment;
   let testServer: MockoonServer;
-  let request;
 
   before(async () => {
     testEnv = await getEnvironment('test');
@@ -19,13 +18,16 @@ describe('Server should follow Faker.js options', () => {
       envVarsPrefix: ''
     });
     testServer.start();
-    request = AssertRequest('http://localhost:3000');
   });
 
   after(() => {
     testServer.stop();
   });
 
-  it('should return seeding and localized content', () =>
-    request('/faker').body('ZS9 0DH').okay());
+  it('should return seeding and localized content', async () => {
+    const response = await fetch('http://localhost:3000/faker');
+    const body = await response.text();
+
+    equal(body, 'SA3 1CE');
+  });
 });

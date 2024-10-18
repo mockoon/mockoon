@@ -111,7 +111,7 @@ describe('Template parser: Faker wrapper', () => {
       request: {} as any,
       envVarsPrefix: ''
     });
-    strictEqual(parseResult, '20');
+    strictEqual(parseResult, '17');
   });
 
   it('should return value for helper with arguments', () => {
@@ -124,21 +124,21 @@ describe('Template parser: Faker wrapper', () => {
       request: {} as any,
       envVarsPrefix: ''
     });
-    strictEqual(parseResult, 'I');
+    strictEqual(parseResult, '0');
   });
 
   it('should be able to use a string value in a switch', () => {
     const parseResult = TemplateParser({
       shouldOmitDataHelper: false,
       content:
-        "{{#switch (faker 'person.firstName')}}{{#case 'Torey'}}Torey{{/case}}{{#default}}defaultvalue{{/default}}{{/switch}}",
+        "{{#switch (faker 'person.firstName')}}{{#case 'Eliza'}}Eliza{{/case}}{{#default}}defaultvalue{{/default}}{{/switch}}",
       environment: {} as any,
       processedDatabuckets: [],
       globalVariables: {},
       request: {} as any,
       envVarsPrefix: ''
     });
-    strictEqual(parseResult, 'Torey');
+    strictEqual(parseResult, 'Eliza');
   });
 
   it('should be able to use a number value in a repeat', () => {
@@ -179,7 +179,7 @@ describe('Template parser: Faker wrapper', () => {
       request: {} as any,
       envVarsPrefix: ''
     });
-    strictEqual(parseResult, '6565');
+    strictEqual(parseResult, '5927');
   });
 
   it('should be able to use a boolean value in a if', () => {
@@ -220,6 +220,6 @@ describe('Template parser: Faker wrapper', () => {
       request: {} as any,
       envVarsPrefix: ''
     });
-    strictEqual(parseResult, 'KFKJR');
+    strictEqual(parseResult, 'SGWBR');
   });
 });
