@@ -23,7 +23,8 @@
   },
   "funding": "https://mockoon.com/sponsor-us/",
   "dependencies": {
-    "@mockoon/commons": "8.4.0"
+    "@mockoon/commons": "8.4.0",
+    "tslib": "2.8.0"
   },
   "devDependencies": {
     "@eslint/js": "9.12.0",

@@ -8,8 +8,7 @@
     "strictPropertyInitialization": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "typeRoots": ["node_modules/@types"],
-    "importHelpers": false
+    "typeRoots": ["node_modules/@types"]
   },
   "include": ["./src", "./test"]
 }
