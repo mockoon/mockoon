@@ -8,8 +8,7 @@
     "strictPropertyInitialization": false,
     "skipLibCheck": true,
     "typeRoots": ["node_modules/@types"],
-    "useUnknownInCatchVariables": true,
-    "resolveJsonModule": true
+    "useUnknownInCatchVariables": true
   },
   "include": ["./src", "./test"]
 }

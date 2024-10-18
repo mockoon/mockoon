@@ -89,6 +89,10 @@ export default tseslint.config(
       '@typescript-eslint/no-use-before-define': 'error',
       '@typescript-eslint/unified-signatures': 'error',
       '@typescript-eslint/consistent-type-definitions': 'off',
+      '@typescript-eslint/no-require-imports': [
+        'error',
+        { allow: ['/package\\.json$'] }
+      ],
       'arrow-body-style': 'error',
       curly: 'error',
       eqeqeq: ['error', 'smart'],
