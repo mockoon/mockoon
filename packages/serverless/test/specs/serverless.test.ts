@@ -1,5 +1,6 @@
 import { Environment } from '@mockoon/commons';
-import assert from 'assert';
+import assert from 'node:assert';
+import { describe, it } from 'node:test';
 import { MockoonServerless } from '../../src';
 
 const mockEnvironment: Environment = {
@@ -35,17 +36,17 @@ const mockEnvironment: Environment = {
 
 describe('Serverless', () => {
   it('should create a class instance', () => {
-    const mockoonServerless = new MockoonServerless(mockEnvironment);
+    const mockoonServerless = new MockoonServerless(mockEnvironment, {});
     assert(mockoonServerless instanceof MockoonServerless);
   });
 
   it('should create a request listener instance', () => {
-    const mockoonServerless = new MockoonServerless(mockEnvironment);
+    const mockoonServerless = new MockoonServerless(mockEnvironment, {});
     assert(mockoonServerless.requestListener() instanceof Function);
   });
 
   it('should create an AWS handler', () => {
-    const mockoonServerless = new MockoonServerless(mockEnvironment);
+    const mockoonServerless = new MockoonServerless(mockEnvironment, {});
     assert(mockoonServerless.awsHandler() instanceof Function);
   });
 });
