@@ -53,7 +53,7 @@ import { startAuthCallbackServer, stopAuthCallbackServer } from './auth';
 
 declare const IS_TESTING: boolean;
 
-const dialogMocks: { [x: string]: string[] } = { save: [], open: [] };
+const dialogMocks: Record<string, string[]> = { save: [], open: [] };
 
 /**
  * Returns the user data path or the last saved saved/opened directory
@@ -350,7 +350,7 @@ if (IS_TESTING) {
 
       const [category, action, filepath] = req.url
         ?.replace('/', '')
-        .split('#') as string[];
+        .split('#')!;
 
       if (category === 'menu' && action) {
         Menu.getApplicationMenu()?.getMenuItemById(action)?.click();

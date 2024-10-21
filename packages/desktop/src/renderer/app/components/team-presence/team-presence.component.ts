@@ -29,7 +29,7 @@ export class TeamPresenceComponent {
   @Input({ required: false })
   public filterContext: string = null;
   @Input({ required: false })
-  public size: string = '22';
+  public size = '22';
   @Input({ required: false })
   public showTooltipList = true;
 }

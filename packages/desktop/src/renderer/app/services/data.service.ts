@@ -278,7 +278,7 @@ export class DataService extends Logger {
   ): Environment {
     const UUIDs = new Set();
     const environments = this.store.get('environments');
-    const renewedUUIDs: { [key: string]: string } = {};
+    const renewedUUIDs: Record<string, string> = {};
 
     if (!force) {
       environments.forEach((environment) => {
@@ -399,7 +399,7 @@ export class DataService extends Logger {
    */
   private replaceObjectsUUID<T extends { uuid: string }>(
     items: T[],
-    oldNewDict: { [key: string]: string }
+    oldNewDict: Record<string, string>
   ) {
     return items.map((item) => {
       if (oldNewDict[item.uuid]) {
@@ -420,7 +420,7 @@ export class DataService extends Logger {
    */
   private renewRefs(
     environment: Environment,
-    renewedUUIDs: { [key: string]: string }
+    renewedUUIDs: Record<string, string>
   ) {
     environment.rootChildren = this.replaceObjectsUUID(
       environment.rootChildren,

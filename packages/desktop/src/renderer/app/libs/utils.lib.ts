@@ -8,7 +8,7 @@ import {
 import { EditorModes } from 'src/renderer/app/models/editor.model';
 
 export const ArrayContainsObjectKey = (
-  obj: { [key: string]: any },
+  obj: Record<string, any>,
   arr: string[]
 ) => {
   if (obj && arr) {

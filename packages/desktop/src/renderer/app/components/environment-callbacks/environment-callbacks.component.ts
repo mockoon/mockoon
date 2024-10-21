@@ -186,7 +186,7 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
       ),
       map((mimeType) => ({
         mimeType,
-        supportsTemplating: MimeTypesWithTemplating.indexOf(mimeType) > -1
+        supportsTemplating: MimeTypesWithTemplating.includes(mimeType)
       }))
     );
     this.activeCallbackUsages$ = this.activeEnvironment$.pipe(
@@ -300,7 +300,7 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
           map((newValue) => {
             if (
               controlName === 'method' &&
-              this.bodySupportingMethods.indexOf(newValue as Methods) < 0
+              !this.bodySupportingMethods.includes(newValue as Methods)
             ) {
               this.activeCallbackForm
                 .get('bodyType')

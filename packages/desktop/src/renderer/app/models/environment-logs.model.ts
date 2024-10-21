@@ -1,6 +1,6 @@
 import { Header, Methods } from '@mockoon/commons';
 
-export type EnvironmentLogs = { [key: string]: EnvironmentLog[] };
+export type EnvironmentLogs = Record<string, EnvironmentLog[]>;
 
 export type EnvironmentLogRequest = {
   headers: Header[];
@@ -37,6 +37,4 @@ export type EnvironmentLog = {
   response: EnvironmentLogResponse;
 };
 
-export type ActiveEnvironmentsLogUUIDs = {
-  [key: string]: string;
-};
+export type ActiveEnvironmentsLogUUIDs = Record<string, string>;
