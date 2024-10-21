@@ -1,5 +1,8 @@
 import { DatePipe } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 import { ErrorHandler, NgModule, SecurityContext } from '@angular/core';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
@@ -128,11 +131,11 @@ import { AppComponent } from './app.component';
     ManageInstancesModalComponent,
     TeamPresenceComponent
   ],
+  bootstrap: [AppComponent],
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
-    HttpClientModule,
     NgbModule,
     TourStepDirective,
     MarkdownModule.forRoot({
@@ -196,8 +199,8 @@ import { AppComponent } from './app.component';
       provide: NgbModalConfig,
       useFactory: NgbModalConfigFactory
     },
-    provideNgxMask()
-  ],
-  bootstrap: [AppComponent]
+    provideNgxMask(),
+    provideHttpClient(withInterceptorsFromDi())
+  ]
 })
 export class AppModule {}
