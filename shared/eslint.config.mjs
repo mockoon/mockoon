@@ -1,51 +1,31 @@
-const eslint = require('@eslint/js');
-const tseslint = require('typescript-eslint');
-const angular = require('angular-eslint');
-const stylisticJs = require('@stylistic/eslint-plugin-js');
-const stylisticTs = require('@stylistic/eslint-plugin-ts');
-const eslintPluginPrettierRecommended = require('eslint-plugin-prettier/recommended');
+// @ts-check
 
-module.exports = tseslint.config(
+import eslint from '@eslint/js';
+import stylisticJs from '@stylistic/eslint-plugin-js';
+import stylisticTs from '@stylistic/eslint-plugin-ts';
+import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
+import tseslint from 'typescript-eslint';
+
+export const configs = [
   { ignores: ['build/**', 'dist/**', 'bin/**', 'tmp/**'] },
   {
     files: ['**/*.ts'],
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommended,
-      ...tseslint.configs.stylisticTypeChecked,
-      ...angular.configs.tsRecommended
+      ...tseslint.configs.stylisticTypeChecked
     ],
     languageOptions: {
       parserOptions: {
         projectService: true,
-        tsconfigDirName: __dirname
+        tsconfigDirName: import.meta.dirname
       }
     },
     plugins: {
-      // tslint:disable-next-line
       '@stylistic/ts': stylisticTs,
-      // tslint:disable-next-line
       '@stylistic/js': stylisticJs
     },
-    processor: angular.processInlineTemplates,
     rules: {
-      '@angular-eslint/directive-selector': [
-        'error',
-        {
-          type: 'attribute',
-          prefix: 'app',
-          style: 'camelCase'
-        }
-      ],
-      '@angular-eslint/component-selector': [
-        'error',
-        {
-          type: 'element',
-          prefix: 'app',
-          style: 'kebab-case'
-        }
-      ],
-      '@angular-eslint/prefer-on-push-component-change-detection': 'error',
       '@stylistic/ts/quotes': ['error', 'single', { avoidEscape: true }],
       '@stylistic/ts/member-delimiter-style': [
         'error',
@@ -138,13 +118,8 @@ module.exports = tseslint.config(
       radix: 'error'
     }
   },
-  {
-    files: ['**/*.html'],
-    extends: [
-      ...angular.configs.templateRecommended,
-      ...angular.configs.templateAccessibility
-    ],
-    rules: {}
-  },
-  eslintPluginPrettierRecommended
-);
+  eslintPluginPrettier
+];
+
+// @ts-ignore
+export const fullConfig = tseslint.config(...configs);

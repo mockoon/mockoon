@@ -5,6 +5,7 @@
     "outDir": "./dist/out-tsc",
     "declaration": false,
     "strict": false,
+    "strictNullChecks": false,
     "module": "es2020",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

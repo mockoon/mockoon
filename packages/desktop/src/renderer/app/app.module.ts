@@ -145,28 +145,6 @@ import { AppComponent } from './app.component';
         useFactory: MarkedOptionsFactory
       }
     }),
-    provideFirebaseApp(() => initializeApp(Config.firebaseConfig)),
-    provideAuth(() => {
-      const auth = getAuth();
-      auth.setPersistence(browserLocalPersistence);
-
-      if (environment.useFirebaseEmulator) {
-        connectAuthEmulator(auth, 'http://localhost:9099', {
-          disableWarnings: true
-        });
-      }
-
-      return auth;
-    }),
-    provideFunctions(() => {
-      const functions = getFunctions();
-
-      if (environment.useFirebaseEmulator) {
-        connectFunctionsEmulator(functions, 'localhost', 5001);
-      }
-
-      return functions;
-    }),
     ReactiveFormsModule.withConfig({
       // enable the legacy disabled state handling (angular v15)
       callSetDisabledState: 'whenDisabledForLegacyCode'
@@ -200,7 +178,29 @@ import { AppComponent } from './app.component';
       useFactory: NgbModalConfigFactory
     },
     provideNgxMask(),
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withInterceptorsFromDi()),
+    provideFirebaseApp(() => initializeApp(Config.firebaseConfig)),
+    provideAuth(() => {
+      const auth = getAuth();
+      auth.setPersistence(browserLocalPersistence);
+
+      if (environment.useFirebaseEmulator) {
+        connectAuthEmulator(auth, 'http://localhost:9099', {
+          disableWarnings: true
+        });
+      }
+
+      return auth;
+    }),
+    provideFunctions(() => {
+      const functions = getFunctions();
+
+      if (environment.useFirebaseEmulator) {
+        connectFunctionsEmulator(functions, 'localhost', 5001);
+      }
+
+      return functions;
+    })
   ]
 })
 export class AppModule {}

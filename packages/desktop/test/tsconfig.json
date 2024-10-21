@@ -2,7 +2,6 @@
   "compilerOptions": {
     "baseUrl": "./test",
     "module": "commonjs",
-    "strictNullChecks": true,
     "types": [
       "node",
       "@wdio/globals/types",

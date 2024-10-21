@@ -71,8 +71,10 @@ export const CloneObject = <T>(objectToClone: T): T =>
 /**
  * Compare two objects using JSON.Stringify
  */
-export const IsEqual = (firstObject: unknown, secondObject: unknown): boolean =>
-  JSON.stringify(firstObject) === JSON.stringify(secondObject);
+export const IsEqual = <T = unknown>(
+  firstObject: T,
+  secondObject: T
+): boolean => JSON.stringify(firstObject) === JSON.stringify(secondObject);
 
 export const RemoveLeadingSlash = (str: string): string =>
   str.replace(/^\//g, '');

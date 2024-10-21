@@ -58,16 +58,20 @@
     "documentation:desktop": "lerna run --stream --scope @mockoon/desktop documentation"
   },
   "devDependencies": {
+    "@eslint/js": "9.13.0",
     "@stylistic/eslint-plugin-js": "2.9.0",
     "@stylistic/eslint-plugin-ts": "2.9.0",
+    "@types/eslint__js": "8.42.3",
     "concurrently": "9.0.1",
     "dotenv": "16.4.5",
+    "eslint": "9.13.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.2.1",
     "glob": "11.0.0",
     "lerna": "6.6.2",
     "prettier": "3.3.3",
     "prettier-plugin-organize-imports": "4.1.0",
-    "tsx": "4.19.1"
+    "tsx": "4.19.1",
+    "typescript-eslint": "8.11.0"
   }
 }
