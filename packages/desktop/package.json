@@ -50,6 +50,7 @@
     "@mockoon/cloud": "8.4.0",
     "@mockoon/commons": "8.4.0",
     "@mockoon/commons-server": "8.4.0",
+    "chokidar4": "npm:chokidar@4.0.1",
     "electron-json-storage": "4.6.0",
     "electron-window-state": "5.0.3",
     "mime-types": "2.1.35",
