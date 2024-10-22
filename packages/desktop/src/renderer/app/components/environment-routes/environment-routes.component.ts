@@ -507,7 +507,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
               INDENT_SIZE
             )
           );
-      } catch (e) {
+      } catch (_error) {
         // ignore any errors with parsing / stringifying the JSON
       }
     }

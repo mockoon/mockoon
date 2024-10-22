@@ -108,6 +108,4 @@ export class SvgComponent {
     | 'events'
     | 'public'
     | string;
-
-  constructor() {}
 }

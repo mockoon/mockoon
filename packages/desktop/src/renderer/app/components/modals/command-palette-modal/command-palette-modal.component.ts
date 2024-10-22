@@ -36,6 +36,8 @@ import { UIService } from 'src/renderer/app/services/ui.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommandPaletteModalComponent implements OnInit, OnDestroy {
+  @HostBinding('class')
+  public hostClasses = 'command-palette-modal d-flex flex-column flex-fill mh0';
   @ViewChildren('commandElement')
   public commandElements: QueryList<ElementRef<HTMLButtonElement>>;
   public focusableInputs = FocusableInputs;
@@ -50,11 +52,6 @@ export class CommandPaletteModalComponent implements OnInit, OnDestroy {
     private commandPaletteService: CommandPaletteService,
     private uiService: UIService
   ) {}
-
-  @HostBinding('class')
-  public get hostClasses() {
-    return 'command-palette-modal d-flex flex-column flex-fill mh0';
-  }
 
   /**
    * Navigate through dropdown items with the keyboard

@@ -336,6 +336,8 @@ export const clearIPCChannels = () => {
  * - Clipboard: clipboard#read
  *
  * (This mock will be striped from the prod build by Webpack)
+ *
+ * eslint-disable-next-line
  */
 if (IS_TESTING) {
   createServer((req, res) => {
@@ -348,9 +350,13 @@ if (IS_TESTING) {
     req.on('end', () => {
       const data = Buffer.concat(chunks).toString();
 
-      const [category, action, filepath] = req.url
-        ?.replace('/', '')
-        .split('#')!;
+      let url = '';
+
+      if (req.url) {
+        url = req.url.replace('/', '');
+      }
+
+      const [category, action, filepath] = url.split('#');
 
       if (category === 'menu' && action) {
         Menu.getApplicationMenu()?.getMenuItemById(action)?.click();

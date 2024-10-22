@@ -4,8 +4,8 @@ import { DragState } from 'src/renderer/app/models/ui.model';
 
 @Injectable({ providedIn: 'root' })
 export class DragService {
-  public dragStopped$: Subject<void> = new Subject();
-  public dropzone$: Subject<string | number> = new Subject();
+  public dragStopped$ = new Subject<void>();
+  public dropzone$ = new Subject<string | number>();
   private initialState: DragState = {
     elementId: null,
     dragContainer: null,
@@ -14,8 +14,6 @@ export class DragService {
     nativeElement: null
   };
   private state: DragState = this.initialState;
-
-  constructor() {}
 
   public startDragging(element: DragState) {
     this.state = element;

@@ -8,7 +8,7 @@ export const config: Partial<Options.Testrunner> = {
   logLevel: 'warn',
   runner: 'local',
   services: ['electron'],
-  beforeSession: async (cap, spec, browser) => {
+  beforeSession: async () => {
     await bootstrap.init();
   },
   bail: 0,

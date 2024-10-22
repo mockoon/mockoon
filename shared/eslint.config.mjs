@@ -42,7 +42,6 @@ export const configs = [
       ],
       '@stylistic/ts/semi': ['error', 'always'],
       '@stylistic/ts/type-annotation-spacing': 'error',
-      '@stylistic/ts/brace-style': ['error', '1tbs'],
       '@stylistic/js/eol-last': 'error',
       '@stylistic/js/no-trailing-spaces': 'error',
       '@stylistic/js/padding-line-between-statements': [
@@ -67,10 +66,15 @@ export const configs = [
         'error',
         {
           accessibility: 'explicit',
-
           overrides: {
             constructors: 'no-public'
-          }
+          },
+          ignoredMethodNames: [
+            'ngOnInit',
+            'ngOnChanges',
+            'ngOnDestroy',
+            'ngAfterViewInit'
+          ]
         }
       ],
       '@typescript-eslint/member-ordering': 'error',
@@ -100,6 +104,8 @@ export const configs = [
           ignorePrimitives: true
         }
       ],
+      '@typescript-eslint/prefer-regexp-exec': 'off',
+      '@typescript-eslint/adjacent-overload-signatures': 'off',
       'arrow-body-style': 'error',
       curly: 'error',
       eqeqeq: ['error', 'smart'],
@@ -112,7 +118,6 @@ export const configs = [
       'no-new-wrappers': 'error',
       'no-throw-literal': 'error',
       'no-undef-init': 'error',
-      'no-underscore-dangle': 'error',
       'no-var': 'error',
       'prefer-const': 'error',
       radix: 'error'

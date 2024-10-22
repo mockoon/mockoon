@@ -22,6 +22,7 @@ configs[1].rules = {
     }
   ],
   '@angular-eslint/prefer-on-push-component-change-detection': 'error',
+  // this should be reenabled once we use strictNullChecks
   '@typescript-eslint/prefer-nullish-coalescing': 'off'
 };
 

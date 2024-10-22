@@ -47,7 +47,7 @@ export class DataService extends Logger {
     try {
       migratedEnvironment =
         this.migrationService.migrateEnvironment(environment);
-    } catch (error) {
+    } catch (_error) {
       this.logMessage('error', 'ENVIRONMENT_MIGRATION_FAILED', {
         environmentName: environment.name,
         environmentUUID: environment.uuid
@@ -123,7 +123,7 @@ export class DataService extends Logger {
           null,
           INDENT_SIZE
         );
-      } catch (error) {
+      } catch (_error) {
         isResJsonInvalid = true;
       }
     }
@@ -135,7 +135,7 @@ export class DataService extends Logger {
           null,
           INDENT_SIZE
         );
-      } catch (error) {
+      } catch (_error) {
         isReqJsonInvalid = true;
       }
     }

@@ -70,7 +70,7 @@ export class TelemetryService {
         .get('geoipEndpoint')
         .pipe(filter((geoipEndpoint) => !!geoipEndpoint)),
       this.store.select('settings').pipe(
-        filter((settings) => settings && settings.enableTelemetry),
+        filter((settings) => settings?.enableTelemetry),
         first()
       )
     ]).pipe(
@@ -94,19 +94,17 @@ export class TelemetryService {
           })
         )
       ),
-      switchMap(() =>
+      switchMap(() => {
         // end session and send infos after session duration inactivity or at midnight, or when app closes
-        {
-          const now = new Date();
-          const midnight = endOfDay(now);
+        const now = new Date();
+        const midnight = endOfDay(now);
 
-          return race(
-            timer(Config.telemetry.sessionDuration),
-            timer(differenceInMilliseconds(midnight, now)),
-            this.closeSession$.pipe(filter((closeSession) => closeSession))
-          );
-        }
-      ),
+        return race(
+          timer(Config.telemetry.sessionDuration),
+          timer(differenceInMilliseconds(midnight, now)),
+          this.closeSession$.pipe(filter((closeSession) => closeSession))
+        );
+      }),
       switchMap(() => {
         const environments = this.store.get('environments');
 

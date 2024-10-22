@@ -77,7 +77,7 @@ export class ValidPathDirective {
    */
   private sanitize(value: string): string {
     // remove double slashes
-    let sanitizedValue = value.replace(/[\/\/]{2,}/gi, '/');
+    let sanitizedValue = value.replace(/[//]{2,}/gi, '/');
 
     // Remove leading slash
     sanitizedValue = sanitizedValue.replace(/^\//gi, '');

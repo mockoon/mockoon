@@ -45,6 +45,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomSelectComponent implements OnInit, ControlValueAccessor {
+  @HostBinding('class')
+  public hostClasses = 'overflow-hidden';
   @Input()
   public isNumber: boolean;
   @Input()
@@ -92,13 +94,6 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   public window = window;
 
   private value$ = new BehaviorSubject<number | string>(null);
-
-  constructor() {}
-
-  @HostBinding('class')
-  public get hostClasses() {
-    return 'overflow-hidden';
-  }
 
   @Input()
   public set items(items: DropdownItems) {
@@ -158,10 +153,8 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
         // reset the focused item when filtering
         this.focusedItemIndex$.next(-1);
 
-        return items.filter(
-          (item) =>
-            item.value !== undefined &&
-            item.value.toString().includes(inputValue)
+        return items.filter((item) =>
+          item.value?.toString().includes(inputValue)
         );
       })
     );
