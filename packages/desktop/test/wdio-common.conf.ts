@@ -1,7 +1,6 @@
-import { Options } from '@wdio/types';
 import bootstrap from './libs/bootstrap';
 
-export const config: Partial<Options.Testrunner> = {
+export const config: Partial<WebdriverIO.Config> = {
   specs: ['./specs/**/*.spec.ts'],
   exclude: [],
   maxInstances: 1,

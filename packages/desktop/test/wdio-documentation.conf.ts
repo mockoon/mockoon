@@ -1,9 +1,8 @@
-import { Options } from '@wdio/types';
 import { promises as fs } from 'fs';
 import { config as commonConfig } from './wdio-common.conf';
 import { config as winConfig } from './wdio-win.conf';
 
-const config: Partial<Options.Testrunner> = {
+const config: WebdriverIO.Config = {
   ...winConfig,
   specs: ['./tools/documentation.spec.ts'],
   beforeSession: [
