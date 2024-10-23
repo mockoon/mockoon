@@ -2,6 +2,11 @@
   "name": "@mockoon/desktop",
   "description": "Mockoon is the easiest and quickest way to run mock APIs locally. No remote deployment, no account required, open source.",
   "version": "8.4.0",
+  "author": {
+    "name": "Mockoon (1kB SARL-S)",
+    "email": "team@mockoon.com",
+    "url": "https://mockoon.com/"
+  },
   "private": true,
   "license": "MIT",
   "repository": "https://github.com/mockoon/mockoon",

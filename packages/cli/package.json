@@ -2,6 +2,11 @@
   "name": "@mockoon/cli",
   "description": "Mockoon's CLI. Deploy your mock APIs anywhere.",
   "version": "8.4.0",
+  "author": {
+    "name": "Mockoon (1kB SARL-S)",
+    "email": "team@mockoon.com",
+    "url": "https://mockoon.com/"
+  },
   "bin": {
     "mockoon-cli": "./bin/run.js"
   },

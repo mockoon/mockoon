@@ -2,6 +2,11 @@
   "name": "@mockoon/commons-server",
   "description": "Mockoon's commons server library. Used in Mockoon desktop application and CLI.",
   "version": "8.4.0",
+  "author": {
+    "name": "Mockoon (1kB SARL-S)",
+    "email": "team@mockoon.com",
+    "url": "https://mockoon.com/"
+  },
   "license": "MIT",
   "scripts": {
     "lint": "eslint",

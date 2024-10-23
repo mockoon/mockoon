@@ -2,6 +2,11 @@
   "name": "@mockoon/serverless",
   "description": "Mockoon's serverless library. Use Mockoon in serverless environments: AWS Lambda, GCP Functions, Firebase Functions, etc.",
   "version": "8.4.0",
+  "author": {
+    "name": "Mockoon (1kB SARL-S)",
+    "email": "team@mockoon.com",
+    "url": "https://mockoon.com/"
+  },
   "license": "MIT",
   "scripts": {
     "lint": "eslint",
