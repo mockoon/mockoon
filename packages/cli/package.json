@@ -48,7 +48,7 @@
     "@inquirer/confirm": "5.0.0",
     "@mockoon/commons": "8.4.0",
     "@mockoon/commons-server": "8.4.0",
-    "@oclif/core": "4.0.29",
+    "@oclif/core": "4.0.30",
     "@oclif/plugin-help": "6.2.16",
     "mkdirp": "3.0.1",
     "mustache": "4.2.0",
@@ -56,10 +56,10 @@
   },
   "devDependencies": {
     "@types/mustache": "4.2.5",
-    "@types/node": "22.7.7",
+    "@types/node": "22.7.9",
     "eslint-config-oclif": "5.2.1",
     "eslint-config-oclif-typescript": "3.1.12",
-    "oclif": "4.15.10",
+    "oclif": "4.15.12",
     "typescript": "5.6.3"
   },
   "engines": {
