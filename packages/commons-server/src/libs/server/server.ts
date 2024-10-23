@@ -1777,17 +1777,22 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         this.environment.endpointPrefix.length > 0
       ) 
 
-         ssl: { ...this.tlsOptions, agent: false },
-          onProxyReq: (proxyReq, request, response) => {
-            this.refreshEnvironment();
 
-            request.proxied = true;
+const proxyConfig = {
+  ssl: { ...this.tlsOptions, agent: false },
+  onProxyReq: (proxyReq, request, response) => {
+    this.refreshEnvironment();
+    request.proxied = true;
 
-            this.setHeaders(
-              this.environment.proxyReqHeaders,
-              proxyReq,
-              request as Request
-            );
+    this.setHeaders(
+      this.environment.proxyReqHeaders,
+      proxyReq,
+      request
+    );
+  }
+};
+
+        
 
     },
     onProxyRes: (proxyRes, req, res) => {
