@@ -1764,25 +1764,33 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       this.emit('creating-proxy');
 
       server.use(
-        '*',
-        createProxyMiddleware({
-          cookieDomainRewrite: { '*': '' },
-          target: this.environment.proxyHost,
-          secure: false,
-          changeOrigin: true,
-          logLevel: 'silent',
-          pathRewrite: (path, req) => {
-            if (
-              this.environment.proxyRemovePrefix === true &&
-              this.environment.endpointPrefix.length > 0
-            ) {
-              const regExp = new RegExp(`^/${this.environment.endpointPrefix}`);
+  '*',
+  createProxyMiddleware({
+    cookieDomainRewrite: { '*': '' },
+    target: this.environment.proxyHost,
+    secure: false,
+    changeOrigin: true,
+    logLevel: 'silent',
+    pathRewrite: (path, req) => {
+      if (
+        this.environment.proxyRemovePrefix === true &&
+        this.environment.endpointPrefix.length > 0
+      ) {
+        // Rewrite the path if required
+      }
+    },
+    onProxyRes: (proxyRes, req, res) => {
+      // Modify 'Set-Cookie' headers to remove 'Secure' flag
+      const setCookieHeaders = proxyRes.headers['set-cookie'];
+      if (setCookieHeaders) {
+        proxyRes.headers['set-cookie'] = setCookieHeaders.map((cookie) =>
+          cookie.replace(/;\s*Secure/i, '')
+        );
+      }
+    }
+  })
+);
 
-              return path.replace(regExp, '');
-            }
-
-            return path;
-          },
           ssl: { ...this.tlsOptions, agent: false },
           onProxyReq: (proxyReq, request, response) => {
             this.refreshEnvironment();
@@ -1873,7 +1881,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         if (target.set) {
           // for express.Response
           if (isSetCookie) {
-            target.append(header.key, parsedHeaderValue);
+             parsedHeaderValue = parsedHeaderValue.replace(/;\s*Secure/i, '');
           } else {
             target.set(header.key, parsedHeaderValue);
           }
