@@ -1,12 +1,39 @@
-import { Server } from 'http';
+import { createServer, Server } from 'http';
+import { brotliCompress, deflate, gzip } from 'zlib';
 import environments from '../libs/environments';
 import environmentsLogs from '../libs/environments-logs';
-import fakeServer from '../libs/fake-server';
 import headersUtils from '../libs/headers-utils';
 import http from '../libs/http';
 import { HttpCall } from '../libs/models';
 import navigation from '../libs/navigation';
 import routes from '../libs/routes';
+
+const compressionLibs = { gzip, deflate, br: brotliCompress };
+
+const fakeServer = () =>
+  new Promise<Server>((resolve) => {
+    const server = createServer((req, res) => {
+      const encoding = req.headers['Accept-Encoding'] as string;
+
+      res.statusCode = 200;
+
+      if (encoding && encoding !== 'identity') {
+        compressionLibs[encoding](`${encoding}test`, (error, result) => {
+          if (error) {
+            throw error;
+          }
+          res.setHeader('Content-Encoding', encoding);
+          res.write(result);
+        });
+      } else {
+        res.write('test');
+      }
+
+      res.end();
+    }).listen(45123, () => {
+      resolve(server);
+    });
+  });
 
 const testCases: { assertTitle: string; assertBody: string; call: HttpCall }[] =
   [
@@ -76,12 +103,9 @@ const testCases: { assertTitle: string; assertBody: string; call: HttpCall }[] =
 describe('Proxy to server with zipped content', () => {
   let server: Server;
 
-  before(
-    () =>
-      new Promise((resolve) => {
-        server = fakeServer.create(resolve);
-      })
-  );
+  before(async () => {
+    server = await fakeServer();
+  });
 
   it('should open and start the environment', async () => {
     await environments.open('compression');
