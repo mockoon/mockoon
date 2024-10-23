@@ -13,7 +13,7 @@ const compressionLibs = { gzip, deflate, br: brotliCompress };
 const fakeServer = () =>
   new Promise<Server>((resolve) => {
     const server = createServer((req, res) => {
-      const encoding = req.headers['Accept-Encoding'] as string;
+      const encoding = req.headers['accept-encoding'] as string;
 
       res.statusCode = 200;
 
