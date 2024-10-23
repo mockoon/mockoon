@@ -1,4 +1,4 @@
-import { watch } from 'chokidar4';
+import { watch } from 'chokidar';
 import { app } from 'electron';
 import { resolve } from 'path';
 
@@ -13,7 +13,7 @@ export const hotReload = () => {
       resolve('../commons-server/dist')
     ],
     {
-      ignored: (path, stats) => !!stats?.isFile() && !path.endsWith('.js'),
+      ignored: '**/*.map',
       interval: 3000
     }
   );

@@ -1,4 +1,4 @@
-import { FSWatcher, watch } from 'chokidar4';
+import { FSWatcher, watch } from 'chokidar';
 import { resolve } from 'path';
 import { Config } from 'src/main/config';
 import { logInfo } from 'src/main/libs/logs';
