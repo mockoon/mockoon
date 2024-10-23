@@ -1842,11 +1842,6 @@ const proxyConfig = {
               504
             );
           }
-        })
-      );
-    }
-  }
-
   /**
    * ### Middleware ###
    * Catch all error handler
