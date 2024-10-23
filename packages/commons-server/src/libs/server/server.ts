@@ -1812,7 +1812,7 @@ const proxyConfig = {
             if (request.rawBody) {
               proxyReq.write(request.rawBody);
             }
-          },
+          
           onProxyRes: (proxyRes, request, response) => {
             this.refreshEnvironment();
 
