@@ -1764,42 +1764,55 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       this.emit('creating-proxy');
 
       server.use(
-        '*',
-        createProxyMiddleware({
-          cookieDomainRewrite: { '*': '' },
-          target: this.environment.proxyHost,
-          secure: false,
-          changeOrigin: true,
-          logLevel: 'silent',
-          pathRewrite: (path, req) => {
-            if (
-              this.environment.proxyRemovePrefix === true &&
-              this.environment.endpointPrefix.length > 0
-            ) {
-              const regExp = new RegExp(`^/${this.environment.endpointPrefix}`);
+  '*',
+  createProxyMiddleware({
+    cookieDomainRewrite: { '*': '' },
+    target: this.environment.proxyHost,
+    secure: false,
+    changeOrigin: true,
+    logLevel: 'silent',
+    pathRewrite: (path, req) => {
+      if (
+        this.environment.proxyRemovePrefix === true &&
+        this.environment.endpointPrefix.length > 0
+      ) 
 
-              return path.replace(regExp, '');
-            }
 
-            return path;
-          },
-          ssl: { ...this.tlsOptions, agent: false },
-          onProxyReq: (proxyReq, request, response) => {
-            this.refreshEnvironment();
+const proxyConfig = {
+  ssl: { ...this.tlsOptions, agent: false },
+  onProxyReq: (proxyReq, request, response) => {
+    this.refreshEnvironment();
+    request.proxied = true;
 
-            request.proxied = true;
+    this.setHeaders(
+      this.environment.proxyReqHeaders,
+      proxyReq,
+      request
+    );
+  }
+};
 
-            this.setHeaders(
-              this.environment.proxyReqHeaders,
-              proxyReq,
-              request as Request
-            );
+        
 
+    },
+    onProxyRes: (proxyRes, req, res) => {
+      // Modify 'Set-Cookie' headers to remove 'Secure' flag
+      const setCookieHeaders = proxyRes.headers['set-cookie'];
+      if (setCookieHeaders) {
+        proxyRes.headers['set-cookie'] = setCookieHeaders.map((cookie) =>
+          cookie.replace(/;\s*Secure/i, '')
+        );
+      }
+    }
+  })
+);
+
+         
             // re-stream the body (intercepted by body parser method)
             if (request.rawBody) {
               proxyReq.write(request.rawBody);
             }
-          },
+          
           onProxyRes: (proxyRes, request, response) => {
             this.refreshEnvironment();
 
@@ -1829,11 +1842,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               504
             );
           }
-        })
-      );
-    }
-  }
-
   /**
    * ### Middleware ###
    * Catch all error handler
@@ -1873,7 +1881,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         if (target.set) {
           // for express.Response
           if (isSetCookie) {
-            target.append(header.key, parsedHeaderValue);
+             parsedHeaderValue = parsedHeaderValue.replace(/;\s*Secure/i, '');
           } else {
             target.set(header.key, parsedHeaderValue);
           }

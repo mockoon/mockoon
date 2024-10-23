@@ -127,14 +127,24 @@ class Http {
         (response) => {
           let body = '';
           response.on('data', (chunk) => (body += chunk));
-          response.on('end', () =>
+          response.on('end', () => {
+            // Clone the headers to modify
+            const headers = { ...response.headers };
+
+            // Check if 'set-cookie' exists and remove 'Secure' flag
+            if (headers['set-cookie']) {
+              headers['set-cookie'] = headers['set-cookie'].map((cookie: string) =>
+                cookie.replace(/;\s*Secure/gi, '') // Remove the Secure flag
+              );
+            }
+
             resolve({
               status: response.statusCode,
               statusMessage: response.statusMessage,
-              headers: response.headers,
+              headers, // Use modified headers
               body
-            })
-          );
+            });
+          });
         }
       );
 
