@@ -24,12 +24,12 @@ const fakeServer = () =>
           }
           res.setHeader('Content-Encoding', encoding);
           res.write(result);
+          res.end();
         });
       } else {
         res.write('test');
+        res.end();
       }
-
-      res.end();
     }).listen(3999, () => {
       resolve(server);
     });
