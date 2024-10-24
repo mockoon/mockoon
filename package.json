@@ -3,18 +3,19 @@
   "private": true,
   "version": "1.0.0",
   "description": "Mockoon is the easiest and quickest way to run mock APIs locally. No remote deployment, no account required, open source.",
-  "author": {
-    "name": "Guillaume Monnet",
-    "email": "guillaume@1kb.software",
-    "url": "https://1kb.software/"
-  },
+  "author": "Guillaume Monnet <guillaume@1kb.software> (https://1kb.software/)",
   "license": "MIT",
-  "repository": "https://github.com/mockoon/mockoon",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mockoon/mockoon.git"
+  },
   "homepage": "https://mockoon.com",
   "bugs": {
     "url": "https://github.com/mockoon/mockoon/issues"
   },
-  "funding": "https://mockoon.com/sponsor-us/",
+  "funding": {
+    "url": "https://mockoon.com/sponsor-us/"
+  },
   "prettier": {
     "singleQuote": true,
     "tabWidth": 2,
@@ -68,6 +69,9 @@
     "eslint-config-prettier": "9.1.0",
     "lerna": "6.6.2",
     "prettier": "3.3.3",
-    "prettier-plugin-organize-imports": "4.0.0"
-  }
+    "prettier-plugin-organize-imports": "4.0.0",
+    "typescript": "5.6.3"
+  },
+  "main": "index.js",
+  "keywords": []
 }
