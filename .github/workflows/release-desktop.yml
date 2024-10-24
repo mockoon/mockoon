@@ -101,8 +101,9 @@ jobs:
     timeout-minutes: 60
 
     env:
-      CSC_LINK: ${{secrets.WIN_CSC_LINK}}
-      CSC_KEY_PASSWORD: ${{secrets.WIN_CSC_KEY_PASSWORD}}
+      AZURE_TENANT_ID: ${{secrets.AZURE_TENANT_ID}}
+      AZURE_CLIENT_ID: ${{secrets.AZURE_CLIENT_ID}}
+      AZURE_CLIENT_SECRET: ${{secrets.AZURE_CLIENT_SECRET}}
 
     steps:
       - uses: actions/checkout@v4
