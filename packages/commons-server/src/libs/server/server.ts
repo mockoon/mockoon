@@ -1775,9 +1775,25 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       if (
         this.environment.proxyRemovePrefix === true &&
         this.environment.endpointPrefix.length > 0
-      ) {
-        // Rewrite the path if required
-      }
+      ) 
+
+
+const proxyConfig = {
+  ssl: { ...this.tlsOptions, agent: false },
+  onProxyReq: (proxyReq, request, response) => {
+    this.refreshEnvironment();
+    request.proxied = true;
+
+    this.setHeaders(
+      this.environment.proxyReqHeaders,
+      proxyReq,
+      request
+    );
+  }
+};
+
+        
+
     },
     onProxyRes: (proxyRes, req, res) => {
       // Modify 'Set-Cookie' headers to remove 'Secure' flag
@@ -1791,23 +1807,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   })
 );
 
-          ssl: { ...this.tlsOptions, agent: false },
-          onProxyReq: (proxyReq, request, response) => {
-            this.refreshEnvironment();
-
-            request.proxied = true;
-
-            this.setHeaders(
-              this.environment.proxyReqHeaders,
-              proxyReq,
-              request as Request
-            );
-
+         
             // re-stream the body (intercepted by body parser method)
             if (request.rawBody) {
               proxyReq.write(request.rawBody);
             }
-          },
+          
           onProxyRes: (proxyRes, request, response) => {
             this.refreshEnvironment();
 
@@ -1837,11 +1842,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               504
             );
           }
-        })
-      );
-    }
-  }
-
   /**
    * ### Middleware ###
    * Catch all error handler
