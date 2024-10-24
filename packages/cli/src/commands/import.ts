@@ -43,8 +43,10 @@ export default class Import extends Command {
       );
 
       await fs.writeFile(userFlags.output, data, 'utf-8');
-    } catch (error: any) {
-      this.error(error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        this.error(error.message);
+      }
     }
   }
 }

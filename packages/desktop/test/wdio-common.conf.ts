@@ -1,14 +1,13 @@
-import { Options } from '@wdio/types';
 import bootstrap from './libs/bootstrap';
 
-export const config: Partial<Options.Testrunner> = {
+export const config: Partial<WebdriverIO.Config> = {
   specs: ['./specs/**/*.spec.ts'],
   exclude: [],
   maxInstances: 1,
   logLevel: 'warn',
   runner: 'local',
   services: ['electron'],
-  beforeSession: async (cap, spec, browser) => {
+  beforeSession: async () => {
     await bootstrap.init();
   },
   bail: 0,

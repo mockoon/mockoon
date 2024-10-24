@@ -4,7 +4,9 @@ export const systemHelperNames: (keyof ReturnType<typeof SystemHelpers>)[] = [
   'getEnvVar'
 ];
 
-export const SystemHelpers = function (options: { prefix: string }) {
+export const SystemHelpers = function (options: {
+  prefix: string;
+}): Record<string, () => any> {
   return {
     // get environment variable
     getEnvVar: function (...args: any[]) {

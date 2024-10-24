@@ -1,5 +1,8 @@
 import { DatePipe } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 import { ErrorHandler, NgModule, SecurityContext } from '@angular/core';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
@@ -128,11 +131,11 @@ import { AppComponent } from './app.component';
     ManageInstancesModalComponent,
     TeamPresenceComponent
   ],
+  bootstrap: [AppComponent],
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
-    HttpClientModule,
     NgbModule,
     TourStepDirective,
     MarkdownModule.forRoot({
@@ -141,28 +144,6 @@ import { AppComponent } from './app.component';
         provide: MARKED_OPTIONS,
         useFactory: MarkedOptionsFactory
       }
-    }),
-    provideFirebaseApp(() => initializeApp(Config.firebaseConfig)),
-    provideAuth(() => {
-      const auth = getAuth();
-      auth.setPersistence(browserLocalPersistence);
-
-      if (environment.useFirebaseEmulator) {
-        connectAuthEmulator(auth, 'http://localhost:9099', {
-          disableWarnings: true
-        });
-      }
-
-      return auth;
-    }),
-    provideFunctions(() => {
-      const functions = getFunctions();
-
-      if (environment.useFirebaseEmulator) {
-        connectFunctionsEmulator(functions, 'localhost', 5001);
-      }
-
-      return functions;
     }),
     ReactiveFormsModule.withConfig({
       // enable the legacy disabled state handling (angular v15)
@@ -196,8 +177,30 @@ import { AppComponent } from './app.component';
       provide: NgbModalConfig,
       useFactory: NgbModalConfigFactory
     },
-    provideNgxMask()
-  ],
-  bootstrap: [AppComponent]
+    provideNgxMask(),
+    provideHttpClient(withInterceptorsFromDi()),
+    provideFirebaseApp(() => initializeApp(Config.firebaseConfig)),
+    provideAuth(() => {
+      const auth = getAuth();
+      auth.setPersistence(browserLocalPersistence);
+
+      if (environment.useFirebaseEmulator) {
+        connectAuthEmulator(auth, 'http://localhost:9099', {
+          disableWarnings: true
+        });
+      }
+
+      return auth;
+    }),
+    provideFunctions(() => {
+      const functions = getFunctions();
+
+      if (environment.useFirebaseEmulator) {
+        connectFunctionsEmulator(functions, 'localhost', 5001);
+      }
+
+      return functions;
+    })
+  ]
 })
 export class AppModule {}

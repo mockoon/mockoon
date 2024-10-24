@@ -130,7 +130,7 @@ export default class Start extends Command {
       for (const environmentInfo of parsedEnvironments) {
         this.createServer({
           environment: environmentInfo.environment,
-          environmentDirectory: getDirname(environmentInfo.originalPath) || '',
+          environmentDirectory: getDirname(environmentInfo.originalPath) ?? '',
           logTransaction: userFlags['log-transaction'],
           fileTransportOptions: userFlags['disable-log-to-file']
             ? null
@@ -154,8 +154,10 @@ export default class Start extends Command {
           enableRandomLatency: userFlags['enable-random-latency']
         });
       }
-    } catch (error: any) {
-      this.error(error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        this.error(error.message);
+      }
     }
   }
 

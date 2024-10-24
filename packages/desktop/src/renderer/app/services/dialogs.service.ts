@@ -82,11 +82,7 @@ export class DialogsService {
 
     return from(MainAPI.invoke('APP_SHOW_OPEN_DIALOG', options)).pipe(
       switchMap((dialogResult) => {
-        if (
-          dialogResult.canceled ||
-          !dialogResult.filePaths ||
-          !dialogResult.filePaths[0]
-        ) {
+        if (dialogResult.canceled || !dialogResult.filePaths?.[0]) {
           return of(null);
         }
 

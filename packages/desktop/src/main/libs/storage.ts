@@ -38,7 +38,7 @@ export const readJSONData = async (path: string) => {
     }
 
     return data;
-  } catch (error) {
+  } catch (_error) {
     // if file empty (JSON.parse error), it will throw
     return null;
   }

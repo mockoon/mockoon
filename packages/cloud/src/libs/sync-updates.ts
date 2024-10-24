@@ -12,7 +12,9 @@ import {
 
 const setRouteResponseDefault = 'SET_RESPONSE_DEFAULT';
 
-export function buildSyncActionKey(syncAction: TransformableSyncActions) {
+export function buildSyncActionKey(
+  syncAction: TransformableSyncActions
+): string {
   switch (syncAction.type) {
     case SyncActionTypes.UPDATE_ENVIRONMENT:
       return SyncActionTypes.UPDATE_ENVIRONMENT + syncAction.environmentUuid;
@@ -154,7 +156,7 @@ export function transformSyncAction<T extends SyncActions>(
 export function saveRecentUpdateSyncAction(
   syncAction: SyncActions,
   recentActionsStore: RecentActionsStore
-) {
+): void {
   if (transformableSyncActionsList.includes(syncAction.type)) {
     recentActionsStore[
       buildSyncActionKey(syncAction as TransformableSyncActions)

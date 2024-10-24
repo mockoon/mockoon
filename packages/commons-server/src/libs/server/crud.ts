@@ -161,13 +161,13 @@ export const databucketActions = (
           responseBody = responseBody.filter((r) => fullTextSearch(r, search));
         }
 
-        responseBody = responseBody.filter((r) =>
+        responseBody = responseBody.filter((r: any) =>
           filters.every((f) => applyFilter(r, f))
         );
         response.set('X-Filtered-Count', responseBody.length.toString());
 
         if (sort != null) {
-          responseBody = responseBody.slice().sort((a, b) => {
+          responseBody = responseBody.slice().sort((a: any, b: any) => {
             let aProp = typeof a === 'object' && a !== null ? a[sort] : a;
             let bProp = typeof b === 'object' && b !== null ? b[sort] : b;
 
@@ -199,7 +199,6 @@ export const databucketActions = (
 
     case 'getbyId': {
       if (Array.isArray(databucket.value)) {
-        console.log(routeCrudKey);
         const foundIndex = findItemIndex(
           databucket.value,
           request,

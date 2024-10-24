@@ -25,9 +25,7 @@ const buildJwtHelper = (partIndex: 0 | 1) =>
       );
 
       return key !== undefined ? payload[key] : payload;
-    } catch (e) {
-      return;
-    }
+    } catch (_error) {}
   };
 
 /**

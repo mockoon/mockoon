@@ -15,7 +15,7 @@ import { Store } from 'src/renderer/app/stores/store';
 
 @Injectable({ providedIn: 'root' })
 export class CommandPaletteService {
-  private scoreCache: { [key: string]: ScoreAndPositions } = {};
+  private scoreCache: Record<string, ScoreAndPositions> = {};
 
   constructor(
     private environmentsService: EnvironmentsService,

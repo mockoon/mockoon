@@ -128,7 +128,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   /**
    * Start a server
    */
-  public start() {
+  public start(): void {
     const requestListener = this.createRequestListener();
 
     const routes = this.getRoutesOfEnvironment();
@@ -216,7 +216,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   /**
    * Kill the server
    */
-  public stop() {
+  public stop(): void {
     if (this.webSocketServers.length > 0) {
       this.webSocketServers.forEach((wss) => wss.close());
     }
@@ -858,8 +858,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           typeof content === 'number'
         ) {
           content = JSON.stringify(content);
-        } else {
-          content = content;
         }
       }
     } else if (
@@ -1209,8 +1207,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
                 typeof content === 'number'
               ) {
                 content = JSON.stringify(content);
-              } else {
-                content = content;
               }
             }
           }
@@ -1278,8 +1274,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
                 typeof content === 'number'
               ) {
                 content = JSON.stringify(content);
-              } else {
-                content = content;
               }
             }
           } else if (cb.bodyType === BodyTypes.FILE && cb.filePath) {
@@ -1482,7 +1476,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           const data = readFileSync(filePath);
           let fileContent;
           if (
-            MimeTypesWithTemplating.indexOf(fileMimeType) > -1 &&
+            MimeTypesWithTemplating.includes(fileMimeType) &&
             !routeResponse.disableTemplating
           ) {
             fileContent = TemplateParser({
@@ -1605,8 +1599,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
       // parse templating for a limited list of mime types
       if (
-        (MimeTypesWithTemplating.indexOf(fileMimeType) > -1 ||
-          FileExtensionsWithTemplating.indexOf(extname(filePath)) > -1) &&
+        (MimeTypesWithTemplating.includes(fileMimeType) ||
+          FileExtensionsWithTemplating.includes(extname(filePath))) &&
         !routeResponse.disableTemplating
       ) {
         readFile(filePath, (readError, data) => {
@@ -1764,14 +1758,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       this.emit('creating-proxy');
 
       server.use(
-        '*',
         createProxyMiddleware({
           cookieDomainRewrite: { '*': '' },
           target: this.environment.proxyHost,
           secure: false,
           changeOrigin: true,
-          logLevel: 'silent',
-          pathRewrite: (path, req) => {
+          pathRewrite: (path) => {
             if (
               this.environment.proxyRemovePrefix === true &&
               this.environment.endpointPrefix.length > 0
@@ -1784,50 +1776,52 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             return path;
           },
           ssl: { ...this.tlsOptions, agent: false },
-          onProxyReq: (proxyReq, request, response) => {
-            this.refreshEnvironment();
+          on: {
+            proxyReq: (proxyReq, request) => {
+              this.refreshEnvironment();
 
-            request.proxied = true;
+              request.proxied = true;
 
-            this.setHeaders(
-              this.environment.proxyReqHeaders,
-              proxyReq,
-              request as Request
-            );
+              this.setHeaders(
+                this.environment.proxyReqHeaders,
+                proxyReq,
+                request as Request
+              );
 
-            // re-stream the body (intercepted by body parser method)
-            if (request.rawBody) {
-              proxyReq.write(request.rawBody);
+              // re-stream the body (intercepted by body parser method)
+              if (request.rawBody) {
+                proxyReq.write(request.rawBody);
+              }
+            },
+            proxyRes: (proxyRes, request, response) => {
+              this.refreshEnvironment();
+
+              const buffers: Buffer[] = [];
+              proxyRes.on('data', (chunk) => {
+                buffers.push(chunk);
+              });
+              proxyRes.on('end', () => {
+                response.body = Buffer.concat(buffers);
+              });
+
+              this.setHeaders(
+                this.environment.proxyResHeaders,
+                proxyRes,
+                request as Request
+              );
+            },
+            error: (error, request, response) => {
+              this.emit('error', ServerErrorCodes.PROXY_ERROR, error);
+
+              this.sendError(
+                response as Response,
+                `${format(
+                  ServerMessages.PROXY_ERROR,
+                  this.environment.proxyHost
+                )} ${request.url}: ${error}`,
+                504
+              );
             }
-          },
-          onProxyRes: (proxyRes, request, response) => {
-            this.refreshEnvironment();
-
-            const buffers: Buffer[] = [];
-            proxyRes.on('data', (chunk) => {
-              buffers.push(chunk);
-            });
-            proxyRes.on('end', () => {
-              response.body = Buffer.concat(buffers);
-            });
-
-            this.setHeaders(
-              this.environment.proxyResHeaders,
-              proxyRes,
-              request as Request
-            );
-          },
-          onError: (error, request, response) => {
-            this.emit('error', ServerErrorCodes.PROXY_ERROR, error);
-
-            this.sendError(
-              response as Response,
-              `${format(
-                ServerMessages.PROXY_ERROR,
-                this.environment.proxyHost
-              )} ${request.url}: ${error}`,
-              504
-            );
           }
         })
       );
@@ -1845,7 +1839,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     error: any,
     request: Request,
     response: Response,
-    next: NextFunction
+    _next: NextFunction
   ) => {
     this.sendError(response, error, 500);
   };
@@ -1893,7 +1887,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             target.headers[header.key] = parsedHeaderValue;
           }
         }
-      } catch (error) {}
+      } catch (_error) {}
     });
   }
 
@@ -1994,7 +1988,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     callback: Callback,
     url: string,
     requestBody: string | null | undefined,
-    requestHeaders: { [key: string]: any }
+    requestHeaders: Record<string, any>
   ) {
     res.text().then((respText) => {
       const reqHeaders = Object.keys(requestHeaders).map(
@@ -2130,8 +2124,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         let newProcessedDatabucket: ProcessedDatabucket;
 
         if (
-          databucket.value.match(
-            new RegExp(`{{2,3}[#(\\s\\w]*(${requestHelperNames.join('|')})`)
+          new RegExp(`{{2,3}[#(\\s\\w]*(${requestHelperNames.join('|')})`).exec(
+            databucket.value
           )
         ) {
           // a request helper was found
@@ -2194,7 +2188,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       new RegExp('data(?:Raw)? +[\'|"]{1}([^(\'|")]*)', 'g')
     );
 
-    return [...(matches || [])].map((mtc) => mtc[1]);
+    return [...(matches ?? [])].map((mtc) => mtc[1]);
   }
 
   /**

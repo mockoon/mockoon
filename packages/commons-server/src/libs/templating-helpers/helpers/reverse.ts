@@ -1,4 +1,4 @@
-const reverse = function (arr: Array<unknown>) {
+const reverse = function (arr: unknown[]) {
   if (!(arr instanceof Array)) {
     return '';
   }

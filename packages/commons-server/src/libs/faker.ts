@@ -9,7 +9,7 @@ let localFaker = allFakers['en'];
  *
  * @param locale
  */
-export const SetFakerLocale = (locale: FakerAvailableLocales) => {
+export const SetFakerLocale = (locale: FakerAvailableLocales): void => {
   localFaker = allFakers[locale];
 };
 
@@ -18,7 +18,7 @@ export const SetFakerLocale = (locale: FakerAvailableLocales) => {
  *
  * @param seed
  */
-export const SetFakerSeed = (seed: number | undefined) => {
+export const SetFakerSeed = (seed: number | undefined): void => {
   if (localFaker !== undefined) {
     localFaker.seed(seed);
   }
@@ -34,9 +34,9 @@ export const SetFakerSeed = (seed: number | undefined) => {
  */
 
 export const safeFakerReturn = function (
-  fakerFunc: Function,
+  fakerFunc: () => any,
   defaultValue: any = ''
-) {
+): any {
   try {
     return fakerFunc();
   } catch (error) {

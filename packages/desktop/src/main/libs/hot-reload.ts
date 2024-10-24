@@ -6,7 +6,12 @@ export const hotReload = () => {
   let relaunching = false;
 
   const watcher = watch(
-    [__dirname, resolve('../commons/dist'), resolve('../commons-server/dist')],
+    [
+      __dirname,
+      resolve('../cloud/dist'),
+      resolve('../commons/dist'),
+      resolve('../commons-server/dist')
+    ],
     {
       ignored: '**/*.map',
       interval: 3000

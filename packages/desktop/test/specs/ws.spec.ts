@@ -1,5 +1,5 @@
-import assert = require('assert');
-import { promises as fs } from 'fs';
+import { fail } from 'node:assert';
+import { promises as fs } from 'node:fs';
 import environments from '../libs/environments';
 import environmentsSettings from '../libs/environments-settings';
 import http from '../libs/http';
@@ -160,8 +160,8 @@ describe('WebSockets', () => {
       const ws = new WsConnection(3000, '/test/ws/disabled');
       try {
         await withTimeout(5000, ws.open());
-        assert.fail();
-      } catch (err) {}
+        fail();
+      } catch (_error) {}
     });
   });
 
@@ -208,7 +208,7 @@ describe('WebSockets', () => {
       // setting this causes an issue, but value is already set. So, we could ignore the error.
       try {
         await environmentsSettings.setSettingValue('enabled', 'true');
-      } catch (err) {}
+      } catch (_error) {}
 
       await environments.restart();
     });

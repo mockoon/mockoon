@@ -5,21 +5,9 @@ import environments from '../libs/environments';
 import environmentsSettings from '../libs/environments-settings';
 import file from '../libs/file';
 import modals from '../libs/modals';
-import { HttpCall } from '../libs/models';
 import navigation from '../libs/navigation';
 import settings from '../libs/settings';
 import utils from '../libs/utils';
-
-const generateCall = (requestBody: any): HttpCall => ({
-  description: 'Call POST dolphins',
-  path: '/dolphins',
-  method: 'POST',
-  body: requestBody,
-  testedResponse: {
-    body: '{\n    "response": "So Long, and Thanks for All the Fish"\n}',
-    status: 200
-  }
-});
 
 describe('Settings', () => {
   describe('Dialog working directory', () => {
@@ -165,7 +153,7 @@ describe('Settings', () => {
       const fileContent: string = (
         await fs.readFile('./tmp/storage/settings.json')
       ).toString();
-      expect(fileContent).toMatch(new RegExp('^{\n'));
+      expect(fileContent).toMatch(new RegExp('^{\\n'));
     });
 
     it('should change prettyPrint setting and verify persistence and no pretty printing', async () => {

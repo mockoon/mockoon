@@ -36,7 +36,9 @@ class Settings {
     }
 
     await expect(modal).toBeDisplayed();
-    await expect(await $('.modal-title')).toHaveTextContaining('Settings');
+    await expect(await $('.modal-title')).toHaveText(
+      expect.stringContaining('Settings')
+    );
   }
 
   public async toggleSetting(settingName: SettingNames): Promise<void> {

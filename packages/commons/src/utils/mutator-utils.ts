@@ -40,7 +40,7 @@ export const insertItemAtTarget = <T extends { uuid: string }>(
   actionType: ReorderActionType,
   itemToInsert: T,
   targetUUID: string
-) => {
+): T[] => {
   const newItems = [...items];
   const targetIndex = newItems.findIndex((item) => item.uuid === targetUUID);
 

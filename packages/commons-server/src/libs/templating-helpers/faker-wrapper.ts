@@ -17,7 +17,7 @@ export const FakerWrapper = {
     if (typeof fakerName !== 'string') {
       throw new Error(
         `Faker method name must be a string (valid: "location.zipCode", "date.past", etc) line ${
-          hbsOptions.loc && hbsOptions.loc.start && hbsOptions.loc.start.line
+          hbsOptions.loc?.start?.line
         }`
       );
     }
@@ -26,12 +26,10 @@ export const FakerWrapper = {
     let errorMessage = `${fakerName} is not a valid Faker method`;
     // check faker helper name pattern
     if (
-      !fakerName ||
-      !fakerName.match(/^[a-z]+\.[a-z0-9]+$/i) ||
+      !/^[a-z]+\.[a-z0-9]+$/i.exec(fakerName) ||
       !fakerPrimaryMethod ||
       !fakerSecondaryMethod ||
-      !faker[fakerPrimaryMethod] ||
-      !faker[fakerPrimaryMethod][fakerSecondaryMethod]
+      !faker[fakerPrimaryMethod]?.[fakerSecondaryMethod]
     ) {
       if (!fakerName) {
         errorMessage = 'Faker method name is missing';
@@ -39,10 +37,7 @@ export const FakerWrapper = {
 
       throw new Error(
         `${errorMessage} (valid: "location.zipCode", "date.past", etc) line ${
-          hbsOptions.loc &&
-          hbsOptions.loc &&
-          hbsOptions.loc.start &&
-          hbsOptions.loc.start.line
+          hbsOptions.loc?.start?.line
         }`
       );
     }

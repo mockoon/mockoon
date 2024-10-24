@@ -46,7 +46,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   @Input()
   public activeRoute$: Observable<Route>;
   @Output()
-  public ruleAdded: EventEmitter<any> = new EventEmitter();
+  public ruleAdded = new EventEmitter<void>();
   public routeResponse$: Observable<RouteResponse>;
   public form: UntypedFormGroup;
   public readonly rulesDisablingResponseModes = RulesDisablingResponseModes;

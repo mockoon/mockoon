@@ -1,8 +1,8 @@
 // convert base64 to a string
-import { FromBase64 } from '../../utils';
 import { HelperOptions, SafeString } from 'handlebars';
+import { FromBase64 } from '../../utils';
 
-const base64Decode = function (...args: any[]) {
+const base64Decode = function (...args: any[]): any {
   const hbsOptions: HelperOptions & hbs.AST.Node = args[args.length - 1];
 
   let content: string;

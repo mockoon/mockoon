@@ -2,12 +2,12 @@
   "name": "@mockoon/mockoon",
   "private": true,
   "version": "1.0.0",
-  "description": "Mockoon is the easiest and quickest way to run mock APIs locally. No remote deployment, no account required, open source.",
   "author": {
-    "name": "Guillaume Monnet",
-    "email": "guillaume@1kb.software",
-    "url": "https://1kb.software/"
+    "name": "Mockoon (1kB SARL-S)",
+    "email": "team@mockoon.com",
+    "url": "https://mockoon.com/"
   },
+  "description": "Mockoon is the easiest and quickest way to run mock APIs locally. No remote deployment, no account required, open source.",
   "license": "MIT",
   "repository": "https://github.com/mockoon/mockoon",
   "homepage": "https://mockoon.com",
@@ -63,11 +63,20 @@
     "documentation:desktop": "lerna run --stream --scope @mockoon/desktop documentation"
   },
   "devDependencies": {
-    "concurrently": "8.2.2",
+    "@eslint/js": "9.13.0",
+    "@stylistic/eslint-plugin-js": "2.9.0",
+    "@stylistic/eslint-plugin-ts": "2.9.0",
+    "@types/eslint__js": "8.42.3",
+    "concurrently": "9.0.1",
     "dotenv": "16.4.5",
+    "eslint": "9.13.0",
     "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-prettier": "5.2.1",
+    "glob": "11.0.0",
     "lerna": "6.6.2",
     "prettier": "3.3.3",
-    "prettier-plugin-organize-imports": "4.0.0"
+    "prettier-plugin-organize-imports": "4.1.0",
+    "tsx": "4.19.1",
+    "typescript-eslint": "8.11.0"
   }
 }
