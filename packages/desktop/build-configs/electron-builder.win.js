@@ -8,7 +8,13 @@ const config = Object.assign({}, commonConfig, {
   win: {
     target: [{ target: 'nsis' }, { target: 'portable' }],
     publisherName: '1kB SARL-S',
-    rfc3161TimeStampServer: 'http://timestamp.sectigo.com/?td=sha256'
+    rfc3161TimeStampServer: 'http://timestamp.acs.microsoft.com',
+    azureSignOptions: {
+      endpoint: 'https://eus.codesigning.azure.net',
+      // respect casing
+      certificateProfileName: 'Mockoon',
+      codeSigningAccountName: 'mockoon'
+    }
   },
   nsis: {
     artifactName: 'mockoon.setup.${version}.${ext}'
