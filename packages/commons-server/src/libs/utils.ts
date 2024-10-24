@@ -85,7 +85,7 @@ const TransformHeaders = (
  * @param a
  * @param b
  */
-const AscSort = (a, b) => {
+const AscSort = (a: { key: string }, b: { key: string }) => {
   if (a.key < b.key) {
     return -1;
   } else {
@@ -429,6 +429,17 @@ export const preparePath = (endpointPrefix: string, endpoint: string) =>
   dedupSlashes(`/${endpointPrefix}/${endpoint.replace(/ /g, '%20')}`);
 
 /**
+ * Escape special characters in a string to be used in a regex
+ * Taken from Lodash escapeRegExp
+ *
+ * @param text
+ * @returns
+ */
+export const escapeRegExp = (text: string) => {
+  return text.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&');
+};
+
+/**
  * Perform a full text search on an object. The object can be any valid JSON type
  *
  * @param object
@@ -442,7 +453,7 @@ export const fullTextSearch = (object: unknown, query: string): boolean => {
     );
   }
 
-  return new RegExp(query, 'i').test(String(object));
+  return new RegExp(escapeRegExp(query), 'i').test(String(object));
 };
 
 /**
@@ -451,11 +462,16 @@ export const fullTextSearch = (object: unknown, query: string): boolean => {
  * If filter expressions are found, each one is checked against a regular expression to ensure it is safe.
  * The function returns a boolean indicating whether the path is valid.
  *
+ * If path is too long, it is considered unsafe due to the time complexity of the hasFilter check.
+ *
  * @param {string} path - The JSONPath string to be validated.
  * @returns {boolean} - whether JSONPath string is safe or not
  */
+export const isSafeJSONPath = (path: string): boolean => {
+  if (path.length > 1000) {
+    return false;
+  }
 
-export const isSafeJSONPath = (path: string) => {
   const hasFilter = (/\((.*)\)/.exec(path) ?? [])[1];
   if (!hasFilter) {
     return true;
