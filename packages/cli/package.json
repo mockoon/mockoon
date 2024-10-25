@@ -1,7 +1,7 @@
 {
   "name": "@mockoon/cli",
   "description": "Mockoon's CLI. Deploy your mock APIs anywhere.",
-  "version": "8.4.0",
+  "version": "9.0.0",
   "author": {
     "name": "Mockoon (1kB SARL-S)",
     "email": "team@mockoon.com",
@@ -46,8 +46,8 @@
   "funding": "https://mockoon.com/sponsor-us/",
   "dependencies": {
     "@inquirer/confirm": "5.0.0",
-    "@mockoon/commons": "8.4.0",
-    "@mockoon/commons-server": "8.4.0",
+    "@mockoon/commons": "9.0.0",
+    "@mockoon/commons-server": "9.0.0",
     "@oclif/core": "4.0.30",
     "@oclif/plugin-help": "6.2.16",
     "mkdirp": "3.0.1",
