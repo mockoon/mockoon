@@ -1772,8 +1772,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         this.environment.endpointPrefix.length > 0
       ) 
 
-
-const proxyConfig = {
   ssl: { ...this.tlsOptions, agent: false },
   onProxyReq: (proxyReq, request, response) => {
     this.refreshEnvironment();
@@ -1785,7 +1783,7 @@ const proxyConfig = {
       request
     );
   }
-};
+
 
         
 
