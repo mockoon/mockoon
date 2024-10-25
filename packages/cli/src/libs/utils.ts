@@ -9,7 +9,7 @@ export const transformEnvironmentName = (environmentName: string): string =>
   environmentName
     .trim()
     .toLowerCase()
-    .replace(/[ \/\\]/g, '-') || 'mock';
+    .replace(/[ /\\]/g, '-') || 'mock';
 
 /**
  * Get the path directory, except if it's a URL.

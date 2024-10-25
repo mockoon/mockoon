@@ -74,8 +74,8 @@ export const fromExpressRequest = (req: Request): ServerRequest =>
   ({
     body: req.body,
     cookies: req.cookies,
-    header: (name: string) => req.header && req.header(name),
-    get: (headerName: string) => req.header && req.header(headerName),
+    header: (name: string) => req.header?.(name),
+    get: (headerName: string) => req.header?.(headerName),
     hostname: req.hostname,
     ip: req.ip,
     method: req.method,
@@ -117,12 +117,10 @@ export const fromWsRequest = (
   return {
     body: structuredMessage || req.body,
     cookies: parseCookies(req),
-    header: (name: string) => req.headers && req.headers[name],
-    get: (headerName: string) => req.headers && req.headers[headerName],
-    hostname: req.headers && req.headers['host'],
-    ip:
-      (req.headers && req.headers['x-forwarded-for']) ||
-      req.socket?.remoteAddress,
+    header: (name: string) => req.headers?.[name],
+    get: (headerName: string) => req.headers?.[headerName],
+    hostname: req.headers?.['host'],
+    ip: req.headers?.['x-forwarded-for'] || req.socket?.remoteAddress,
     method: req.method,
     originalRequest: req,
     params: CloneObject(pathParams),

@@ -9,6 +9,8 @@ import {
   RouteResponse,
   stringIncludesArrayItems
 } from '@mockoon/commons';
+import Ajv from 'ajv';
+import { get as objectGet } from 'object-path';
 import { ParsedQs } from 'qs';
 import { ServerRequest, fromServerRequest } from './requests';
 import { TemplateParser } from './template-parser';
@@ -17,8 +19,6 @@ import {
   getValueFromPath,
   parseRequestMessage
 } from './utils';
-import { get as objectGet } from 'object-path';
-import Ajv from 'ajv';
 
 /**
  * Interpretor for the route response rules.
@@ -62,7 +62,7 @@ export class ResponseRulesInterpreter {
   ): RouteResponse | null {
     // if no rules were fulfilled find the default one, or first one if no default
     const defaultResponse =
-      this.routeResponses.find((routeResponse) => routeResponse.default) ||
+      this.routeResponses.find((routeResponse) => routeResponse.default) ??
       this.routeResponses[0];
 
     if (this.responseMode === ResponseMode.RANDOM) {
@@ -222,7 +222,7 @@ export class ResponseRulesInterpreter {
         const valid = ajv.compile(schema)(value);
 
         return valid;
-      } catch (err) {
+      } catch (_error) {
         return false;
       }
     }
@@ -308,7 +308,7 @@ export class ResponseRulesInterpreter {
           : this.request,
         envVarsPrefix: this.envVarsPrefix
       });
-    } catch (error) {
+    } catch (_error) {
       return value;
     }
 

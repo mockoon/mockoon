@@ -3,14 +3,13 @@
   "description": "Mockoon's cloud sync library. Used in Mockoon desktop application and backend.",
   "version": "8.4.0",
   "author": {
-    "name": "Guillaume Monnet",
-    "email": "guillaume@1kb.software",
-    "url": "https://1kb.software/"
+    "name": "Mockoon (1kB SARL-S)",
+    "email": "team@mockoon.com",
+    "url": "https://mockoon.com/"
   },
   "license": "MIT",
   "scripts": {
-    "lint": "eslint -c .eslintrc.js --ext .js,.ts .",
-    "test": "ts-mocha -p ./tsconfig-build-cjs.json --timeout 10000 --forbid-only test/**/*.spec.ts",
+    "lint": "eslint",
     "build": "tsc -p tsconfig-build.json && tsc -p tsconfig-build-cjs.json",
     "build:watch": "concurrently \"tsc -p tsconfig-build.json --watch --preserveWatchOutput\" \"tsc -p tsconfig-build-cjs.json --watch --preserveWatchOutput\""
   },
@@ -29,20 +28,11 @@
   },
   "funding": "https://mockoon.com/sponsor-us/",
   "dependencies": {
-    "@mockoon/commons": "8.4.0"
+    "@mockoon/commons": "8.4.0",
+    "tslib": "2.8.0"
   },
   "devDependencies": {
-    "@types/chai": "4.3.16",
-    "@types/mocha": "10.0.7",
-    "@types/node": "22.0.0",
-    "@typescript-eslint/eslint-plugin": "7.18.0",
-    "@typescript-eslint/parser": "7.18.0",
-    "chai": "5.1.1",
-    "concurrently": "8.2.2",
-    "eslint": "8.57.0",
-    "eslint-plugin-jsdoc": "48.10.2",
-    "mocha": "10.7.0",
-    "ts-mocha": "10.0.0",
-    "typescript": "5.5.4"
+    "@types/node": "22.7.9",
+    "typescript": "5.6.3"
   }
 }

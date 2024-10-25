@@ -1,4 +1,3 @@
-import { ChainablePromiseArray, ChainablePromiseElement } from 'webdriverio';
 import { ToastTypes } from '../../src/renderer/app/models/toasts.model';
 import { SharedConfig } from '../../src/shared/shared-config';
 
@@ -50,7 +49,7 @@ export enum DropdownMenuLogsActions {
 
 class Utils {
   public async clearElementValue(
-    element: ChainablePromiseElement<WebdriverIO.Element>
+    element: ReturnType<WebdriverIO.Browser['$']>
   ): Promise<void> {
     // clearing by entering text and removing it as some validation directive does not react to 'change' event
     await element.click();
@@ -59,7 +58,7 @@ class Utils {
   }
 
   public async setElementValue(
-    element: ChainablePromiseElement<WebdriverIO.Element>,
+    element: ReturnType<WebdriverIO.Browser['$']>,
     value: string
   ): Promise<void> {
     // ensure we unfocus previously selected fields (on Linux, using setValue, previous fields with typeaheads may still show the menu and not be immediately unfocused)
@@ -68,14 +67,14 @@ class Utils {
   }
 
   public async assertElementValue(
-    element: ChainablePromiseElement<WebdriverIO.Element>,
+    element: ReturnType<WebdriverIO.Browser['$']>,
     value: string
   ): Promise<void> {
     expect(await element.getValue()).toEqual(value);
   }
 
   public async assertDisabled(
-    element: ChainablePromiseElement<WebdriverIO.Element>,
+    element: ReturnType<WebdriverIO.Browser['$']>,
     reverse = false
   ): Promise<void> {
     const disabledAttr = await element.getAttribute('disabled');
@@ -84,7 +83,7 @@ class Utils {
   }
 
   public async assertHasClass(
-    element: ChainablePromiseElement<WebdriverIO.Element>,
+    element: ReturnType<WebdriverIO.Browser['$']>,
     className: string,
     reverse = false
   ): Promise<void> {
@@ -117,7 +116,7 @@ class Utils {
   }
 
   public async assertHasAttribute(
-    element: ChainablePromiseElement<WebdriverIO.Element>,
+    element: ReturnType<WebdriverIO.Browser['$']>,
     attributeName: string,
     content: string,
     reverse = false
@@ -132,7 +131,7 @@ class Utils {
   }
 
   public async assertElementText(
-    element: ChainablePromiseElement<WebdriverIO.Element>,
+    element: ReturnType<WebdriverIO.Browser['$']>,
     text: string,
     multiline = false
   ): Promise<void> {
@@ -142,21 +141,21 @@ class Utils {
   }
 
   public async assertElementTextContains(
-    element: ChainablePromiseElement<WebdriverIO.Element>,
+    element: ReturnType<WebdriverIO.Browser['$']>,
     text: string
   ): Promise<void> {
     expect(await element.getText()).toContain(text);
   }
 
   public async assertElementTextContain(
-    element: ChainablePromiseElement<WebdriverIO.Element>,
+    element: ReturnType<WebdriverIO.Browser['$']>,
     text: string
   ): Promise<void> {
     expect(await element.getText()).toContain(text);
   }
 
   public async countElements(
-    elements: ChainablePromiseArray<WebdriverIO.ElementArray>,
+    elements: ReturnType<WebdriverIO.Browser['$$']>,
     expected: number
   ) {
     expect((await elements).length).toEqual(expected);

@@ -1,15 +1,13 @@
-import { Options } from '@wdio/types';
 import { promises as fs } from 'fs';
-import { Settings } from '../src/shared/models/settings.model';
 import { config as commonConfig } from './wdio-common.conf';
 import { config as winConfig } from './wdio-win.conf';
 
-const config: Partial<Options.Testrunner> = {
+const config: WebdriverIO.Config = {
   ...winConfig,
   specs: ['./tools/documentation.spec.ts'],
   beforeSession: [
     commonConfig.beforeSession as any,
-    async (cap, spec, browser) => {
+    async () => {
       // wait a bit
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -25,9 +23,6 @@ const config: Partial<Options.Testrunner> = {
           isFullScreen: false,
           displayBounds: { x: 0, y: 0, width: 2560, height: 1440 }
         })
-      );
-      const appSettings: Settings = JSON.parse(
-        await fs.readFile('./tmp/storage/settings.json', 'utf-8')
       );
 
       await fs.writeFile(

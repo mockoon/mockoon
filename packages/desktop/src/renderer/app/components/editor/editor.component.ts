@@ -162,13 +162,17 @@ export class EditorComponent
     this._editor.destroy();
   }
 
-  public onChange = (_: any) => {};
+  public onChange = (_: any) => {
+    // required by ControlValueAccessor
+  };
 
   public registerOnChange(fn: any) {
     this.onChange = fn;
   }
 
-  public onTouched = () => {};
+  public onTouched = () => {
+    // required by ControlValueAccessor
+  };
 
   public registerOnTouched(fn: any) {
     this.onTouched = fn;

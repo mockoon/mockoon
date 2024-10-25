@@ -23,6 +23,8 @@ export type WebSocketRequest = {
  * @param environment
  * @param processedDatabuckets
  * @param request
+ *
+ * @throws {Error}
  */
 export const TemplateParser = function ({
   shouldOmitDataHelper,
@@ -71,14 +73,10 @@ export const TemplateParser = function ({
     };
   }
 
-  try {
-    return hbsCompile(content)(
-      {},
-      {
-        helpers
-      }
-    );
-  } catch (error) {
-    throw error;
-  }
+  return hbsCompile(content)(
+    {},
+    {
+      helpers
+    }
+  );
 };

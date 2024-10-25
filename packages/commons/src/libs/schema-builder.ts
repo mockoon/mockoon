@@ -85,7 +85,7 @@ export const CloneDataBucket = (dataBucket: DataBucket): DataBucket => ({
  * @param callback callback to clone
  * @returns cloned callback.
  */
-export const CloneCallback = (callback: Callback) => ({
+export const CloneCallback = (callback: Callback): Callback => ({
   ...CloneObject(callback),
   uuid: generateUUID(),
   id: GenerateUniqueID(),
@@ -223,7 +223,7 @@ export const BuildEnvironment = (
 
   return {
     ...EnvironmentDefault,
-    port: params.port !== undefined ? params.port : EnvironmentDefault.port,
+    port: params.port ?? EnvironmentDefault.port,
     routes: params.hasDefaultRoute ? [newRoute] : [],
     headers: params.hasDefaultHeader
       ? [BuildHeader('Content-Type', 'application/json'), ...CORSHeaders]

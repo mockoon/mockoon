@@ -4,10 +4,9 @@
     "target": "ES2019",
     "module": "commonjs",
     "outDir": "./dist",
-    "noImplicitAny": false,
-    "strictPropertyInitialization": false,
     "skipLibCheck": true,
-    "typeRoots": ["node_modules/@types"]
+    "typeRoots": ["node_modules/@types"],
+    "useUnknownInCatchVariables": true
   },
   "include": ["./src", "./test"]
 }

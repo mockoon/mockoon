@@ -36,7 +36,7 @@ export class RouteCallbacksComponent implements OnInit, OnDestroy {
   @Input()
   public activeRoute$: Observable<Route>;
   @Output()
-  public callbackAdded: EventEmitter<any> = new EventEmitter();
+  public callbackAdded = new EventEmitter<void>();
   public activeEnvironment$: Observable<Environment>;
   public routeResponse$: Observable<RouteResponse>;
   public form: FormGroup;

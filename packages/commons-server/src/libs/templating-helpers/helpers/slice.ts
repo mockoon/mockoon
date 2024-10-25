@@ -1,5 +1,5 @@
 const slice = function (
-  arr: Array<unknown>,
+  arr: unknown[],
   sliceFrom: number,
   sliceTo?: number | unknown
 ) {

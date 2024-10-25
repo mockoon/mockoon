@@ -18,7 +18,7 @@ export class TourService {
     current: number;
     total: number;
   }>();
-  public currentHostElement$: Subject<HTMLElement> = new Subject();
+  public currentHostElement$ = new Subject<HTMLElement>();
   private currentStep = -1;
   private steps: TourStep[] = [
     {

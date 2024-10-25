@@ -21,7 +21,7 @@ const dateTimeShift = function (options: HelperOptions) {
         ? new Date(date)
         : date;
 
-  if (typeof options === 'object' && options !== null && options.hash) {
+  if (typeof options === 'object' && options?.hash) {
     const days = numberFromSafeString(options.hash['days']);
     const months = numberFromSafeString(options.hash['months']);
     const years = numberFromSafeString(options.hash['years']);

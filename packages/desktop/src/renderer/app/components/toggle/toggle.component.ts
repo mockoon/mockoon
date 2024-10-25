@@ -9,8 +9,8 @@ import {
 } from '@angular/core';
 import {
   ControlValueAccessor,
-  UntypedFormControl,
-  NG_VALUE_ACCESSOR
+  NG_VALUE_ACCESSOR,
+  UntypedFormControl
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ToggleItem, ToggleItems } from 'src/renderer/app/models/common.model';

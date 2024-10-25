@@ -49,7 +49,7 @@ export const createAdminEndpoint = (
     purgeLogs: () => void;
     envVarsPrefix: string;
   }
-) => {
+): void => {
   const adminApiPrefix = '/mockoon-admin';
 
   app.get(adminApiPrefix, (req, res) => {
@@ -119,7 +119,7 @@ export const createAdminEndpoint = (
       } else {
         throw new Error('Key or value missing from request');
       }
-    } catch (err) {
+    } catch (_error) {
       res.status(400).send({ message: 'Invalid request' });
     }
   };
@@ -166,7 +166,7 @@ export const createAdminEndpoint = (
       } else {
         throw new Error('Key or value missing from request');
       }
-    } catch (err) {
+    } catch (_error) {
       res.status(400).send({ message: 'Invalid request' });
     }
   };
@@ -183,7 +183,7 @@ export const createAdminEndpoint = (
       res.send({
         message: 'Global variables have been purged'
       });
-    } catch (err) {
+    } catch (_error) {
       res.status(500).send({ message: 'Failed to purge global variables' });
     }
   };
@@ -226,7 +226,7 @@ export const createAdminEndpoint = (
       res.send({
         message: 'Data buckets have been reset to their initial state'
       });
-    } catch (err) {
+    } catch (_error) {
       res.status(500).send({ message: 'Failed to reset the data buckets' });
     }
   };
@@ -261,7 +261,7 @@ export const createAdminEndpoint = (
       res.send({
         message: 'Logs have been purged'
       });
-    } catch (err) {
+    } catch (_error) {
       res.status(500).send({ message: 'Failed to purge logs' });
     }
   };

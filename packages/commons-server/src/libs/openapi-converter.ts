@@ -28,43 +28,44 @@ type SpecificationVersions = 'SWAGGER' | 'OPENAPI_V3';
  *
  */
 export class OpenAPIConverter {
-  constructor() {}
-
   /**
    * Import Swagger or OpenAPI format
    *
    * @param filePath
+   * @throws {Error}
    */
-  public async convertFromOpenAPI(filePath: string, port?: number) {
-    try {
-      // .bind() due to https://github.com/APIDevTools/json-schema-ref-parser/issues/139#issuecomment-940500698
-      const parsedAPI: OpenAPI.Document = await openAPI.dereference.bind(
-        openAPI
-      )(filePath, {
+  public async convertFromOpenAPI(
+    filePath: string,
+    port?: number
+  ): Promise<Environment | null> {
+    // .bind() due to https://github.com/APIDevTools/json-schema-ref-parser/issues/139#issuecomment-940500698
+    const parsedAPI: OpenAPI.Document = await openAPI.dereference.bind(openAPI)(
+      filePath,
+      {
         dereference: { circular: 'ignore' }
-      });
-
-      if (this.isSwagger(parsedAPI)) {
-        return this.convertFromSwagger(parsedAPI, port);
-      } else if (this.isOpenAPIV3(parsedAPI)) {
-        return this.convertFromOpenAPIV3(parsedAPI, port);
       }
+    );
 
-      return null;
-    } catch (error) {
-      throw error;
+    if (this.isSwagger(parsedAPI)) {
+      return this.convertFromSwagger(parsedAPI, port);
+    } else if (this.isOpenAPIV3(parsedAPI)) {
+      return this.convertFromOpenAPIV3(parsedAPI, port);
     }
+
+    return null;
   }
 
   /**
    * Convert environment to OpenAPI JSON object
    *
+   *
    * @param environment
+   * @throws {Error}
    */
   public async convertToOpenAPIV3(
     environment: Environment,
-    prettify: boolean = false
-  ) {
+    prettify = false
+  ): Promise<string> {
     const routes = routesFromFolder(
       environment.rootChildren,
       environment.folders,
@@ -116,7 +117,7 @@ export class OpenAPIConverter {
                 try {
                   JSON.parse(routeResponse.body);
                   responseBody = routeResponse.body;
-                } catch (error) {}
+                } catch (_error) {}
               }
 
               responses[routeResponse.statusCode.toString()] = {
@@ -127,18 +128,19 @@ export class OpenAPIConverter {
                 headers: [
                   ...environment.headers,
                   ...routeResponse.headers
-                ].reduce<{
-                  [header: string]: OpenAPIV3.HeaderObject;
-                }>((headers, header) => {
-                  if (header.key.toLowerCase() !== 'content-type') {
-                    headers[header.key] = {
-                      schema: { type: 'string' },
-                      example: header.value
-                    };
-                  }
+                ].reduce<Record<string, OpenAPIV3.HeaderObject>>(
+                  (headers, header) => {
+                    if (header.key.toLowerCase() !== 'content-type') {
+                      headers[header.key] = {
+                        schema: { type: 'string' },
+                        example: header.value
+                      };
+                    }
 
-                  return headers;
-                }, {})
+                    return headers;
+                  },
+                  {}
+                )
               } as any;
 
               return responses;
@@ -171,13 +173,9 @@ export class OpenAPIConverter {
       }, {})
     };
 
-    try {
-      await openAPI.validate(openAPIEnvironment);
+    await openAPI.validate(openAPIEnvironment);
 
-      return JSON.stringify(openAPIEnvironment, null, prettify ? 2 : 0);
-    } catch (error) {
-      throw error;
-    }
+    return JSON.stringify(openAPIEnvironment, null, prettify ? 2 : 0);
   }
 
   /**
@@ -244,7 +242,7 @@ export class OpenAPIConverter {
           newEnvironment.endpointPrefix = RemoveLeadingSlash(
             parsedUrl.pathname
           );
-        } catch (error) {
+        } catch (_error) {
           // fail silently
         }
       }
@@ -315,10 +313,10 @@ export class OpenAPIConverter {
 
               if (version === 'SWAGGER') {
                 contentTypeHeaders =
-                  parsedRoute.produces ||
-                  parsedRoute.consumes ||
-                  parsedAPI.produces ||
-                  parsedAPI.consumes ||
+                  parsedRoute.produces ??
+                  parsedRoute.consumes ??
+                  parsedAPI.produces ??
+                  parsedAPI.consumes ??
                   [];
               } else if (version === 'OPENAPI_V3' && routeResponse.content) {
                 contentTypeHeaders = Object.keys(routeResponse.content);
@@ -411,20 +409,14 @@ export class OpenAPIConverter {
     responseHeaders:
       | undefined
       | OpenAPIV2.HeadersObject
-      | {
-          [key: string]: OpenAPIV3.ReferenceObject | OpenAPIV3.HeaderObject;
-        }
+      | Record<string, OpenAPIV3.ReferenceObject | OpenAPIV3.HeaderObject>
   ): Header[] {
     const routeContentTypeHeader = BuildHeader(
       'Content-Type',
       'application/json'
     );
 
-    if (
-      contentTypes &&
-      contentTypes.length &&
-      !contentTypes.includes('application/json')
-    ) {
+    if (contentTypes?.length && !contentTypes.includes('application/json')) {
       routeContentTypeHeader.value = contentTypes[0];
     }
 
@@ -466,7 +458,7 @@ export class OpenAPIConverter {
    * @private
    */
   private buildResponse(
-    body: Object | undefined,
+    body: object | undefined,
     label: string,
     statusCode: number,
     headers: Header[]
@@ -600,7 +592,7 @@ export class OpenAPIConverter {
       // check if we have an array of schemas, and take first item
       for (const propertyName of ['allOf', 'oneOf', 'anyOf']) {
         if (
-          schema.hasOwnProperty(propertyName) &&
+          Object.prototype.hasOwnProperty.call(schema, propertyName) &&
           schema[propertyName].length > 0
         ) {
           return this.generateSchema(schema[propertyName][0]);
@@ -635,7 +627,7 @@ export class OpenAPIConverter {
    */
   private convertJSONSchemaPrimitives(jsonSchema: string) {
     return jsonSchema.replace(
-      /\"({{faker '(?:number\.int|number\.float|datatype\.boolean)'(?: max=99999)?}})\"/g,
+      /"({{faker '(?:number\.int|number\.float|datatype\.boolean)'(?: max=99999)?}})"/g,
       '$1'
     );
   }
@@ -650,7 +642,7 @@ export class OpenAPIConverter {
     examples: OpenAPIV2.ExampleObject | OpenAPIV3.ExampleObject,
     version: string
   ) {
-    const responses: Pick<RouteResponse, 'body' | 'label'>[] = [];
+    const responses: { label: string; body: any }[] = [];
 
     Object.keys(examples).forEach((exampleName) => {
       const example = examples[exampleName];

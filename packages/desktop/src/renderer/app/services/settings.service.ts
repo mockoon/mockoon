@@ -98,7 +98,7 @@ export class SettingsService {
     return this.store.select('settings').pipe(
       filter((settings) => !!settings),
       debounceTime(500),
-      distinctUntilChanged(IsEqual),
+      distinctUntilChanged(IsEqual<Settings>),
       tap(() => {
         this.storageService.initiateSaving();
       }),

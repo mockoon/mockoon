@@ -79,15 +79,12 @@ export const getBodyEditorMode = (state: StoreType) => {
   const currentEnvironment = state.environments.find(
     (environment) => environment.uuid === state.activeEnvironmentUUID
   );
-  const currentRoute =
-    currentEnvironment &&
-    currentEnvironment.routes.find(
-      (route) => route.uuid === state.activeRouteUUID
-    );
+  const currentRoute = currentEnvironment?.routes.find(
+    (route) => route.uuid === state.activeRouteUUID
+  );
   const currentRouteResponse =
     currentEnvironment &&
-    currentRoute &&
-    currentRoute.responses.find(
+    currentRoute?.responses.find(
       (response) => response.uuid === state.activeRouteResponseUUID
     );
 

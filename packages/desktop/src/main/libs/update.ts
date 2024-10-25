@@ -37,9 +37,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
       pathJoin(userDataPath, `mockoon.setup.${Config.appVersion}.exe`)
     );
     logInfo('[MAIN][UPDATE] Removed old update file');
-  } catch (error) {
-    /* empty */
-  }
+  } catch (_error) {}
 
   try {
     releaseResponse = await (
@@ -72,9 +70,7 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
         updateAvailableVersion = latestVersion;
 
         return;
-      } catch (error) {
-        /* empty */
-      }
+      } catch (_error) {}
 
       logInfo('[MAIN][UPDATE] Downloading binary file');
 

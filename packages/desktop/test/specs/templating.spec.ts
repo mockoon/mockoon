@@ -692,7 +692,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body: '::1'
+          body: '::ffff:127.0.0.1'
         }
       },
       {
@@ -1022,7 +1022,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body: 'Hayley.Reichel-Watsica30'
+          body: 'Hayley.Abbott14'
         }
       },
       {
@@ -1032,7 +1032,7 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         method: 'GET',
         testedResponse: {
           status: 200,
-          body: 'Hayley.Reichel-Watsica30'
+          body: 'Hayley.Abbott14'
         }
       }
     ]
@@ -1045,7 +1045,7 @@ const fakerSeedingTest: HttpCall = {
   headers: { 'Content-Type': 'text/plain' },
   testedResponse: {
     status: 200,
-    body: 'IR3 9OW'
+    body: 'AR45 1FU'
   }
 };
 

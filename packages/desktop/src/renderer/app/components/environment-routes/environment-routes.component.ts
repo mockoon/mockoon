@@ -309,10 +309,8 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       map(({ mimeType, filePath }) => ({
         mimeType,
         supportsTemplating:
-          MimeTypesWithTemplating.indexOf(mimeType) > -1 ||
-          FileExtensionsWithTemplating.indexOf(
-            `.${filePath.split('.').pop()}`
-          ) > -1
+          MimeTypesWithTemplating.includes(mimeType) ||
+          FileExtensionsWithTemplating.includes(`.${filePath.split('.').pop()}`)
       }))
     );
     this.databuckets$ = this.activeEnvironment$.pipe(
@@ -509,7 +507,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
               INDENT_SIZE
             )
           );
-      } catch (e) {
+      } catch (_error) {
         // ignore any errors with parsing / stringifying the JSON
       }
     }

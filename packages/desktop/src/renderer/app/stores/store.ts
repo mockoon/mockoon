@@ -89,8 +89,6 @@ export class Store {
     emit: boolean;
   }>(null);
 
-  constructor() {}
-
   /**
    * Select store element
    */

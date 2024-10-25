@@ -2,7 +2,7 @@ import { HelperOptions, SafeString } from 'handlebars';
 import { ToBase64 } from '../../utils';
 
 // converts the input to a base64 string
-const base64 = function (...args: any[]) {
+const base64 = function (...args: any[]): SafeString {
   const hbsOptions: HelperOptions & hbs.AST.Node = args[args.length - 1];
 
   let content: string;

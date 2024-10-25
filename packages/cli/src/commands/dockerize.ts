@@ -2,7 +2,7 @@ import { Command, Flags } from '@oclif/core';
 import { promises as fs } from 'fs';
 import { mkdirp } from 'mkdirp';
 import { render as mustacheRender } from 'mustache';
-import { parse as pathParse, ParsedPath, resolve as pathResolve } from 'path';
+import { ParsedPath, parse as pathParse, resolve as pathResolve } from 'path';
 import { Config } from '../config';
 import { CLIMessages } from '../constants/cli-messages.constants';
 import { commonFlags } from '../constants/command.constants';
@@ -103,8 +103,10 @@ export default class Dockerize extends Command {
         userFlags.port.map((port) => `-p ${port}:${port}`).join(' '),
         'mockoon-image'
       );
-    } catch (error: any) {
-      this.error(error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        this.error(error.message);
+      }
     }
   }
 }

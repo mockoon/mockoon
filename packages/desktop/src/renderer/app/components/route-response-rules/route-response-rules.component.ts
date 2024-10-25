@@ -46,7 +46,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   @Input()
   public activeRoute$: Observable<Route>;
   @Output()
-  public ruleAdded: EventEmitter<any> = new EventEmitter();
+  public ruleAdded = new EventEmitter<void>();
   public routeResponse$: Observable<RouteResponse>;
   public form: UntypedFormGroup;
   public readonly rulesDisablingResponseModes = RulesDisablingResponseModes;
@@ -73,7 +73,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     { value: 'null', label: 'null' },
     { value: 'empty_array', label: 'empty array' },
     { value: 'array_includes', label: 'array includes' },
-    { value: 'valid_json_schema', label: 'valid json schema' }
+    { value: 'valid_json_schema', label: 'valid JSON schema' }
   ];
   public modifierPlaceholders: Record<ResponseRuleTargets, string> = {
     body: 'JSONPath or object path (empty for full body)',
@@ -95,7 +95,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     null: '',
     empty_array: '',
     array_includes: 'Value',
-    valid_json_schema: 'Databucket ID'
+    valid_json_schema: 'Databucket ID or name'
   };
   public operatorDisablingForTargets = {
     request_number: [

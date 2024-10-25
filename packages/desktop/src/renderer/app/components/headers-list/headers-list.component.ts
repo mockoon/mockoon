@@ -113,7 +113,7 @@ export class HeadersListComponent implements OnInit, OnDestroy {
           term.length < 1
             ? []
             : list
-                .filter((v) => v.toLowerCase().indexOf(term.toLowerCase()) > -1)
+                .filter((v) => v.toLowerCase().includes(term.toLowerCase()))
                 .slice(0, 10)
         )
       );

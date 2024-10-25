@@ -600,7 +600,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       headers: { 'content-type': 'application/json' },
       testedResponse: {
         status: 201,
-        body: /\{"id":\"newid\","test":"hello2"\}/,
+        body: /\{"id":"newid","test":"hello2"\}/,
         headers: { 'content-type': 'application/json' }
       }
     },
@@ -1895,7 +1895,7 @@ const jsonArrayTestGroups: HttpCall[][] = [
       testedResponse: {
         status: 201,
         body: new RegExp(
-          /\{"sub"\:\{"id"\:"6"\,"myid"\:"[a-f0-9\-]{36}"\}\,"prop"\:"test6"\}/i
+          /\{"sub":\{"id":"6","myid":"[a-f0-9-]{36}"\},"prop":"test6"\}/i
         ),
         headers: { 'content-type': 'application/json' }
       }

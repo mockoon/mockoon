@@ -1,8 +1,7 @@
-import { Options } from '@wdio/types';
 import { join } from 'path';
 import { config as commonConfig } from './wdio-common.conf';
 
-const config: Options.Testrunner = {
+const config: WebdriverIO.Config = {
   ...commonConfig,
   capabilities: [
     {

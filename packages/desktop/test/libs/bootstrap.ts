@@ -19,7 +19,7 @@ class Bootstrap {
       await fs.rm(storagePath, { recursive: true, force: true });
 
       await mkdirp(storagePath);
-    } catch (err) {}
+    } catch (_error) {}
   }
 
   /**
@@ -40,7 +40,7 @@ class Bootstrap {
         './test/data/mock-settings/settings.json',
         './tmp/storage/settings.json'
       );
-    } catch (error) {}
+    } catch (_error) {}
   }
 }
 

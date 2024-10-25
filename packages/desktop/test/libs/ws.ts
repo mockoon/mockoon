@@ -22,8 +22,8 @@ export class WsConnection {
   private msgCallback: (err?: Error, msg?: string) => void;
   constructor(
     private port: number,
-    private path: string = '',
-    private protocol: string = 'ws'
+    private path = '',
+    private protocol = 'ws'
   ) {}
 
   public async open(openWithData?: string, headers?: any) {

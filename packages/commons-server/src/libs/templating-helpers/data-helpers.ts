@@ -21,8 +21,8 @@ const getDataBucket = function (
 
 export const DataHelpers = function (
   processedDatabuckets: ProcessedDatabucket[]
-) {
-  const dataHelpers: any = {
+): Record<string, () => any> {
+  return {
     data: function (...args: any[]) {
       const parameters = args.slice(0, -1);
 
@@ -168,6 +168,4 @@ export const DataHelpers = function (
       }
     }
   };
-
-  return dataHelpers;
 };

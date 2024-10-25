@@ -45,9 +45,9 @@ export type EnvironmentStatus = {
   needRestart: boolean;
 };
 
-export type EnvironmentsStatuses = { [key: string]: EnvironmentStatus };
+export type EnvironmentsStatuses = Record<string, EnvironmentStatus>;
 
-export type DuplicatedRoutesTypes = { [key: string]: Set<string> };
+export type DuplicatedRoutesTypes = Record<string, Set<string>>;
 
 export type UIState = {
   closing: boolean;

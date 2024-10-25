@@ -21,9 +21,7 @@ const jsonParse = function (...args: any[]) {
   } else {
     try {
       return JSON.parse(text);
-    } catch (e) {
-      return;
-    }
+    } catch (_error) {}
   }
 };
 

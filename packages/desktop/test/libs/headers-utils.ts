@@ -53,15 +53,15 @@ class HeadersUtils {
     location: HeaderLocations,
     values: { [key in string]: string | undefined }
   ) {
-    const keyInputs = await $$(
+    const keyInputs = $$(
       `app-headers-list#${location} .headers-list .header-item input:first-of-type`
     );
-    const valueInputs = await $$(
+    const valueInputs = $$(
       `app-headers-list#${location} .headers-list .header-item input:last-of-type`
     );
     const headers = {};
 
-    for (let index = 0; index < keyInputs.length; index++) {
+    for (let index = 0; index < (await keyInputs.length); index++) {
       const key = (await keyInputs[index].getValue()).toLowerCase();
       const value = (await valueInputs[index].getValue()).toLowerCase();
 
@@ -69,9 +69,11 @@ class HeadersUtils {
     }
 
     for (const key in values) {
-      expect(headers[key.toLowerCase()]).toEqual(
-        values[key] ? values[key].toLowerCase() : undefined
-      );
+      if (Object.prototype.hasOwnProperty.call(values, key)) {
+        expect(headers[key.toLowerCase()]).toEqual(
+          values[key] ? values[key].toLowerCase() : undefined
+        );
+      }
     }
   }
 
