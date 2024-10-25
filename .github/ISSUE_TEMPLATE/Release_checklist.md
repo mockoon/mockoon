@@ -15,6 +15,14 @@ about: Checklist for releases (maintainers use only)
 
 - [ ] Create a `libs-v{x.x.x}` tag to release all the NPM libraries
 
+**Sync server(s):**
+
+- [ ] Update libs and re-deploy after libs release (⚠️ Must be done prior to distribution if major release)
+
+**Deploy server(s):**
+
+- [ ] Update libs and re-deploy after libs release (⚠️ Must be done prior to distribution if major release)
+
 **Release desktop:**
 
 - [ ] Create a **pre-release** (!important) on GitHub with correct version (`v*.*.*`) and publish, for the desktop app
@@ -31,10 +39,6 @@ about: Checklist for releases (maintainers use only)
 - [ ] Update desktop latest version in `/releases/desktop/stable.json`
 - [ ] Merge release branch on main
 - [ ] Wait for deployment and purge cache on CF
-
-**Sync server:**
-
-- [ ] Re-deploy after libs release and API update
 
 **Website (update desktop version):**
 
