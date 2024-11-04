@@ -1877,10 +1877,11 @@ server.use(
     error: any,
     request: Request,
     response: Response,
-    _next: NextFunction,
-  ) => {
+    _next: NextFunction
+) => {
     this.sendError(response, error, 500);
-  };
+};
+
 
   /**
    * Set the provided headers on the target. Use different headers accessors
