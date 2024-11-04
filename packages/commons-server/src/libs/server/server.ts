@@ -1756,9 +1756,9 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       IsValidURL(this.environment.proxyHost)
     ) {
       this.emit('creating-proxy');
+this.emit('creating-proxy');
 
-      server.use(
-
+server.use(
   '*',
   createProxyMiddleware({
     cookieDomainRewrite: { '*': '' },
@@ -1770,23 +1770,21 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       if (
         this.environment.proxyRemovePrefix === true &&
         this.environment.endpointPrefix.length > 0
-      ) 
+      ) {
+        // Implement your logic for path rewriting here
+      }
+      return path; // Ensure to return the modified path or the original
+    },
+    ssl: { ...this.tlsOptions, agent: false },
+    onProxyReq: (proxyReq, request, response) => {
+      this.refreshEnvironment();
+      request.proxied = true;
+      this.setHeaders(this.environment.proxyReqHeaders, proxyReq, request);
 
-  ssl: { ...this.tlsOptions, agent: false },
-  onProxyReq: (proxyReq, request, response) => {
-    this.refreshEnvironment();
-    request.proxied = true;
-
-    this.setHeaders(
-      this.environment.proxyReqHeaders,
-      proxyReq,
-      request
-    );
-  }
-
-
-        
-
+      // Re-stream the body (intercepted by body parser method)
+      if (request.rawBody) {
+        proxyReq.write(request.rawBody);
+      }
     },
     onProxyRes: (proxyRes, req, res) => {
       // Modify 'Set-Cookie' headers to remove 'Secure' flag
@@ -1800,13 +1798,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   })
 );
 
-         
-            // re-stream the body (intercepted by body parser method)
-            if (request.rawBody) {
-              proxyReq.write(request.rawBody);
-            }
-          
-          onProxyRes: (proxyRes, request, response) => {
             this.refreshEnvironment();
 
         createProxyMiddleware({
