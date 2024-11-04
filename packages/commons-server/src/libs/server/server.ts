@@ -1853,35 +1853,14 @@ server.use(
                 request as Request
               );
             },
-            error: (error, request, response) => {
-              this.emit('error', ServerErrorCodes.PROXY_ERROR, error);
-
-              this.sendError(
-                response as Response,
-                `${format(
-                  ServerMessages.PROXY_ERROR,
-                  this.environment.proxyHost
-                )} ${request.url}: ${error}`,
-                504
-              );
-            }
-          }
-  /**
+   /**         
    * ### Middleware ###
    * Catch all error handler
    * http://expressjs.com/en/guide/error-handling.html#catching-errors
    *
    * @param server - server on which to log the response
    */
-  private errorHandler = (
-    error: any,
-    request: Request,
-    response: Response,
-    _next: NextFunction
-) => {
-    this.sendError(response, error, 500);
-};
-
+  
 
   /**
    * Set the provided headers on the target. Use different headers accessors
