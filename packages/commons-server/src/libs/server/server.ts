@@ -1771,9 +1771,9 @@ server.use(
         this.environment.proxyRemovePrefix === true &&
         this.environment.endpointPrefix.length > 0
       ) {
-        // Implement your logic for path rewriting here
+        
       }
-      return path; // Ensure to return the modified path or the original
+      return path; 
     },
     ssl: { ...this.tlsOptions, agent: false },
     onProxyReq: (proxyReq, request, response) => {
@@ -1877,7 +1877,7 @@ server.use(
     error: any,
     request: Request,
     response: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ) => {
     this.sendError(response, error, 500);
   };
