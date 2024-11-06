@@ -1,6 +1,10 @@
 import { Frequency, Plans } from './plans.model';
 import { TeamRoles } from './team.model';
 
+export type UserProfile = {
+  displayName?: string;
+};
+
 export type User = {
   uid: string;
   email: string;
@@ -26,4 +30,4 @@ export type User = {
     pastDue?: boolean;
     subscriptionId: string;
   };
-};
+} & UserProfile;
