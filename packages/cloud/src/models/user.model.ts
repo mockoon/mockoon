@@ -2,7 +2,7 @@ import { Frequency, Plans } from './plans.model';
 import { TeamRoles } from './team.model';
 
 export type UserProfile = {
-  displayName: string;
+  displayName?: string;
 };
 
 export type User = {
