@@ -18,19 +18,43 @@
 
   <div class="modal-body">
     <div [formGroup]="optionsForm">
-      <div class="d-flex align-items-center">
-        <div class="me-2">Instance visibility:</div>
-        <app-toggle
-          prefix="instance-visibility"
-          formControlName="visibility"
-          [items]="visibilityToggle"
-          [uncheckable]="false"
-        ></app-toggle>
-        <div class="ms-2">
-          <app-svg
-            icon="info"
-            ngbTooltip="Public instances are accessible by anyone with the URL. Private instances are only accessible by you and your team members using a token."
-          ></app-svg>
+      <div class="mb-3">
+        <div class="input-group align-items-center">
+          <label class="col-form-label pe-2">Instance visibility</label>
+          <app-toggle
+            prefix="instance-visibility"
+            formControlName="visibility"
+            [items]="visibilityToggle"
+            [uncheckable]="false"
+          ></app-toggle>
+          <div class="input-group-text">
+            <app-svg
+              icon="info"
+              ngbTooltip="Public instances are accessible by anyone with the URL. Private instances are only accessible by you and your team members using a token."
+            ></app-svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="">
+        <div class="input-group align-items-center">
+          <div class="form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="enableAdminApi"
+              formControlName="enableAdminApi"
+            />
+            <label class="form-check-label" for="enableAdminApi">
+              Enable admin API
+            </label>
+          </div>
+          <div class="input-group-text">
+            <app-svg
+              icon="info"
+              ngbTooltip="Enable the admin API expose on /mockoon-admin endpoint. This API allows you to manage your instances remotely."
+            ></app-svg>
+          </div>
         </div>
       </div>
     </div>

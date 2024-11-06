@@ -15,4 +15,5 @@ export type DeployInstance = {
   status: DeployInstanceStatus;
   name: string;
   apiKey: string | null;
+  enableAdminApi: boolean;
 };
