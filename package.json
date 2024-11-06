@@ -19,7 +19,8 @@
     "singleQuote": true,
     "tabWidth": 2,
     "printWidth": 80,
-    "trailingComma": "none"
+    "trailingComma": "none",
+    "endOfLine": "auto"
   },
   "scripts": {
     "bootstrap": "npm ci && lerna bootstrap",
