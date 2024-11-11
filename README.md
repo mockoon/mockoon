@@ -7,6 +7,7 @@
   <a href="https://mockoon.com/newsletter/"><img src="https://img.shields.io/badge/Newsletter-Subscribe-green.svg?style=flat-square"/></a>
   <a href="https://twitter.com/GetMockoon"><img src="https://img.shields.io/badge/Twitter_@GetMockoon-follow-blue.svg?style=flat-square&colorB=1da1f2"/></a>
   <a href="https://mockoon.com/discord/"><img src="https://img.shields.io/badge/Discord-go-blue.svg?style=flat-square&colorA=6c84d9&colorB=1da1f2"/></a>  
+  <a href="https://gurubase.io/g/mockoon"><img src="https://img.shields.io/badge/Gurubase-Ask%20Mockoon%20Guru-006BFF?style=flat-square"/></a>
   <br>
   <br>
   <h1>Mockoon: awesome API mocking</h1>
