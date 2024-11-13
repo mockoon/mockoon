@@ -226,62 +226,86 @@ describe('Utils', () => {
       strictEqual(fullTextSearch(object, query), false);
     });
   });
+
   describe('isSafeJSONPath', () => {
     it('should return true if path has no filter expressions', () => {
       const path = '$.store.book[*].author';
       strictEqual(isSafeJSONPath(path), true);
     });
+
     it('should return true if path is a simple filter expression', () => {
       const path = '$..book[?(@.isbn)]';
       strictEqual(isSafeJSONPath(path), true);
     });
+
     it('should return true if path has greater than filter expression', () => {
       const path = '$.store.book[?(@.price>10)]"';
       strictEqual(isSafeJSONPath(path), true);
     });
+
     it('should return true if path has equating filter expressions', () => {
       const path = '$.[?(@[\'Account Name\'] === "Firefly")]';
       strictEqual(isSafeJSONPath(path), true);
     });
+
     it('should return true if path has selects multiple fields', () => {
       const path = '$..book[0][category,author]';
       strictEqual(isSafeJSONPath(path), true);
     });
+
     it('should return true if path has length operand in filter expression', () => {
       const path = '$.store.book[(@.length-1)].title';
       strictEqual(isSafeJSONPath(path), true);
     });
+
     it('should return true if path has match function filter expression', () => {
       const path = '$..book.*[?(@property.match(/bn$/i))]^';
       strictEqual(isSafeJSONPath(path), true);
     });
+
     it('should return true if path has not equating filter expressions', () => {
       const path = '$..book[?(@property !== 0)]';
       strictEqual(isSafeJSONPath(path), true);
     });
+
     it('should return true if path has multiple filter expressions', () => {
       const path = "$..*[?(@property === 'price' && @ !== 8.95)]";
       strictEqual(isSafeJSONPath(path), true);
     });
+
+    it('should return true if path has multiple filter expressions enclosed in parentheses', () => {
+      const path = "$..*[?((@property === 'price') && (@ !== 8.95))]";
+      strictEqual(isSafeJSONPath(path), true);
+    });
+
     it('should return true if path has multiple complex filter expressions', () => {
       const path =
         '$..book[?(@parent.bicycle && @parent.bicycle.color === "red")].category';
       strictEqual(isSafeJSONPath(path), true);
     });
+
     it('should return true if path has self referencing filter expressions', () => {
       const path = "$.store.book[?(@path !== \"$['store']['book'][0]\")]";
       strictEqual(isSafeJSONPath(path), true);
     });
+
     it('should return true if path has self referencing deep nested filter expressions', () => {
       const path =
         '$.Account.Order.[?(@.ProductID===@root.Account.Order[0].Product[0].ProductID)]';
       strictEqual(isSafeJSONPath(path), true);
     });
+
     it('should return true if path has filter expressions with match function', () => {
       const path =
         '$..book.*[?(@property === "category" && @.match(/TION$/i))]';
       strictEqual(isSafeJSONPath(path), true);
     });
+
+    it('should return true if path has filter expressions with parts enclosed in parentheses', () => {
+      const path = "$[?(@.status==='enabled' && (@.id===1 || @.id===2))]";
+      strictEqual(isSafeJSONPath(path), true);
+    });
+
     it('should return false if path has unsafe filter expression', () => {
       const path =
         '$..book[0][((this.constructor.constructor(\'return this.process\')()).mainModule.require("child_process").exec("calc").toString())]';

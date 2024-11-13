@@ -238,6 +238,7 @@ describe('Request helpers', () => {
       });
       strictEqual(parseResult, '"Default"');
     });
+
     it('should return default if jsonpath filter expression is invalid', () => {
       const parseResult = TemplateParser({
         shouldOmitDataHelper: false,
@@ -445,6 +446,7 @@ describe('Request helpers', () => {
         'attribute-value-1,attribute-value-2attribute-1-name,attribute-2-name,attribute-3-namevalue'
       );
     });
+
     it('should return default if there are no properties matching jsonpath expression', () => {
       const parseResult = TemplateParser({
         shouldOmitDataHelper: false,
@@ -461,6 +463,7 @@ describe('Request helpers', () => {
       });
       strictEqual(parseResult, 'Default');
     });
+
     it('should return default if jsonpath filter expression is invalid', () => {
       const parseResult = TemplateParser({
         shouldOmitDataHelper: false,
