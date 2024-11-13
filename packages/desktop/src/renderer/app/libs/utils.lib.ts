@@ -87,14 +87,28 @@ export const HumanizeText = (text: string): string => {
 };
 
 /**
- * Build a full APi endpoint path with protocol, domain and port
+ * Build a full API endpoint path with protocol, domain and port
  *
  * @param environment
  * @param route
  * @returns
  */
 export const BuildFullPath = (environment: Environment, route: Route) => {
-  let routeUrl = `${environment.tlsOptions.enabled ? 'https://' : 'http://'}${
+  let protocol = 'http://';
+
+  if (route.type === RouteType.WS) {
+    if (environment.tlsOptions.enabled) {
+      protocol = 'wss://';
+    } else {
+      protocol = 'ws://';
+    }
+  } else {
+    if (environment.tlsOptions.enabled) {
+      protocol = 'https://';
+    }
+  }
+
+  let routeUrl = `${protocol}${
     environment.hostname || 'localhost'
   }:${environment.port}/`;
 
