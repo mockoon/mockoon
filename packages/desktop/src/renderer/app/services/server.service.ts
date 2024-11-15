@@ -6,7 +6,10 @@ import { MessageParams } from 'src/renderer/app/models/messages.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
-import { updateEnvironmentStatusAction } from 'src/renderer/app/stores/actions';
+import {
+  updateEnvironmentStatusAction,
+  updateProcessedDatabucketsAction
+} from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 
 @Injectable({ providedIn: 'root' })
@@ -82,6 +85,8 @@ export class ServerService extends Logger {
                 environment.uuid
               )
             );
+
+            this.store.update(updateProcessedDatabucketsAction(null));
           });
           break;
 
@@ -107,6 +112,16 @@ export class ServerService extends Logger {
                 environmentUUID,
                 transaction: data.transaction
               });
+            });
+          }
+          break;
+
+        case 'data-bucket-processed':
+          if (data.dataBuckets) {
+            this.zone.run(() => {
+              this.store.update(
+                updateProcessedDatabucketsAction(data.dataBuckets)
+              );
             });
           }
           break;

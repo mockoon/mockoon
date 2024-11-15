@@ -2,6 +2,7 @@ import {
   Environment,
   Environments,
   InFlightRequest,
+  ProcessedDatabucketWithoutValue,
   Transaction
 } from '@mockoon/commons';
 import { MockoonServer, listenServerEvents } from '@mockoon/commons-server';
@@ -122,6 +123,20 @@ export class ServerInstance {
         );
       }
     });
+
+    server.on(
+      'data-bucket-processed',
+      (dataBuckets: ProcessedDatabucketWithoutValue[]) => {
+        if (!mainWindow.isDestroyed()) {
+          mainWindow.webContents.send(
+            'APP_SERVER_EVENT',
+            this.environment.uuid,
+            'data-bucket-processed',
+            { dataBuckets }
+          );
+        }
+      }
+    );
 
     server.on('error', (errorCode: any, originalError: any) => {
       if (!mainWindow.isDestroyed()) {

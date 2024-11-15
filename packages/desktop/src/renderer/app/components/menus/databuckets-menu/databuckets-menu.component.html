@@ -1,4 +1,10 @@
-<ng-container *ngIf="activeEnvironment$ | async as activeEnvironment">
+@let processedDatabuckets = processedDatabuckets$ | async;
+@let activeDatabucket = activeDatabucket$ | async;
+@let activeEnvironment = activeEnvironment$ | async;
+@let databucketList = databucketList$ | async;
+@let settings = settings$ | async;
+
+@if (activeEnvironment) {
   <div class="databuckets-menu d-flex flex-column h-100">
     <div class="d-flex w-100 py-2 align-items-center">
       <div>
@@ -19,7 +25,7 @@
       </div>
     </div>
 
-    <ng-container *ngIf="databucketList$ | async as databucketList">
+    @if (databucketList) {
       <ul class="nav flex-column menu-list h-100">
         <li
           class="nav-item"
@@ -36,27 +42,58 @@
           <a
             class="nav-link d-flex pe-0 hover-parent"
             [ngClass]="{
-              active: (activeDatabucket$ | async)?.uuid === databucket.uuid
+              active: activeDatabucket?.uuid === databucket.uuid
             }"
             appScrollWhenActive
             (click)="selectDatabucket(databucket.uuid)"
           >
             <!-- mw0 is important for proper text truncation -->
             <div class="d-flex flex-column mw0">
+              @if (settings) {
+                <div
+                  class="nav-link-label databucket-path"
+                  [ngClass]="{
+                    'text-truncate': settings.truncateRouteName,
+                    'text-break': !settings.truncateRouteName
+                  }"
+                >
+                  {{ databucket.name }}
+                </div>
+              }
               <div
-                *ngIf="settings$ | async as settings"
-                class="nav-link-label databucket-path"
-                [ngClass]="{
-                  'text-truncate': settings.truncateRouteName,
-                  'text-break': !settings.truncateRouteName
-                }"
-              >
-                {{ databucket.name }}
-              </div>
-              <div
-                *ngIf="databucket.documentation"
                 class="nav-link-subtitle mt-1 d-flex align-items-center svg-text-align"
               >
+                <span
+                  class="me-2"
+                  ngbTooltip="Data ID (can be used within data and dataRaw templating helpers). Click to copy."
+                  (click)="copyToClipboard(activeDatabucket.id)"
+                  >{{ databucket.id }}</span
+                >
+                <app-svg
+                  class="me-2"
+                  [ngClass]="{
+                    'text-gray':
+                      !processedDatabuckets[activeDatabucket.uuid]?.parsed,
+                    'text-success':
+                      processedDatabuckets[activeDatabucket.uuid]?.parsed &&
+                      processedDatabuckets[activeDatabucket.uuid]?.validJSON,
+                    'text-warning':
+                      processedDatabuckets[activeDatabucket.uuid]?.parsed &&
+                      !processedDatabuckets[activeDatabucket.uuid]?.validJSON
+                  }"
+                  icon="data"
+                  size="14"
+                  [ngbTooltip]="
+                    processedDatabuckets[activeDatabucket.uuid]?.parsed
+                      ? processedDatabuckets[activeDatabucket.uuid]?.validJSON
+                        ? 'Generated JSON is valid'
+                        : 'Generated JSON is not valid'
+                      : processedDatabuckets[activeDatabucket.uuid]
+                        ? 'Not parsed yet (request helpers detected)'
+                        : 'Not parsed yet (server is not running)'
+                  "
+                ></app-svg>
+
                 <span class="text-truncate">{{
                   databucket.documentation
                 }}</span>
@@ -76,7 +113,7 @@
           </a>
         </li>
       </ul>
-    </ng-container>
+    }
 
     <div
       appResizeColumn
@@ -86,4 +123,4 @@
       class="resize-column"
     ></div>
   </div>
-</ng-container>
+}

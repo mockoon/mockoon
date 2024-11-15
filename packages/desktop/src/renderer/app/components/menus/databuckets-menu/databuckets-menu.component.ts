@@ -16,6 +16,7 @@ import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { textFilter, trackByUuid } from 'src/renderer/app/libs/utils.lib';
+import { StoreType } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
@@ -34,6 +35,7 @@ export class DatabucketsMenuComponent implements OnInit {
   public activeEnvironment$: Observable<Environment>;
   public databucketList$: Observable<DataBucket[]>;
   public activeDatabucket$: Observable<DataBucket>;
+  public processedDatabuckets$: Observable<StoreType['processedDataBuckets']>;
   public databucketsFilter$: Observable<string>;
   public focusableInputs = FocusableInputs;
   public menuSize = Config.defaultSecondaryMenuSize;
@@ -92,6 +94,7 @@ export class DatabucketsMenuComponent implements OnInit {
   ngOnInit() {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeDatabucket$ = this.store.selectActiveDatabucket();
+    this.processedDatabuckets$ = this.store.select('processedDataBuckets');
     this.settings$ = this.store.select('settings');
     this.databucketsFilter$ = this.store.selectFilter('databuckets');
 
@@ -136,5 +139,9 @@ export class DatabucketsMenuComponent implements OnInit {
    */
   public selectDatabucket(databucketUUID: string) {
     this.environmentsService.setActiveDatabucket(databucketUUID);
+  }
+
+  public copyToClipboard(databucketId: string) {
+    MainAPI.send('APP_WRITE_CLIPBOARD', databucketId);
   }
 }

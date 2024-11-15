@@ -4,6 +4,7 @@ import {
   DataBucket,
   Environment,
   Folder,
+  ProcessedDatabucketWithoutValue,
   ReorderAction,
   ReorderableContainers,
   Route,
@@ -88,7 +89,8 @@ export const enum ActionTypes {
   DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT',
   DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT',
   DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT',
-  FULL_REORDER_ENTITIES = 'FULL_REORDER_ENTITIES'
+  FULL_REORDER_ENTITIES = 'FULL_REORDER_ENTITIES',
+  UPDATE_PROCESSED_DATABUCKETS = 'UPDATE_PROCESSED_DATABUCKETS'
 }
 
 /**
@@ -932,6 +934,19 @@ export const updateUIStateAction = (properties: Partial<UIState>) =>
     properties
   }) as const;
 
+/**
+ * Update processed databuckets
+ *
+ * @param properties - properties to update
+ */
+export const updateProcessedDatabucketsAction = (
+  processedDataBuckets: ProcessedDatabucketWithoutValue[]
+) =>
+  ({
+    type: ActionTypes.UPDATE_PROCESSED_DATABUCKETS,
+    processedDataBuckets
+  }) as const;
+
 export type Actions =
   | ReturnType<typeof convertEnvironmentToLocalAction>
   | ReturnType<typeof updateUserAction>
@@ -988,4 +1003,5 @@ export type Actions =
   | ReturnType<typeof cancelEntityDuplicationToAnotherEnvironmentAction>
   | ReturnType<typeof duplicateRouteToAnotherEnvironmentAction>
   | ReturnType<typeof duplicateDatabucketToAnotherEnvironmentAction>
-  | ReturnType<typeof duplicateCallbackToAnotherEnvironmentAction>;
+  | ReturnType<typeof duplicateCallbackToAnotherEnvironmentAction>
+  | ReturnType<typeof updateProcessedDatabucketsAction>;

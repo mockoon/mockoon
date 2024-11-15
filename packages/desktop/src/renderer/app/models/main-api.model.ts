@@ -2,6 +2,7 @@ import {
   Environment,
   Environments,
   InFlightRequest,
+  ProcessedDatabucketWithoutValue,
   ServerErrorCodes,
   ServerEvents,
   Transaction
@@ -114,6 +115,7 @@ export interface MainAPIModel {
         originalError?: Error;
         transaction?: Transaction;
         inflightRequest?: InFlightRequest;
+        dataBuckets?: ProcessedDatabucketWithoutValue[];
       }
     ) => void
   ): void;

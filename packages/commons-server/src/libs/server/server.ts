@@ -268,8 +268,9 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         getDataBuckets: (nameOrId: string) =>
           this.processedDatabuckets.find(
             (processedDatabucket) =>
-              processedDatabucket.name === nameOrId ||
-              processedDatabucket.id === nameOrId
+              processedDatabucket.name.toLowerCase() ===
+                nameOrId.toLowerCase() ||
+              processedDatabucket.id.toLowerCase() === nameOrId.toLowerCase()
           ),
         purgeDataBuckets: () => {
           this.processedDatabuckets = [];
@@ -2130,10 +2131,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         ) {
           // a request helper was found
           newProcessedDatabucket = {
+            uuid: databucket.uuid,
             id: databucket.id,
             name: databucket.name,
             value: databucket.value,
-            parsed: false
+            parsed: false,
+            validJSON: false
           };
         } else {
           let templateParsedContent;
@@ -2149,32 +2152,41 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             });
 
             const JSONParsedContent = JSON.parse(templateParsedContent);
+
             newProcessedDatabucket = {
+              uuid: databucket.uuid,
               id: databucket.id,
               name: databucket.name,
               value: JSONParsedContent,
-              parsed: true
+              parsed: true,
+              validJSON: true
             };
           } catch (error: any) {
             if (error instanceof SyntaxError) {
               newProcessedDatabucket = {
+                uuid: databucket.uuid,
                 id: databucket.id,
                 name: databucket.name,
                 value: templateParsedContent,
-                parsed: true
+                parsed: true,
+                validJSON: false
               };
             } else {
               newProcessedDatabucket = {
+                uuid: databucket.uuid,
                 id: databucket.id,
                 name: databucket.name,
                 value: error.message,
-                parsed: true
+                parsed: true,
+                validJSON: false
               };
             }
           }
         }
         this.processedDatabuckets.push(newProcessedDatabucket);
       });
+
+      this.emitProcessedDatabuckets();
     }
   }
 
@@ -2350,6 +2362,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
         if (targetDatabucket && !targetDatabucket?.parsed) {
           let content = targetDatabucket.value;
+
           try {
             content = TemplateParser({
               shouldOmitDataHelper: false,
@@ -2360,20 +2373,42 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               request: fromExpressRequest(request),
               envVarsPrefix: this.options.envVarsPrefix
             });
+
             const JSONParsedcontent = JSON.parse(content);
+
             targetDatabucket.value = JSONParsedcontent;
             targetDatabucket.parsed = true;
+            targetDatabucket.validJSON = true;
           } catch (error: any) {
             if (error instanceof SyntaxError) {
               targetDatabucket.value = content;
             } else {
               targetDatabucket.value = error.message;
             }
+
             targetDatabucket.parsed = true;
+            targetDatabucket.validJSON = false;
           }
         }
       }
+
+      this.emitProcessedDatabuckets();
     }
+  }
+
+  /**
+   * Emit an event with the processed databuckets.
+   * Remove the value from the processed databuckets to avoid sending
+   * too much data to the client.
+   */
+  private emitProcessedDatabuckets() {
+    this.emit(
+      'data-bucket-processed',
+      // remove the value from the processed databuckets to avoid sending it to the client
+      this.processedDatabuckets.map(({ value: _value, ...props }) => ({
+        ...props
+      }))
+    );
   }
 
   /**

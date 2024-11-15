@@ -9,6 +9,7 @@ import { DataBucket, DataBucketDefault } from '@mockoon/commons';
 import { Observable, Subject, filter, map, merge, takeUntil, tap } from 'rxjs';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
+import { StoreType } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
@@ -25,6 +26,7 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
   public activeDatabucketForm: UntypedFormGroup;
   public focusableInputs = FocusableInputs;
   public bodyEditorConfig$: Observable<any>;
+  public processedDatabuckets$: Observable<StoreType['processedDataBuckets']>;
   public scrollToBottom = this.uiService.scrollToBottom;
   private destroy$ = new Subject<void>();
 
@@ -41,6 +43,7 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
       map((environment) => environment.data.length > 0)
     );
     this.activeDatabucket$ = this.store.selectActiveDatabucket();
+    this.processedDatabuckets$ = this.store.select('processedDataBuckets');
     this.bodyEditorConfig$ = this.store.select('bodyEditorConfig');
     this.initForms();
     this.initFormValues();

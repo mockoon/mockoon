@@ -1,5 +1,8 @@
 import { DeployInstance, SyncPresence, User } from '@mockoon/cloud';
-import { Environments } from '@mockoon/commons';
+import {
+  Environments,
+  ProcessedDatabucketWithoutValue
+} from '@mockoon/commons';
 import {
   CallbackSpecTabNameType,
   CallbackTabsNameType
@@ -99,4 +102,5 @@ export type StoreType = {
     alert: string | null;
   };
   deployInstances: DeployInstance[];
+  processedDataBuckets: Record<string, ProcessedDatabucketWithoutValue>;
 };

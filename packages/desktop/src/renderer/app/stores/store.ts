@@ -72,7 +72,8 @@ export const storeDefaultState: StoreType = {
     offlineReason: null,
     alert: null
   },
-  deployInstances: []
+  deployInstances: [],
+  processedDataBuckets: {}
 };
 
 @Injectable({ providedIn: 'root' })

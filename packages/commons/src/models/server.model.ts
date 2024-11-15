@@ -3,11 +3,18 @@ import { FakerAvailableLocales } from './faker.model';
 import { Header, Methods } from './route.model';
 
 export type ProcessedDatabucket = {
+  uuid: string;
   id: string;
   name: string;
   value: any;
   parsed: boolean;
+  validJSON: boolean;
 };
+
+export type ProcessedDatabucketWithoutValue = Omit<
+  ProcessedDatabucket,
+  'value'
+>;
 
 /**
  * Object containing invoked callback details.
