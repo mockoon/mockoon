@@ -11,6 +11,7 @@ import { CommandPaletteModalComponent } from 'src/renderer/app/components/modals
 import { ConfirmModalComponent } from 'src/renderer/app/components/modals/confirm-modal/confirm-modal.component';
 import { DeployInstanceModalComponent } from 'src/renderer/app/components/modals/deploy-instance-modal/deploy-instance-modal.component';
 import { DuplicateModalComponent } from 'src/renderer/app/components/modals/duplicate-modal/duplicate-modal.component';
+import { EditorModalComponent } from 'src/renderer/app/components/modals/editor-modal/editor-modal.component';
 import { ManageInstancesModalComponent } from 'src/renderer/app/components/modals/manage-instances-modal/manage-instances-modal.component';
 import { SettingsModalComponent } from 'src/renderer/app/components/modals/settings-modal/settings-modal.component';
 import { TemplatesModalComponent } from 'src/renderer/app/components/modals/templates-modal/templates-modal.component';
@@ -19,6 +20,7 @@ import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { UIState } from 'src/renderer/app/models/store.model';
 import {
   ConfirmModalPayload,
+  EditorModalPayload,
   ManageInstancesModalPayload
 } from 'src/renderer/app/models/ui.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
@@ -50,20 +52,22 @@ type ModalNames =
   | 'auth'
   | 'confirm'
   | 'deploy'
+  | 'editor'
   | 'manageInstances';
 type ModalWithPayload = Extract<
   ModalNames,
-  'deploy' | 'manageInstances' | 'confirm'
+  'deploy' | 'editor' | 'manageInstances' | 'confirm'
 >;
 type ModalWithoutPayload = Exclude<
   ModalNames,
-  'deploy' | 'manageInstances' | 'confirm'
+  'deploy' | 'editor' | 'manageInstances' | 'confirm'
 >;
 
 @Injectable({ providedIn: 'root' })
 export class UIService {
   private modalsPayloads = {
     deploy: new BehaviorSubject<string>(null),
+    editor: new BehaviorSubject<EditorModalPayload>(null),
     manageInstances: new BehaviorSubject<ManageInstancesModalPayload>(null),
     confirm: new BehaviorSubject<ConfirmModalPayload>(null)
   };
@@ -116,6 +120,10 @@ export class UIService {
       component: DeployInstanceModalComponent,
       options: commonConfigs.large
     },
+    editor: {
+      component: EditorModalComponent,
+      options: commonConfigs.large
+    },
     manageInstances: {
       component: ManageInstancesModalComponent,
       options: commonConfigs.large
@@ -131,6 +139,7 @@ export class UIService {
     auth: null,
     confirm: null,
     deploy: null,
+    editor: null,
     manageInstances: null
   };
 
@@ -182,6 +191,7 @@ export class UIService {
    * @param modalName
    */
 
+  public openModal(modalName: 'editor', payload: EditorModalPayload): void;
   public openModal(modalName: 'confirm', payload: ConfirmModalPayload): void;
   public openModal(modalName: 'deploy', payload: string): void;
   public openModal(
@@ -191,7 +201,12 @@ export class UIService {
   public openModal(modalName: ModalWithoutPayload): void;
   public openModal(
     modalName: ModalNames,
-    payload?: string | ConfirmModalPayload | ManageInstancesModalPayload | never
+    payload?:
+      | string
+      | ConfirmModalPayload
+      | ManageInstancesModalPayload
+      | EditorModalPayload
+      | never
   ): void {
     if (this.modalsInstances[modalName]) {
       return;

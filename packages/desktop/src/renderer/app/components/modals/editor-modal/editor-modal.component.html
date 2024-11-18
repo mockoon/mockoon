@@ -1,0 +1,34 @@
+@let editorModalPayload = editorModalPayload$ | async;
+
+@if (editorModalPayload) {
+  <div class="modal-header">
+    <h4 class="modal-title">
+      {{ editorModalPayload.title }}
+
+      @if (editorModalPayload.subtitle) {
+        <br />
+        <small class="text-muted h6">{{ editorModalPayload.subtitle }}</small>
+      }
+    </h4>
+  </div>
+  <div class="modal-body">
+    <div class="editor">
+      <app-editor
+        class="h-100"
+        [text]="editorModalPayload.text"
+        [options]="defaultEditorConfig.options"
+        [mode]="defaultEditorConfig.mode"
+        [readOnly]="true"
+      ></app-editor>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary modal-close"
+      (click)="close()"
+    >
+      Close
+    </button>
+  </div>
+}

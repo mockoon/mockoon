@@ -5,11 +5,16 @@ import {
   OnInit
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { DataBucket, DataBucketDefault } from '@mockoon/commons';
+import {
+  DataBucket,
+  DataBucketDefault,
+  ProcessedDatabucketWithoutValue
+} from '@mockoon/commons';
 import { Observable, Subject, filter, map, merge, takeUntil, tap } from 'rxjs';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { ServerService } from 'src/renderer/app/services/server.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
 
@@ -25,6 +30,9 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
   public activeDatabucketForm: UntypedFormGroup;
   public focusableInputs = FocusableInputs;
   public bodyEditorConfig$: Observable<any>;
+  public processedDatabuckets$: Observable<
+    Record<string, ProcessedDatabucketWithoutValue>
+  >;
   public scrollToBottom = this.uiService.scrollToBottom;
   private destroy$ = new Subject<void>();
 
@@ -32,7 +40,8 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
     private uiService: UIService,
     private store: Store,
     private environmentsService: EnvironmentsService,
-    private formBuilder: UntypedFormBuilder
+    private formBuilder: UntypedFormBuilder,
+    private serverService: ServerService
   ) {}
 
   ngOnInit() {
@@ -41,6 +50,8 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
       map((environment) => environment.data.length > 0)
     );
     this.activeDatabucket$ = this.store.selectActiveDatabucket();
+    this.processedDatabuckets$ =
+      this.store.selectActiveEnvironmentProcessedDatabuckets();
     this.bodyEditorConfig$ = this.store.select('bodyEditorConfig');
     this.initForms();
     this.initFormValues();
@@ -53,6 +64,26 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
 
   public copyToClipboard(databucketId: string) {
     MainAPI.send('APP_WRITE_CLIPBOARD', databucketId);
+  }
+
+  public showDatabucketValue(
+    databucketUuid: string,
+    validJson: boolean,
+    databucketName: string
+  ) {
+    this.serverService
+      .getProcessedDatabucketValue(
+        this.store.getActiveEnvironment().uuid,
+        databucketUuid
+      )
+      .subscribe((d) => {
+        this.uiService.openModal('editor', {
+          title: `"${databucketName}" databucket value`,
+          subtitle:
+            'This is the current in-memory value of the processed databucket content',
+          text: validJson ? JSON.stringify(d, null, 2) : d
+        });
+      });
   }
 
   private initForms() {

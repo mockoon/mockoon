@@ -51,6 +51,7 @@ import { CommandPaletteModalComponent } from 'src/renderer/app/components/modals
 import { ConfirmModalComponent } from 'src/renderer/app/components/modals/confirm-modal/confirm-modal.component';
 import { DeployInstanceModalComponent } from 'src/renderer/app/components/modals/deploy-instance-modal/deploy-instance-modal.component';
 import { DuplicateModalComponent } from 'src/renderer/app/components/modals/duplicate-modal/duplicate-modal.component';
+import { EditorModalComponent } from 'src/renderer/app/components/modals/editor-modal/editor-modal.component';
 import { ManageInstancesModalComponent } from 'src/renderer/app/components/modals/manage-instances-modal/manage-instances-modal.component';
 import { SettingsModalComponent } from 'src/renderer/app/components/modals/settings-modal/settings-modal.component';
 import { TemplatesModalComponent } from 'src/renderer/app/components/modals/templates-modal/templates-modal.component';
@@ -101,6 +102,7 @@ import { AppComponent } from './app.component';
     ChangelogModalComponent,
     ConfirmModalComponent,
     TemplatesModalComponent,
+    EditorModalComponent,
     EnvironmentLogsComponent,
     EnvironmentProxyComponent,
     EnvironmentHeadersComponent,

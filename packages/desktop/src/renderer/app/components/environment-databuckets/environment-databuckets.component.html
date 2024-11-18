@@ -1,13 +1,11 @@
+@let processedDatabuckets = processedDatabuckets$ | async;
+@let activeDatabucket = activeDatabucket$ | async;
+
 <div class="d-flex h-100">
   <app-databuckets-menu class="h-100"></app-databuckets-menu>
 
   <div class="d-flex flex-column flex-fill mh0">
-    <ng-container
-      *ngIf="
-        activeDatabucket$ | async as activeDatabucket;
-        else noActiveDatabucket
-      "
-    >
+    @if (activeDatabucket) {
       <ng-container [formGroup]="activeDatabucketForm">
         <!-- Name -->
         <div class="input-group pt-2 px-2">
@@ -55,18 +53,52 @@
           >
             <small class="p-0">Unique ID: {{ activeDatabucket.id }}</small>
           </button>
+
+          <button
+            id="databucket-processed-status"
+            class="btn btn-link btn-icon pe-0"
+            [ngClass]="{
+              'text-muted':
+                !processedDatabuckets[activeDatabucket.uuid]?.parsed,
+              'text-success':
+                processedDatabuckets[activeDatabucket.uuid]?.parsed &&
+                processedDatabuckets[activeDatabucket.uuid].validJson,
+              'text-warning':
+                processedDatabuckets[activeDatabucket.uuid]?.parsed &&
+                !processedDatabuckets[activeDatabucket.uuid].validJson,
+              'cursor-default':
+                !processedDatabuckets[activeDatabucket.uuid]?.parsed
+            }"
+            [ngbTooltip]="
+              processedDatabuckets[activeDatabucket.uuid]?.parsed
+                ? processedDatabuckets[activeDatabucket.uuid].validJson
+                  ? 'Generated content is valid JSON. Click to view current value.'
+                  : 'Generated content is not valid JSON (will be stored as a string). Click to view current value.'
+                : processedDatabuckets[activeDatabucket.uuid]
+                  ? 'Not parsed yet (request helpers detected)'
+                  : 'Not parsed yet (server is not running)'
+            "
+            (click)="
+              processedDatabuckets[activeDatabucket.uuid]?.parsed &&
+                showDatabucketValue(
+                  activeDatabucket.uuid,
+                  processedDatabuckets[activeDatabucket.uuid].validJson,
+                  activeDatabucket.name
+                )
+            "
+          >
+            <small class="p-0"><app-svg icon="data"></app-svg></small>
+          </button>
         </div>
       </ng-container>
-    </ng-container>
+    } @else {
+      <p class="message mt-4">
+        {{
+          (hasDatabuckets$ | async)
+            ? 'No databucket selected'
+            : 'No databucket defined'
+        }}
+      </p>
+    }
   </div>
 </div>
-
-<ng-template #noActiveDatabucket>
-  <p class="message mt-4">
-    {{
-      (hasDatabuckets$ | async)
-        ? 'No databucket selected'
-        : 'No databucket defined'
-    }}
-  </p>
-</ng-template>

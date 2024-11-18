@@ -1,12 +1,16 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Environment } from '@mockoon/commons';
+import { from } from 'rxjs';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { MessageParams } from 'src/renderer/app/models/messages.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
-import { updateEnvironmentStatusAction } from 'src/renderer/app/stores/actions';
+import {
+  updateEnvironmentStatusAction,
+  updateProcessedDatabucketsAction
+} from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 
 @Injectable({ providedIn: 'root' })
@@ -35,18 +39,37 @@ export class ServerService extends Logger {
   /**
    * Completely stop an environment/server
    *
-   * @param environmentUUID
+   * @param environmentUuid
    */
-  public stop(environmentUUID: string) {
-    MainAPI.invoke('APP_STOP_SERVER', environmentUUID);
+  public stop(environmentUuid: string) {
+    MainAPI.invoke('APP_STOP_SERVER', environmentUuid);
+  }
+
+  /**
+   * Get the processed value of a databucket from the server
+   *
+   * @param environmentUuid
+   * @param databucketUuid
+   */
+  public getProcessedDatabucketValue(
+    environmentUuid: string,
+    databucketUuid: string
+  ) {
+    return from(
+      MainAPI.invoke(
+        'APP_SERVER_GET_PROCESSED_DATABUCKET_VALUE',
+        environmentUuid,
+        databucketUuid
+      )
+    );
   }
 
   /**
    * Listen to server events coming from main process
    */
   private addEventListener() {
-    MainAPI.receive('APP_SERVER_EVENT', (environmentUUID, eventName, data) => {
-      const environment = this.store.getEnvironmentByUUID(environmentUUID);
+    MainAPI.receive('APP_SERVER_EVENT', (environmentUuid, eventName, data) => {
+      const environment = this.store.getEnvironmentByUUID(environmentUuid);
 
       if (!environment) {
         return;
@@ -82,6 +105,10 @@ export class ServerService extends Logger {
                 environment.uuid
               )
             );
+
+            this.store.update(
+              updateProcessedDatabucketsAction(environmentUuid, null)
+            );
           });
           break;
 
@@ -93,7 +120,7 @@ export class ServerService extends Logger {
           if (data.inflightRequest) {
             this.zone.run(() => {
               this.eventsService.serverTransaction$.next({
-                environmentUUID,
+                environmentUUID: environmentUuid,
                 inflightRequest: data.inflightRequest
               });
             });
@@ -104,9 +131,22 @@ export class ServerService extends Logger {
           if (data.transaction) {
             this.zone.run(() => {
               this.eventsService.serverTransaction$.next({
-                environmentUUID,
+                environmentUUID: environmentUuid,
                 transaction: data.transaction
               });
+            });
+          }
+          break;
+
+        case 'data-bucket-processed':
+          if (data.dataBuckets) {
+            this.zone.run(() => {
+              this.store.update(
+                updateProcessedDatabucketsAction(
+                  environmentUuid,
+                  data.dataBuckets
+                )
+              );
             });
           }
           break;

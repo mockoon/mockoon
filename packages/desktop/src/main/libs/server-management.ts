@@ -2,6 +2,7 @@ import {
   Environment,
   Environments,
   InFlightRequest,
+  ProcessedDatabucketWithoutValue,
   Transaction
 } from '@mockoon/commons';
 import { MockoonServer, listenServerEvents } from '@mockoon/commons-server';
@@ -31,14 +32,23 @@ export class ServerInstance {
     });
   };
 
-  public static stop(environmentUUID: string) {
-    ServerInstance.instances[environmentUUID]?.mockoonServer?.stop();
+  public static stop(environmentUuid: string) {
+    ServerInstance.instances[environmentUuid]?.mockoonServer?.stop();
   }
 
   public static stopAll() {
-    Object.keys(ServerInstance.instances).forEach((runningEnvironmentUUID) => {
-      this.stop(runningEnvironmentUUID);
+    Object.keys(ServerInstance.instances).forEach((runningEnvironmentUuid) => {
+      this.stop(runningEnvironmentUuid);
     });
+  }
+
+  public static getProcessedDatabucketValue(
+    environmentUuid: string,
+    databucketUuid: string
+  ) {
+    return ServerInstance.instances[
+      environmentUuid
+    ]?.mockoonServer?.getProcessedDatabucket(databucketUuid)?.value;
   }
 
   private start() {
@@ -122,6 +132,20 @@ export class ServerInstance {
         );
       }
     });
+
+    server.on(
+      'data-bucket-processed',
+      (dataBuckets: ProcessedDatabucketWithoutValue[]) => {
+        if (!mainWindow.isDestroyed()) {
+          mainWindow.webContents.send(
+            'APP_SERVER_EVENT',
+            this.environment.uuid,
+            'data-bucket-processed',
+            { dataBuckets }
+          );
+        }
+      }
+    );
 
     server.on('error', (errorCode: any, originalError: any) => {
       if (!mainWindow.isDestroyed()) {

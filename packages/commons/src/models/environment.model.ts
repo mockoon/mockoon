@@ -5,6 +5,7 @@ export type TLSOptionsType = 'PFX' | 'CERT';
 
 export type DataBucket = {
   uuid: string;
+  // unique short id to be used in templating helpers or rules
   id: string;
   name: string;
   documentation: string;
