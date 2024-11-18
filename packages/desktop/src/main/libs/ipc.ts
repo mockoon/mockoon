@@ -158,7 +158,7 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
 
   ipcMain.handle(
     'APP_UNWATCH_FILE',
-    async (event, UUID) => await unwatchEnvironmentFile(UUID)
+    async (event, uuid) => await unwatchEnvironmentFile(uuid)
   );
 
   ipcMain.handle(
@@ -289,14 +289,23 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
   });
 
   ipcMain.handle(
+    'APP_SERVER_GET_PROCESSED_DATABUCKET_VALUE',
+    (event, environmentUuid: string, databucketUuid: string) =>
+      ServerInstance.getProcessedDatabucketValue(
+        environmentUuid,
+        databucketUuid
+      )
+  );
+
+  ipcMain.handle(
     'APP_START_SERVER',
     (event, environment: Environment, environmentPath: string) => {
       new ServerInstance(environment, environmentPath);
     }
   );
 
-  ipcMain.handle('APP_STOP_SERVER', (event, environmentUUID: string) => {
-    ServerInstance.stop(environmentUUID);
+  ipcMain.handle('APP_STOP_SERVER', (event, uuid: string) => {
+    ServerInstance.stop(uuid);
   });
 
   ipcMain.on(

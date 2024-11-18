@@ -66,6 +66,34 @@ class Databuckets {
     );
   }
 
+  /**
+   * Check processed indicator in both footer and menu for the active databucket
+   * @param status
+   */
+  public async assertProcessedState(status: 'ok' | 'nok' | 'na') {
+    const statusClasses = {
+      ok: 'text-success',
+      nok: 'text-warning',
+      na: 'text-muted'
+    };
+    const processedStatusFooter = $(
+      'app-environment-databuckets #databucket-processed-status'
+    );
+    const processedStatusMenu = $(
+      '.databuckets-menu .menu-list .nav-item .nav-link.active .databucket-processed-status'
+    );
+
+    await processedStatusFooter.waitForExist();
+    await processedStatusMenu.waitForExist();
+
+    // check class
+    const footerClasses = await processedStatusFooter.getAttribute('class');
+    const menuClasses = await processedStatusMenu.getAttribute('class');
+
+    expect(footerClasses).toContain(statusClasses[status]);
+    expect(menuClasses).toContain(statusClasses[status]);
+  }
+
   public async assertName(expected: string) {
     expect(await this.nameInput.getValue()).toEqual(expected);
   }

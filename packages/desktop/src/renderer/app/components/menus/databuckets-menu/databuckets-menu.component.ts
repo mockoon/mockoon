@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {
   DataBucket,
   Environment,
+  ProcessedDatabucketWithoutValue,
   ReorderAction,
   ReorderableContainers
 } from '@mockoon/commons';
@@ -34,6 +35,9 @@ export class DatabucketsMenuComponent implements OnInit {
   public activeEnvironment$: Observable<Environment>;
   public databucketList$: Observable<DataBucket[]>;
   public activeDatabucket$: Observable<DataBucket>;
+  public processedDatabuckets$: Observable<
+    Record<string, ProcessedDatabucketWithoutValue>
+  >;
   public databucketsFilter$: Observable<string>;
   public focusableInputs = FocusableInputs;
   public menuSize = Config.defaultSecondaryMenuSize;
@@ -92,6 +96,8 @@ export class DatabucketsMenuComponent implements OnInit {
   ngOnInit() {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeDatabucket$ = this.store.selectActiveDatabucket();
+    this.processedDatabuckets$ =
+      this.store.selectActiveEnvironmentProcessedDatabuckets();
     this.settings$ = this.store.select('settings');
     this.databucketsFilter$ = this.store.selectFilter('databuckets');
 
@@ -136,5 +142,9 @@ export class DatabucketsMenuComponent implements OnInit {
    */
   public selectDatabucket(databucketUUID: string) {
     this.environmentsService.setActiveDatabucket(databucketUUID);
+  }
+
+  public copyToClipboard(databucketId: string) {
+    MainAPI.send('APP_WRITE_CLIPBOARD', databucketId);
   }
 }

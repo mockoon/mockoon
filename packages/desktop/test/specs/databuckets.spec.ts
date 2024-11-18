@@ -251,6 +251,10 @@ describe('Databuckets autocompletion', () => {
 describe('Databuckets selection in responses', () => {
   it('should generate databucket at server start and always serve the same content', async () => {
     await environments.select(1);
+    await navigation.switchView('ENV_DATABUCKETS');
+    await databuckets.select(1);
+    await databuckets.assertProcessedState('na');
+    await navigation.switchView('ENV_ROUTES');
     await routes.select(1);
     await environments.start();
     await http.assertCall({
@@ -267,9 +271,17 @@ describe('Databuckets selection in responses', () => {
         body: '{"response":"Hayley"}'
       }
     });
+
+    await navigation.switchView('ENV_DATABUCKETS');
+    await databuckets.select(1);
+    await databuckets.assertProcessedState('ok');
   });
 
   it('should generate databucket with req helper at first call (string) and always serve the same content', async () => {
+    await navigation.switchView('ENV_DATABUCKETS');
+    await databuckets.select(2);
+    await databuckets.assertProcessedState('na');
+
     await http.assertCall({
       method: 'GET',
       path: '/databucketWithReqHelper?param=testvalue1',
@@ -280,6 +292,9 @@ describe('Databuckets selection in responses', () => {
       path: '/databucketWithReqHelper?param=testvalue2',
       testedResponse: { body: 'testvalue1' }
     });
+
+    // should be nok as it's not valid JSON but just a string
+    await databuckets.assertProcessedState('nok');
   });
 
   it('should generate databucket with req helper at first call (number) and always serve the same content', async () => {

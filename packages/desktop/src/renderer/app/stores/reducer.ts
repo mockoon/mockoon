@@ -1495,6 +1495,27 @@ export const environmentReducer = (
       break;
     }
 
+    case ActionTypes.UPDATE_PROCESSED_DATABUCKETS: {
+      newState = {
+        ...state,
+        processedDatabuckets: {
+          ...state.processedDatabuckets,
+          [action.environmentUuid]: action.processedDatabuckets
+            ? action.processedDatabuckets.reduce(
+                (processedDatabuckets, processedDatabucket) => {
+                  processedDatabuckets[processedDatabucket.uuid] =
+                    processedDatabucket;
+
+                  return processedDatabuckets;
+                },
+                {}
+              )
+            : {}
+        }
+      };
+      break;
+    }
+
     default:
       newState = state;
       break;

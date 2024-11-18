@@ -2,6 +2,7 @@ import {
   Environment,
   Environments,
   InFlightRequest,
+  ProcessedDatabucketWithoutValue,
   ServerErrorCodes,
   ServerEvents,
   Transaction
@@ -68,13 +69,20 @@ export interface MainAPIModel {
     environment: Environment
   ): Promise<string>;
   invoke(
+    channel: 'APP_SERVER_GET_PROCESSED_DATABUCKET_VALUE',
+    environmentUuid: string,
+    databucketUuid: string
+  ): Promise<any>;
+  invoke(
     channel: 'APP_START_SERVER',
     environment: Environment,
     environmentPath: string
   ): Promise<any>;
-  invoke(channel: 'APP_STOP_SERVER', environmentUUID: string): Promise<any>;
+  invoke(
+    channel: 'APP_STOP_SERVER' | 'APP_UNWATCH_FILE',
+    uuid: string
+  ): Promise<void>;
   invoke(channel: 'APP_GET_OS'): Promise<string>;
-  invoke(channel: 'APP_UNWATCH_FILE', UUID: string): Promise<void>;
   invoke(channel: 'APP_UNWATCH_ALL_FILE'): Promise<void>;
 
   send(channel: 'APP_UPDATE_MENU_STATE', state: MenuStateUpdatePayload): void;
@@ -114,6 +122,7 @@ export interface MainAPIModel {
         originalError?: Error;
         transaction?: Transaction;
         inflightRequest?: InFlightRequest;
+        dataBuckets?: ProcessedDatabucketWithoutValue[];
       }
     ) => void
   ): void;

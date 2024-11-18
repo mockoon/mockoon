@@ -3,6 +3,7 @@ import {
   Callback,
   DataBucket,
   Environment,
+  ProcessedDatabucketWithoutValue,
   Route,
   RouteResponse
 } from '@mockoon/commons';
@@ -72,7 +73,8 @@ export const storeDefaultState: StoreType = {
     offlineReason: null,
     alert: null
   },
-  deployInstances: []
+  deployInstances: [],
+  processedDatabuckets: {}
 };
 
 @Injectable({ providedIn: 'root' })
@@ -154,6 +156,22 @@ export class Store {
         map(
           (store: StoreType) =>
             store.environmentsStatus[store.activeEnvironmentUUID]
+        )
+      );
+  }
+
+  /**
+   * Select active environment status observable
+   */
+  public selectActiveEnvironmentProcessedDatabuckets(): Observable<
+    Record<string, ProcessedDatabucketWithoutValue>
+  > {
+    return this.store$
+      .asObservable()
+      .pipe(
+        map(
+          (store: StoreType) =>
+            store.processedDatabuckets[store.activeEnvironmentUUID] ?? {}
         )
       );
   }
@@ -302,9 +320,9 @@ export class Store {
   /**
    * Get environment by uuid
    */
-  public getEnvironmentByUUID(UUID: string): Environment {
+  public getEnvironmentByUUID(uuid: string): Environment {
     return this.store$.value.environments.find(
-      (environment) => environment.uuid === UUID
+      (environment) => environment.uuid === uuid
     );
   }
 
@@ -321,8 +339,8 @@ export class Store {
   /**
    * Get an environment status value
    */
-  public getEnvironmentStatus(environmentUUID: string): EnvironmentStatus {
-    return this.store$.value.environmentsStatus[environmentUUID];
+  public getEnvironmentStatus(environmentUuid: string): EnvironmentStatus {
+    return this.store$.value.environmentsStatus[environmentUuid];
   }
 
   /**

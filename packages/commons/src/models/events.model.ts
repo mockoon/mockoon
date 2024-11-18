@@ -1,5 +1,10 @@
 import { ServerErrorCodes } from '../enums/errors.enum';
-import { InFlightRequest, InvokedCallback, Transaction } from './server.model';
+import {
+  InFlightRequest,
+  InvokedCallback,
+  ProcessedDatabucketWithoutValue,
+  Transaction
+} from './server.model';
 
 export type ServerEvents = {
   error: (
@@ -27,4 +32,14 @@ export type ServerEvents = {
     reason?: string | null
   ) => void;
   'ws-message-received': (request: InFlightRequest, message: string) => void;
+
+  /**
+   * Event emitted when the data bucket are processed
+   *
+   * @param dataBuckets
+   * @returns
+   */
+  'data-bucket-processed': (
+    dataBuckets: ProcessedDatabucketWithoutValue[]
+  ) => void;
 };

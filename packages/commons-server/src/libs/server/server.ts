@@ -265,12 +265,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         purgeGlobalVariables: () => {
           this.globalVariables = {};
         },
-        getDataBuckets: (nameOrId: string) =>
-          this.processedDatabuckets.find(
-            (processedDatabucket) =>
-              processedDatabucket.name === nameOrId ||
-              processedDatabucket.id === nameOrId
-          ),
+        getDataBuckets: this.getProcessedDatabucket.bind(this),
         purgeDataBuckets: () => {
           this.processedDatabuckets = [];
           this.generateDatabuckets(this.environment);
@@ -296,6 +291,19 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     app.use(this.errorHandler);
 
     return app;
+  }
+  /**
+   * Return a processed databucket by name, id, or uuid
+   *
+   * @param identifier
+   */
+  public getProcessedDatabucket(identifier: string) {
+    return this.processedDatabuckets.find(
+      (processedDatabucket) =>
+        processedDatabucket.name.toLowerCase() === identifier.toLowerCase() ||
+        processedDatabucket.id === identifier.toLowerCase() ||
+        processedDatabucket.uuid === identifier.toLowerCase()
+    );
   }
 
   /**
@@ -2130,10 +2138,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         ) {
           // a request helper was found
           newProcessedDatabucket = {
+            uuid: databucket.uuid,
             id: databucket.id,
             name: databucket.name,
             value: databucket.value,
-            parsed: false
+            parsed: false,
+            validJson: false
           };
         } else {
           let templateParsedContent;
@@ -2149,32 +2159,41 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             });
 
             const JSONParsedContent = JSON.parse(templateParsedContent);
+
             newProcessedDatabucket = {
+              uuid: databucket.uuid,
               id: databucket.id,
               name: databucket.name,
               value: JSONParsedContent,
-              parsed: true
+              parsed: true,
+              validJson: true
             };
           } catch (error: any) {
             if (error instanceof SyntaxError) {
               newProcessedDatabucket = {
+                uuid: databucket.uuid,
                 id: databucket.id,
                 name: databucket.name,
                 value: templateParsedContent,
-                parsed: true
+                parsed: true,
+                validJson: false
               };
             } else {
               newProcessedDatabucket = {
+                uuid: databucket.uuid,
                 id: databucket.id,
                 name: databucket.name,
                 value: error.message,
-                parsed: true
+                parsed: true,
+                validJson: false
               };
             }
           }
         }
         this.processedDatabuckets.push(newProcessedDatabucket);
       });
+
+      this.emitProcessedDatabuckets();
     }
   }
 
@@ -2350,6 +2369,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
         if (targetDatabucket && !targetDatabucket?.parsed) {
           let content = targetDatabucket.value;
+
           try {
             content = TemplateParser({
               shouldOmitDataHelper: false,
@@ -2360,20 +2380,42 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               request: fromExpressRequest(request),
               envVarsPrefix: this.options.envVarsPrefix
             });
+
             const JSONParsedcontent = JSON.parse(content);
+
             targetDatabucket.value = JSONParsedcontent;
             targetDatabucket.parsed = true;
+            targetDatabucket.validJson = true;
           } catch (error: any) {
             if (error instanceof SyntaxError) {
               targetDatabucket.value = content;
             } else {
               targetDatabucket.value = error.message;
             }
+
             targetDatabucket.parsed = true;
+            targetDatabucket.validJson = false;
           }
         }
       }
+
+      this.emitProcessedDatabuckets();
     }
+  }
+
+  /**
+   * Emit an event with the processed databuckets.
+   * Remove the value from the processed databuckets to avoid sending
+   * too much data to the client.
+   */
+  private emitProcessedDatabuckets() {
+    this.emit(
+      'data-bucket-processed',
+      // remove the value from the processed databuckets to avoid sending it to the client
+      this.processedDatabuckets.map(({ value: _value, ...props }) => ({
+        ...props
+      }))
+    );
   }
 
   /**

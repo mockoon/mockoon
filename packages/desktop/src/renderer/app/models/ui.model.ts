@@ -25,6 +25,12 @@ export type ConfirmModalPayload = {
   confirmed$: Subject<boolean>;
 };
 
+export type EditorModalPayload = {
+  title: string;
+  subtitle?: string;
+  text: string;
+};
+
 export type ManageInstancesModalPayload = {
   environmentUuid?: string;
   refresh: boolean;
