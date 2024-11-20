@@ -10,6 +10,7 @@ import {
   stringIncludesArrayItems
 } from '@mockoon/commons';
 import Ajv from 'ajv';
+import addAjvFormats from 'ajv-formats';
 import { get as objectGet } from 'object-path';
 import { ParsedQs } from 'qs';
 import { ServerRequest, fromServerRequest } from './requests';
@@ -227,6 +228,8 @@ export class ResponseRulesInterpreter {
 
       try {
         const ajv = new Ajv();
+        addAjvFormats(ajv);
+
         const valid = ajv.compile(schema)(value);
 
         return valid;
