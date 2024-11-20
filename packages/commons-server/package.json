@@ -36,6 +36,7 @@
     "@faker-js/faker": "9.0.3",
     "@mockoon/commons": "9.0.0",
     "ajv": "8.17.1",
+    "ajv-formats": "3.0.1",
     "append-field": "1.0.0",
     "busboy": "1.6.0",
     "cookie-parser": "1.4.7",

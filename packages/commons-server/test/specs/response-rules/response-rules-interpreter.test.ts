@@ -3717,6 +3717,117 @@ describe('Response rules interpreter', () => {
       strictEqual(routeResponse?.body, 'response1');
     });
 
+    it('should return response if operator is "valid_json_schema" and schema is valid without path and using a specific format (email)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = { 'Content-Type': 'application/json' };
+
+          return headers[headerName];
+        },
+        body: {
+          email: 'test@example.org'
+        }
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'body',
+                modifier: '',
+                value: 'schema',
+                operator: 'valid_json_schema',
+                invert: false
+              }
+            ],
+            body: 'response1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [
+          {
+            name: 'schema',
+            id: 'w63q',
+            value: {
+              type: 'object',
+              properties: {
+                email: { type: 'string', format: 'email' }
+              },
+              required: ['email'],
+              additionalProperties: false
+            },
+            parsed: true,
+            uuid: 'abcd',
+            validJson: true
+          }
+        ],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'response1');
+    });
+
+    it('should return error response if operator is "valid_json_schema" and schema is invalid without path and using a specific format (email)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = { 'Content-Type': 'application/json' };
+
+          return headers[headerName];
+        },
+        body: {
+          // invalid email
+          email: 'testexample.org'
+        }
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'body',
+                modifier: '',
+                value: 'schema',
+                operator: 'valid_json_schema',
+                invert: false
+              }
+            ],
+            body: 'response1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [
+          {
+            name: 'schema',
+            id: 'w63q',
+            value: {
+              type: 'object',
+              properties: {
+                email: { type: 'string', format: 'email' }
+              },
+              required: ['email'],
+              additionalProperties: false
+            },
+            parsed: true,
+            uuid: 'abcd',
+            validJson: true
+          }
+        ],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'unauthorized');
+    });
+
     it('should return response if operator is "valid_json_schema" and schema is valid', () => {
       const request: Request = {
         header: function (headerName: string) {
