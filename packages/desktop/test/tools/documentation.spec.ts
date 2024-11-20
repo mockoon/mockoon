@@ -1262,7 +1262,7 @@ const documentationTopics: {
   },
   {
     enabled: true,
-    folder: 'mockoon-data-files/data-storage-location',
+    folder: 'mockoon-data-files/data-files-location',
     screenshots: [
       {
         tasks: async () => {
@@ -1368,13 +1368,7 @@ const documentationTopics: {
         screenshotPosition: {},
         screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
         fileName: 'storage-pretty-printing.png'
-      }
-    ]
-  },
-  {
-    enabled: true,
-    folder: 'mockoon-data-files/environment-clipboard-copy',
-    screenshots: [
+      },
       {
         tasks: async () => {
           await navigation.switchView('ENV_ROUTES');

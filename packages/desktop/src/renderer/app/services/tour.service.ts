@@ -29,7 +29,7 @@ export class TourService {
       placement: 'right',
       links: [
         {
-          url: 'https://mockoon.com/docs/latest/mockoon-data-files/data-storage-location/',
+          url: 'https://mockoon.com/docs/latest/mockoon-data-files/data-files-location/',
           text: 'Local environments documentation'
         },
         {

@@ -29,7 +29,7 @@ $ npm install @mockoon/serverless
 
 ### Mockoon's data file
 
-The Serverless package needs a Mockoon `Environment` object loaded from a [data file](https://mockoon.com/docs/latest/mockoon-data-files/data-storage-location/).
+The Serverless package needs a Mockoon `Environment` object loaded from a [data file](https://mockoon.com/docs/latest/mockoon-data-files/data-files-location/).
 You are responsible for loading this data file (from a URL, S3, etc.) and providing the object to the class constructor (see below).
 
 In the examples below, we will be loading the data file as if it was located next to your function's main file.

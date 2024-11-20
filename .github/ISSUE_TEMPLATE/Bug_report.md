@@ -13,7 +13,7 @@ about: Create a bug report to help us improve Mockoon
 **Steps to Reproduce**
 
 <!-- Steps to reproduce the behavior. -->
-<!-- ⚠️ Please include the full environment / route configuration you are using (route, response type, headers, body, etc). Ideally, join your environment's JSON file: https://mockoon.com/docs/latest/mockoon-data-files/data-storage-location/#locating-the-files -->
+<!-- ⚠️ Please include the full environment / route configuration you are using (route, response type, headers, body, etc). Ideally, join your environment's JSON file: https://mockoon.com/docs/latest/mockoon-data-files/data-files-location/#locating-the-files -->
 
 **Mockoon version:**
 
