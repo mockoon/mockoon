@@ -32,12 +32,10 @@ import {
  */
 export class ResponseRulesInterpreter {
   private targets: {
-    [key in
-      | Exclude<
-          ResponseRuleTargets,
-          'header' | 'request_number' | 'cookie' | 'templating'
-        >
-      | 'bodyRaw']: any;
+    [key in Exclude<
+      ResponseRuleTargets,
+      'header' | 'request_number' | 'cookie' | 'templating'
+    >]: any;
   };
 
   constructor(
@@ -144,6 +142,7 @@ export class ResponseRulesInterpreter {
 
     const parsedRuleModifier = this.templateParse(rule.modifier ?? '');
 
+    // get the value for each rule type
     if (rule.target === 'request_number') {
       value = requestNumber;
     } else if (rule.target === 'cookie') {
@@ -160,12 +159,14 @@ export class ResponseRulesInterpreter {
     } else if (rule.target === 'templating') {
       value = parsedRuleModifier;
     } else {
+      /**
+       * Get the value for targets that can store complex data (body, query, params (route params), global_var, data_bucket)
+       * Note: global_var, data_bucket and params need at least their name to be provided as part of the modifier. An empty modifier is not allowed, and will therefore fail below as value will be undefined.
+       */
       if (parsedRuleModifier) {
-        value = this.targets.bodyRaw;
-
         let target = this.targets[rule.target];
 
-        // if a requestMessage is provided, we parse it based on the information
+        // if a requestMessage (websocket) is provided, we parse it based on the information
         // in the original request.
         if (requestMessage) {
           target =
@@ -175,8 +176,15 @@ export class ResponseRulesInterpreter {
         }
 
         value = getValueFromPath(target, parsedRuleModifier, undefined);
-      } else if (rule.target === 'body') {
-        value = requestMessage || this.targets.bodyRaw;
+      } else {
+        /**
+         * Body and query targets can be used without a modifier, in which case the whole parsed body or query is used.
+         */
+        if (rule.target === 'body') {
+          value = requestMessage || this.targets.body;
+        } else if (rule.target === 'query') {
+          value = this.targets.query;
+        }
       }
     }
 
@@ -260,15 +268,17 @@ export class ResponseRulesInterpreter {
    */
   private extractTargets() {
     const requestContentType = this.request.header('Content-Type');
-    let body: ParsedQs | JSON = {};
+    let body: ParsedQs | JSON | string = this.request.stringBody;
 
-    if (requestContentType) {
-      if (stringIncludesArrayItems(ParsedBodyMimeTypes, requestContentType)) {
-        body = this.request.body;
-      }
+    if (
+      requestContentType &&
+      stringIncludesArrayItems(ParsedBodyMimeTypes, requestContentType)
+    ) {
+      body = this.request.body;
     }
 
     const dataBucketTargets = {};
+
     this.processedDatabuckets.forEach((bucket) => {
       dataBucketTargets[bucket.id] = bucket.value;
       dataBucketTargets[bucket.name] = bucket.value;
@@ -278,7 +288,6 @@ export class ResponseRulesInterpreter {
       body,
       query: this.request.query,
       params: this.request.params,
-      bodyRaw: this.request.stringBody,
       global_var: this.globalVariables,
       data_bucket: dataBucketTargets,
       method: this.request.method?.toLowerCase(),
