@@ -52,7 +52,7 @@ import { match } from 'path-to-regexp';
 import { parse as qsParse } from 'qs';
 import rangeParser from 'range-parser';
 import { Readable } from 'stream';
-import { SecureContextOptions } from 'tls';
+import { SecureContextOptions, TlsOptions } from 'tls';
 import TypedEmitter from 'typed-emitter';
 import { parse as parseUrl } from 'url';
 import { format } from 'util';
@@ -152,6 +152,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       try {
         this.tlsOptions = this.buildTLSOptions(this.environment);
 
+        console.log('requestCert---->', JSON.stringify(this.environment));
+        console.log('tlsOptions---->', JSON.stringify(this.tlsOptions));
         this.serverInstance = httpsCreateServer(this.tlsOptions);
       } catch (error: any) {
         if (error.code === 'ENOENT') {
@@ -2057,7 +2059,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * @returns
    */
   private buildTLSOptions(environment: Environment): SecureContextOptions {
-    let tlsOptions: SecureContextOptions = {};
+    let tlsOptions: TlsOptions = {};
     const processTemplating = (content: string) =>
       TemplateParser({
         content,
@@ -2117,6 +2119,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       }
     } else {
       tlsOptions = { ...DefaultTLSOptions };
+    }
+
+    if (environment.tlsOptions?.requestCert) {
+      tlsOptions.requestCert = true;
+      tlsOptions.rejectUnauthorized = true;
     }
 
     return tlsOptions;

@@ -405,6 +405,7 @@ export const Migrations: {
       if (!environment.tlsOptions) {
         environment.tlsOptions = {
           enabled: (environment as EnvironmentWithHttps).https,
+          requestCert: EnvironmentDefault.tlsOptions.requestCert,
           type: EnvironmentDefault.tlsOptions.type,
           pfxPath: EnvironmentDefault.tlsOptions.pfxPath,
           certPath: EnvironmentDefault.tlsOptions.certPath,
