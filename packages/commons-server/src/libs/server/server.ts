@@ -151,9 +151,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     if (this.environment.tlsOptions.enabled && !this.options.disableTls) {
       try {
         this.tlsOptions = this.buildTLSOptions(this.environment);
-
-        console.log('requestCert---->', JSON.stringify(this.environment));
-        console.log('tlsOptions---->', JSON.stringify(this.tlsOptions));
         this.serverInstance = httpsCreateServer(this.tlsOptions);
       } catch (error: any) {
         if (error.code === 'ENOENT') {
