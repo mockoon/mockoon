@@ -2132,9 +2132,9 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         let newProcessedDatabucket: ProcessedDatabucket;
 
         if (
-          new RegExp(`{{2,3}[#(\\s\\w]*(${requestHelperNames.join('|')})`).exec(
-            databucket.value
-          )
+          new RegExp(
+            `{{2,3}[#(~\\s\\w ]*((?<![\\w])${requestHelperNames.join('|')})[)} ~]+`
+          ).exec(databucket.value)
         ) {
           // a request helper was found
           newProcessedDatabucket = {

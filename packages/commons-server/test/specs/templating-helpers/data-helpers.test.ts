@@ -27,7 +27,9 @@ describe('Data helpers', () => {
             name: 'rightDatabucket',
             id: '45fd',
             value: 'value of the databucket',
-            parsed: true
+            parsed: true,
+            uuid: '313619c9-a343-4a11-b1b2-f3c7fd4e5618',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -47,7 +49,9 @@ describe('Data helpers', () => {
             name: 'numberDatabucket',
             id: 'd45s',
             value: '1',
-            parsed: true
+            parsed: true,
+            uuid: 'c8481a51-a030-4066-8c64-42adaafe214c',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -67,7 +71,9 @@ describe('Data helpers', () => {
             name: 'booleanDatabucket',
             id: 'd5zs',
             value: 'true',
-            parsed: true
+            parsed: true,
+            uuid: '8fda8dc0-d7b6-4f9f-874a-1f04901f99d9',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -87,7 +93,9 @@ describe('Data helpers', () => {
             name: 'nullDatabucket',
             id: 'gn18',
             value: 'null',
-            parsed: true
+            parsed: true,
+            uuid: 'bfe4c50c-02ae-496b-afb0-58771a020887',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -107,7 +115,9 @@ describe('Data helpers', () => {
             name: 'arrayDatabucket',
             id: 'szed',
             value: ['first', 'second'],
-            parsed: true
+            parsed: true,
+            uuid: '94a261c4-82a0-48fc-8553-6963dc7ba7a1',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -127,7 +137,9 @@ describe('Data helpers', () => {
             name: 'objectDatabucket',
             id: 'sc51',
             value: { key: 'value' },
-            parsed: true
+            parsed: true,
+            uuid: '7d5a1721-55c5-418c-952d-921b2e9cc7bf',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -147,7 +159,9 @@ describe('Data helpers', () => {
             name: 'stringDatabucket',
             id: 'jh14',
             value: 'test',
-            parsed: true
+            parsed: true,
+            uuid: '26486289-42f5-456c-a8ee-391ea190f790',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -171,7 +185,9 @@ describe('Data helpers', () => {
               prop: 'value',
               object2: []
             },
-            parsed: true
+            parsed: true,
+            uuid: '25f21584-ec2b-45aa-a518-c10ff20ddbc8',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -195,7 +211,9 @@ describe('Data helpers', () => {
               prop: 'value',
               object2: []
             },
-            parsed: true
+            parsed: true,
+            uuid: '1279e5a0-2493-4caf-9455-7922e28fe167',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -217,7 +235,9 @@ describe('Data helpers', () => {
             value: {
               object1: { prop1: false }
             },
-            parsed: true
+            parsed: true,
+            uuid: '9ddb7f7a-492c-4cb4-a184-4322dee99054',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -241,7 +261,9 @@ describe('Data helpers', () => {
               prop: 'value',
               object2: []
             },
-            parsed: true
+            parsed: true,
+            uuid: '81d24b9b-f9fc-4f07-afe9-920b69044c95',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -274,7 +296,9 @@ describe('Data helpers', () => {
                 }
               }
             },
-            parsed: true
+            parsed: true,
+            uuid: '45c8f9cd-6d08-4c0e-905d-ae6126edcad8',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -298,7 +322,9 @@ describe('Data helpers', () => {
             value: {
               data: 'value'
             },
-            parsed: true
+            parsed: true,
+            uuid: '8e40b249-9038-47af-8b25-c1c9a3881c46',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -320,7 +346,9 @@ describe('Data helpers', () => {
             value: {
               data: 'value'
             },
-            parsed: true
+            parsed: true,
+            uuid: 'cfd66166-783d-4f01-9093-9e4b2e1be88b',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -355,7 +383,9 @@ describe('Data helpers', () => {
             name: 'rightDatabucket',
             id: 'b47g',
             value: 'value of the databucket',
-            parsed: true
+            parsed: true,
+            uuid: 'c6b9945e-3c83-4f03-a8e8-39f8e74000d7',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -375,7 +405,9 @@ describe('Data helpers', () => {
             name: 'stringDatabucket',
             id: 'h18t',
             value: 'test',
-            parsed: true
+            parsed: true,
+            uuid: 'df39ff19-c338-439c-9b70-db17bd55f9a7',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -395,7 +427,9 @@ describe('Data helpers', () => {
             name: 'numberDatabucket',
             id: 's95a',
             value: '1',
-            parsed: true
+            parsed: true,
+            uuid: 'a02cc95e-ffa6-4597-8b59-36d9da068c47',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -415,7 +449,9 @@ describe('Data helpers', () => {
             name: 'booleanDatabucket',
             id: 'ju47',
             value: 'true',
-            parsed: true
+            parsed: true,
+            uuid: 'aff8ee83-fbd4-4efc-92b1-d8293f38fe38',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -435,7 +471,9 @@ describe('Data helpers', () => {
             name: 'nullDatabucket',
             id: 'bv25',
             value: 'null',
-            parsed: true
+            parsed: true,
+            uuid: '7c8f27e4-5443-4bc4-884b-4db44760fb40',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -455,7 +493,9 @@ describe('Data helpers', () => {
             name: 'arrayDatabucket',
             id: 'de9s',
             value: ['first', 'second'],
-            parsed: true
+            parsed: true,
+            uuid: '8581c0ce-5701-4d49-ae9c-5856e5533a6f',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -475,7 +515,9 @@ describe('Data helpers', () => {
             name: 'eachDatabucket',
             id: 'df95',
             value: [1, 2, 3],
-            parsed: true
+            parsed: true,
+            uuid: 'ad5ddd2f-92ae-4b23-8e17-eeb908bbb2bb',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -495,7 +537,9 @@ describe('Data helpers', () => {
             name: 'ifDatabucket',
             id: 'l18k',
             value: 'true',
-            parsed: true
+            parsed: true,
+            uuid: '092e3c37-7b19-4c9a-93f2-80322f2bc4fe',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -515,7 +559,9 @@ describe('Data helpers', () => {
             name: 'enumDatabucket',
             id: 'h18h',
             value: ['string1', 'string2'],
-            parsed: true
+            parsed: true,
+            uuid: 'ea4373ce-d45e-4f61-b27d-9bcc5c825602',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -539,7 +585,9 @@ describe('Data helpers', () => {
               prop: 'value',
               object2: []
             },
-            parsed: true
+            parsed: true,
+            uuid: '341e2533-21d7-4937-95d9-a6f6225df50e',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -563,7 +611,9 @@ describe('Data helpers', () => {
               prop: 'value',
               object2: []
             },
-            parsed: true
+            parsed: true,
+            uuid: 'e4cc3695-bd28-4c33-b25e-a4b59597b884',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -586,7 +636,9 @@ describe('Data helpers', () => {
             value: {
               object1: { prop1: true, prop2: false }
             },
-            parsed: true
+            parsed: true,
+            uuid: '0a7bedc3-7810-466a-9ced-834824a0de44',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -608,7 +660,9 @@ describe('Data helpers', () => {
             value: {
               object1: { 'prop.with.dots': 'value1' }
             },
-            parsed: true
+            parsed: true,
+            uuid: '62265077-a8df-4925-9b12-16e9d3859b3d',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -630,7 +684,9 @@ describe('Data helpers', () => {
             value: {
               'prop.with.dots': 'value1'
             },
-            parsed: true
+            parsed: true,
+            uuid: '845f5471-4ceb-4574-8c0e-e50eae785a2b',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -650,7 +706,9 @@ describe('Data helpers', () => {
             name: 'arrayDatabucket',
             id: 'h18h',
             value: { arr: ['string1', 'string2'] },
-            parsed: true
+            parsed: true,
+            uuid: 'cb3dabe8-f1d8-431c-a9a0-c8a7e7a9cb92',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -684,7 +742,9 @@ describe('Data helpers', () => {
                 }
               }
             },
-            parsed: true
+            parsed: true,
+            uuid: 'b1f2adb2-3071-4a69-b62f-c808002a5286',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -709,7 +769,9 @@ describe('Data helpers', () => {
             value: {
               data: 'value'
             },
-            parsed: true
+            parsed: true,
+            uuid: '687a55c5-af70-4656-8455-2c2b068a07a8',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -731,7 +793,9 @@ describe('Data helpers', () => {
             value: {
               data: 'value'
             },
-            parsed: true
+            parsed: true,
+            uuid: '8767a45f-b573-4e0d-8d82-8bb50d1714ff',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -766,7 +830,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: 'value',
-            parsed: true
+            parsed: true,
+            uuid: 'ffbb6449-8f26-4336-bf9b-636501aa88d8',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -787,7 +853,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: 'value',
-            parsed: true
+            parsed: true,
+            uuid: '6c1f42af-da73-4cc0-9669-ad2df128b1d9',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -807,7 +875,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: 'value',
-            parsed: true
+            parsed: true,
+            uuid: '7140a7da-e707-4a1d-8352-8c0c8c78e102',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -828,7 +898,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: undefined,
-            parsed: true
+            parsed: true,
+            uuid: 'ed8502fa-cef5-4e9f-9df0-0663102ff069',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -849,7 +921,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: { path: { to: { value: 'oldValue' } } },
-            parsed: true
+            parsed: true,
+            uuid: '5d372b59-0114-4fd1-b6c9-371d1d63412c',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -869,7 +943,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: ['first', 'second'],
-            parsed: true
+            parsed: true,
+            uuid: 'ae0f0c49-8164-4f58-9c9e-20a33e1398c4',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -890,7 +966,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: { path: { to: { array: ['first', 'second'] } } },
-            parsed: true
+            parsed: true,
+            uuid: '2d91f3bb-775e-4a0d-8a5e-1d990b704f68',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -910,7 +988,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: 'value',
-            parsed: true
+            parsed: true,
+            uuid: '11d4c89d-ea59-40d2-ade7-7d0d4a003ada',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -931,7 +1011,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: { path: { to: { value: 'oldValue' } } },
-            parsed: true
+            parsed: true,
+            uuid: 'e86b3a0e-0cc5-45ca-b18e-2be4ab1dc6a5',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -951,7 +1033,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: 1,
-            parsed: true
+            parsed: true,
+            uuid: 'f53ce414-3539-4b76-b76b-f75ed87b234f',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -972,7 +1056,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: { path: { to: { value: 1 } } },
-            parsed: true
+            parsed: true,
+            uuid: 'bee15c02-2297-44b8-8835-ae0c489386fa',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -992,7 +1078,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: 1,
-            parsed: true
+            parsed: true,
+            uuid: 'ce3d3a02-ac14-48df-b3db-7af12afcc97c',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -1012,7 +1100,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: 1,
-            parsed: true
+            parsed: true,
+            uuid: '8a00354c-cccb-403f-95a2-5fa4bf131d5a',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -1033,7 +1123,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: { path: { to: { value: 1 } } },
-            parsed: true
+            parsed: true,
+            uuid: 'ad50cc8a-f96a-4d82-b5ac-b2c4b9393302',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -1054,7 +1146,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: { path: { to: { value: 1 } } },
-            parsed: true
+            parsed: true,
+            uuid: '6da967eb-12fa-49bf-ba8c-d38dee0b6c49',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -1074,7 +1168,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: 5,
-            parsed: true
+            parsed: true,
+            uuid: '591e9c04-df8e-4a63-87f0-d75f4f65dd69',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -1095,7 +1191,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: { path: { to: { value: 5 } } },
-            parsed: true
+            parsed: true,
+            uuid: '0f97cd6b-4f10-466e-8746-254e7c7b4583',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -1115,7 +1213,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: 5,
-            parsed: true
+            parsed: true,
+            uuid: 'afe1b9f4-2577-43e4-9728-ce3afb17addf',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -1135,7 +1235,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: 5,
-            parsed: true
+            parsed: true,
+            uuid: '7476598d-de47-4089-8982-76d14cc2b45b',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -1156,7 +1258,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: { path: { to: { value: 5 } } },
-            parsed: true
+            parsed: true,
+            uuid: '814973ae-9467-4272-945a-2b45c581132e',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -1177,7 +1281,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: { path: { to: { value: 5 } } },
-            parsed: true
+            parsed: true,
+            uuid: '4f802a5a-c007-4f10-98db-ac0c6eb501fa',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -1197,7 +1303,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: true,
-            parsed: true
+            parsed: true,
+            uuid: 'bc473612-18ef-4c54-a705-38eb7a236180',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -1218,7 +1326,9 @@ describe('Data helpers', () => {
             name: 'myData',
             id: 'abcd',
             value: { path: { to: { value: true } } },
-            parsed: true
+            parsed: true,
+            uuid: '463c6d7c-c597-4d4b-a0c3-803356c67e5a',
+            validJson: true
           }
         ],
         globalVariables: {},
