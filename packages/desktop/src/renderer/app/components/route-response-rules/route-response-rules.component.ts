@@ -106,8 +106,8 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     ],
     cookie: ['empty_array'],
     params: ['empty_array', 'array_includes'],
-    path: ['null', 'empty_array', 'array_includes'],
-    method: ['null', 'empty_array', 'array_includes'],
+    path: ['null', 'empty_array', 'array_includes', 'valid_json_schema'],
+    method: ['null', 'empty_array', 'array_includes', 'valid_json_schema'],
     templating: ['empty_array', 'array_includes']
   };
   public rulesOperators: ToggleItems = [

@@ -1,7 +1,6 @@
 import { Route } from '@mockoon/commons';
 import { Request } from 'express';
 import { ParamsDictionary, Query } from 'express-serve-static-core';
-import { IncomingMessage } from 'http';
 import { deepStrictEqual, notStrictEqual, strictEqual } from 'node:assert';
 import { describe, it } from 'node:test';
 import {
@@ -13,7 +12,7 @@ import {
 describe('Requests', () => {
   describe('fromExpressRequest', () => {
     it('should create ServerRequest correctly from empty express request', () => {
-      const req = {} as Request;
+      const req = { route: { path: '' } } as Request;
       const result = fromExpressRequest(req);
 
       strictEqual(result.body, undefined);
@@ -34,7 +33,8 @@ describe('Requests', () => {
     it('should return body and stringBody correctly', () => {
       const req = {
         body: { a: 1, text: 'hello' },
-        stringBody: "{ a: 1, text: 'hello' }"
+        stringBody: "{ a: 1, text: 'hello' }",
+        route: { path: '' }
       } as Request;
       const result = fromExpressRequest(req);
       deepStrictEqual(result.body, { a: 1, text: 'hello' });
@@ -43,7 +43,8 @@ describe('Requests', () => {
 
     it('should return cookies correctly', () => {
       const req = {
-        cookies: { 'session-id': 'abc' } as any
+        cookies: { 'session-id': 'abc' } as any,
+        route: { path: '' }
       } as Request;
       const result = fromExpressRequest(req);
       deepStrictEqual(result.cookies, { 'session-id': 'abc' });
@@ -55,7 +56,8 @@ describe('Requests', () => {
         accept: 'text/html'
       };
       const req = {
-        header: (name: string) => headers[name]
+        header: (name: string) => headers[name],
+        route: { path: '' }
       } as Request;
       const result = fromExpressRequest(req);
       strictEqual(result.header('content-type'), 'application/json');
@@ -68,7 +70,8 @@ describe('Requests', () => {
         params: {
           path1: 'value1',
           path2: 'value2'
-        } as ParamsDictionary
+        } as ParamsDictionary,
+        route: { path: '' }
       } as Request;
       const result = fromExpressRequest(req);
       deepStrictEqual(result.params, {
@@ -82,7 +85,8 @@ describe('Requests', () => {
         query: {
           search: 'abc',
           range: '1'
-        } as Query
+        } as Query,
+        route: { path: '' }
       } as Request;
       const result = fromExpressRequest(req);
       deepStrictEqual(result.query, {
@@ -95,7 +99,8 @@ describe('Requests', () => {
       const req = {
         hostname: 'localhost',
         ip: '127.0.0.2',
-        method: 'GET'
+        method: 'GET',
+        route: { path: '' }
       } as Request;
       const result = fromExpressRequest(req);
       strictEqual(result.hostname, 'localhost');
@@ -107,8 +112,9 @@ describe('Requests', () => {
   describe('fromWsRequest', () => {
     it('should parse url correctly from http IncomingMessage', () => {
       const req = {
-        url: 'api/path1/test?q=1&p=abc'
-      } as IncomingMessage;
+        url: 'api/path1/test?q=1&p=abc',
+        route: { path: '' }
+      } as Request;
 
       const result = fromWsRequest(req, {
         endpoint: 'api/path1/test'
@@ -120,8 +126,9 @@ describe('Requests', () => {
 
     it('should parse url path variables correctly from url', () => {
       const req = {
-        url: '/api/path1/test?q=1&p=abc'
-      } as IncomingMessage;
+        url: '/api/path1/test?q=1&p=abc',
+        route: { path: '' }
+      } as Request;
 
       const result = fromWsRequest(req, {
         endpoint: 'api/:var1/:var2'
@@ -134,8 +141,9 @@ describe('Requests', () => {
     it('should return body and stringBody correctly when message is not given', () => {
       const req = {
         url: 'api/path1/test?q=1&p=abc',
-        body: { a: 1, text: 'hello' }
-      } as IncomingMessage;
+        body: { a: 1, text: 'hello' },
+        route: { path: '' }
+      } as Request;
       const result = fromWsRequest(req, {
         endpoint: 'api/path1/test'
       } as Route);
@@ -149,8 +157,9 @@ describe('Requests', () => {
         body: { a: 1, text: 'hello' },
         headers: {
           'content-type': 'application/json'
-        } as NodeJS.Dict<string | string[]>
-      } as IncomingMessage;
+        } as NodeJS.Dict<string | string[]>,
+        route: { path: '' }
+      } as Request;
       const result = fromWsRequest(
         req,
         {
@@ -168,8 +177,9 @@ describe('Requests', () => {
         headers: {
           'content-type': 'application/json',
           accept: 'text/html'
-        } as NodeJS.Dict<string | string[]>
-      } as IncomingMessage;
+        } as NodeJS.Dict<string | string[]>,
+        route: { path: '' }
+      } as Request;
       const result = fromWsRequest(req, {
         endpoint: 'api/path1/test'
       } as Route);
@@ -187,8 +197,9 @@ describe('Requests', () => {
           accept: 'text/html',
           host: 'localhost',
           'x-forwarded-for': '192.168.1.1'
-        } as NodeJS.Dict<string | string[]>
-      } as IncomingMessage;
+        } as NodeJS.Dict<string | string[]>,
+        route: { path: '' }
+      } as Request;
       const result = fromWsRequest(req, {
         endpoint: 'api/path1/test'
       } as Route);
@@ -200,8 +211,9 @@ describe('Requests', () => {
       const req = {
         headers: {
           cookie: 'a=1;b=hello%20this%20is%20%2521%3D4'
-        }
-      } as IncomingMessage;
+        },
+        route: { path: '' }
+      } as Request;
       const result = fromWsRequest(req, {
         endpoint: 'api/path1/test'
       } as Route);
@@ -218,8 +230,9 @@ describe('Requests', () => {
         url: 'api/path1/test?q=1&p=abc',
         headers: {
           'content-type': 'application/json'
-        } as NodeJS.Dict<string | string[]>
-      } as IncomingMessage;
+        } as NodeJS.Dict<string | string[]>,
+        route: { path: '' }
+      } as Request;
       const req = fromWsRequest(originalReq, {
         endpoint: 'api/path1/test'
       } as Route);
@@ -237,8 +250,9 @@ describe('Requests', () => {
           url: 'api/path1/test?q=1&p=abc',
           headers: {
             'content-type': 'application/json'
-          } as NodeJS.Dict<string | string[]>
-        } as IncomingMessage,
+          } as NodeJS.Dict<string | string[]>,
+          route: { path: '' }
+        } as Request,
         {
           endpoint: 'api/path1/test'
         } as Route
@@ -256,8 +270,9 @@ describe('Requests', () => {
           body: { a: 1, text: 'hello' },
           headers: {
             'content-type': 'application/json'
-          } as NodeJS.Dict<string | string[]>
-        } as IncomingMessage,
+          } as NodeJS.Dict<string | string[]>,
+          route: { path: '' }
+        } as Request,
         {
           endpoint: 'api/path1/test'
         } as Route
@@ -284,8 +299,9 @@ describe('Requests', () => {
           stringBody: JSON.stringify({ a: 1, text: 'hello' }),
           headers: {
             'content-type': 'application/json'
-          } as NodeJS.Dict<string | string[]>
-        } as IncomingMessage,
+          } as NodeJS.Dict<string | string[]>,
+          route: { path: '' }
+        } as Request,
         {
           endpoint: 'api/path1/test'
         } as Route
