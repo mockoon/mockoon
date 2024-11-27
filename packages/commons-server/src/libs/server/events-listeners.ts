@@ -166,7 +166,7 @@ export const listenServerEvents = function (
           )
         : [];
     }
-    logger.info('WebSocket New Connection', logMeta);
+    logger.info('New WebSocket connection', logMeta);
   });
 
   server.on(
@@ -192,7 +192,7 @@ export const listenServerEvents = function (
             )
           : [];
       }
-      logger.info('WebSocket Message Recieved', logMeta);
+      logger.info('WebSocket message received', logMeta);
     }
   );
 
@@ -216,7 +216,7 @@ export const listenServerEvents = function (
           : [];
       }
 
-      logger.info('WebSocket Closed', logMeta);
+      logger.info('WebSocket closed', logMeta);
     }
   );
 };

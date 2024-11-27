@@ -35,11 +35,7 @@ import { EventEmitter } from 'events';
 import express, { Application, NextFunction, Request, Response } from 'express';
 import { createReadStream, readFile, readFileSync, statSync } from 'fs';
 import type { RequestListener } from 'http';
-import {
-  IncomingMessage,
-  createServer as httpCreateServer,
-  Server as httpServer
-} from 'http';
+import { createServer as httpCreateServer, Server as httpServer } from 'http';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import {
   createServer as httpsCreateServer,
@@ -671,7 +667,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     webSocketServer: WebSocketServer,
     routeFor: Route
   ) {
-    return (socket: WebSocket, request: IncomingMessage) => {
+    return (socket: WebSocket, request: Request) => {
       // Refresh the environment when a new client is connected.
       this.refreshEnvironment();
       const route = this.getRefreshedRoute(routeFor);
@@ -837,7 +833,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     socket: WebSocket,
     route: Route,
     enabledRouteResponse: RouteResponse,
-    request?: IncomingMessage,
+    request?: Request,
     data?: string,
     connectedRequest?: ServerRequest
   ): string | undefined {
@@ -983,7 +979,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   private handleOneToOneStreamingResponses(
     socket: WebSocket,
     route: Route,
-    request: IncomingMessage,
+    request: Request,
     baseErrorMeta: any
   ) {
     let responseNumber = 1;

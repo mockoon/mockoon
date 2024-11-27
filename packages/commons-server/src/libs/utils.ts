@@ -585,7 +585,7 @@ export const parseRequestMessage = (
   data: string,
   request?: ServerRequest
 ): any => {
-  const contentType = request?.header('content-type');
+  const contentType = request?.header('content-type') as string;
 
   return parseByContentType(data, contentType);
 };

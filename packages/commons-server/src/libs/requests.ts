@@ -12,8 +12,8 @@ import { parseRequestMessage, parseWebSocketMessage } from './utils';
  */
 export interface ServerRequest {
   cookies: any;
-  header: (name: string) => string | undefined;
-  get: (headerName: string) => string | undefined;
+  header: (name: string) => string | string[] | undefined;
+  get: (headerName: string) => string | string[] | undefined;
   params: any;
   query: any;
   body: any;
@@ -22,7 +22,8 @@ export interface ServerRequest {
   hostname: string | undefined;
   ip: string | undefined;
   method: string | undefined;
-
+  // store the original path of the request, e.g. /api/v1/users/:id -> /api/v1/users/1
+  originalPath: string;
   originalRequest: any;
 }
 
@@ -70,20 +71,21 @@ const parseCookies = (req: IncomingMessage): any => {
  * @param req Express request object
  * @returns Mockoon common server request
  */
-export const fromExpressRequest = (req: Request): ServerRequest =>
-  ({
-    body: req.body,
-    cookies: req.cookies,
-    header: (name: string) => req.header?.(name),
-    get: (headerName: string) => req.header?.(headerName),
-    hostname: req.hostname,
-    ip: req.ip,
-    method: req.method,
-    params: req.params,
-    originalRequest: req,
-    query: req.query,
-    stringBody: req.stringBody || ''
-  }) as ServerRequest;
+export const fromExpressRequest = (req: Request): ServerRequest => ({
+  body: req.body,
+  cookies: req.cookies,
+  header: (name: string) => req.header?.(name),
+  get: (headerName: string) => req.header?.(headerName),
+  hostname: req.hostname,
+  ip: req.ip,
+  method: req.method,
+  params: req.params,
+  // store the original path of the request, e.g. /api/v1/users/:id
+  originalPath: req.route?.path ?? '',
+  originalRequest: req,
+  query: req.query,
+  stringBody: req.stringBody || ''
+});
 
 /**
  * Creates a common ServerRequest instance from Web socket request.
@@ -93,7 +95,7 @@ export const fromExpressRequest = (req: Request): ServerRequest =>
  * @param message message recieved from websocket now
  */
 export const fromWsRequest = (
-  req: IncomingMessage,
+  req: Request,
   originalRoute: Route,
   message?: string
 ): ServerRequest => {
@@ -120,13 +122,15 @@ export const fromWsRequest = (
     header: (name: string) => req.headers?.[name],
     get: (headerName: string) => req.headers?.[headerName],
     hostname: req.headers?.['host'],
-    ip: req.headers?.['x-forwarded-for'] || req.socket?.remoteAddress,
+    ip:
+      (req.headers?.['x-forwarded-for'] as string) || req.socket?.remoteAddress,
     method: req.method,
+    originalPath: `${originalRoute.endpoint.startsWith('/') ? '' : '/'}${originalRoute.endpoint}`,
     originalRequest: req,
     params: CloneObject(pathParams),
     query: CloneObject(location.query),
     stringBody: message || toString(req.body) || ''
-  } as ServerRequest;
+  };
 };
 
 /**
@@ -157,9 +161,10 @@ export const fromServerRequest = (
     hostname: req.hostname,
     ip: req.ip,
     method: req.method,
+    originalPath: req.originalPath,
     originalRequest: req.originalRequest,
     params: req.params,
     query: req.query,
     stringBody: message || req.stringBody || ''
-  } as ServerRequest;
+  };
 };

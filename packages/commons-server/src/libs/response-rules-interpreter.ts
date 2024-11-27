@@ -270,7 +270,7 @@ export class ResponseRulesInterpreter {
    * Extract rules targets from the request (body, headers, etc)
    */
   private extractTargets() {
-    const requestContentType = this.request.header('Content-Type');
+    const requestContentType = this.request.header('Content-Type') as string;
     let body: ParsedQs | JSON | string = this.request.stringBody;
 
     if (
@@ -294,7 +294,7 @@ export class ResponseRulesInterpreter {
       global_var: this.globalVariables,
       data_bucket: dataBucketTargets,
       method: this.request.method?.toLowerCase(),
-      path: this.request.originalRequest.url
+      path: [this.request.originalRequest.url, this.request.originalPath]
     };
   }
 

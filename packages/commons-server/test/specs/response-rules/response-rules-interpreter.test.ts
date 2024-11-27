@@ -1996,7 +1996,8 @@ describe('Response rules interpreter', () => {
         header: function (_headerName: string) {
           return '';
         },
-        url: '/test/1'
+        url: '/test/1',
+        route: { path: '/test/:id' }
       } as Request;
 
       const routeResponse = new ResponseRulesInterpreter(
@@ -2026,12 +2027,49 @@ describe('Response rules interpreter', () => {
       strictEqual(routeResponse?.body, 'path1');
     });
 
+    it('should return response if path equals value', () => {
+      const request: Request = {
+        header: function (_headerName: string) {
+          return '';
+        },
+        url: '/test/1',
+        route: { path: '/test/:id' }
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'path',
+                modifier: '',
+                value: '/test/:id',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'path1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'path1');
+    });
+
     it('should return response if path contains value (regex)', () => {
       const request: Request = {
         header: function (_headerName: string) {
           return '';
         },
-        url: '/test/2'
+        url: '/test/2',
+        route: { path: '/test/:id' }
       } as Request;
 
       const routeResponse = new ResponseRulesInterpreter(
@@ -2044,6 +2082,42 @@ describe('Response rules interpreter', () => {
                 target: 'path',
                 modifier: '',
                 value: '1|2',
+                operator: 'regex',
+                invert: false
+              }
+            ],
+            body: 'path2'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'path2');
+    });
+
+    it('should return response if path contains value (regex)', () => {
+      const request: Request = {
+        header: function (_headerName: string) {
+          return '';
+        },
+        url: '/test/2',
+        route: { path: '/test/:id' }
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'path',
+                modifier: '',
+                value: ':id',
                 operator: 'regex',
                 invert: false
               }
