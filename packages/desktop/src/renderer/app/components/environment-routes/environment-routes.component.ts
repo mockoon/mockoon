@@ -41,7 +41,7 @@ import {
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
-import { StatusCodeValidation } from 'src/renderer/app/constants/masks.constants';
+import { statusCodeValidation } from 'src/renderer/app/constants/masks.constants';
 import {
   StatusCodes,
   defaultContentType
@@ -228,7 +228,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public rulesNotUsingDefaultResponse: ResponseMode[] =
     RulesNotUsingDefaultResponse;
   public statusCodes = StatusCodes;
-  public statusCodeValidation = StatusCodeValidation;
+  public statusCodeValidation = statusCodeValidation;
   public focusableInputs = FocusableInputs;
   public Infinity = Infinity;
   public texts = Texts;
