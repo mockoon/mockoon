@@ -330,6 +330,13 @@ export const DesktopMessages: {
     toastType: 'error',
     showToast: true
   }),
+  CLOUD_DEPLOY_START_SUBDOMAIN_TAKEN: () => ({
+    message:
+      'Error while starting the instance. The subdomain is already taken. Please choose another one.',
+    log: true,
+    toastType: 'error',
+    showToast: true
+  }),
   CLOUD_DEPLOY_STOP_ERROR: () => ({
     message: 'Error while stopping the instance. Please try again later.',
     log: true,

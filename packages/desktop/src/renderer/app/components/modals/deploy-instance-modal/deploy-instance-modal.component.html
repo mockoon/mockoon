@@ -20,6 +20,48 @@
     <div [formGroup]="optionsForm">
       <div class="mb-3">
         <div class="input-group align-items-center">
+          <label class="col-form-label pe-2" for="subdomain">Subdomain</label>
+          <div class="col-4">
+            <input
+              type="text"
+              id="subdomain"
+              class="form-control"
+              formControlName="subdomain"
+              placeholder="Optional custom subdomain"
+              [maxLength]="50"
+              [minLength]="5"
+            />
+          </div>
+          <div class="input-group-text">
+            <app-svg
+              icon="info"
+              ngbTooltip="Customize the subdomain of your instance (e.g. {subdomain}.mockoon.app). Leave empty to use a random subdomain. Only letters, numbers, and dashes are allowed."
+            ></app-svg>
+          </div>
+          <div class="input-group-text text-warning">
+            <small>
+              @if (
+                optionsForm.get('subdomain').errors?.minlength ||
+                optionsForm.get('subdomain').errors?.maxlength ||
+                optionsForm.get('subdomain').errors?.pattern
+              ) {
+                5 to 50 characters, a-z, 0-9 and - (not at the beginning or end)
+              } @else if (optionsForm.get('subdomain').errors?.subdomainTaken) {
+                This subdomain is not available
+              } @else if (
+                optionsForm.get('subdomain').value &&
+                !optionsForm.get('subdomain').errors &&
+                !data.taskInProgress
+              ) {
+                <app-svg icon="check" size="12" class="text-success"></app-svg>
+              }
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <div class="input-group align-items-center">
           <label class="col-form-label pe-2">Instance visibility</label>
           <app-toggle
             prefix="instance-visibility"
@@ -52,7 +94,7 @@
           <div class="input-group-text">
             <app-svg
               icon="info"
-              ngbTooltip="Enable the admin API expose on /mockoon-admin endpoint. This API allows you to manage your instances remotely."
+              ngbTooltip="Enable the admin API exposed on /mockoon-admin endpoint. This API allows you to manage your mocks remotely."
             ></app-svg>
           </div>
         </div>
@@ -96,7 +138,7 @@
         type="button"
         class="btn btn-primary me-2"
         (click)="deploy(data.user, data.environment.uuid)"
-        [disabled]="data.taskInProgress"
+        [disabled]="data.taskInProgress || optionsForm.invalid"
       >
         {{ data.instanceExists ? 'Re-deploy' : 'Deploy' }}
       </button>

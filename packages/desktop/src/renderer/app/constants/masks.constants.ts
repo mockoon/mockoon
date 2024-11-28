@@ -1,6 +1,6 @@
 import { Validation } from 'src/renderer/app/models/common.model';
 
-export const StatusCodeValidation: Validation = {
+export const statusCodeValidation: Validation = {
   mask: 'abb',
   maskPatterns: {
     a: { pattern: new RegExp(/[1-9]/) },

@@ -1,13 +1,23 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, Validators } from '@angular/forms';
-import { DeployInstanceVisibility, User } from '@mockoon/cloud';
+import { DeployInstance, DeployInstanceVisibility, User } from '@mockoon/cloud';
 import { Environment } from '@mockoon/commons';
 import {
   BehaviorSubject,
-  EMPTY,
-  Observable,
   catchError,
+  combineLatestWith,
+  debounceTime,
+  EMPTY,
+  filter,
   map,
+  Observable,
   switchMap,
   tap
 } from 'rxjs';
@@ -27,9 +37,17 @@ import { Config } from 'src/renderer/config';
 })
 export class DeployInstanceModalComponent extends Logger implements OnInit {
   public taskInProgress$ = new BehaviorSubject<boolean>(false);
+  public existingInstance$: Observable<DeployInstance>;
   public instanceExists$: Observable<boolean>;
   public user$: Observable<User>;
   public optionsForm = this.formBuilder.group({
+    subdomain: this.formBuilder.control<string>(null, {
+      validators: [
+        Validators.minLength(5),
+        Validators.maxLength(50),
+        Validators.pattern(/^(?!-)[a-z0-9-]*(?<!-)$/)
+      ]
+    }),
     visibility: this.formBuilder.control<DeployInstanceVisibility>(
       DeployInstanceVisibility.PRIVATE,
       Validators.required
@@ -48,6 +66,7 @@ export class DeployInstanceModalComponent extends Logger implements OnInit {
   ];
   public environment$: Observable<Environment>;
   private environmentUuid$ = this.uiService.getModalPayload$('deploy');
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private uiService: UIService,
@@ -64,19 +83,23 @@ export class DeployInstanceModalComponent extends Logger implements OnInit {
       map((environmentUuid) => this.store.getEnvironmentByUUID(environmentUuid))
     );
     this.user$ = this.store.select('user');
-    this.instanceExists$ = this.environmentUuid$.pipe(
+    this.existingInstance$ = this.environmentUuid$.pipe(
       switchMap((environmentUuid) =>
         this.store
           .select('deployInstances')
           .pipe(map((instances) => ({ environmentUuid, instances })))
       ),
-      map(({ environmentUuid, instances }) => {
-        const existingInstance = instances.find(
+      map(({ environmentUuid, instances }) =>
+        instances.find(
           (instance) => instance.environmentUuid === environmentUuid
-        );
-
+        )
+      )
+    );
+    this.instanceExists$ = this.existingInstance$.pipe(
+      map((existingInstance) => {
         if (existingInstance) {
           this.optionsForm.patchValue({
+            subdomain: existingInstance.subdomain,
             visibility: existingInstance.visibility,
             enableAdminApi: existingInstance.enableAdminApi
           });
@@ -85,6 +108,47 @@ export class DeployInstanceModalComponent extends Logger implements OnInit {
         return !!existingInstance;
       })
     );
+
+    // check subdomain availability (not using async validators to use debounce and stuff)
+    this.optionsForm
+      .get('subdomain')
+      .valueChanges.pipe(
+        combineLatestWith(this.existingInstance$),
+        filter(
+          ([subdomain, existingInstance]) =>
+            subdomain &&
+            subdomain.length >= 5 &&
+            this.optionsForm.get('subdomain').valid &&
+            (!existingInstance || existingInstance.subdomain !== subdomain)
+        ),
+        tap(() => {
+          this.optionsForm.get('subdomain').setErrors(null);
+
+          this.taskInProgress$.next(true);
+        }),
+        debounceTime(1000),
+        switchMap(([subdomain, existingInstance]) =>
+          this.deployService
+            .checkSubdomainAvailability(
+              subdomain,
+              existingInstance?.environmentUuid ?? null
+            )
+            .pipe(
+              tap(() => {
+                this.taskInProgress$.next(false);
+              }),
+              map((isAvailable) => {
+                if (!isAvailable) {
+                  this.optionsForm
+                    .get('subdomain')
+                    .setErrors({ subdomainTaken: true });
+                }
+              })
+            )
+        ),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe();
   }
 
   public close() {
@@ -92,6 +156,10 @@ export class DeployInstanceModalComponent extends Logger implements OnInit {
   }
 
   public deploy(user: User, environmentUuid: string) {
+    if (this.optionsForm.invalid) {
+      return;
+    }
+
     const instances = this.store.get('deployInstances');
     const existingInstance = instances.find(
       (instance) => instance.environmentUuid === environmentUuid
@@ -132,6 +200,8 @@ export class DeployInstanceModalComponent extends Logger implements OnInit {
         catchError((error) => {
           if (error.status === 413) {
             this.logMessage('error', 'CLOUD_DEPLOY_START_TOO_BIG_ERROR');
+          } else if (error.status === 409) {
+            this.logMessage('error', 'CLOUD_DEPLOY_START_SUBDOMAIN_TAKEN');
           } else {
             this.logMessage('error', 'CLOUD_DEPLOY_START_ERROR');
           }

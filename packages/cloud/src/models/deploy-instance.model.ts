@@ -10,6 +10,7 @@ export enum DeployInstanceVisibility {
 
 export type DeployInstance = {
   environmentUuid: string;
+  subdomain: string;
   url: string;
   visibility: DeployInstanceVisibility;
   status: DeployInstanceStatus;

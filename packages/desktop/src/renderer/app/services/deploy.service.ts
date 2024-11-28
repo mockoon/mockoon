@@ -7,6 +7,7 @@ import {
   filter,
   first,
   forkJoin,
+  map,
   of,
   switchMap,
   tap
@@ -75,13 +76,53 @@ export class DeployService extends Logger {
   }
 
   /**
+   * Check if a subdomain is available
+   *
+   * @returns
+   */
+  public checkSubdomainAvailability(
+    subdomain: string,
+    environmentUuid?: string
+  ) {
+    return forkJoin([
+      this.userService.getIdToken(),
+      this.remoteConfig.get('deployUrl').pipe(
+        filter((deployUrl) => !!deployUrl),
+        first()
+      )
+    ]).pipe(
+      switchMap(([token, deployUrl]) =>
+        this.httpClient
+          .post(
+            `${deployUrl}/deployments/subdomain`,
+            {
+              subdomain,
+              environmentUuid
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            }
+          )
+          .pipe(
+            map(() => true),
+            catchError(() => of(false))
+          )
+      )
+    );
+  }
+  /**
    * Deploy an environment to the cloud
    *
    * @returns
    */
   public deploy(
     environmentUuid: string,
-    options: Pick<DeployInstance, 'visibility'>,
+    options: Pick<
+      DeployInstance,
+      'visibility' | 'subdomain' | 'enableAdminApi'
+    >,
     redeploy = false
   ) {
     const environment = this.store.getEnvironmentByUUID(environmentUuid);
