@@ -2,10 +2,41 @@
   "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
   "lastMigration": 33,
   "name": "WebSockets Test",
-  "endpointPrefix": "",
+  "endpointPrefix": "ws-env",
   "latency": 0,
   "port": 3000,
   "routes": [
+    {
+      "uuid": "a9bf1b7f-b829-4f18-9763-fd3a635abe75",
+      "type": "http",
+      "documentation": "HTTP route with same endpoint as ws route",
+      "method": "get",
+      "endpoint": "test/ws/echo",
+      "responses": [
+        {
+          "uuid": "363474ea-0e3e-47e2-b6b0-42506232bd0d",
+          "body": "httpres",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
     {
       "uuid": "dd07b407-df1f-4393-83f2-7a832fdd6f99",
       "method": "get",
@@ -427,6 +458,7 @@
   ],
   "folders": [],
   "rootChildren": [
+    { "type": "route", "uuid": "a9bf1b7f-b829-4f18-9763-fd3a635abe75" },
     { "type": "route", "uuid": "06441476-6e46-4763-a8e7-0cc8377efb3a" },
     { "type": "route", "uuid": "12c2e169-2211-4582-85bc-82caaa8e4390" },
     { "type": "route", "uuid": "dd07b407-df1f-4393-83f2-7a832fdd6f99" },

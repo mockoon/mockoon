@@ -89,7 +89,7 @@ import {
  */
 export class MockoonServer extends (EventEmitter as new () => TypedEmitter<ServerEvents>) {
   private serverInstance: httpServer | httpsServer;
-  private webSocketServers: WebSocketServer[] = [];
+  private webSocketServers: { instance: WebSocketServer; path: string }[] = [];
   private tlsOptions: SecureContextOptions = {};
   private processedDatabuckets: ProcessedDatabucket[] = [];
   // store the request number for each route
@@ -193,6 +193,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     if (webSocketRoutes.length > 0) {
       this.createWSRoutes(webSocketRoutes);
+    } else {
+      this.serverInstance.on('upgrade', (request, socket) => {
+        socket.write(`HTTP/${request.httpVersion} 404\r\n\r\n`);
+        socket.destroy();
+      });
     }
 
     try {
@@ -214,9 +219,13 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    */
   public stop(): void {
     if (this.webSocketServers.length > 0) {
-      this.webSocketServers.forEach((wss) => wss.close());
+      this.webSocketServers.forEach((webSocketServer) => {
+        webSocketServer.instance.close();
+      });
     }
+
     BroadcastContext.getInstance().closeAll();
+
     if (this.serverInstance) {
       this.serverInstance.kill(() => {
         this.emit('stopped');
@@ -615,7 +624,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
         if (declaredRoute.type === RouteType.CRUD) {
           this.createCRUDRoute(server, declaredRoute, routePath);
-        } else {
+        } else if (declaredRoute.type === RouteType.HTTP) {
           this.createRESTRoute(server, declaredRoute, routePath);
         }
       } catch (error: any) {
@@ -640,37 +649,38 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * @param wsRoutes
    */
   private createWSRoutes(wsRoutes: Route[]) {
-    const envPath = this.environment.endpointPrefix
-      ? `/${this.environment.endpointPrefix}`
-      : '';
-
     wsRoutes.forEach((wsRoute) => {
       const webSocketServer = new WebSocket.Server({
-        noServer: true,
-        path: `${envPath}`
+        noServer: true
       });
 
-      this.webSocketServers.push(webSocketServer);
+      this.webSocketServers.push({
+        instance: webSocketServer,
+        path: preparePath(this.environment.endpointPrefix, wsRoute.endpoint)
+      });
 
       webSocketServer.on(
         'connection',
         this.createWebSocketConnectionHandler(webSocketServer, wsRoute)
       );
+    });
 
-      const pathMatcherFn = match(
-        wsRoute.endpoint.startsWith('/')
-          ? wsRoute.endpoint
-          : '/' + wsRoute.endpoint
-      );
+    this.serverInstance.on('upgrade', (req, socket, head) => {
+      const urlParsed = parseUrl(req.url || '', true);
 
-      this.serverInstance.on('upgrade', (req, socket, head) => {
-        const urlParsed = parseUrl(req.url || '', true);
-        if (pathMatcherFn(urlParsed.pathname || '')) {
-          webSocketServer.handleUpgrade(req, socket, head, (client) => {
-            webSocketServer.emit('connection', client, req);
+      for (const wsServer of this.webSocketServers) {
+        if (match(wsServer.path)(urlParsed.pathname || '')) {
+          wsServer.instance.handleUpgrade(req, socket, head, (client) => {
+            wsServer.instance.emit('connection', client, req);
           });
+
+          return;
         }
-      });
+      }
+
+      // if no route is matched (loop didn't return), close the connection
+      socket.write(`HTTP/${req.httpVersion} 404\r\n\r\n`);
+      socket.destroy();
     });
   }
 

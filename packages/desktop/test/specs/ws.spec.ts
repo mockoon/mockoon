@@ -14,21 +14,32 @@ describe('WebSockets', () => {
   });
 
   describe('Http and WebSocket mixed', () => {
-    it('should work http routes as usual among websocket routes', async () => {
+    it('should get response from http routes as usual among websocket routes', async () => {
       await http.assertCall({
         method: 'GET',
-        path: '/test/http',
+        path: '/ws-env/test/http',
         testedResponse: {
           status: 200,
           body: 'This is a http response'
         }
       });
     });
+
+    it('should get response from http routes with same name than a ws route', async () => {
+      await http.assertCall({
+        method: 'GET',
+        path: '/ws-env/test/ws/echo',
+        testedResponse: {
+          status: 200,
+          body: 'httpres'
+        }
+      });
+    });
   });
 
   describe('One-to-one websocket', () => {
-    it('Should be able to connect to echo websocket service', async () => {
-      const ws = new WsConnection(3000, '/test/ws/echo');
+    it('should be able to connect to echo websocket service', async () => {
+      const ws = new WsConnection(3000, '/ws-env/test/ws/echo');
       await ws.openForConversation();
       ws.assertWebsocketIsOpened();
 
@@ -46,11 +57,11 @@ describe('WebSockets', () => {
     });
 
     it('should be able to connect multiple clients to echo socket', async () => {
-      const ws1 = new WsConnection(3000, '/test/ws/echo');
+      const ws1 = new WsConnection(3000, '/ws-env/test/ws/echo');
       await ws1.openForConversation();
       ws1.assertWebsocketIsOpened();
 
-      const ws2 = new WsConnection(3000, '/test/ws/echo');
+      const ws2 = new WsConnection(3000, '/ws-env/test/ws/echo');
       await ws2.openForConversation();
       await ws2.assertWebsocketIsOpened();
 
@@ -85,7 +96,7 @@ describe('WebSockets', () => {
         './tmp/storage/file-templating.txt'
       );
 
-      const ws = new WsConnection(3000, '/test/ws/converse');
+      const ws = new WsConnection(3000, '/ws-env/test/ws/converse');
       await ws.openForConversation({
         'Content-Type': 'application/json'
       });
@@ -100,8 +111,11 @@ describe('WebSockets', () => {
       ws.assertWebsocketIsClosed();
     });
 
-    it('Should be able to connect to streaming websocket service', async () => {
-      const ws = new WsConnection(3000, '/test/ws/one-to-one?q1=abc&q2=123');
+    it('should be able to connect to streaming websocket service', async () => {
+      const ws = new WsConnection(
+        3000,
+        '/ws-env/test/ws/one-to-one?q1=abc&q2=123'
+      );
       await ws.open();
       ws.assertWebsocketIsOpened();
 
@@ -121,8 +135,8 @@ describe('WebSockets', () => {
       ws.assertWebsocketIsClosed();
     });
 
-    it('Should send data in correct order for sequential streaming', async () => {
-      const ws = new WsConnection(3000, '/test/ws/one-to-one/seq');
+    it('should send data in correct order for sequential streaming', async () => {
+      const ws = new WsConnection(3000, '/ws-env/test/ws/one-to-one/seq');
       await ws.open();
       ws.assertWebsocketIsOpened();
 
@@ -139,8 +153,8 @@ describe('WebSockets', () => {
       ws.assertWebsocketIsClosed();
     });
 
-    it('Should send correct data for default response streaming', async () => {
-      const ws = new WsConnection(3000, '/test/ws/one-to-one/dfres');
+    it('should send correct data for default response streaming', async () => {
+      const ws = new WsConnection(3000, '/ws-env/test/ws/one-to-one/dfres');
       await ws.open();
       ws.assertWebsocketIsOpened();
 
@@ -157,7 +171,7 @@ describe('WebSockets', () => {
     });
 
     it('should not be able to connect to disabled websockets', async () => {
-      const ws = new WsConnection(3000, '/test/ws/disabled');
+      const ws = new WsConnection(3000, '/ws-env/test/ws/disabled');
       try {
         await withTimeout(5000, ws.open());
         fail();
@@ -167,8 +181,8 @@ describe('WebSockets', () => {
 
   describe('Broadcast streams', () => {
     it('should receive same message for all connected clients', async () => {
-      const ws1 = new WsConnection(3000, '/test/ws/broadcast');
-      const ws2 = new WsConnection(3000, '/test/ws/broadcast');
+      const ws1 = new WsConnection(3000, '/ws-env/test/ws/broadcast');
+      const ws2 = new WsConnection(3000, '/ws-env/test/ws/broadcast');
       await Promise.all([ws1.open(), ws2.open()]);
       ws1.assertWebsocketIsOpened();
       ws2.assertWebsocketIsOpened();
@@ -214,7 +228,7 @@ describe('WebSockets', () => {
     });
 
     it('should be able to connect to secured websocket', async () => {
-      const ws = new WsConnection(3000, '/test/ws/echo', 'wss');
+      const ws = new WsConnection(3000, '/ws-env/test/ws/echo', 'wss');
       await ws.openForConversation();
       ws.assertWebsocketIsOpened();
 
