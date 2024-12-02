@@ -5,7 +5,7 @@ import {
   Route,
   RouteResponse
 } from '@mockoon/commons';
-import { IncomingMessage } from 'http';
+import { Request } from 'express';
 import { ok, strictEqual } from 'node:assert';
 import { describe, it } from 'node:test';
 import { fromWsRequest } from '../../../src/libs/requests';
@@ -33,7 +33,7 @@ const EMPTY_SERVER_CTX = {
 } as ServerContext;
 
 const EMPTY_WS_REQUEST = fromWsRequest(
-  {} as IncomingMessage,
+  {} as Request,
   {
     endpoint: 'api/path1/test'
   } as Route
