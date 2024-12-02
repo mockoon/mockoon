@@ -400,6 +400,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             }
 
             if (name != null && !info.nameTruncated && !info.valueTruncated) {
+              // add support for first level array fields (e.g. multiple fields with the same name without brackets)
+              if (
+                !name.includes('[') &&
+                request.body[name] !== undefined &&
+                !Array.isArray(request.body[name])
+              ) {
+                request.body[name] = [request.body[name]];
+                name = `${name}[]`;
+              }
               appendField(request.body, name, value);
             }
           });
@@ -426,6 +435,16 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               });
 
               stream.on('close', () => {
+                // add support for first level array fields (e.g. multiple fields with the same name without brackets)
+                if (
+                  !name.includes('[') &&
+                  request.body[name] !== undefined &&
+                  !Array.isArray(request.body[name])
+                ) {
+                  request.body[name] = [request.body[name]];
+                  name = `${name}[]`;
+                }
+
                 appendField(request.body, name, file);
               });
             }
