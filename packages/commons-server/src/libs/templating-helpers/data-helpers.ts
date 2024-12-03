@@ -94,7 +94,7 @@ export const DataHelpers = function (
         return;
       }
 
-      const operators = ['push', 'del', 'inc', 'dec', 'invert', 'set'];
+      const operators = ['push', 'del', 'inc', 'dec', 'invert', 'set', 'merge'];
       let operator = String(fromSafeString(parameters[0]));
 
       // default operator is 'set'
@@ -122,6 +122,37 @@ export const DataHelpers = function (
           objectSet(targetDatabucket.value, path, newValue);
         } else {
           targetDatabucket.value = newValue;
+        }
+      } else if (operator === 'merge') {
+        const currentValue = path
+          ? objectGet(targetDatabucket.value, path)
+          : targetDatabucket.value;
+
+        if (
+          typeof currentValue === 'object' &&
+          !Array.isArray(currentValue) &&
+          currentValue !== null &&
+          typeof newValue === 'object' &&
+          !Array.isArray(newValue) &&
+          newValue !== null
+        ) {
+          if (path) {
+            objectSet(targetDatabucket.value, path, {
+              ...currentValue,
+              ...newValue
+            });
+          } else {
+            targetDatabucket.value = {
+              ...currentValue,
+              ...newValue
+            };
+          }
+        } else {
+          if (path) {
+            objectSet(targetDatabucket.value, path, newValue);
+          } else {
+            targetDatabucket.value = newValue;
+          }
         }
       } else if (operator === 'push') {
         if (path && Array.isArray(objectGet(targetDatabucket.value, path))) {

@@ -1337,5 +1337,95 @@ describe('Data helpers', () => {
       });
       strictEqual(parseResult, 'false');
     });
+
+    it('should merge objects when no path is provided', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{setData "merge" "myData" null (object type="test")}}{{data "myData"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: { id: 123 },
+            parsed: true,
+            uuid: '463c6d7c-c597-4d4b-a0c3-803356c67e5a',
+            validJson: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '{"id":123,"type":"test"}');
+    });
+
+    it('should merge objects when a path is provided', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{setData "merge" "myData" "sub" (object type="test")}}{{data "myData"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: { sub: { id: 123 } },
+            parsed: true,
+            uuid: '463c6d7c-c597-4d4b-a0c3-803356c67e5a',
+            validJson: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '{"sub":{"id":123,"type":"test"}}');
+    });
+
+    it('should not merge objects, but replace bucket value when new value is not an object and no path is provided', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{setData "merge" "myData" null "hello"}}{{data "myData"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: { id: 123 },
+            parsed: true,
+            uuid: '463c6d7c-c597-4d4b-a0c3-803356c67e5a',
+            validJson: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'hello');
+    });
+
+    it('should not merge objects, but create new entry (using object path) when new value is not an object and a path is provided', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{setData "merge" "myData" "sub" "hello"}}{{data "myData"}}',
+        environment: {} as any,
+        processedDatabuckets: [
+          {
+            name: 'myData',
+            id: 'abcd',
+            value: { id: 123 },
+            parsed: true,
+            uuid: '463c6d7c-c597-4d4b-a0c3-803356c67e5a',
+            validJson: true
+          }
+        ],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '{"id":123,"sub":"hello"}');
+    });
   });
 });

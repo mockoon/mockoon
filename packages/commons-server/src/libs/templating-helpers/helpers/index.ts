@@ -64,6 +64,7 @@ import newline from './newline';
 import now from './now';
 import object from './object';
 import objectId from './objectId';
+import objectMerge from './objectMerge';
 import oneOf from './oneOf';
 import padEnd from './padEnd';
 import padStart from './padStart';
@@ -149,6 +150,7 @@ export const Helpers = {
   now,
   object,
   objectId,
+  objectMerge,
   oneOf,
   padEnd,
   padStart,
