@@ -245,13 +245,13 @@ export const FromBase64 = (base64: string): string =>
   Buffer.from(base64, 'base64').toString('utf-8');
 
 /**
- * Convert a SafeString to a string if needed.
+ * Extract the string value from a SafeString
  *
- * @param text
+ * @param value
  * @returns
  */
-export const fromSafeString = (text: string | SafeString) =>
-  text instanceof SafeString ? text.toString() : text;
+export const fromSafeString = (value: any | SafeString) =>
+  value instanceof SafeString ? value.toString() : value;
 
 /**
  * Parse a number from a SafeString if needed.

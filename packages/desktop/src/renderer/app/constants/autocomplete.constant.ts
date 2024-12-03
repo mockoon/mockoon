@@ -59,6 +59,7 @@ export const helpersAutocompletions = [
   { caption: 'base64', value: '{{base64 value}}', meta: '' },
   { caption: 'base64Decode', value: '{{base64Decode string}}', meta: '' },
   { caption: 'objectId', value: '{{objectId}}', meta: '' },
+  { caption: 'objectMerge', value: '{{objectMerge object object}}', meta: '' },
   { caption: 'getVar', value: "{{getVar 'varname'}}", meta: '' },
   { caption: 'setVar', value: "{{setVar 'varname' 'value'}}", meta: '' },
   {

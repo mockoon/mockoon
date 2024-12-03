@@ -151,6 +151,23 @@ describe('Template parser', () => {
       });
       strictEqual(parseResult, 'item_10item_20');
     });
+
+    it('should concat arrays', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          "{{{stringify (concat (array 'item1' 'item2') (array 'item3' 'item4') (array 'item5'))}}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(
+        parseResult,
+        '[\n  "item1",\n  "item2",\n  "item3",\n  "item4",\n  "item5"\n]'
+      );
+    });
   });
 
   describe('Helper: setVar', () => {
@@ -2617,7 +2634,9 @@ describe('Template parser', () => {
             parsed: true,
             value: {
               myarr: [1, 2, 3]
-            }
+            },
+            uuid: '',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -2914,7 +2933,9 @@ describe('Template parser', () => {
             id: 'abc1',
             name: 'db1',
             parsed: true,
-            value: [{ id: 1, value: 'value1' }]
+            value: [{ id: 1, value: 'value1' }],
+            uuid: '',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -2934,7 +2955,9 @@ describe('Template parser', () => {
             id: 'abc1',
             name: 'db1',
             parsed: true,
-            value: [{ id: 1, value: 'value1' }]
+            value: [{ id: 1, value: 'value1' }],
+            uuid: '',
+            validJson: true
           }
         ],
         globalVariables: {},
@@ -2995,6 +3018,34 @@ describe('Template parser', () => {
           2
         )
       );
+    });
+  });
+
+  describe('Helper: objectMerge', () => {
+    it('should return nothing when no parameter provided', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{{ stringify (objectMerge) }}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { body: { test: 'value' } } as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '');
+    });
+
+    it('should return a new object after merging multiple parameters', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{{ stringify (objectMerge (object id=12) (bodyRaw)) }}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { body: { test: 'value' } } as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '{\n  "id": 12,\n  "test": "value"\n}');
     });
   });
 
