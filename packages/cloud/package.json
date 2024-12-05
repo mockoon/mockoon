@@ -29,10 +29,10 @@
   "funding": "https://mockoon.com/sponsor-us/",
   "dependencies": {
     "@mockoon/commons": "9.0.0",
-    "tslib": "2.8.0"
+    "tslib": "2.8.1"
   },
   "devDependencies": {
-    "@types/node": "22.7.9",
-    "typescript": "5.6.3"
+    "@types/node": "22.10.1",
+    "typescript": "5.7.2"
   }
 }
