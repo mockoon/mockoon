@@ -498,9 +498,7 @@ export class OpenAPIConverter {
    */
   private v3ParametersReplace(
     str: string,
-    parameters:
-      | { [variable in string]: OpenAPIV3.ServerVariableObject }
-      | undefined
+    parameters: Record<string, OpenAPIV3.ServerVariableObject> | undefined
   ) {
     return str.replace(/{(\w+)}/gi, (searchValue, replaceValue) =>
       parameters ? parameters[replaceValue].default : ''

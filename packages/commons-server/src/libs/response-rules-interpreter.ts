@@ -32,13 +32,13 @@ import {
  * - default response shouldn't have rules
  */
 export class ResponseRulesInterpreter {
-  private targets: {
-    [key in Exclude<
+  private targets: Record<
+    Exclude<
       ResponseRuleTargets,
       'header' | 'request_number' | 'cookie' | 'templating'
-    >]: any;
-  };
-
+    >,
+    any
+  >;
   constructor(
     private routeResponses: RouteResponse[],
     private request: ServerRequest,

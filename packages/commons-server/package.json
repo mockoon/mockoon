@@ -1,7 +1,7 @@
 {
   "name": "@mockoon/commons-server",
   "description": "Mockoon's commons server library. Used in Mockoon desktop application and CLI.",
-  "version": "9.0.0",
+  "version": "9.1.0",
   "author": {
     "name": "Mockoon (1kB SARL-S)",
     "email": "team@mockoon.com",
@@ -34,7 +34,7 @@
   "dependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
     "@faker-js/faker": "9.3.0",
-    "@mockoon/commons": "9.0.0",
+    "@mockoon/commons": "9.1.0",
     "ajv": "8.17.1",
     "ajv-formats": "3.0.1",
     "append-field": "1.0.0",
