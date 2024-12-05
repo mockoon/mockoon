@@ -21,7 +21,7 @@ export class ManageInstancesModalComponent extends Logger implements OnInit {
   public payload$ = this.uiService.getModalPayload$('manageInstances');
   public taskInProgress$ = new BehaviorSubject<boolean>(false);
   public instances$ = this.store.select('deployInstances');
-  public environmentList$: Observable<{ [environmentUuid in string]: true }>;
+  public environmentList$: Observable<Record<string, true>>;
   public user$ = this.store.select('user');
   public isCloudEnabled$ = this.user$.pipe(
     map((user) => user && user.plan !== 'FREE')

@@ -128,7 +128,7 @@ export const updateDuplicatedRoutes = (
 export const changeObjectKey = (
   previousKey: string,
   currentKey: string,
-  target: { [key in string]: any }
+  target: Record<string, any>
 ) => {
   target[currentKey] = target[previousKey];
   delete target[previousKey];

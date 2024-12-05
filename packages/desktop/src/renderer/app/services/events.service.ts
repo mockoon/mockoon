@@ -8,7 +8,7 @@ export class EventsService {
   public focusInput = new Subject<FocusableInputs>();
   public updateAvailable$ = new BehaviorSubject<string | null>(null);
   // environment UUID -> boolean
-  public logsRecording$ = new BehaviorSubject<{ [key in string]: boolean }>({});
+  public logsRecording$ = new BehaviorSubject<Record<string, boolean>>({});
   public serverTransaction$ = new Subject<{
     environmentUUID: string;
     transaction?: Transaction;

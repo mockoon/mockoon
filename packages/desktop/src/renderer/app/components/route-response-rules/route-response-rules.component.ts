@@ -88,7 +88,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     method: '',
     templating: 'Any templating expression (e.g. {{ helper }})'
   };
-  public valuePlaceholders: { [key in ResponseRuleOperators]: string } = {
+  public valuePlaceholders: Record<ResponseRuleOperators, string> = {
     equals: 'Value',
     regex: 'Regex (without /../)',
     regex_i: 'Regex (without /../i)',

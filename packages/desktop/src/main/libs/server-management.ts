@@ -12,7 +12,7 @@ import { getMainWindow } from 'src/main/libs/main-window';
 import { getSettings } from 'src/main/libs/settings';
 
 export class ServerInstance {
-  private static instances: { [key in string]: ServerInstance } = {};
+  private static instances: Record<string, ServerInstance> = {};
   private mockoonServer: MockoonServer | null = null;
 
   constructor(

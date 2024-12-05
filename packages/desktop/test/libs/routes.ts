@@ -605,7 +605,7 @@ class Routes {
   }
 
   public async switchTab(tabName: TabsNameType): Promise<void> {
-    const selectors: { [key in typeof tabName]: string } = {
+    const selectors: Record<typeof tabName, string> = {
       RESPONSE:
         '#route-responses-menu .nav.nav-tabs .nav-item:nth-child(1) .nav-link',
       HEADERS:

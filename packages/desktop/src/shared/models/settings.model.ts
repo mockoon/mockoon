@@ -28,8 +28,8 @@ export type Settings = {
   fakerSeed: number;
   lastChangelog: string;
   environments: EnvironmentDescriptor[];
-  disabledRoutes: { [environmentUuid in string]: string[] };
-  collapsedFolders: { [environmentUuid in string]: string[] };
+  disabledRoutes: Record<string, string[]>;
+  collapsedFolders: Record<string, string[]>;
   enableTelemetry: boolean;
   storagePrettyPrint: boolean;
   fileWatcherEnabled: FileWatcherOptions;
@@ -37,9 +37,7 @@ export type Settings = {
   startEnvironmentsOnLoad: boolean;
   logTransactions: boolean;
   environmentsCategoriesOrder: EnvironmentsCategories[];
-  environmentsCategoriesCollapsed: {
-    [key in EnvironmentsCategories]: boolean;
-  };
+  environmentsCategoriesCollapsed: Record<EnvironmentsCategories, boolean>;
   envVarsPrefix: string;
   activeEnvironmentUuid: string | null;
   enableRandomLatency: boolean;

@@ -108,7 +108,7 @@ class EnvironmentsLogs {
   }
 
   public async switchTab(tabName: EnvironmentLogsTabsNameType) {
-    const selectors: { [key in typeof tabName]: string } = {
+    const selectors: Record<typeof tabName, string> = {
       REQUEST:
         '.environment-logs-content .nav.nav-tabs .nav-item:nth-child(1) .nav-link',
       RESPONSE:

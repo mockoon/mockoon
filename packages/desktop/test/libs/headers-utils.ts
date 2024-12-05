@@ -51,7 +51,7 @@ class HeadersUtils {
 
   public async assertHeadersValues(
     location: HeaderLocations,
-    values: { [key in string]: string | undefined }
+    values: Record<string, string | undefined>
   ) {
     const keyInputs = $$(
       `app-headers-list#${location} .headers-list .header-item input:first-of-type`

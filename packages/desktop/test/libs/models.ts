@@ -2,9 +2,7 @@ export type HttpCallResponse = {
   body?: string | { contains: string } | RegExp;
   status?: number;
   statusMessage?: string;
-  headers?: {
-    [key in string]: string | string[];
-  };
+  headers?: Record<string, string | string[]>;
   cert?: {
     issuer: {
       C?: string;
@@ -28,7 +26,7 @@ export type HttpCall = {
     | 'OPTIONS'
     | 'DELETE'
     | 'PURGE';
-  headers?: { [key in string]: string | string[] | number };
+  headers?: Record<string, string | string[] | number>;
   cookie?: string;
   body?: any;
   testedResponse?: HttpCallResponse;

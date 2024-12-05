@@ -4,32 +4,32 @@ import {
 } from 'src/renderer/app/models/messages.model';
 import { ToastTypes } from 'src/renderer/app/models/toasts.model';
 
-export const DesktopMessages: {
-  [key in MessageCodes | string]:
-    | ((messageParams: MessageParams) => {
-        // message used for both logging and toasts
-        message: string;
-        // should send log or not
-        log: boolean;
-        logPayload?: any;
-        // override logging message
-        loggerMessage?: string;
-        // should display a toast or not
-        showToast: false;
-      })
-    | ((messageParams: MessageParams) => {
-        // message used for both logging and toasts
-        message: string;
-        // should send log or not
-        log: boolean;
-        logPayload?: any;
-        // override logging message
-        loggerMessage?: string;
-        // should display a toast or not
-        showToast: true;
-        toastType: ToastTypes;
-      });
-} = {
+export const DesktopMessages: Record<
+  MessageCodes | string,
+  | ((messageParams: MessageParams) => {
+      // message used for both logging and toasts
+      message: string;
+      // should send log or not
+      log: boolean;
+      logPayload?: any;
+      // override logging message
+      loggerMessage?: string;
+      // should display a toast or not
+      showToast: false;
+    })
+  | ((messageParams: MessageParams) => {
+      // message used for both logging and toasts
+      message: string;
+      // should send log or not
+      log: boolean;
+      logPayload?: any;
+      // override logging message
+      loggerMessage?: string;
+      // should display a toast or not
+      showToast: true;
+      toastType: ToastTypes;
+    })
+> = {
   INITIALIZING_APP: () => ({
     message: 'Initializing application',
     log: true,

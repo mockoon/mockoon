@@ -1,4 +1,4 @@
-const runtimeArgs: { [flag in string]: string | boolean } = {};
+const runtimeArgs: Record<string, string | boolean> = {};
 
 /**
  * Parse runtime arguments and store them in an object

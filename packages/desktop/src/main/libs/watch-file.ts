@@ -7,7 +7,7 @@ import { getSettings } from 'src/main/libs/settings';
 import { FileWatcherOptions } from 'src/shared/models/settings.model';
 
 let watchers: { UUID: string; watcher: FSWatcher }[] = [];
-const reWatchTimeouts: { [key in string]: NodeJS.Timeout } = {};
+const reWatchTimeouts: Record<string, NodeJS.Timeout> = {};
 const logPrefix = '[MAIN][WATCHER] ';
 
 const findExistingWatcher = (UUID: string) =>

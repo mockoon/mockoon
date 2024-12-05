@@ -92,7 +92,7 @@ class Http {
       | 'OPTIONS'
       | 'DELETE'
       | 'PURGE';
-    headers: { [key in string]: string | string[] | number };
+    headers: Record<string, string | string[] | number>;
     body: any;
     cookie: string;
   }): Promise<HttpCallResponse> {

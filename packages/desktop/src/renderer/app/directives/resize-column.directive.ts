@@ -37,7 +37,7 @@ export class ResizeColumnDirective implements AfterViewInit {
   private dragging: boolean;
   // The x point where the mousedown event occurred
   private startX: number;
-  private settingProperties: { [key in ColumnType]: string } = {
+  private settingProperties: Record<ColumnType, string> = {
     main: 'mainMenuSize',
     secondary: 'secondaryMenuSize'
   };

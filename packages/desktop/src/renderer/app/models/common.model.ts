@@ -24,7 +24,7 @@ export type ToggleItems = ToggleItem[];
 
 export type Validation = {
   mask: string;
-  maskPatterns: { [key in string]: { pattern: RegExp } };
+  maskPatterns: Record<string, { pattern: RegExp }>;
   min?: number;
   max?: number;
 };

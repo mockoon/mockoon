@@ -27,7 +27,7 @@ import { EventsService } from 'src/renderer/app/services/events.service';
 import { updateUIStateAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 
-const commonConfigs: { [key in string]: NgbModalOptions } = {
+const commonConfigs: Record<string, NgbModalOptions> = {
   small: {
     size: 'sm'
   },
@@ -71,12 +71,13 @@ export class UIService {
     manageInstances: new BehaviorSubject<ManageInstancesModalPayload>(null),
     confirm: new BehaviorSubject<ConfirmModalPayload>(null)
   };
-  private modals: {
-    [key in ModalNames]: {
+  private modals: Record<
+    ModalNames,
+    {
       component: any;
       options: NgbModalOptions;
-    };
-  } = {
+    }
+  > = {
     commandPalette: {
       component: CommandPaletteModalComponent,
       options: {
@@ -129,7 +130,7 @@ export class UIService {
       options: commonConfigs.large
     }
   };
-  private modalsInstances: { [key in ModalNames]: NgbModalRef } = {
+  private modalsInstances: Record<ModalNames, NgbModalRef> = {
     commandPalette: null,
     settings: null,
     changelog: null,
