@@ -71,6 +71,7 @@ export const parseDataFiles = async (
   userOptions: {
     ports: number[];
     hostnames: string[];
+    proxy?: 'enabled' | 'disabled';
   } = { ports: [], hostnames: [] },
   repair = false
 ): Promise<{ originalPath: string; environment: Environment }[]> => {
@@ -125,6 +126,10 @@ export const parseDataFiles = async (
 
       if (userOptions.hostnames[index] !== undefined) {
         environment.hostname = userOptions.hostnames[index];
+      }
+
+      if (userOptions.proxy) {
+        environment.proxyMode = userOptions.proxy === 'enabled';
       }
 
       environments.push({ environment, originalPath: filePath });

@@ -120,33 +120,39 @@ The mocks will run by default on the ports and hostnames specified in the files.
 
 > 💡 To run the CLI as a background process, add an `&` at the end of the command: `mockoon-cli start -d ./data-file.json &`.
 
-```
-USAGE
-  $ mockoon-cli start
+**Usage**:
+`$ mockoon-cli start`
 
-OPTIONS
-  -d, --data                   [required] Path(s) or URL(s) to your Mockoon file(s)
-  -p, --port                   Override environment(s) port(s)
-  -l, --hostname               Override default listening hostname(s)
-  -c, --faker-locale           Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see below.)
-  -s, --faker-seed             Number for the Faker.js seed (e.g. 1234)
-  -t, --log-transaction        Log the full HTTP transaction (request and response)
-  -X, --disable-log-to-file    Disable logging to file
-  -e, --disable-routes         Disable route(s) by UUID or keyword present in the route's path (do not include a leading slash) or keyword present in a folder name
-  -r, --repair                 If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting
-  -x, --env-vars-prefix        Prefix for environment variables (default: 'MOCKOON_')
-      --disable-admin-api      Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)
-      --disable-tls            Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/)
-      --max-transaction-logs   Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100)
-      --enable-random-latency  Randomize global and responses latencies between 0 and the specified value (default: false)
-  -h, --help                   Show CLI help
+**Options**:
+|Flag|Description|
+|-|-|
+|-d, --data |[required] Path(s) or URL(s) to your Mockoon file(s)|
+|-p, --port |Override environment(s) port(s)|
+|-l, --hostname |Override default listening hostname(s)|
+|-c, --faker-locale | Faker locale (e.g. 'en', 'en*GB', etc. For supported locales, see below.)|
+|-s, --faker-seed | Number for the Faker.js seed (e.g. 1234)|
+|-t, --log-transaction | Log the full HTTP transaction (request and response)|
+|-X, --disable-log-to-file | Disable logging to file|
+|-e, --disable-routes | Disable route(s) by UUID or keyword present in the route's path (do not include a leading slash) or keyword present in a folder name. Use '\*' to disable all routes.|
+|-r, --repair | If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting|
+|-x, --env-vars-prefix | Prefix for environment variables (default: 'MOCKOON*')|
+|--disable-admin-api | Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)|
+|--disable-tls | Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/)|
+|--max-transaction-logs | Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100)|
+|--enable-random-latency | Randomize global and responses latencies between 0 and the specified value (default: false)|
+|--proxy | Override the environment's proxy settings (options: 'enabled' or 'disabled')|
+|-h, --help | Show CLI help|
 
-EXAMPLES
-  $ mockoon-cli start --data ~/data.json
-  $ mockoon-cli start --data ~/data1.json ~/data2.json --port 3000 3001 --hostname 127.0.0.1 192.168.1.1
-  $ mockoon-cli start --data https://file-server/data.json
-  $ mockoon-cli start --data ~/data.json --log-transaction
-  $ mockoon-cli start --data ~/data.json --disable-routes route1 route2 folder1
+**Examples**:
+
+```bash
+$ mockoon-cli start --data ~/data.json
+$ mockoon-cli start --data ~/data1.json ~/data2.json --port 3000 3001 --hostname 127.0.0.1 192.168.1.1
+$ mockoon-cli start --data https://file-server/data.json
+$ mockoon-cli start --data ~/data.json --log-transaction
+$ mockoon-cli start --data ~/data.json --disable-routes route1 route2 folder1
+$ mockoon-cli start --data ~/data.json --disable-routes=*
+$ mockoon-cli start --data ~/data.json --disable-routes "*"
 ```
 
 #### Admin API
@@ -174,6 +180,8 @@ This is the counterpart of the "Toggle route" feature in the desktop application
 
 For example, to disable all routes in a folder named `folder1`, and all routes having "users" in their paths, you can use `--disable-routes folder1 users`.
 
+To disable all routes, use `--disable-routes=*` or `--disable-routes "*"`.
+
 ### Dockerize command
 
 Generates a Dockerfile used to build a self-contained image of one or more mock API. After building the image, no additional parameters will be needed when running the container.
@@ -184,21 +192,24 @@ Please note that this command will copy your Mockoon environments files you prov
 
 For more information on how to build the image: [Using the dockerize command](#using-the-dockerize-command)
 
-```
-USAGE
-  $ mockoon-cli dockerize
+**Usage**:
+`$ mockoon-cli dockerize`
 
-OPTIONS
-  -d, --data                  [required] Path or URL to your Mockoon file
-  -p, --port                  [required] Ports to expose in the Docker container. It should match the number of environment data files you provide with the --data flag.
-  -o, --output                [required] Generated Dockerfile path and name (e.g. `./folder/Dockerfile`)
-  -t, --log-transaction       Log the full HTTP transaction (request and response)
-  -h, --help                  Show CLI help
+**Options**:
+|Flag|Description|
+|-|-|
+|-d, --data | [required] Path or URL to your Mockoon file|
+|-p, --port | [required] Ports to expose in the Docker container. It should match the number of environment data files you provide with the --data flag.|
+|-o, --output | [required] Generated Dockerfile path and name (e.g. `./folder/Dockerfile`)|
+|-t, --log-transaction | Log the full HTTP transaction (request and response)|
+|-h, --help | Show CLI help|
 
-EXAMPLES
-  $ mockoon-cli dockerize --data ~/data.json --output ./Dockerfile
-  $ mockoon-cli dockerize --data ~/data1.json ~/data2.json --output ./Dockerfile
-  $ mockoon-cli dockerize --data https://file-server/data.json --output ./Dockerfile
+**Examples**:
+
+```bash
+$ mockoon-cli dockerize --data ~/data.json --output ./Dockerfile
+$ mockoon-cli dockerize --data ~/data1.json ~/data2.json --output ./Dockerfile
+$ mockoon-cli dockerize --data https://file-server/data.json --output ./Dockerfile
 ```
 
 ### Import command
@@ -209,20 +220,23 @@ The output file will not be prettified by default. You can prettify it using the
 
 Note: This command is similar to the app's import feature, but it will not import directly to your desktop app. If you need to import and open in your desktop app, use the app's import feature instead.
 
-```
-USAGE
-  $ mockoon-cli import
+**Usage**:
+`$ mockoon-cli import`
 
-OPTIONS
-  -i, --input                 [required] Path or URL to your Swagger v2/OpenAPI v3 file
-  -o, --output                [required] Generated Mockoon path and name (e.g. `./environment.json`)
-  -p, --prettify              Prettify output
-  -h, --help                  Show CLI help
+**Options**:
+|Flag|Description|
+|-|-|
+|-i, --input [required] |Path or URL to your Swagger v2/OpenAPI v3 file|
+|-o, --output [required] |Generated Mockoon path and name (e.g. `./environment.json`)|
+|-p, --prettify |Prettify output|
+|-h, --help |Show CLI help|
 
-EXAMPLES
-  $ mockoon-cli import --input ~/input.json --output ./output.json
-  $ mockoon-cli import --input ~/input.yaml --output ./output.json
-  $ mockoon-cli import --input ~/input.json --output ./output.json --prettify
+**Examples**:
+
+```bash
+$ mockoon-cli import --input ~/input.json --output ./output.json
+$ mockoon-cli import --input ~/input.yaml --output ./output.json
+$ mockoon-cli import --input ~/input.json --output ./output.json --prettify
 ```
 
 ### Export command
@@ -231,35 +245,36 @@ Export a mock API to an OpenAPI v3 specification file (JSON).
 
 The output file will not be prettified by default. You can prettify it using the `--prettify` flag described below.
 
-```
-USAGE
-  $ mockoon-cli export
+**Usage**:
+`$ mockoon-cli export`
 
-OPTIONS
-  -i, --input                 [required] Path or URL to your Mockoon data file
-  -o, --output                [required] Generated OpenApi v3 path and name (e.g. `./output.json`)
-  -p, --prettify              Prettify output
-  -h, --help                  Show CLI help
+**Options**:
+|Flag|Description|
+|-|-|
+|-i, --input [required] |Path or URL to your Mockoon data file|
+|-o, --output [required] |Generated OpenApi v3 path and name (e.g. `./output.json`)|
+|-p, --prettify |Prettify output|
+|-h, --help |Show CLI help|
 
-EXAMPLES
-  $ mockoon-cli export --input ~/input.json --output ./output.json
-  $ mockoon-cli export --input ~/input.json --output ./output.json --prettify
+**Examples**:
+
+```bash
+$ mockoon-cli export --input ~/input.json --output ./output.json
+$ mockoon-cli export --input ~/input.json --output ./output.json --prettify
 ```
 
 ### Help command
 
 Returns information about a command.
 
-```
-USAGE
-  $ mockoon-cli help [COMMAND]
+**Usage**:
+`$ mockoon-cli help [COMMAND]`
 
-ARGUMENTS
-  COMMAND  command to show help for
-
-OPTIONS
-  --all  see all commands in CLI
-```
+**Arguments and options**:
+|Flag|Description|
+|-|-|
+|COMMAND |command to show help for|
+|--all |see all commands in CLI|
 
 ## Use the GitHub Action
 
