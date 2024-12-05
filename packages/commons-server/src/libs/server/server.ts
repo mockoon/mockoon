@@ -884,10 +884,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         });
 
       // resolve file location
-      let filePath = templateParser(enabledRouteResponse.filePath);
-      // replace backslashes with forward slashes after parsing eventual helpers as they can contain escaped dots (e.g. {{queryParam 'prop\.with\.dots'}})
-      filePath = filePath.replace(/\\/g, '/');
-
+      let filePath = templateParser(
+        // replace backslashes with forward slashes, but not if followed by a dot (to allow helpers with paths containing properties with dots: e.g. {{queryParam 'path.prop\.with\.dots'}})
+        enabledRouteResponse.filePath.replace(/\\(?!\.)/g, '/')
+      );
       filePath = resolvePathFromEnvironment(
         filePath,
         this.options.environmentDirectory
@@ -1429,16 +1429,14 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
       let filePath = TemplateParser({
         shouldOmitDataHelper: false,
-        content: callback.filePath,
+        // replace backslashes with forward slashes, but not if followed by a dot (to allow helpers with paths containing properties with dots: e.g. {{queryParam 'path.prop\.with\.dots'}})
+        content: callback.filePath.replace(/\\(?!\.)/g, '/'),
         environment: this.environment,
         processedDatabuckets: this.processedDatabuckets,
         globalVariables: this.globalVariables,
         request: serverRequest,
         envVarsPrefix: this.options.envVarsPrefix
       });
-
-      // replace backslashes with forward slashes after parsing eventual helpers as they can contain escaped dots (e.g. {{queryParam 'prop\.with\.dots'}})
-      filePath = filePath.replace(/\\/g, '/');
 
       filePath = resolvePathFromEnvironment(
         filePath,
@@ -1582,16 +1580,14 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     try {
       let filePath = TemplateParser({
         shouldOmitDataHelper: false,
-        content: routeResponse.filePath,
+        // replace backslashes with forward slashes, but not if followed by a dot (to allow helpers with paths containing properties with dots: e.g. {{queryParam 'path.prop\.with\.dots'}})
+        content: routeResponse.filePath.replace(/\\(?!\.)/g, '/'),
         environment: this.environment,
         processedDatabuckets: this.processedDatabuckets,
         globalVariables: this.globalVariables,
         request: serverRequest,
         envVarsPrefix: this.options.envVarsPrefix
       });
-
-      // replace backslashes with forward slashes after parsing eventual helpers as they can contain escaped dots (e.g. {{queryParam 'prop\.with\.dots'}})
-      filePath = filePath.replace(/\\/g, '/');
 
       filePath = resolvePathFromEnvironment(
         filePath,
