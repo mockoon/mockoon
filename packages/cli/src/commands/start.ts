@@ -100,6 +100,10 @@ export default class Start extends Command {
       description:
         'Enable random latency from 0 to value specified in the route settings',
       default: false
+    }),
+    proxy: Flags.string({
+      description: "Override the environment's proxy settings",
+      options: ['enabled', 'disabled'] as const
     })
   };
 
@@ -122,7 +126,8 @@ export default class Start extends Command {
         userFlags.data,
         {
           ports: userFlags.port,
-          hostnames: userFlags.hostname
+          hostnames: userFlags.hostname,
+          proxy: userFlags.proxy as 'enabled' | 'disabled'
         },
         userFlags.repair
       );

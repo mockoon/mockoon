@@ -127,21 +127,13 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   public start(): void {
     const requestListener = this.createRequestListener();
 
-    const routes = this.getRoutesOfEnvironment();
-    const webSocketRoutes = routes.filter((route) => {
-      const routePath = preparePath(
-        this.environment.endpointPrefix,
-        route.endpoint
-      );
-
-      return (
-        route.type === RouteType.WS &&
-        !this.options.disabledRoutes?.some(
-          (disabledRoute) =>
-            route.uuid === disabledRoute || routePath.includes(disabledRoute)
-        )
-      );
-    });
+    const webSocketRoutes = routesFromFolder(
+      this.environment.rootChildren,
+      this.environment.folders,
+      this.environment.routes,
+      this.options.disabledRoutes,
+      [RouteType.WS]
+    );
 
     // create https or http server instance
     if (this.environment.tlsOptions.enabled && !this.options.disableTls) {
@@ -576,24 +568,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   };
 
   /**
-   * Returns all defined routes in the setup environment.
-   */
-  private getRoutesOfEnvironment(): Route[] {
-    if (
-      !this.environment.rootChildren ||
-      this.environment.rootChildren.length < 1
-    ) {
-      return [];
-    }
-
-    return routesFromFolder(
-      this.environment.rootChildren,
-      this.environment.folders,
-      this.environment.routes
-    );
-  }
-
-  /**
    * Generate an environment routes and attach to running server
    *
    * @param server - server on which attach routes
@@ -610,7 +584,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       this.environment.rootChildren,
       this.environment.folders,
       this.environment.routes,
-      this.options.disabledRoutes
+      this.options.disabledRoutes,
+      [RouteType.HTTP, RouteType.CRUD]
     );
 
     routes.forEach((declaredRoute: Route) => {

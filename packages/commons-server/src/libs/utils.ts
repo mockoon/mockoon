@@ -9,6 +9,7 @@ import {
   ParsedJSONBodyMimeTypes,
   ParsedXMLBodyMimeTypes,
   Route,
+  RouteType,
   stringIncludesArrayItems,
   Transaction
 } from '@mockoon/commons';
@@ -333,19 +334,25 @@ export const convertPathToArray = (str: string): string | string[] => {
 /**
  * List routes in the order they appear in a folder children array (can be called recursively)
  *
- * If exclude is provided, it will exclude the routes with the provided UUIDs, or the routes in the provided folders by keyword in the folder name
+ * If excludeList is provided, it will exclude the routes with the provided UUIDs,
+ * or the routes in the provided folders by keyword in the folder name.
+ * A wildcard '*' can be used to exclude all routes.
+ *
+ * If filterByType is provided, it will only return routes of the specified type.
  *
  * @param folderChildren
  * @param allFolders
  * @param allRoutes
- * @param exclude
+ * @param excludeList
+ * @param filterByType
  * @returns
  */
 export const routesFromFolder = (
   folderChildren: FolderChild[],
   allFolders: Folder[],
   allRoutes: Route[],
-  exclude: string[] = []
+  excludeList: string[] = [],
+  filterByType?: RouteType[]
 ): Route[] => {
   const routesList: Route[] = [];
 
@@ -354,8 +361,10 @@ export const routesFromFolder = (
       const foundRoute = allRoutes.find(
         (route) =>
           route.uuid === folderChild.uuid &&
-          !exclude.includes(route.uuid) &&
-          !exclude.includes(route.endpoint)
+          (!filterByType || filterByType.includes(route.type)) &&
+          !excludeList.includes(route.uuid) &&
+          !excludeList.some((exclude) => route.endpoint.includes(exclude)) &&
+          !excludeList.includes('*')
       );
 
       if (foundRoute) {
@@ -364,7 +373,9 @@ export const routesFromFolder = (
     } else {
       const subFolder = allFolders.find(
         (folder) =>
-          folder.uuid === folderChild.uuid && !exclude.includes(folder.name)
+          folder.uuid === folderChild.uuid &&
+          !excludeList.some((exclude) => folder.name.includes(exclude)) &&
+          !excludeList.includes('*')
       );
 
       if (subFolder) {
@@ -373,7 +384,7 @@ export const routesFromFolder = (
             subFolder.children,
             allFolders,
             allRoutes,
-            exclude
+            excludeList
           )
         );
       }
