@@ -17,7 +17,8 @@
     "certPath": "./wrongPath",
     "keyPath": "./wrongKey",
     "caPath": "",
-    "passphrase": ""
+    "passphrase": "",
+    "requestCert": false
   },
   "cors": true,
   "data": [],
