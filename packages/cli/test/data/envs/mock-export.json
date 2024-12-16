@@ -51,7 +51,8 @@
     "certPath": "",
     "keyPath": "",
     "caPath": "",
-    "passphrase": ""
+    "passphrase": "",
+    "requestCert": false
   },
   "data": [],
   "folders": [],
