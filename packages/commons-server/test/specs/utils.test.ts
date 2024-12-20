@@ -306,6 +306,11 @@ describe('Utils', () => {
       strictEqual(isSafeJSONPath(path), true);
     });
 
+    it('should return true if path has child property filter expression', () => {
+      const path = '$[?(@.name.match(/lex/))]';
+      strictEqual(isSafeJSONPath(path), true);
+    });
+
     it('should return false if path has unsafe filter expression', () => {
       const path =
         '$..book[0][((this.constructor.constructor(\'return this.process\')()).mainModule.require("child_process").exec("calc").toString())]';
