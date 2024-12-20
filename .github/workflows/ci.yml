@@ -14,9 +14,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20.x"
-      - name: Update NPM
-        run: |
-          npm install -g npm@latest
       - uses: actions/cache@v4
         id: cache-modules
         with:
@@ -47,9 +44,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20.x"
-      - name: Update NPM
-        run: |
-          npm install -g npm@latest
       - uses: actions/cache@v4
         id: cache-modules
         with:
@@ -80,9 +74,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20.x"
-      - name: Update NPM
-        run: |
-          npm install -g npm@latest
       - uses: actions/cache@v4
         id: cache-modules
         with:
@@ -118,9 +109,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-      - name: Update NPM
-        run: |
-          npm install -g npm@latest
       - uses: actions/cache@v4
         id: cache-modules
         with:
@@ -152,9 +140,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20.x"
-      - name: Update NPM
-        run: |
-          npm install -g npm@latest
       - uses: actions/cache@v4
         id: cache-modules
         with:
@@ -192,9 +177,6 @@ jobs:
   #       uses: actions/setup-node@v4
   #       with:
   #         node-version: "20.x"
-  #     - name: Update NPM
-  #       run: |
-  #         npm install -g npm@latest
   #     - uses: actions/cache@v4
   #       id: cache-modules
   #       with:
@@ -234,9 +216,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20.x"
-      - name: Update NPM
-        run: |
-          npm install -g npm@latest
       - uses: actions/cache@v4
         id: cache-modules
         with:
