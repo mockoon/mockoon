@@ -13,7 +13,7 @@ const config: WebdriverIO.Config = {
           'linux-unpacked',
           'mockoon'
         ),
-        appArgs: ['user-data-dir=' + join(process.cwd(), 'tmp')]
+        appArgs: ['no-sandbox', 'user-data-dir=' + join(process.cwd(), 'tmp')]
       }
     }
   ]
