@@ -4,8 +4,5 @@ contact_links:
     url: https://github.com/mockoon/mockoon/discussions
     about: Please ask and answer questions here.
   - name: Enterprise support
-    url: https://mockoon.com/pro/
+    url: https://mockoon.com/pricing/
     about: Get enterprise grade support
-  - name: Discord server
-    url: https://discord.gg/FtJjkejKGp
-    about: Join us to chat with the community and the team.

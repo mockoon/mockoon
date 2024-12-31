@@ -4,7 +4,7 @@ about: Create a bug report to help us improve Mockoon
 ---
 
 <!-- ⚠️ Please search existing issues to avoid creating duplicates. ⚠️ -->
-<!-- ⚠️ If you are unsure whether this is a bug, initiate a discussion first (https://github.com/mockoon/mockoon/discussions) or visit our Discord server (https://discord.gg/FtJjkejKGp). ⚠️ -->
+<!-- ⚠️ If you are unsure whether this is a bug, initiate a discussion first (https://github.com/mockoon/mockoon/discussions). ⚠️ -->
 
 **Describe the bug**
 
@@ -13,7 +13,7 @@ about: Create a bug report to help us improve Mockoon
 **Steps to Reproduce**
 
 <!-- Steps to reproduce the behavior. -->
-<!-- ⚠️ Please include the full environment / route configuration you are using (route, response type, headers, body, etc). Ideally, join your environment's JSON file: https://mockoon.com/docs/latest/mockoon-data-files/data-files-location/#locating-the-files -->
+<!-- ⚠️ Please include the full environment / route configuration you are using (route, response type, headers, body, etc). Ideally, join your environment's JSON file: https://mockoon.com/docs/latest/mockoon-data-files/data-files-location/#locating-the-mock-api-files -->
 
 **Mockoon version:**
 
