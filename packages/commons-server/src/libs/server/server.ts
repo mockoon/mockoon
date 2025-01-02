@@ -1767,8 +1767,50 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       IsValidURL(this.environment.proxyHost)
     ) {
       this.emit('creating-proxy');
+this.emit('creating-proxy');
 
-      server.use(
+server.use(
+  '*',
+  createProxyMiddleware({
+    cookieDomainRewrite: { '*': '' },
+    target: this.environment.proxyHost,
+    secure: false,
+    changeOrigin: true,
+    logLevel: 'silent',
+    pathRewrite: (path, req) => {
+      if (
+        this.environment.proxyRemovePrefix === true &&
+        this.environment.endpointPrefix.length > 0
+      ) {
+        
+      }
+      return path; 
+    },
+    ssl: { ...this.tlsOptions, agent: false },
+    onProxyReq: (proxyReq, request, response) => {
+      this.refreshEnvironment();
+      request.proxied = true;
+      this.setHeaders(this.environment.proxyReqHeaders, proxyReq, request);
+
+      // Re-stream the body (intercepted by body parser method)
+      if (request.rawBody) {
+        proxyReq.write(request.rawBody);
+      }
+    },
+    onProxyRes: (proxyRes, req, res) => {
+      // Modify 'Set-Cookie' headers to remove 'Secure' flag
+      const setCookieHeaders = proxyRes.headers['set-cookie'];
+      if (setCookieHeaders) {
+        proxyRes.headers['set-cookie'] = setCookieHeaders.map((cookie) =>
+          cookie.replace(/;\s*Secure/i, '')
+        );
+      }
+    }
+  })
+);
+
+            this.refreshEnvironment();
+
         createProxyMiddleware({
           cookieDomainRewrite: { '*': '' },
           target: this.environment.proxyHost,
@@ -1807,6 +1849,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             proxyRes: (proxyRes, request, response) => {
               this.refreshEnvironment();
 
+
               const buffers: Buffer[] = [];
               proxyRes.on('data', (chunk) => {
                 buffers.push(chunk);
@@ -1821,39 +1864,14 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
                 request as Request
               );
             },
-            error: (error, request, response) => {
-              this.emit('error', ServerErrorCodes.PROXY_ERROR, error);
-
-              this.sendError(
-                response as Response,
-                `${format(
-                  ServerMessages.PROXY_ERROR,
-                  this.environment.proxyHost
-                )} ${request.url}: ${error}`,
-                504
-              );
-            }
-          }
-        })
-      );
-    }
-  }
-
-  /**
+   /**         
    * ### Middleware ###
    * Catch all error handler
    * http://expressjs.com/en/guide/error-handling.html#catching-errors
    *
    * @param server - server on which to log the response
    */
-  private errorHandler = (
-    error: any,
-    request: Request,
-    response: Response,
-    _next: NextFunction
-  ) => {
-    this.sendError(response, error, 500);
-  };
+  
 
   /**
    * Set the provided headers on the target. Use different headers accessors
@@ -1878,7 +1896,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         if (target.set) {
           // for express.Response
           if (isSetCookie) {
-            target.append(header.key, parsedHeaderValue);
+             parsedHeaderValue = parsedHeaderValue.replace(/;\s*Secure/i, '');
           } else {
             target.set(header.key, parsedHeaderValue);
           }
