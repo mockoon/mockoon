@@ -1,0 +1,28 @@
+name: New discussion auto reply
+
+on:
+  discussion:
+    types: [created]
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate an app token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_SECRET }}
+      - name: Extract discussion create event JSON
+        id: read-event
+        run: |
+          echo "discussionId=$(node -e 'console.log(require(process.env.GITHUB_EVENT_PATH).discussion.node_id)')" >> "$GITHUB_OUTPUT"
+      - name: Write body into an output
+        run: |
+          echo "{\"query\":\"mutation { addDiscussionComment(input: { discussionId: \\\"${{ steps.read-event.outputs.discussionId }}\\\", body: \\\"\\\"\\\"### Thank you for reaching out! 👋\\n\\nWe appreciate you taking the time to ask your question or report an issue. Please note that response times may vary as we work through requests. We\\\'ll get back to you as soon as possible.\\n\\nIf you require priority support or enterprise assistance, you can explore our support options on [mockoon.com](https://mockoon.com/pricing/).\\n\\nAlternatively, for a guaranteed fast response (usually within a day), you can [purchase a one-time support request](https://github.com/sponsors/mockoon/sponsorships?sponsor=255kb&tier_id=454493) via GitHub Sponsors.\\n\\nThank you for your patience and for being part of the Mockoon community!\\\"\\\"\\\" }) { comment { id body createdAt author { login } } } }\"}" >> ./body.json
+          cat ./body.json
+      - name: Add a welcome comment to the discussion
+        run: |
+          curl -X POST -H "Authorization: bearer ${{ steps.generate-token.outputs.token }}" -H "Content-Type: application/json" -d @./body.json https://api.github.com/graphql
