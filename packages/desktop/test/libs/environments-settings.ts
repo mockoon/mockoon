@@ -35,6 +35,12 @@ class EnvironmentsSettings {
     return $('app-environment-settings label[for=env-settings-tls-enabled]');
   }
 
+  public get enableClientCert() {
+    return $(
+      'app-environment-settings label[for=env-settings-client-auth-enabled]'
+    );
+  }
+
   public get preflight() {
     return $('app-environment-settings label[for=env-settings-cors]');
   }
