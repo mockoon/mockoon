@@ -139,26 +139,26 @@ export class ResponseRulesInterpreter {
       return false;
     }
 
-    let value: any;
+    let targetValue: any;
 
     const parsedRuleModifier = this.templateParse(rule.modifier ?? '');
 
     // get the value for each rule type
     if (rule.target === 'request_number') {
-      value = requestNumber;
+      targetValue = requestNumber;
     } else if (rule.target === 'cookie') {
       if (!parsedRuleModifier) {
         return false;
       }
-      value = this.request.cookies?.[parsedRuleModifier];
+      targetValue = this.request.cookies?.[parsedRuleModifier];
     } else if (rule.target === 'path') {
-      value = this.targets.path;
+      targetValue = this.targets.path;
     } else if (rule.target === 'method') {
-      value = this.targets.method;
+      targetValue = this.targets.method;
     } else if (rule.target === 'header') {
-      value = this.request.header(parsedRuleModifier);
+      targetValue = this.request.header(parsedRuleModifier);
     } else if (rule.target === 'templating') {
-      value = parsedRuleModifier;
+      targetValue = parsedRuleModifier;
     } else {
       /**
        * Get the value for targets that can store complex data (body, query, params (route params), global_var, data_bucket)
@@ -176,37 +176,39 @@ export class ResponseRulesInterpreter {
               : target;
         }
 
-        value = getValueFromPath(target, parsedRuleModifier, undefined);
+        targetValue = getValueFromPath(target, parsedRuleModifier, undefined);
       } else {
         /**
          * Body and query targets can be used without a modifier, in which case the whole parsed body or query is used.
          */
         if (rule.target === 'body') {
-          value = requestMessage || this.targets.body;
+          targetValue = requestMessage || this.targets.body;
         } else if (rule.target === 'query') {
-          value = this.targets.query;
+          targetValue = this.targets.query;
         }
       }
     }
 
-    // ⬇ "null" and "empty_array" operators need no value
-    if (rule.operator === 'null' && parsedRuleModifier) {
-      return value === null || value === undefined;
+    // ⬇ "null" and "empty_array" operators need no rule value
+    if (rule.operator === 'null') {
+      return (
+        targetValue === null || targetValue === undefined || targetValue === ''
+      );
     }
 
-    if (rule.operator === 'empty_array' && parsedRuleModifier) {
-      return Array.isArray(value) && value.length < 1;
+    if (rule.operator === 'empty_array') {
+      return Array.isArray(targetValue) && targetValue.length < 1;
     }
 
     // ⬇ all other operators need a value
 
-    if (value === undefined) {
+    if (targetValue === undefined) {
       return false;
     }
 
     // value may be explicitely null (JSON), this is considered as an empty string
-    if (value === null) {
-      value = '';
+    if (targetValue === null) {
+      targetValue = '';
     }
 
     // rule value may be explicitely null (is shouldn't anymore), this is considered as an empty string too
@@ -230,7 +232,7 @@ export class ResponseRulesInterpreter {
         const ajv = new Ajv();
         addAjvFormats(ajv);
 
-        const valid = ajv.compile(schema)(value);
+        const valid = ajv.compile(schema)(targetValue);
 
         return valid;
       } catch (_error) {
@@ -240,8 +242,8 @@ export class ResponseRulesInterpreter {
 
     if (rule.operator === 'array_includes' && rule.modifier) {
       return (
-        Array.isArray(value) &&
-        value.some((val) => String(val) === parsedRuleValue)
+        Array.isArray(targetValue) &&
+        targetValue.some((val) => String(val) === parsedRuleValue)
       );
     }
 
@@ -253,17 +255,17 @@ export class ResponseRulesInterpreter {
         rule.operator === 'regex_i' ? 'i' : undefined
       );
 
-      return Array.isArray(value)
-        ? value.some((arrayValue) => regex.test(arrayValue))
-        : regex.test(value);
+      return Array.isArray(targetValue)
+        ? targetValue.some((arrayValue) => regex.test(arrayValue))
+        : regex.test(targetValue);
     }
 
     // value extracted by JSONPath can be an array, cast its values to string (in line with the equals operator below)
-    if (Array.isArray(value)) {
-      return value.map((v) => String(v)).includes(parsedRuleValue);
+    if (Array.isArray(targetValue)) {
+      return targetValue.map((v) => String(v)).includes(parsedRuleValue);
     }
 
-    return String(value) === String(parsedRuleValue);
+    return String(targetValue) === String(parsedRuleValue);
   };
 
   /**
@@ -275,7 +277,8 @@ export class ResponseRulesInterpreter {
 
     if (
       requestContentType &&
-      stringIncludesArrayItems(ParsedBodyMimeTypes, requestContentType)
+      stringIncludesArrayItems(ParsedBodyMimeTypes, requestContentType) &&
+      this.request.body !== undefined
     ) {
       body = this.request.body;
     }
