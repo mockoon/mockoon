@@ -2675,6 +2675,84 @@ describe('Response rules interpreter', () => {
     const xmlBody =
       '<?xml version="1.0" encoding="utf-8"?><user userId="1"><name>John</name></user>';
 
+    it('should return response if full body is null (req content type absent)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = {};
+
+          return headers[headerName];
+        },
+        stringBody: '',
+        body: ''
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'body',
+                modifier: '',
+                value: '',
+                operator: 'null',
+                invert: false
+              }
+            ],
+            body: 'body1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'body1');
+    });
+
+    it('should return response if full body is null (req content type present)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = {
+            'Content-Type': 'application/json'
+          };
+
+          return headers[headerName];
+        },
+        stringBody: '',
+        body: ''
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'body',
+                modifier: '',
+                value: '',
+                operator: 'null',
+                invert: false
+              }
+            ],
+            body: 'body1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'body1');
+    });
+
     it('should return response if full body value matches (no modifier + regex)', () => {
       const request: Request = {
         header: function (headerName: string) {
@@ -4200,6 +4278,82 @@ describe('Response rules interpreter', () => {
         ''
       ).chooseResponse(1);
       strictEqual(routeResponse?.body, 'unauthorized');
+    });
+
+    it('should return response if operator is "empty_array" and body property is an empty array', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = { 'Content-Type': 'application/json' };
+
+          return headers[headerName];
+        },
+        body: {
+          prop: []
+        }
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'body',
+                modifier: 'prop',
+                value: '',
+                operator: 'empty_array',
+                invert: false
+              }
+            ],
+            body: 'response1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'response1');
+    });
+
+    it('should return response if operator is "empty_array" and body is an empty array', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = { 'Content-Type': 'application/json' };
+
+          return headers[headerName];
+        },
+        body: []
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'body',
+                modifier: '',
+                value: '',
+                operator: 'empty_array',
+                invert: false
+              }
+            ],
+            body: 'response1'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'response1');
     });
   });
 
