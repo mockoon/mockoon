@@ -64,6 +64,10 @@ input,
   *::-webkit-scrollbar-thumb {
     background: lighten($gray-900, 15%);
   }
+
+  &-height-content {
+    max-height: fit-content;
+  }
 }
 
 .hover-parent {

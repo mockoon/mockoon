@@ -27,7 +27,7 @@ import {
   tap,
   withLatestFrom
 } from 'rxjs/operators';
-import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { DropdownMenuItem } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { BuildFullPath, textFilter } from 'src/renderer/app/libs/utils.lib';
@@ -81,7 +81,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   public menuSize = Config.defaultSecondaryMenuSize;
   public draggedFolderCollapsed: boolean;
   public ResponseMode = ResponseMode;
-  public routeDropdownMenuItems: DropdownMenuComponent['items'] = [
+  public routeDropdownMenuItems: DropdownMenuItem[] = [
     {
       label: 'Duplicate',
       icon: 'content_copy',
@@ -144,7 +144,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
       }
     }
   ];
-  public folderDropdownMenuItems: DropdownMenuComponent['items'] = [
+  public folderDropdownMenuItems: DropdownMenuItem[] = [
     {
       label: 'Add CRUD route',
       icon: 'endpoints',

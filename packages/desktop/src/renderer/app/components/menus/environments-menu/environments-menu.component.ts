@@ -26,9 +26,12 @@ import {
   takeUntil,
   tap
 } from 'rxjs/operators';
-import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
+import {
+  DropdownMenuElement,
+  DropdownMenuItem
+} from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
-import { trackById, trackByUuid } from 'src/renderer/app/libs/utils.lib';
 import { EnvironmentsStatuses } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
@@ -40,6 +43,7 @@ import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import {
   EnvironmentsCategories,
+  RecentLocalEnvironment,
   Settings
 } from 'src/shared/models/settings.model';
 
@@ -69,8 +73,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public isCloudEnabled$: Observable<boolean>;
   public isConnected$ = this.user$.pipe(map((user) => !!user));
   public syncAlert$: Observable<string>;
-  public trackByUuid = trackByUuid;
-  public trackById = trackById;
+  public clearRecentLocalEnvironmentsConfirm$ = new TimedBoolean();
   public alertLabels = {
     VERSION_TOO_OLD_WARNING:
       'We will soon not support your Mockoon version anymore. Please update.',
@@ -81,7 +84,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
     OFFLINE_WARNING_GROUP:
       'Concurrent offline editing may result in conflicts. In case of conflict, you will be prompted to choose between the local or remote version. Click to learn more.'
   };
-  public commonDropdownMenuItems: DropdownMenuComponent['items'] = [
+  public commonDropdownMenuItems: DropdownMenuItem[] = [
     {
       label: 'Duplicate to the cloud',
       icon: 'cloud',
@@ -123,7 +126,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       }
     }
   ];
-  public environmentsDropdownMenuItems: DropdownMenuComponent['items'] = [
+  public localEnvironmentDropdownMenuItems: DropdownMenuItem[] = [
     ...this.commonDropdownMenuItems,
     {
       label: 'Show data file in explorer/finder',
@@ -152,7 +155,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       }
     }
   ];
-  public cloudEnvironmentsDropdownMenuItems: DropdownMenuComponent['items'] = [
+  public cloudEnvironmentDropdownMenuItems: DropdownMenuItem[] = [
     ...this.commonDropdownMenuItems,
     {
       label: 'Show local backup data file in explorer/finder',
@@ -194,6 +197,50 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       }, {})
     )
   );
+  public cloudDropdownMenuItems: DropdownMenuElement[] = [
+    {
+      label: 'New cloud environment',
+      icon: 'cloud_add',
+      twoSteps: false,
+      action: () => {
+        this.environmentsService.addCloudEnvironment(null, true).subscribe();
+      },
+      disabled$: () => this.sync$.pipe(map((sync) => !sync?.status))
+    },
+    {
+      label: 'New cloud environment from local file',
+      icon: 'folder_open',
+      twoSteps: false,
+      action: () => {
+        this.environmentsService.addCloudEnvironmentFromLocalFile().subscribe();
+      },
+      disabled$: () => this.sync$.pipe(map((sync) => !sync?.status))
+    }
+  ];
+  public localDropdownMenuItems$: Observable<DropdownMenuElement[]>;
+  private localDropdownMenuStaticItems: DropdownMenuElement[] = [
+    {
+      label: 'New local environment',
+      icon: 'note_add',
+      twoSteps: false,
+      action: () => {
+        this.environmentsService
+          .addEnvironment({ setActive: true })
+          .subscribe();
+      }
+    },
+    {
+      label: 'Open local environment',
+      icon: 'folder_open',
+      twoSteps: false,
+      action: () => {
+        this.environmentsService.openEnvironment().subscribe();
+      }
+    },
+    {
+      separator: true
+    }
+  ];
   private userAndSync$ = combineLatest([
     this.store.select('user').pipe(distinctUntilChanged()),
     this.store.select('sync').pipe(distinctUntilChanged())
@@ -230,6 +277,55 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
     this.settings$ = this.store
       .select('settings')
       .pipe(filter(Boolean), distinctUntilChanged());
+    this.localDropdownMenuItems$ = this.settings$.pipe(
+      map((settings) => settings.recentLocalEnvironments),
+      map((recentLocalEnvironments) => {
+        const recentLocalEnvironmentsMenuItems =
+          recentLocalEnvironments.map<DropdownMenuElement>(
+            (recentLocalEnvironment: RecentLocalEnvironment) => ({
+              label: recentLocalEnvironment.name,
+              subLabel: recentLocalEnvironment.path,
+              icon: null,
+              twoSteps: false,
+              action: () => {
+                this.environmentsService
+                  .openEnvironment(recentLocalEnvironment.path)
+                  .subscribe();
+              }
+            })
+          );
+
+        return [
+          ...this.localDropdownMenuStaticItems,
+          ...recentLocalEnvironmentsMenuItems,
+          ...(recentLocalEnvironmentsMenuItems.length > 0
+            ? []
+            : [
+                {
+                  label: 'No recent local environments',
+                  icon: null,
+                  twoSteps: false,
+                  disabled$: () => of(true)
+                }
+              ]),
+          {
+            separator: true
+          },
+          {
+            label: 'Clear recently opened',
+            icon: 'delete',
+            twoSteps: true,
+            confirmIcon: 'delete',
+            confirmLabel: 'Confirm',
+            action: () => {
+              this.settingsService.updateSettings({
+                recentLocalEnvironments: []
+              });
+            }
+          }
+        ];
+      })
+    );
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.environments$ = combineLatest([
       this.store.select('environments'),
@@ -410,31 +506,6 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
         [categoryId]: !collapsed
       }
     });
-  }
-
-  /**
-   * Create a new environment. Append at the end of the list.
-   */
-  public addLocalEnvironment() {
-    this.environmentsService.addEnvironment({ setActive: true }).subscribe();
-  }
-
-  /**
-   * Open an environment. Append at the end of the list.
-   */
-  public openLocalEnvironment() {
-    this.environmentsService.openEnvironment().subscribe();
-  }
-
-  /**
-   * Create a new cloud environment. Append at the end of the cloud list.
-   */
-  public addCloudEnvironment() {
-    this.environmentsService.addCloudEnvironment(null, true).subscribe();
-  }
-
-  public addCloudEnvironmentFromLocalFile() {
-    this.environmentsService.addCloudEnvironmentFromLocalFile().subscribe();
   }
 
   /**

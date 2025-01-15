@@ -17,6 +17,11 @@ export enum FileWatcherOptions {
 
 export type EnvironmentsCategories = 'cloud' | 'local';
 
+export type RecentLocalEnvironment = {
+  name: string;
+  path: string;
+};
+
 export type Settings = {
   welcomeShown: boolean;
   bannerDismissed: string[];
@@ -41,4 +46,5 @@ export type Settings = {
   envVarsPrefix: string;
   activeEnvironmentUuid: string | null;
   enableRandomLatency: boolean;
+  recentLocalEnvironments: RecentLocalEnvironment[];
 };

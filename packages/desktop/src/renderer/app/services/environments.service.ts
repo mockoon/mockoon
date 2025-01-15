@@ -919,55 +919,60 @@ export class EnvironmentsService extends Logger {
    * Open an environment file and add it to the store
    *
    */
-  public openEnvironment(): Observable<Environment> {
-    return this.dialogsService
-      .showOpenDialog('Open environment JSON file', 'json', true, true)
-      .pipe(
-        switchMap((filePaths) => {
-          if (!filePaths) {
-            return EMPTY;
-          }
-          const environments = this.store.get('settings').environments;
+  public openEnvironment(userPaths?: string): Observable<Environment> {
+    return (
+      userPaths
+        ? of([userPaths])
+        : this.dialogsService.showOpenDialog(
+            'Open environment JSON file',
+            'json',
+            true,
+            true
+          )
+    ).pipe(
+      switchMap((filePaths) => {
+        if (!filePaths) {
+          return EMPTY;
+        }
+        const environments = this.store.get('settings').environments;
 
-          const observables: Observable<Environment>[] = [];
+        const observables: Observable<Environment>[] = [];
 
-          filePaths.forEach((filePath) => {
-            const openedEnvironment = environments.find(
-              (environmentItem) => environmentItem.path === filePath
+        filePaths.forEach((filePath) => {
+          const openedEnvironment = environments.find(
+            (environmentItem) => environmentItem.path === filePath
+          );
+
+          if (openedEnvironment === undefined) {
+            observables.push(
+              this.storageService.loadEnvironment(filePath).pipe(
+                switchMap((environment) => this.verifyData(environment)),
+                tap((environment) => {
+                  const validatedEnvironment =
+                    this.dataService.migrateAndValidateEnvironment(environment);
+
+                  this.store.update(
+                    addEnvironmentAction(validatedEnvironment, {
+                      filePath,
+                      setActive: true
+                    })
+                  );
+                })
+              )
             );
+          } else if (
+            openedEnvironment !== undefined &&
+            filePaths.length === 1
+          ) {
+            this.store.update(
+              setActiveEnvironmentAction(openedEnvironment.uuid)
+            );
+          }
+        });
 
-            if (openedEnvironment === undefined) {
-              observables.push(
-                this.storageService.loadEnvironment(filePath).pipe(
-                  switchMap((environment) => this.verifyData(environment)),
-                  tap((environment) => {
-                    const validatedEnvironment =
-                      this.dataService.migrateAndValidateEnvironment(
-                        environment
-                      );
-
-                    this.store.update(
-                      addEnvironmentAction(validatedEnvironment, {
-                        filePath,
-                        setActive: true
-                      })
-                    );
-                  })
-                )
-              );
-            } else if (
-              openedEnvironment !== undefined &&
-              filePaths.length === 1
-            ) {
-              this.store.update(
-                setActiveEnvironmentAction(openedEnvironment.uuid)
-              );
-            }
-          });
-
-          return concat(...observables);
-        })
-      );
+        return concat(...observables);
+      })
+    );
   }
 
   /**

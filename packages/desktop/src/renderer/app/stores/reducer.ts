@@ -463,6 +463,25 @@ export const environmentReducer = (
         } else {
           newSettings.environments.push(newEnvironmentDescriptor);
         }
+
+        // add environment to the recent environments list
+        if (
+          !action.cloud &&
+          !newSettings.recentLocalEnvironments.find(
+            (recentEnvironment) => recentEnvironment.path === action.filePath
+          )
+        ) {
+          newSettings = {
+            ...newSettings,
+            recentLocalEnvironments: [
+              {
+                name: newEnvironment.name,
+                path: action.filePath
+              },
+              ...newSettings.recentLocalEnvironments
+            ].slice(0, 8)
+          };
+        }
       }
 
       const activeUuids: Partial<StoreType> = {};

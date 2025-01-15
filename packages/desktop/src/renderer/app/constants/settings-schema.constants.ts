@@ -4,6 +4,7 @@ import { Config } from 'src/renderer/config';
 import {
   EnvironmentDescriptor,
   FileWatcherOptions,
+  RecentLocalEnvironment,
   Settings
 } from 'src/shared/models/settings.model';
 
@@ -33,7 +34,8 @@ export const SettingsDefault: Settings = {
   },
   envVarsPrefix: defaultEnvironmentVariablesPrefix,
   activeEnvironmentUuid: null,
-  enableRandomLatency: false
+  enableRandomLatency: false,
+  recentLocalEnvironments: []
 };
 
 export const SettingsSchema = Joi.object<Settings, true>({
@@ -138,6 +140,16 @@ export const SettingsSchema = Joi.object<Settings, true>({
     .required(),
   enableRandomLatency: Joi.boolean()
     .failover(SettingsDefault.enableRandomLatency)
+    .required(),
+  recentLocalEnvironments: Joi.array()
+    .items(
+      Joi.object<RecentLocalEnvironment, true>({
+        name: Joi.string().required(),
+        path: Joi.string().required()
+      }),
+      Joi.any().strip()
+    )
+    .failover(SettingsDefault.recentLocalEnvironments)
     .required()
 })
   .failover(SettingsDefault)

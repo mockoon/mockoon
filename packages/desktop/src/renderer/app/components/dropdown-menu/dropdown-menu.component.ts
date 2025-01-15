@@ -1,8 +1,32 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
+
+export type DropdownMenuItem = {
+  label: string;
+  // less visible label (for additional information, ⚠️ not really compatible with twoSteps)
+  subLabel?: string;
+  icon: string;
+  // If true, the item will require a confirmation click
+  twoSteps: boolean;
+  // must be provided if twoSteps is true
+  confirmIcon?: string;
+  // must be provided if twoSteps is true
+  confirmLabel?: string;
+  // If provided, the item will be disabled when the observable emits true
+  disabled$?: (payload: any) => Observable<boolean>;
+  // Can be provided to display a custom disabled label
+  disabledLabel?: string;
+  action?: (payload: any) => void;
+};
+
+export type DropdownMenuSeparator = {
+  separator: boolean;
+};
+
+export type DropdownMenuElement = DropdownMenuItem | DropdownMenuSeparator;
 
 /**
  * Add a dropdown menu, with a three dots vertical icon.
@@ -16,46 +40,17 @@ import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownMenuComponent {
-  @Input({ required: true })
-  public items: {
-    label: string;
-    icon: string;
-    // If true, the item will require a confirmation click
-    twoSteps: boolean;
-    // must be provided if twoSteps is true
-    confirmIcon?: string;
-    // must be provided if twoSteps is true
-    confirmLabel?: string;
-    // If provided, the item will be disabled when the observable emits true
-    disabled$?: (payload: any) => Observable<boolean>;
-    // Can be provided to display a custom disabled label
-    disabledLabel?: string;
-    action: (payload: any) => void;
-  }[];
-
-  /**
-   * Payload provided by the parent, to be sent to the action functions
-   */
-  @Input()
-  public payload: any = null;
-
-  @Input({ required: true })
-  public idPrefix: string;
-
+  public readonly items = input.required<DropdownMenuElement[]>();
+  public readonly idPrefix = input.required<string>();
+  // Payload provided by the parent, to be sent to the action functions
+  public readonly payload = input<any>(null);
   // label to display as the dropdown button
-  @Input()
-  public label: string = null;
-
+  public readonly label = input<string>(null);
   // set to null to use default caret
-  @Input()
-  public icon: SvgComponent['icon'] = 'more_vert';
-
-  @Input()
-  public iconFaded = false;
-
-  @Input()
-  public noYPadding = false;
-
+  public readonly icon = input<SvgComponent['icon']>('more_vert');
+  public readonly iconFaded = input(false);
+  public readonly noYPadding = input(false);
+  public readonly menuHeightFitContent = input(false);
   public confirmRequested$ = new TimedBoolean();
   public window = window;
 
@@ -76,13 +71,37 @@ export class DropdownMenuComponent {
    * @param item
    * @param dropdown
    */
-  public itemClicked(item: (typeof this.items)[number], dropdown: NgbDropdown) {
+  public itemClicked(item: DropdownMenuItem, dropdown: NgbDropdown) {
     if (
       !item.twoSteps ||
       (item.twoSteps && this.confirmRequested$.readValue().enabled)
     ) {
-      item.action(this.payload);
+      if (item.action) {
+        item.action(this.payload());
+      }
       dropdown.close();
     }
+  }
+
+  /**
+   * Used for type checking in the template
+   *
+   * @param element
+   * @returns
+   */
+  public isItem(element: DropdownMenuElement): element is DropdownMenuItem {
+    return 'label' in element;
+  }
+
+  /**
+   * Used for type checking in the template
+   *
+   * @param element
+   * @returns
+   */
+  public isSeparator(
+    element: DropdownMenuElement
+  ): element is DropdownMenuSeparator {
+    return 'separator' in element;
   }
 }

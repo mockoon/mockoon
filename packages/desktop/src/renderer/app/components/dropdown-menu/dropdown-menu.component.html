@@ -1,77 +1,81 @@
-<ng-container
-  *ngIf="{
-    confirmRequested: confirmRequested$ | async
-  } as data"
-  ><div
-    ngbDropdown
-    autoClose="outside"
-    (openChange)="onChange($event)"
-    #dropdownInstance="ngbDropdown"
-    [id]="idPrefix + '-dropdown'"
+@let confirmRequested = confirmRequested$ | async;
+
+<div
+  class="h-100"
+  ngbDropdown
+  autoClose="outside"
+  (openChange)="onChange($event)"
+  #dropdownInstance="ngbDropdown"
+  [id]="idPrefix() + '-dropdown'"
+>
+  <button
+    class="btn dropdown-toggle h-100 d-flex align-items-center"
+    [ngClass]="{
+      'btn-custom': label(),
+      'btn-link': icon(),
+      'btn-icon': icon(),
+      'dropdown-toggle-icon': icon(),
+      'dropdown-toggle-no-caret': icon(),
+      'hover-fade': iconFaded(),
+      'py-0': noYPadding()
+    }"
+    type="button"
+    ngbDropdownToggle
+    (click)="$event.stopPropagation()"
   >
-    <button
-      class="btn dropdown-toggle"
-      [ngClass]="{
-        'btn-custom': label,
-        'btn-link': icon,
-        'btn-icon': icon,
-        'dropdown-toggle-icon': icon,
-        'dropdown-toggle-no-caret': icon,
-        'hover-fade': iconFaded,
-        'py-0': noYPadding
-      }"
-      type="button"
-      ngbDropdownToggle
-      (click)="$event.stopPropagation()"
-    >
-      @if (icon) {
-        <app-svg [icon]="icon"></app-svg>
-      }
-      @if (label) {
-        <div class="dropdown-toggle-label">{{ label }}</div>
-      }
-    </button>
-    <div
-      class="dropdown-menu"
-      [id]="idPrefix + '-dropdown-menu'"
-      ngbDropdownMenu
-    >
-      <div class="dropdown-menu-content">
-        @for (item of items; track $index) {
-          <ng-container
-            *ngIf="{
-              disabled: item.disabled$ && item.disabled$(payload) | async,
-              needConfirm: item.twoSteps && data.confirmRequested.enabled
-            } as flags"
+    @if (icon()) {
+      <app-svg [icon]="icon()"></app-svg>
+    }
+    @if (label()) {
+      <div class="dropdown-toggle-label">{{ label() }}</div>
+    }
+  </button>
+  <div
+    class="dropdown-menu"
+    [ngClass]="{ 'dropdown-menu-height-content': menuHeightFitContent() }"
+    style="max-width: 40vw"
+    [id]="idPrefix() + '-dropdown-menu'"
+    ngbDropdownMenu
+  >
+    <div class="dropdown-menu-content">
+      @for (item of items(); track $index) {
+        @if (isSeparator(item)) {
+          <hr class="dropdown-divider" />
+        } @else if (isItem(item)) {
+          @let disabled = item.disabled$ && item.disabled$(payload()) | async;
+          @let needConfirm = item.twoSteps && confirmRequested.enabled;
+
+          <button
+            class="btn dropdown-item d-flex"
+            [ngClass]="{
+              'text-danger': needConfirm
+            }"
+            (click)="itemClicked(item, dropdownInstance)"
+            [disabled]="disabled"
           >
-            <button
-              class="btn dropdown-item d-flex"
-              [ngClass]="{
-                'text-danger': flags.needConfirm
-              }"
-              (click)="itemClicked(item, dropdownInstance)"
-              [disabled]="flags.disabled"
-            >
-              <span class="text-truncate">
-                @if (item.icon) {
-                  <app-svg
-                    [icon]="flags.needConfirm ? item.confirmIcon : item.icon"
-                    class="pe-2"
-                  >
-                  </app-svg>
-                }
-                {{
-                  flags.needConfirm
-                    ? item.confirmLabel
-                    : flags.disabled
-                      ? item.disabledLabel || item.label
-                      : item.label
-                }}
-              </span>
-            </button>
-          </ng-container>
+            <span class="text-truncate">
+              @if (item.icon) {
+                <app-svg
+                  [icon]="needConfirm ? item.confirmIcon : item.icon"
+                  class="pe-2"
+                >
+                </app-svg>
+              }
+              {{
+                needConfirm
+                  ? item.confirmLabel
+                  : disabled
+                    ? item.disabledLabel || item.label
+                    : item.label
+              }}
+              @if (item.subLabel) {
+                <br />
+                <small class="text-muted">{{ item.subLabel }}</small>
+              }
+            </span>
+          </button>
         }
-      </div>
+      }
     </div>
   </div>
-</ng-container>
+</div>
