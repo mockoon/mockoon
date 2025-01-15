@@ -10,7 +10,7 @@ import {
   map
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
-import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { DropdownMenuItem } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import {
@@ -78,7 +78,7 @@ export class EnvironmentLogsComponent implements OnInit {
   public logsFilter$: Observable<string>;
   public dateFormat = 'yyyy-MM-dd HH:mm:ss:SSS';
   public focusableInputs = FocusableInputs;
-  public dropdownMenuItems: DropdownMenuComponent['items'] = [
+  public dropdownMenuItems: DropdownMenuItem[] = [
     {
       label: 'Create mock endpoint',
       icon: 'control_point_duplicate',

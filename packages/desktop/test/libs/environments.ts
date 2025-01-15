@@ -11,7 +11,7 @@ class Environments {
   }
 
   public get addBtn() {
-    return $('#environments-add-dropdown .dropdown-toggle');
+    return $('#local-environments-add-dropdown .dropdown-toggle');
   }
 
   private get startBtn() {
@@ -38,7 +38,7 @@ class Environments {
 
   public getAddMenuEntry(index: number) {
     return $(
-      `#environments-add-dropdown-menu .dropdown-item:nth-child(${index})`
+      `#local-environments-add-dropdown-menu .dropdown-item:nth-child(${index})`
     );
   }
 

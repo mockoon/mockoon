@@ -27,7 +27,7 @@ import {
   tap,
   withLatestFrom
 } from 'rxjs';
-import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { DropdownMenuItem } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import {
@@ -111,7 +111,7 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
       label: 'Data'
     }
   ];
-  public fileDropdownMenuItems: DropdownMenuComponent['items'] = [
+  public fileDropdownMenuItems: DropdownMenuItem[] = [
     {
       label: 'Browse',
       icon: 'find_in_page',
@@ -121,7 +121,7 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
           .showOpenDialog('Choose a file', null, false)
           .pipe(
             tap((filePaths) => {
-              if (filePaths[0]) {
+              if (filePaths?.[0]) {
                 this.activeCallbackForm.get('filePath').setValue(filePaths[0]);
               }
             })

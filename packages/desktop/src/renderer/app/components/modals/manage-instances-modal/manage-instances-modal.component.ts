@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { BehaviorSubject, EMPTY, Observable, catchError, map, tap } from 'rxjs';
 import { Logger } from 'src/renderer/app/classes/logger';
-import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { DropdownMenuItem } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
@@ -26,7 +26,7 @@ export class ManageInstancesModalComponent extends Logger implements OnInit {
   public isCloudEnabled$ = this.user$.pipe(
     map((user) => user && user.plan !== 'FREE')
   );
-  public deployEnvList$: Observable<DropdownMenuComponent['items']> = this.store
+  public deployEnvList$: Observable<DropdownMenuItem[]> = this.store
     .select('environments')
     .pipe(
       map((environments) =>
@@ -42,7 +42,7 @@ export class ManageInstancesModalComponent extends Logger implements OnInit {
       )
     );
   public cloudPlansURL = Config.cloudPlansURL;
-  public instancesDropdownMenuItems: DropdownMenuComponent['items'] = [
+  public instancesDropdownMenuItems: DropdownMenuItem[] = [
     {
       label: 'Re-deploy',
       icon: 'refresh',

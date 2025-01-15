@@ -11,7 +11,7 @@ import {
   filter,
   map
 } from 'rxjs/operators';
-import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { DropdownMenuItem } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { textFilter, trackByUuid } from 'src/renderer/app/libs/utils.lib';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
@@ -35,7 +35,7 @@ export class CallbacksMenuComponent implements OnInit {
   public focusableInputs = FocusableInputs;
   public menuSize = Config.defaultSecondaryMenuSize;
   public trackByUuid = trackByUuid;
-  public dropdownMenuItems: DropdownMenuComponent['items'] = [
+  public dropdownMenuItems: DropdownMenuItem[] = [
     {
       label: 'Duplicate',
       icon: 'content_copy',

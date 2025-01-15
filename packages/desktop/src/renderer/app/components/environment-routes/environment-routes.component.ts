@@ -39,7 +39,7 @@ import {
   tap
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
-import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { DropdownMenuItem } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { statusCodeValidation } from 'src/renderer/app/constants/masks.constants';
 import {
@@ -232,7 +232,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public focusableInputs = FocusableInputs;
   public Infinity = Infinity;
   public texts = Texts;
-  public fileDropdownMenuItems: DropdownMenuComponent['items'] = [
+  public fileDropdownMenuItems: DropdownMenuItem[] = [
     {
       label: 'Browse',
       icon: 'find_in_page',
@@ -242,7 +242,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
           .showOpenDialog('Choose a file', null, false)
           .pipe(
             tap((filePaths) => {
-              if (filePaths[0]) {
+              if (filePaths?.[0]) {
                 this.activeRouteResponseForm
                   .get('filePath')
                   .setValue(filePaths[0]);
