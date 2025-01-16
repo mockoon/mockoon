@@ -21,7 +21,7 @@ export type User = {
   nextQuotaResetOn: number;
   subscription: {
     trial?: boolean;
-    provider?: 'stripe' | 'paddle' | 'free';
+    provider?: 'stripe' | 'paddle' | 'free' | 'manual';
     frequency?: Frequency;
     createdOn: number;
     renewOn: number;
