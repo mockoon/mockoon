@@ -33,6 +33,7 @@ import domain from './domain';
 import email from './email';
 import eq from './eq';
 import filter from './filter';
+import find from './find';
 import firstName from './firstName';
 import float from './float';
 import floor from './floor';
@@ -117,6 +118,7 @@ export const Helpers = {
   email,
   eq,
   filter,
+  find,
   firstName,
   float,
   floor,
