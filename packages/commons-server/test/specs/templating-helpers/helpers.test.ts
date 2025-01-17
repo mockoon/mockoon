@@ -3126,6 +3126,53 @@ describe('Template parser', () => {
     });
   });
 
+  describe('Helper: find', () => {
+    it('should return the first item matching the condition', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{{ stringify (find (array (object b="b1" a="a1") (object b="b2" a="a2") 3) (object b="b1")) }}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, JSON.stringify({ a: 'a1', b: 'b1' }, null, 2));
+    });
+
+    it('should return the first item matching nested values', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{{ stringify (find (array (object parent=(object child="child-val") b="b1") (object parent=(object child="child-val2") b="b2") 2 3) (object parent=(object child="child-val"))) }}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(
+        parseResult,
+        JSON.stringify({ b: 'b1', parent: { child: 'child-val' } }, null, 2)
+      );
+    });
+
+    it('should return undefined when no item matches the condition', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content:
+          '{{{ stringify (find (array (object parent=(object child="child-val") b="b1") (object parent=(object child="child-val2") b="b2") 2 3) (object parent="parent-val")) }}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '');
+    });
+  });
+
   describe('Helper: sort', () => {
     it('should return correctly sorted array of numbers in ascending order', () => {
       const parseResult = TemplateParser({

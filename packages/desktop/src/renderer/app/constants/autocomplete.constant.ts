@@ -83,6 +83,7 @@ export const helpersAutocompletions = [
   { caption: 'concat', value: '{{concat value value}}', meta: '' },
   { caption: 'jwtPayload', value: "{{jwtPayload token 'key'}}", meta: '' },
   { caption: 'jwtHeader', value: "{{jwtHeader token 'key'}}", meta: '' },
+  { caption: 'filter', value: "{{filter array 'key'}}", meta: '' },
   {
     caption: 'indexOf',
     value: '{{indexOf value search startIndex}}',
@@ -138,6 +139,7 @@ export const helpersAutocompletions = [
   { caption: 'color', value: '{{color}}', meta: '' },
   { caption: 'hexColor', value: '{{hexColor}}', meta: '' },
   { caption: 'guid', value: '{{guid}}', meta: '' },
+  { caption: 'uuid', value: '{{uuid}}', meta: '' },
   { caption: 'ipv4', value: '{{ipv4}}', meta: '' },
   { caption: 'ipv6', value: '{{ipv6}}', meta: '' },
   { caption: 'lorem', value: '{{lorem length}}', meta: '' }
