@@ -188,7 +188,8 @@ export class OpenAPIConverter {
     port?: number
   ): Environment {
     const newEnvironment = BuildEnvironment({
-      hasDefaultHeader: false,
+      hasContentTypeHeader: false,
+      hasCorsHeaders: true,
       hasDefaultRoute: false,
       port
     });
@@ -224,7 +225,8 @@ export class OpenAPIConverter {
     port?: number
   ): Environment {
     const newEnvironment = BuildEnvironment({
-      hasDefaultHeader: false,
+      hasContentTypeHeader: false,
+      hasCorsHeaders: true,
       hasDefaultRoute: false,
       port
     });

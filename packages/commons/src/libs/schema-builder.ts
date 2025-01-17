@@ -212,22 +212,32 @@ export const BuildCallback = (): Callback => ({ ...CallbackDefault });
 export const BuildEnvironment = (
   params: {
     hasDefaultRoute: boolean;
-    hasDefaultHeader: boolean;
+    hasContentTypeHeader: boolean;
+    hasCorsHeaders: boolean;
     port?: number;
   } = {
     hasDefaultRoute: true,
-    hasDefaultHeader: true
+    hasContentTypeHeader: true,
+    hasCorsHeaders: true
   }
 ): Environment => {
   const newRoute = BuildHTTPRoute();
+
+  const headers: Header[] = [];
+
+  if (params.hasContentTypeHeader) {
+    headers.push(BuildHeader('Content-Type', 'application/json'));
+  }
+
+  if (params.hasCorsHeaders) {
+    headers.push(...CORSHeaders);
+  }
 
   return {
     ...EnvironmentDefault,
     port: params.port ?? EnvironmentDefault.port,
     routes: params.hasDefaultRoute ? [newRoute] : [],
-    headers: params.hasDefaultHeader
-      ? [BuildHeader('Content-Type', 'application/json'), ...CORSHeaders]
-      : [],
+    headers,
     proxyReqHeaders: [BuildHeader()],
     proxyResHeaders: [BuildHeader()],
     rootChildren: params.hasDefaultRoute
