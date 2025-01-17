@@ -544,7 +544,8 @@ export class EnvironmentsService extends Logger {
         const newEnvironment = options.environment
           ? options.environment
           : BuildEnvironment({
-              hasDefaultHeader: true,
+              hasContentTypeHeader: true,
+              hasCorsHeaders: true,
               hasDefaultRoute: true,
               port: this.dataService.getNewEnvironmentPort()
             });
@@ -719,7 +720,8 @@ export class EnvironmentsService extends Logger {
     if (!environment) {
       environment = {
         ...BuildEnvironment({
-          hasDefaultHeader: true,
+          hasContentTypeHeader: true,
+          hasCorsHeaders: true,
           hasDefaultRoute: true
         }),
         // provide a name or the filename (UUID) will be used
@@ -1267,7 +1269,8 @@ export class EnvironmentsService extends Logger {
             setActive: true,
             environment: {
               ...BuildEnvironment({
-                hasDefaultHeader: true,
+                hasContentTypeHeader: true,
+                hasCorsHeaders: true,
                 hasDefaultRoute: true,
                 port: this.dataService.getNewEnvironmentPort()
               }),

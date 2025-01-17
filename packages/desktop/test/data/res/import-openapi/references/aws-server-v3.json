@@ -4336,7 +4336,20 @@
     "passphrase": ""
   },
   "cors": true,
-  "headers": [],
+  "headers": [
+    {
+      "key": "Access-Control-Allow-Origin",
+      "value": "*"
+    },
+    {
+      "key": "Access-Control-Allow-Methods",
+      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+    },
+    {
+      "key": "Access-Control-Allow-Headers",
+      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+    }
+  ],
   "proxyReqHeaders": [{ "key": "", "value": "" }],
   "proxyResHeaders": [{ "key": "", "value": "" }],
   "data": [],
