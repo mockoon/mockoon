@@ -2913,6 +2913,46 @@ describe('Response rules interpreter', () => {
       strictEqual(routeResponse?.body, 'unauthorized');
     });
 
+    it('should return default response if full body (JSON) value matches (no modifier)', () => {
+      const request: Request = {
+        header: function (headerName: string) {
+          const headers = {
+            'Content-Type': 'application/json'
+          };
+
+          return headers[headerName];
+        },
+        stringBody: '{"name":"john"}',
+        body: { name: 'john' }
+      } as Request;
+
+      const routeResponse = new ResponseRulesInterpreter(
+        [
+          routeResponse403,
+          {
+            ...routeResponseTemplate,
+            rules: [
+              {
+                target: 'body',
+                modifier: '',
+                value: '{"name":"john"}',
+                operator: 'equals',
+                invert: false
+              }
+            ],
+            body: 'body'
+          }
+        ],
+        fromExpressRequest(request),
+        null,
+        EnvironmentDefault,
+        [],
+        {},
+        ''
+      ).chooseResponse(1);
+      strictEqual(routeResponse?.body, 'body');
+    });
+
     it('should return response if JSON body property value matches (no regex)', () => {
       const request: Request = {
         header: function (headerName: string) {

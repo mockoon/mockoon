@@ -33,10 +33,11 @@ import {
  */
 export class ResponseRulesInterpreter {
   private targets: Record<
-    Exclude<
-      ResponseRuleTargets,
-      'header' | 'request_number' | 'cookie' | 'templating'
-    >,
+    | Exclude<
+        ResponseRuleTargets,
+        'header' | 'request_number' | 'cookie' | 'templating'
+      >
+    | 'stringBody',
     any
   >;
   constructor(
@@ -180,9 +181,16 @@ export class ResponseRulesInterpreter {
       } else {
         /**
          * Body and query targets can be used without a modifier, in which case the whole parsed body or query is used.
+         * For body, when operator is equals, regex or regex_i, the stringBody is used instead of the parsed body to allow for string comparison.
          */
         if (rule.target === 'body') {
-          targetValue = requestMessage || this.targets.body;
+          targetValue =
+            requestMessage ||
+            (rule.operator === 'equals' ||
+            rule.operator === 'regex' ||
+            rule.operator === 'regex_i'
+              ? this.targets.stringBody
+              : this.targets.body);
         } else if (rule.target === 'query') {
           targetValue = this.targets.query;
         }
@@ -291,6 +299,7 @@ export class ResponseRulesInterpreter {
     });
 
     this.targets = {
+      stringBody: this.request.stringBody,
       body,
       query: this.request.query,
       params: this.request.params,
