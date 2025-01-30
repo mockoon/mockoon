@@ -28,7 +28,8 @@ type dropdownMenuPayload = { databucketUuid: string };
   selector: 'app-databuckets-menu',
   templateUrl: './databuckets-menu.component.html',
   styleUrls: ['./databuckets-menu.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class DatabucketsMenuComponent implements OnInit {
   public settings$: Observable<Settings>;

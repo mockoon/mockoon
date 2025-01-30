@@ -16,7 +16,8 @@ import { Config } from 'src/renderer/config';
   selector: 'app-title-separator',
   templateUrl: './title-separator.component.html',
   styleUrls: ['./title-separator.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class TitleSeparatorComponent {
   @Input()

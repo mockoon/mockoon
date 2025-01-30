@@ -21,7 +21,8 @@ import { FileWatcherOptions, Settings } from 'src/shared/models/settings.model';
   selector: 'app-settings-modal',
   templateUrl: './settings-modal.component.html',
   styleUrls: ['settings-modal.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class SettingsModalComponent implements OnInit, OnDestroy {
   public settings$: Observable<Settings>;

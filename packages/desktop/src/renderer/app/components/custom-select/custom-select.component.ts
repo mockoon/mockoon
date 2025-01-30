@@ -42,7 +42,8 @@ import {
       multi: true
     }
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   @HostBinding('class')

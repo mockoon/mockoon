@@ -53,7 +53,8 @@ type dropdownMenuPayload = { environmentUuid: string; syncStatus: boolean };
   selector: 'app-environments-menu',
   templateUrl: './environments-menu.component.html',
   styleUrls: ['./environments-menu.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;

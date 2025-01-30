@@ -25,7 +25,8 @@ type dropdownMenuPayload = { callbackUuid: string };
   selector: 'app-callbacks-menu',
   templateUrl: './callbacks-menu.component.html',
   styleUrls: ['./callbacks-menu.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class CallbacksMenuComponent implements OnInit {
   public settings$: Observable<Settings>;

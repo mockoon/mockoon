@@ -21,7 +21,8 @@ import { Config } from 'src/renderer/config';
   selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class FooterComponent implements OnInit {
   @Input() public isTemplateModalOpen: boolean;

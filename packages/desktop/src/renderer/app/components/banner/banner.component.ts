@@ -10,7 +10,8 @@ import { Store } from 'src/renderer/app/stores/store';
 @Component({
   selector: 'app-banner',
   templateUrl: 'banner.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class BannerComponent implements OnInit {
   public banner$: Observable<Banner>;

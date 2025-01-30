@@ -28,7 +28,8 @@ import { Store } from 'src/renderer/app/stores/store';
   selector: 'app-route-callbacks',
   templateUrl: 'route-callbacks.component.html',
   styleUrls: ['./route-callbacks.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class RouteCallbacksComponent implements OnInit, OnDestroy {
   @Input()

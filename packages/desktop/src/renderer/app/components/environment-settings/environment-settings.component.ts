@@ -16,7 +16,8 @@ import { Store } from 'src/renderer/app/stores/store';
 @Component({
   selector: 'app-environment-settings',
   templateUrl: './environment-settings.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;

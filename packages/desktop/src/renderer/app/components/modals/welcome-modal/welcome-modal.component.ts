@@ -6,7 +6,8 @@ import { UIService } from 'src/renderer/app/services/ui.service';
 @Component({
   selector: 'app-welcome-modal',
   templateUrl: './welcome-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class WelcomeModalComponent {
   constructor(

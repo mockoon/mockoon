@@ -40,7 +40,8 @@ declare const ace: any;
       multi: true
     }
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class EditorComponent
   implements ControlValueAccessor, OnInit, OnDestroy

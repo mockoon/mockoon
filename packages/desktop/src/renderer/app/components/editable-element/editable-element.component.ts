@@ -30,7 +30,8 @@ import {
       useExisting: forwardRef(() => EditableElementComponent),
       multi: true
     }
-  ]
+  ],
+  standalone: false
 })
 export class EditableElementComponent implements ControlValueAccessor {
   /**

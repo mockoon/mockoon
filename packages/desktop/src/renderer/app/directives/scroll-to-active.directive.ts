@@ -5,7 +5,8 @@ import { Subject } from 'rxjs';
  * This directive is used to scroll the element into view when it becomes active (class added) or when the element is created with the active class (element insertion, click or class change from outside, like the command palette).
  */
 @Directive({
-  selector: '[appScrollWhenActive]'
+  selector: '[appScrollWhenActive]',
+  standalone: false
 })
 export class ScrollWhenActiveDirective implements AfterViewInit, OnDestroy {
   private destroy$ = new Subject<void>();

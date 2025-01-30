@@ -17,7 +17,8 @@ import { Store } from 'src/renderer/app/stores/store';
 @Component({
   selector: 'app-duplicate-modal',
   templateUrl: './duplicate-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class DuplicateModalComponent implements OnInit, OnDestroy {
   public environments$: Observable<Environment[]> = this.store

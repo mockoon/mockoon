@@ -22,7 +22,8 @@ import { Store } from 'src/renderer/app/stores/store';
   selector: 'app-environment-databuckets',
   templateUrl: './environment-databuckets.component.html',
   styleUrls: ['./environment-databuckets.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
   public hasDatabuckets$: Observable<boolean>;

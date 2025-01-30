@@ -21,7 +21,8 @@ export type ColumnType = 'main' | 'secondary';
  */
 
 @Directive({
-  selector: '[appResizeColumn]'
+  selector: '[appResizeColumn]',
+  standalone: false
 })
 export class ResizeColumnDirective implements AfterViewInit {
   @Input()

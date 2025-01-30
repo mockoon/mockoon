@@ -63,7 +63,8 @@ import { Config } from 'src/renderer/config';
         animate('1s ease-in', style({ opacity: 1 }))
       ])
     ])
-  ]
+  ],
+  standalone: false
 })
 export class TemplatesModalComponent implements OnInit, OnDestroy {
   public isDemoLoading$ = new BehaviorSubject<boolean>(false);

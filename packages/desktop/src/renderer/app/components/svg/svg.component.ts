@@ -22,7 +22,8 @@ import {
   selector: 'app-svg',
   templateUrl: './svg.component.html',
   styleUrls: ['./svg.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class SvgComponent {
   @Input()

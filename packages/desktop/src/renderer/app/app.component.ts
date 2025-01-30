@@ -29,7 +29,8 @@ import { environment } from 'src/renderer/environments/environment';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class AppComponent extends Logger implements OnInit {
   public activeEnvironment$: Observable<Environment>;
