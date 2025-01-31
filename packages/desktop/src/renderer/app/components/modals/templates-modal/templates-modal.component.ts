@@ -38,7 +38,6 @@ import {
   tap,
   withLatestFrom
 } from 'rxjs';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { demoTemplates } from 'src/renderer/app/constants/demo-templates';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
@@ -90,6 +89,7 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
   public defaultEditorOptions = defaultEditorOptions;
   public focusableInputs = FocusableInputs;
   public open = false;
+  public accountUrl = Config.accountUrl;
   private isFirstDemo = true;
   private destroy$ = new Subject<void>();
 
@@ -226,13 +226,6 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
         this.templatingToggle.value ? ['templating'] : []
       )
       .subscribe();
-  }
-
-  /**
-   * Open the account page in the default browser
-   */
-  public account() {
-    MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.accountURL);
   }
 
   public setActiveTab(tab: TemplatesTabsName) {

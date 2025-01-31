@@ -48,7 +48,6 @@ describe('Schema validation', () => {
 
       // add missing properties with default
       expect(fileContent.secondaryMenuSize).toEqual(200);
-      expect(fileContent.bannerDismissed).toHaveLength(0);
 
       // remove unknown values
       expect((fileContent as any).unknown).toEqual(undefined);

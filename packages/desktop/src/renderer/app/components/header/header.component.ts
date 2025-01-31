@@ -52,6 +52,7 @@ export class HeaderComponent implements OnInit {
     ENV_PROXY: 'tour-environment-proxy'
   };
   public isDev = !env.production;
+  public accountUrl = Config.accountUrl;
 
   constructor(
     private store: Store,
@@ -155,13 +156,6 @@ export class HeaderComponent implements OnInit {
    */
   public logout() {
     this.userService.logout().subscribe();
-  }
-
-  /**
-   * Open the account page in the default browser
-   */
-  public account() {
-    MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.accountURL);
   }
 
   /**

@@ -31,7 +31,6 @@ import {
   DropdownMenuElement,
   DropdownMenuItem
 } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { EnvironmentsStatuses } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
@@ -75,6 +74,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public isConnected$ = this.user$.pipe(map((user) => !!user));
   public syncAlert$: Observable<string>;
   public clearRecentLocalEnvironmentsConfirm$ = new TimedBoolean();
+  public offlineWarningLink = Config.docs.cloudSyncOffline;
   public alertLabels = {
     VERSION_TOO_OLD_WARNING:
       'We will soon not support your Mockoon version anymore. Please update.',
@@ -518,15 +518,6 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
 
   public cloudReconnect() {
     this.syncsService.reconnect();
-  }
-
-  public openSyncAlert(syncAlert: string) {
-    if (syncAlert.includes('OFFLINE_WARNING')) {
-      MainAPI.send(
-        'APP_OPEN_EXTERNAL_LINK',
-        `${Config.docs.cloudSync}#offline-editing`
-      );
-    }
   }
 
   public login(event: MouseEvent) {

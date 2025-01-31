@@ -95,7 +95,6 @@ export interface MainAPIModel {
       | 'APP_AUTH_STOP_SERVER'
   ): void;
   send(channel: 'APP_AUTH', page: 'login' | 'signup'): void;
-  send(channel: 'APP_OPEN_EXTERNAL_LINK', url: string): void;
   send(
     channel: 'APP_SHOW_FILE' | 'APP_OPEN_FILE',
     path: string,

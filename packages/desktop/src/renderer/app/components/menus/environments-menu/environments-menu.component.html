@@ -58,16 +58,23 @@
           <div class="text-truncate">
             {{ category.label }}
             @if (category.id === 'cloud' && syncAlert) {
-              <span
-                class="ms-2 text-warning"
-                [ngClass]="{
-                  'cursor-pointer': syncAlert.includes('OFFLINE_WARNING')
-                }"
-                [ngbTooltip]="alertLabels[syncAlert]"
-                (click)="openSyncAlert(syncAlert)"
-              >
-                <app-svg icon="warning"></app-svg>
-              </span>
+              @if (syncAlert.includes('OFFLINE_WARNING')) {
+                <a
+                  class="ms-2 text-warning cursor-pointer"
+                  [ngbTooltip]="alertLabels[syncAlert]"
+                  href="{{ offlineWarningLink }}"
+                  target="_blank"
+                >
+                  <app-svg icon="warning"></app-svg>
+                </a>
+              } @else {
+                <span
+                  class="ms-2 text-warning"
+                  [ngbTooltip]="alertLabels[syncAlert]"
+                >
+                  <app-svg icon="warning"></app-svg>
+                </span>
+              }
             }
           </div>
         </div>

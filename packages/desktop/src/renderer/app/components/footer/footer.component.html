@@ -25,10 +25,6 @@
           {{ (platform$ | async) === 'win32' ? 'Install' : 'Download' }}
         </button>
       </div>
-
-      <div class="footer-item">
-        <app-banner></app-banner>
-      </div>
     </div>
 
     <ng-container *ngIf="uiState$ | async as uiState">

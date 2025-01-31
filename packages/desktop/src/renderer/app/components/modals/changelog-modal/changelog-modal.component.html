@@ -4,9 +4,11 @@
       Release notes v{{ appVersion }}
       <a
         class="btn btn-link btn-sm btn-icon text-primary"
-        (click)="openReleaseLink()"
-        >View online</a
+        href="{{ releaseUrl }}"
+        target="_blank"
       >
+        View online
+      </a>
     </h4>
   </div>
   <div class="modal-body">

@@ -48,7 +48,7 @@ import {
 } from 'src/renderer/app/constants/routes.constants';
 import { Texts } from 'src/renderer/app/constants/texts.constant';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
-import { BuildFullPath } from 'src/renderer/app/libs/utils.lib';
+import { buildFullPath } from 'src/renderer/app/libs/utils.lib';
 import {
   DropdownItems,
   ToggleItems
@@ -92,6 +92,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public activeRouteResponseForm: UntypedFormGroup;
   public scrollToBottom = this.uiService.scrollToBottom;
   public databuckets$: Observable<DropdownItems>;
+  public externalLink$: Observable<string>;
   public methods: DropdownItems = [
     {
       value: Methods.all,
@@ -325,6 +326,14 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
         }))
       )
     );
+    this.externalLink$ = combineLatest([
+      this.activeEnvironment$,
+      this.activeRoute$
+    ]).pipe(
+      map(([activeEnvironment, activeRoute]) =>
+        buildFullPath(activeEnvironment, activeRoute)
+      )
+    );
 
     /**
      * Effective content type:
@@ -452,19 +461,6 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   ) {
     routeResponsesDropdown.close();
     this.environmentsService.setActiveRouteResponse(routeResponseUUID);
-  }
-
-  /**
-   * Open GET routes in the browser
-   */
-  public openRouteInBrowser() {
-    const activeEnvironment = this.store.getActiveEnvironment();
-    const activeRoute = this.store.getActiveRoute();
-
-    MainAPI.send(
-      'APP_OPEN_EXTERNAL_LINK',
-      BuildFullPath(activeEnvironment, activeRoute)
-    );
   }
 
   /**

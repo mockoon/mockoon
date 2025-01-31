@@ -7,7 +7,6 @@ import {
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Observable, Subject, merge } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FakerLocales } from 'src/renderer/app/constants/faker.constants';
 import { SettingsDefault } from 'src/renderer/app/constants/settings-schema.constants';
 import { DropdownItems } from 'src/renderer/app/models/common.model';
@@ -27,6 +26,7 @@ import { FileWatcherOptions, Settings } from 'src/shared/models/settings.model';
 export class SettingsModalComponent implements OnInit, OnDestroy {
   public settings$: Observable<Settings>;
   public Infinity = Infinity;
+  public faqUrl = Config.docs.faq;
   public fakerLocales: DropdownItems = FakerLocales;
   public fileWatcherOptions: DropdownItems = [
     { value: FileWatcherOptions.DISABLED, label: 'Disabled' },
@@ -63,12 +63,6 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
    */
   public settingsUpdated(settingNewValue: string, settingName: keyof Settings) {
     this.settingsService.updateSettings({ [settingName]: settingNewValue });
-  }
-
-  public openWikiLink(linkName: string, event: MouseEvent) {
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-    MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.docs[linkName]);
   }
 
   public close() {

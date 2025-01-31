@@ -15,13 +15,6 @@
     <div class="text-truncate">
       {{ subheading }}
       <ng-content select="[subheading]"></ng-content>
-      <span
-        *ngIf="docLink"
-        class="ps-2 btn btn-link text-primary p-0 cursor-pointer"
-        (click)="linkClick()"
-      >
-        <app-svg icon="info"></app-svg>
-      </span>
     </div>
   </div>
 </div>

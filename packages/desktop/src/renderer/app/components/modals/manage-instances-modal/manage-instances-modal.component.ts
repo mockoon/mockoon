@@ -24,6 +24,7 @@ export class ManageInstancesModalComponent extends Logger implements OnInit {
   public instances$ = this.store.select('deployInstances');
   public environmentList$: Observable<Record<string, true>>;
   public user$ = this.store.select('user');
+  public accountUrl = Config.accountUrl;
   public isCloudEnabled$ = this.user$.pipe(
     map((user) => user && user.plan !== 'FREE')
   );
@@ -121,13 +122,6 @@ export class ManageInstancesModalComponent extends Logger implements OnInit {
 
   public close() {
     this.uiService.closeModal('manageInstances', false);
-  }
-
-  /**
-   * Open the account page in the default browser
-   */
-  public account() {
-    MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.accountURL);
   }
 
   public copyToClipboard(text: string) {

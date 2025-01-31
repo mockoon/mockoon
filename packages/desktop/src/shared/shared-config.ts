@@ -36,13 +36,16 @@ export const SharedConfig = (options: {
       hostname: docsURL + 'server-configuration/listening-hostname/',
       faq: options.websiteURL + 'faq/',
       cloudSync:
-        docsURL + 'mockoon-cloud/data-synchronization-team-collaboration/'
+        docsURL + 'mockoon-cloud/data-synchronization-team-collaboration/',
+      cloudSyncOffline:
+        docsURL +
+        'mockoon-cloud/data-synchronization-team-collaboration/#offline-editing'
     },
     // should not be used directly. Instead use the flow methods in the user service
     loginURL: `${options.websiteURL}login/`,
     // should not be used directly. Instead use the flow methods in the user service
     signupURL: `${options.websiteURL}signup/`,
-    accountURL: `${options.websiteURL}account/subscription/`,
+    accountUrl: `${options.websiteURL}account/subscription/`,
     cloudPlansURL: `${options.websiteURL}cloud/`,
     maxPromptLength: 500,
     defaultMaxLogsPerEnvironment: defaultMaxTransactionLogs,

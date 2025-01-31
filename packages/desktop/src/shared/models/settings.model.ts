@@ -24,7 +24,6 @@ export type RecentLocalEnvironment = {
 
 export type Settings = {
   welcomeShown: boolean;
-  bannerDismissed: string[];
   maxLogsPerEnvironment: number;
   truncateRouteName: boolean;
   mainMenuSize: number;

@@ -30,7 +30,7 @@ import {
 import { DropdownMenuItem } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
-import { BuildFullPath, textFilter } from 'src/renderer/app/libs/utils.lib';
+import { buildFullPath, textFilter } from 'src/renderer/app/libs/utils.lib';
 import {
   DuplicatedRoutesTypes,
   EnvironmentsStatuses
@@ -122,7 +122,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
 
         MainAPI.send(
           'APP_WRITE_CLIPBOARD',
-          BuildFullPath(activeEnvironment, route)
+          buildFullPath(activeEnvironment, route)
         );
       }
     },
