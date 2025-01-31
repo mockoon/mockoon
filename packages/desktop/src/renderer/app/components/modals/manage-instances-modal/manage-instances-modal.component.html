@@ -168,14 +168,14 @@
           data.user?.deployInstancesQuota
         }})
       </p>
-      <button
-        type="button"
+      <a
         class="btn btn-link btn-icon text-primary ps-2"
-        (click)="account()"
+        href="{{ accountUrl }}"
+        target="_blank"
       >
         My account
         <app-svg icon="open_in_new" class="ps-1" size="12"></app-svg>
-      </button>
+      </a>
     </div>
     <div class="ms-auto">
       @if (data.taskInProgress) {

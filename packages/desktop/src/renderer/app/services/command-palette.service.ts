@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, from, map } from 'rxjs';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { CharCode } from 'src/renderer/app/enums/charcode.enum';
-import { BuildFullPath } from 'src/renderer/app/libs/utils.lib';
+import { buildFullPath } from 'src/renderer/app/libs/utils.lib';
 import {
   Commands,
   ScoreAndPositions
@@ -748,7 +748,7 @@ export class CommandPaletteService {
         action: () => {
           MainAPI.send(
             'APP_WRITE_CLIPBOARD',
-            BuildFullPath(activeEnvironment, activeRoute)
+            buildFullPath(activeEnvironment, activeRoute)
           );
         },
         score: 1,

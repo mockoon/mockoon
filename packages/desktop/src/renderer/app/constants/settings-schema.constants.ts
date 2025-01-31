@@ -10,7 +10,6 @@ import {
 
 export const SettingsDefault: Settings = {
   welcomeShown: false,
-  bannerDismissed: [],
   maxLogsPerEnvironment: Config.defaultMaxLogsPerEnvironment,
   truncateRouteName: true,
   mainMenuSize: Config.defaultMainMenuSize,
@@ -40,10 +39,6 @@ export const SettingsDefault: Settings = {
 
 export const SettingsSchema = Joi.object<Settings, true>({
   welcomeShown: Joi.boolean().failover(SettingsDefault.welcomeShown).required(),
-  bannerDismissed: Joi.array()
-    .items(Joi.string(), Joi.any().strip())
-    .failover(SettingsDefault.bannerDismissed)
-    .required(),
   maxLogsPerEnvironment: Joi.number()
     .min(1)
     .failover(SettingsDefault.maxLogsPerEnvironment)

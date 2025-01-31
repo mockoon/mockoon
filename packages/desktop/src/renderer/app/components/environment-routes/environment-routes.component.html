@@ -13,7 +13,8 @@
     defaultResponseTooltip: defaultResponseTooltip$ | async,
     bodyEditorConfig: bodyEditorConfig$ | async,
     effectiveContentType: effectiveContentType$ | async,
-    activeRouteResponseLastLog: activeRouteResponseLastLog$ | async
+    activeRouteResponseLastLog: activeRouteResponseLastLog$ | async,
+    externalLink: externalLink$ | async
   } as data"
 >
   <div class="d-flex h-100">
@@ -46,25 +47,27 @@
             />
 
             <div class="d-flex">
-              <button
-                class="btn btn-link"
-                ngbTooltip="Open route in browser (GET method only)"
-                [ngClass]="{
-                  'is-primary':
-                    !data.environmentsStatus[data.activeEnvironment?.uuid]
-                      ?.running || data.activeRoute?.method !== 'get'
-                }"
-                (click)="openRouteInBrowser()"
-                [disabled]="
-                  !data.environmentsStatus[data.activeEnvironment?.uuid]
-                    ?.running ||
-                  ((data.activeRoute?.method !== 'get' ||
-                    data.activeRoute?.type !== 'http') &&
-                    data.activeRoute?.type !== 'crud')
-                "
-              >
-                <app-svg icon="open_in_new"></app-svg>
-              </button>
+              @if (
+                data.environmentsStatus[data.activeEnvironment?.uuid]
+                  ?.running &&
+                ((data.activeRoute?.method === 'get' &&
+                  data.activeRoute?.type === 'http') ||
+                  data.activeRoute?.type === 'crud')
+              ) {
+                <a
+                  class="btn btn-link"
+                  ngbTooltip="Open route in browser (GET method only)"
+                  [ngClass]="{
+                    'is-primary':
+                      !data.environmentsStatus[data.activeEnvironment?.uuid]
+                        ?.running || data.activeRoute?.method !== 'get'
+                  }"
+                  href="{{ data.externalLink }}"
+                  target="_blank"
+                >
+                  <app-svg icon="open_in_new"></app-svg>
+                </a>
+              }
 
               <span
                 *ngIf="routeHasQueryParams()"

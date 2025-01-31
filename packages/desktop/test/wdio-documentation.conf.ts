@@ -29,7 +29,6 @@ const config: WebdriverIO.Config = {
         './tmp/storage/settings.json',
         JSON.stringify({
           welcomeShown: true,
-          bannerDismissed: [],
           maxLogsPerEnvironment: 50,
           truncateRouteName: true,
           mainMenuSize: 150,

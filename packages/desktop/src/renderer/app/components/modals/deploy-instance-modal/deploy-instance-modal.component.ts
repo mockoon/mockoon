@@ -41,6 +41,7 @@ export class DeployInstanceModalComponent extends Logger implements OnInit {
   public existingInstance$: Observable<DeployInstance>;
   public instanceExists$: Observable<boolean>;
   public user$: Observable<User>;
+  public accountUrl = Config.accountUrl;
   public optionsForm = this.formBuilder.group({
     subdomain: this.formBuilder.control<string>(null, {
       validators: [
@@ -213,13 +214,6 @@ export class DeployInstanceModalComponent extends Logger implements OnInit {
         })
       )
       .subscribe();
-  }
-
-  /**
-   * Open the account page in the default browser
-   */
-  public account() {
-    MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.accountURL);
   }
 
   public copyToClipboard(url: string) {

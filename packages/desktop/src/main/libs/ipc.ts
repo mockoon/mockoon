@@ -130,10 +130,6 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     stopAuthCallbackServer();
   });
 
-  ipcMain.on('APP_OPEN_EXTERNAL_LINK', (event, url) => {
-    shell.openExternal(url);
-  });
-
   ipcMain.on('APP_WRITE_CLIPBOARD', async (event, data) => {
     clipboard.writeText(data, 'clipboard');
   });

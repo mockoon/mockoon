@@ -93,7 +93,7 @@ export const HumanizeText = (text: string): string => {
  * @param route
  * @returns
  */
-export const BuildFullPath = (environment: Environment, route: Route) => {
+export const buildFullPath = (environment: Environment, route: Route) => {
   let protocol = 'http://';
 
   if (route.type === RouteType.WS) {

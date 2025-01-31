@@ -2,7 +2,6 @@ export const IPCMainListenerChannels = [
   'APP_APPLY_UPDATE',
   'APP_UPDATE_MENU_STATE',
   'APP_LOGS',
-  'APP_OPEN_EXTERNAL_LINK',
   'APP_QUIT',
   'APP_HIDE_WINDOW',
   'APP_UPDATE_ENVIRONMENT',

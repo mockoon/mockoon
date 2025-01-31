@@ -122,7 +122,6 @@
       heading="Faker.js"
       subheading="Templating system supports Faker.js"
       icon="code"
-      docLink="templating"
     ></app-title-separator>
 
     <div class="ps-4">
@@ -299,12 +298,9 @@
             </label>
           </div>
           <div class="input-group-text">
-            <app-svg
-              icon="info"
-              class="text-primary cursor-pointer"
-              [ngbTooltip]="telemetryTooltip"
-              (click)="openWikiLink('faq', $event)"
-            ></app-svg>
+            <a href="{{ faqUrl }}" target="_blank">
+              <app-svg icon="info" [ngbTooltip]="telemetryTooltip"></app-svg>
+            </a>
             <ng-template #telemetryTooltip>
               <div>
                 Our custom telemetry system is collecting a minimal amount of

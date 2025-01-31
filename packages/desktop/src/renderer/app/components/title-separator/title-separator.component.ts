@@ -5,8 +5,6 @@ import {
   Input,
   Output
 } from '@angular/core';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
-import { Config } from 'src/renderer/config';
 
 /**
  * Heading and subheading can be passed through simple string inputs or
@@ -27,8 +25,6 @@ export class TitleSeparatorComponent {
   @Input()
   public isFirst = false;
   @Input()
-  public docLink: string;
-  @Input()
   public icon: string;
   @Input()
   public iconClasses: string;
@@ -38,10 +34,6 @@ export class TitleSeparatorComponent {
   public iconTooltip: string;
   @Output()
   public iconClicked = new EventEmitter<void>();
-
-  public linkClick() {
-    MainAPI.send('APP_OPEN_EXTERNAL_LINK', Config.docs[this.docLink]);
-  }
 
   public iconClick() {
     if (this.iconClickable) {

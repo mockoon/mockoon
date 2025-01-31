@@ -25,7 +25,6 @@ import {
 import { browserLocalPersistence, connectAuthEmulator } from 'firebase/auth';
 import { MARKED_OPTIONS, MarkdownModule } from 'ngx-markdown';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { BannerComponent } from 'src/renderer/app/components/banner/banner.component';
 import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
 import { DropdownMenuComponent } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { EditableElementComponent } from 'src/renderer/app/components/editable-element/editable-element.component';
@@ -111,7 +110,6 @@ import { AppComponent } from './app.component';
     EnvironmentDatabucketsComponent,
     EnvironmentCallbacksComponent,
     HeadersListComponent,
-    BannerComponent,
     RouteResponseRulesComponent,
     RouteCallbacksComponent,
     EnvironmentsMenuComponent,
