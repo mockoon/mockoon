@@ -38,6 +38,7 @@
     "build:libs:watch": "concurrently \"lerna run --stream --scope @mockoon/commons build:watch\" \"lerna run --scope @mockoon/commons-server build:watch\" \"lerna run --scope @mockoon/cloud build:watch\"",
     "build:serverless": "lerna run --stream --scope @mockoon/serverless build",
     "build:cli": "lerna run --stream --scope @mockoon/cli build",
+    "build:web:dev:watch": "lerna run --stream --scope @mockoon/desktop build:watch:web",
     "build:desktop:dev:watch": "lerna run --stream --scope @mockoon/desktop build:watch:all",
     "build:desktop:dev": "lerna run --stream --scope @mockoon/desktop build:dev:all",
     "build:desktop:ci": "lerna run --stream --scope @mockoon/desktop build:ci:all",

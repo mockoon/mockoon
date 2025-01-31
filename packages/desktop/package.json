@@ -32,6 +32,7 @@
     "build:ci:main": "webpack --config ./src/main/webpack.config.js --mode production --env isTesting=1",
     "build:prod:main": "webpack --config ./src/main/webpack.config.js --mode production",
     "build:watch:renderer": "ng build --configuration=development --watch --output-hashing=all",
+    "build:watch:web": "ng build --configuration=development-web --watch --output-hashing=all",
     "build:dev:renderer": "ng build --configuration=development --output-hashing=all",
     "build:ci:renderer": "ng build --configuration=ci",
     "build:prod:renderer": "ng build --configuration=production",
