@@ -51,7 +51,8 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
   selector: 'app-environment-callbacks',
   templateUrl: './environment-callbacks.component.html',
   styleUrls: ['./environment-callbacks.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;

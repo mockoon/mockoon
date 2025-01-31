@@ -9,7 +9,8 @@ import { Store } from 'src/renderer/app/stores/store';
 @Component({
   selector: 'app-environment-headers',
   templateUrl: './environment-headers.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class EnvironmentHeadersComponent implements OnInit {
   public activeEnvironment$: Observable<Environment>;

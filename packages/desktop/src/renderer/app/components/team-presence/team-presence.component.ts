@@ -13,7 +13,8 @@ import { SyncPresence, SyncUserPresence, User } from '@mockoon/cloud';
   selector: 'app-team-presence',
   templateUrl: './team-presence.component.html',
   styleUrls: ['./team-presence.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class TeamPresenceComponent {
   @Input({ required: false })

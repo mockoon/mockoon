@@ -12,7 +12,8 @@ import { UIService } from 'src/renderer/app/services/ui.service';
 @Component({
   selector: 'app-confirm-modal',
   templateUrl: './confirm-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class ConfirmModalComponent implements OnInit, OnDestroy {
   public confirmModalPayload$: Observable<ConfirmModalPayload>;

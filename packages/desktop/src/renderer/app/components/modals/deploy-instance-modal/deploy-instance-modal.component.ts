@@ -33,7 +33,8 @@ import { Config } from 'src/renderer/config';
 @Component({
   selector: 'app-deploy-instance-modal',
   templateUrl: './deploy-instance-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class DeployInstanceModalComponent extends Logger implements OnInit {
   public taskInProgress$ = new BehaviorSubject<boolean>(false);

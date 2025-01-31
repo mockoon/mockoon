@@ -69,7 +69,8 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
   selector: 'app-environment-routes',
   templateUrl: './environment-routes.component.html',
   styleUrls: ['./environment-routes.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;

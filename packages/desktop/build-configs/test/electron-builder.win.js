@@ -7,8 +7,9 @@ const commonConfig = require('../electron-builder.common');
 const config = Object.assign({}, commonConfig, {
   win: {
     target: [{ target: 'nsis' }],
-    publisherName: '1kB SARL-S',
-    rfc3161TimeStampServer: 'http://timestamp.sectigo.com/?td=sha256'
+    signtoolOptions: {
+      publisherName: '1kB SARL-S'
+    }
   },
   nsis: {
     artifactName: 'mockoon.setup.${version}.${ext}'

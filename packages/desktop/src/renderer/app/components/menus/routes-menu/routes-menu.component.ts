@@ -58,7 +58,8 @@ type folderDropdownMenuPayload = { folder: Folder; folderUuid: string };
   selector: 'app-routes-menu',
   templateUrl: './routes-menu.component.html',
   styleUrls: ['./routes-menu.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class RoutesMenuComponent implements OnInit, OnDestroy {
   @ViewChild('routesMenu')

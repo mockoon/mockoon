@@ -12,7 +12,8 @@ import { TourService } from 'src/renderer/app/services/tour.service';
 @Component({
   selector: 'app-tour',
   templateUrl: 'tour.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class TourComponent implements OnInit, AfterViewInit {
   @ViewChild('popover') public popoverRef: TemplateRef<HTMLElement>;

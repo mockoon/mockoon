@@ -19,7 +19,8 @@ import { Store } from 'src/renderer/app/stores/store';
 @Component({
   selector: 'app-filter',
   templateUrl: 'filter.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class FilterComponent implements OnInit, OnDestroy {
   @Input({ required: true }) public filterName: keyof StoreType['filters'];

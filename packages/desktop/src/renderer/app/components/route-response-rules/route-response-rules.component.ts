@@ -38,7 +38,8 @@ import { Store } from 'src/renderer/app/stores/store';
   selector: 'app-route-response-rules',
   templateUrl: 'route-response-rules.component.html',
   styleUrls: ['./route-response-rules.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   @Input()

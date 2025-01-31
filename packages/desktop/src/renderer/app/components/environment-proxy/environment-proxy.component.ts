@@ -21,7 +21,8 @@ import { Store } from 'src/renderer/app/stores/store';
 @Component({
   selector: 'app-environment-proxy',
   templateUrl: './environment-proxy.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class EnvironmentProxyComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;

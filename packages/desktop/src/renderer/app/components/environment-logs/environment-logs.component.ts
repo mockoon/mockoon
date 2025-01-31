@@ -47,7 +47,8 @@ type logsDropdownMenuPayload = { logUuid: string };
   selector: 'app-environment-logs',
   templateUrl: 'environment-logs.component.html',
   styleUrls: ['environment-logs.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class EnvironmentLogsComponent implements OnInit {
   public environmentLogs$: Observable<

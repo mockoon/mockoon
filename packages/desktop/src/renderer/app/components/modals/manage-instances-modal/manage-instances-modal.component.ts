@@ -15,7 +15,8 @@ type dropdownMenuPayload = { environmentUuid: string };
 @Component({
   selector: 'app-manage-instances-modal',
   templateUrl: './manage-instances-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class ManageInstancesModalComponent extends Logger implements OnInit {
   public payload$ = this.uiService.getModalPayload$('manageInstances');

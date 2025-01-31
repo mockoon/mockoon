@@ -23,7 +23,8 @@ import { UserService } from 'src/renderer/app/services/user.service';
 @Component({
   selector: 'app-auth-modal',
   templateUrl: './auth-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class AuthModalComponent implements OnInit, OnDestroy {
   public isLoading$ = new BehaviorSubject<boolean>(false);

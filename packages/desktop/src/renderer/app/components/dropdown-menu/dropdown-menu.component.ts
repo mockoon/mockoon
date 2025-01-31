@@ -37,7 +37,8 @@ export type DropdownMenuElement = DropdownMenuItem | DropdownMenuSeparator;
 @Component({
   selector: 'app-dropdown-menu',
   templateUrl: './dropdown-menu.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class DropdownMenuComponent {
   public readonly items = input.required<DropdownMenuElement[]>();

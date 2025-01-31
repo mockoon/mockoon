@@ -34,7 +34,8 @@ import { Store } from 'src/renderer/app/stores/store';
 @Component({
   selector: 'app-headers-list',
   templateUrl: 'headers-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class HeadersListComponent implements OnInit, OnDestroy {
   @Input()

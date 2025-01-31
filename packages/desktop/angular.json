@@ -18,20 +18,27 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/renderer",
+            "outputPath": {
+              "base": "dist/renderer",
+              "browser": ""
+            },
             "index": "src/renderer/index.html",
-            "main": "src/renderer/main.ts",
             "tsConfig": "src/renderer/tsconfig.app.json",
-            "polyfills": "src/renderer/polyfills.ts",
+            "polyfills": ["src/renderer/polyfills.ts"],
+            "externalDependencies": ["crypto"],
             "allowedCommonJsDependencies": [
               "joi",
               "semver",
+              "brace",
               "brace/index",
+              "brace/ext/language_tools",
+              "brace/ext/searchbox",
               "brace/mode/css",
               "brace/mode/html.js",
               "brace/mode/json.js",
+              "brace/mode/text.js",
               "brace/mode/xml.js"
             ],
             "assets": [
@@ -43,25 +50,36 @@
               }
             ],
             "styles": ["src/renderer/styles/styles.scss"],
-            "vendorChunk": true,
             "extractLicenses": false,
-            "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
             "namedChunks": true,
             "stylePreprocessorOptions": {
-              "includePaths": ["./node_modules"]
-            }
+              "includePaths": ["./node_modules"],
+              "sass": {
+                "silenceDeprecations": [
+                  "mixed-decls",
+                  "color-functions",
+                  "global-builtin",
+                  "import"
+                ]
+              }
+            },
+            "browser": "src/renderer/main.ts"
           },
           "configurations": {
             "production": {
-              "optimization": true,
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                }
+              },
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "fileReplacements": [
                 {
                   "replace": "src/renderer/environments/environment.ts",
@@ -75,8 +93,6 @@
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "fileReplacements": [
                 {
                   "replace": "src/renderer/environments/environment.ts",
@@ -96,7 +112,7 @@
           "defaultConfiguration": ""
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular/build:dev-server",
           "options": {
             "buildTarget": "mockoon:build"
           },
@@ -110,7 +126,7 @@
           }
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@angular/build:extract-i18n",
           "options": {
             "buildTarget": "mockoon:build"
           }

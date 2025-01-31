@@ -6,7 +6,8 @@ import { UIService } from 'src/renderer/app/services/ui.service';
   selector: 'app-editor-modal',
   templateUrl: './editor-modal.component.html',
   styleUrls: ['editor-modal.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class EditorModalComponent {
   public editorModalPayload$ = this.uiService.getModalPayload$('editor');

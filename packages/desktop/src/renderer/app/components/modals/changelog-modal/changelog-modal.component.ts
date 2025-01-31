@@ -9,7 +9,8 @@ import { Config } from 'src/renderer/config';
 @Component({
   selector: 'app-changelog-modal',
   templateUrl: './changelog-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class ChangelogModalComponent implements OnInit {
   public appVersion = Config.appVersion;

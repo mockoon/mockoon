@@ -24,7 +24,8 @@ import { environment as env } from 'src/renderer/environments/environment';
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class HeaderComponent implements OnInit {
   public activeEnvironment$: Observable<Environment>;

@@ -3,6 +3,7 @@
   "files": ["app.ts", "preload.ts"],
   "compilerOptions": {
     "outDir": "../../dist",
+    "esModuleInterop": false,
     "module": "CommonJS",
     "target": "es2018",
     "strict": true,

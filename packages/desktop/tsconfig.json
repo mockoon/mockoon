@@ -11,6 +11,7 @@
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "target": "ES2022",
+    "esModuleInterop": true,
     "typeRoots": ["node_modules/@types"],
     "lib": ["es2018", "dom"],
     "useDefineForClassFields": false

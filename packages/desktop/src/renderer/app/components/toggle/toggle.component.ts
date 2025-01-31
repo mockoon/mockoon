@@ -30,7 +30,8 @@ import { ToggleItem, ToggleItems } from 'src/renderer/app/models/common.model';
       multi: true
     }
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 export class ToggleComponent
   implements OnInit, OnDestroy, ControlValueAccessor
