@@ -38,7 +38,9 @@
 
       <div
         id="{{ dropdownId }}-dropdown-menu"
-        class="dropdown-menu"
+        class="dropdown-menu {{
+          enableCustomInput ? 'dropdown-menu-with-fixed-search' : ''
+        }}"
         [ngStyle]="{
           'min-width': dropdownElement.getBoundingClientRect().width + 'px',
           'max-width':

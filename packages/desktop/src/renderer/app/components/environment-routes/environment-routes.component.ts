@@ -22,6 +22,7 @@ import {
   RouteDefault,
   RouteResponse,
   RouteResponseDefault,
+  RouteType,
   RulesDisablingResponseModes,
   RulesNotUsingDefaultResponse,
   StreamingMode,
@@ -30,6 +31,7 @@ import {
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject, combineLatest, from, merge } from 'rxjs';
 import {
+  combineLatestWith,
   distinctUntilChanged,
   filter,
   map,
@@ -48,7 +50,7 @@ import {
 } from 'src/renderer/app/constants/routes.constants';
 import { Texts } from 'src/renderer/app/constants/texts.constant';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
-import { buildFullPath } from 'src/renderer/app/libs/utils.lib';
+import { buildFullPath, textFilter } from 'src/renderer/app/libs/utils.lib';
 import {
   DropdownItems,
   ToggleItems
@@ -76,6 +78,9 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;
   public activeRoute$: Observable<Route>;
   public activeRouteResponse$: Observable<RouteResponse>;
+  public activeRouteResponses$: Observable<
+    (RouteResponse & { originalIndex: number })[]
+  >;
   public activeRouteResponseIndex$: Observable<number>;
   public activeRouteResponseLastLog$: Observable<EnvironmentLog>;
   public activeResponseFileMimeType$: Observable<{
@@ -290,6 +295,29 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       .selectActiveEnvironment()
       .pipe(distinctUntilChanged());
     this.activeRoute$ = this.store.selectActiveRoute();
+    this.activeRouteResponses$ = this.activeRoute$.pipe(
+      filter((activeRoute) => !!activeRoute),
+      distinctUntilChanged(),
+      combineLatestWith(this.store.selectFilter('routeResponses')),
+      map(([activeRoute, search]) => ({
+        routeType: activeRoute.type,
+        responses: activeRoute.responses.map((response, originalIndex) => ({
+          ...response,
+          originalIndex
+        })),
+        search
+      })),
+      map(({ routeType, responses, search }) =>
+        !search
+          ? responses
+          : responses.filter((response, responseIndex) =>
+              textFilter(
+                `${routeType === RouteType.CRUD && response.default ? 'CRUD operations' : ''} ${routeType === RouteType.CRUD ? responseIndex : responseIndex + 1} ${response.statusCode} ${response.label}`,
+                search
+              )
+            )
+      )
+    );
     this.activeRouteResponse$ = this.store.selectActiveRouteResponse();
     this.activeRouteResponseIndex$ =
       this.store.selectActiveRouteResponseIndex();

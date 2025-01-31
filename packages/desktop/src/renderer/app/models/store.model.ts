@@ -92,6 +92,7 @@ export type StoreType = {
     templates: string;
     callbacks: string;
     logs: string;
+    routeResponses: string;
   };
   user: User;
   callbackSettings: CallbackSettings;
