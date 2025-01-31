@@ -376,6 +376,18 @@ $status-code-colors: ('4xx', lighten($orange, 10%)),
   }
 }
 
+.dropdown-menu-with-fixed-search {
+  flex-direction: column;
+  overflow: hidden;
+
+  &.show {
+    display: flex;
+  }
+  .dropdown-menu-content {
+    overflow-y: auto;
+  }
+}
+
 .text-break-all {
   word-break: break-all;
 }

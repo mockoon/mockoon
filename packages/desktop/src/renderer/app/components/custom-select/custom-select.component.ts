@@ -34,7 +34,6 @@ import {
 @Component({
   selector: 'app-custom-select',
   templateUrl: './custom-select.component.html',
-  styleUrls: ['./custom-select.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

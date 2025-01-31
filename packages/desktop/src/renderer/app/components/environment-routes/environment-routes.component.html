@@ -1,6 +1,7 @@
 <ng-container
   *ngIf="{
     activeRouteResponse: activeRouteResponse$ | async,
+    activeRouteResponses: activeRouteResponses$ | async,
     activeEnvironment: activeEnvironment$ | async,
     activeRoute: activeRoute$ | async,
     environmentsStatus: environmentsStatus$ | async,
@@ -227,7 +228,7 @@
               </button>
 
               <div
-                class="dropdown-menu route-responses-dropdown-menu"
+                class="dropdown-menu route-responses-dropdown-menu dropdown-menu-with-fixed-search"
                 [ngStyle]="{
                   'min-width':
                     routeResponsesDropdownElement.getBoundingClientRect()
@@ -241,118 +242,131 @@
                 aria-labelledby="route-responses-dropdown"
                 ngbDropdownMenu
               >
-                <button
-                  type="button"
-                  *ngFor="
-                    let routeResponse of data.activeRoute?.responses;
-                    index as routeResponseIndex
-                  "
-                  class="btn dropdown-item d-flex"
-                  [ngClass]="{
-                    active:
-                      data.activeRouteResponse?.uuid === routeResponse.uuid,
-                    'border-bottom-light':
-                      data.activeRoute?.type === 'crud' &&
-                      routeResponse.default &&
-                      data.activeRoute?.responses.length > 1
-                  }"
-                  ngbDropdownItem
-                  appDraggable
-                  appDropzone
-                  dragContainer="route-responses"
-                  [dragEnabled]="
-                    data.activeRoute?.type === 'crud'
-                      ? !routeResponse.default
-                      : true
-                  "
-                  dragParentId="root"
-                  [dragIsContainer]="false"
-                  [dragId]="routeResponse.uuid"
-                  (dropped)="reorderRouteResponses($event)"
-                >
-                  <span
-                    class="flex-grow-1 me-2 text-truncate"
-                    (click)="
-                      setActiveRouteResponse(
-                        routeResponse.uuid,
-                        routeResponsesDropdown
-                      )
-                    "
-                  >
-                    <span *ngIf="data.activeRoute.type === 'ws'" class="pe-2"
-                      >Response {{ routeResponseIndex + 1 }}</span
-                    >
-                    <span *ngIf="data.activeRoute?.type === 'http'" class="pe-2"
-                      >Response {{ routeResponseIndex + 1 }} ({{
-                        routeResponse.statusCode
-                      }})</span
-                    >
-                    <span
-                      *ngIf="
-                        data.activeRoute?.type === 'crud' &&
-                        !routeResponse.default
-                      "
-                      class="pe-2"
-                      >Response {{ routeResponseIndex }} ({{
-                        routeResponse.statusCode
-                      }})</span
-                    >
-                    <span
-                      *ngIf="
-                        data.activeRoute?.type === 'crud' &&
-                        routeResponse.default
-                      "
-                      class="pe-2"
-                      >CRUD operations</span
-                    >
-                    {{ routeResponse.label }}
-                  </span>
-                  <ng-container
-                    *ngIf="
-                      data.activeRoute?.type === 'crud' && routeResponse.default
-                    "
-                  >
-                    <span
-                      class="px-2 text-primary"
-                      ngbTooltip="Response linked to the data bucket for CRUD operations"
-                    >
-                      <app-svg icon="data"></app-svg>
-                    </span>
-                  </ng-container>
-                  <ng-container
-                    *ngIf="
-                      data.activeRoute?.type === 'http' ||
-                      data.activeRoute?.type === 'ws'
-                    "
-                  >
-                    <span
-                      *ngIf="routeResponse.default"
-                      class="px-2"
-                      (click)="setDefaultRouteResponse(null, $event)"
+                <app-filter
+                  filterName="routeResponses"
+                  [focusableInput]="null"
+                ></app-filter>
+                <div class="dropdown-menu-content">
+                  @for (
+                    routeResponse of data.activeRouteResponses;
+                    track $index
+                  ) {
+                    <button
+                      type="button"
+                      class="btn dropdown-item d-flex"
                       [ngClass]="{
-                        'text-primary': !rulesNotUsingDefaultResponse.includes(
-                          data.activeRoute?.responseMode
-                        ),
-                        'text-muted': rulesNotUsingDefaultResponse.includes(
-                          data.activeRoute?.responseMode
-                        )
+                        active:
+                          data.activeRouteResponse?.uuid === routeResponse.uuid,
+                        'border-bottom-light':
+                          data.activeRoute?.type === 'crud' &&
+                          routeResponse.default &&
+                          data.activeRoute?.responses.length > 1
                       }"
-                      [ngbTooltip]="data.defaultResponseTooltip"
-                    >
-                      <app-svg icon="flag"></app-svg>
-                    </span>
-                    <span
-                      *ngIf="!routeResponse.default"
-                      (click)="
-                        setDefaultRouteResponse(routeResponse.uuid, $event)
+                      ngbDropdownItem
+                      appDraggable
+                      appDropzone
+                      dragContainer="route-responses"
+                      [dragEnabled]="
+                        data.activeRoute?.type === 'crud'
+                          ? !routeResponse.default
+                          : true
                       "
-                      class="text-muted px-2"
-                      ngbTooltip="Make route response as default"
+                      dragParentId="root"
+                      [dragIsContainer]="false"
+                      [dragId]="routeResponse.uuid"
+                      (dropped)="reorderRouteResponses($event)"
                     >
-                      <app-svg icon="outlined_flag"></app-svg>
-                    </span>
-                  </ng-container>
-                </button>
+                      <span
+                        class="flex-grow-1 me-2 text-truncate"
+                        (click)="
+                          setActiveRouteResponse(
+                            routeResponse.uuid,
+                            routeResponsesDropdown
+                          )
+                        "
+                      >
+                        <span
+                          *ngIf="data.activeRoute.type === 'ws'"
+                          class="pe-2"
+                          >Response {{ routeResponse.originalIndex + 1 }}</span
+                        >
+                        <span
+                          *ngIf="data.activeRoute?.type === 'http'"
+                          class="pe-2"
+                          >Response {{ routeResponse.originalIndex + 1 }} ({{
+                            routeResponse.statusCode
+                          }})</span
+                        >
+                        <span
+                          *ngIf="
+                            data.activeRoute?.type === 'crud' &&
+                            !routeResponse.default
+                          "
+                          class="pe-2"
+                          >Response {{ routeResponse.originalIndex }} ({{
+                            routeResponse.statusCode
+                          }})</span
+                        >
+                        <span
+                          *ngIf="
+                            data.activeRoute?.type === 'crud' &&
+                            routeResponse.default
+                          "
+                          class="pe-2"
+                          >CRUD operations</span
+                        >
+                        {{ routeResponse.label }}
+                      </span>
+                      <ng-container
+                        *ngIf="
+                          data.activeRoute?.type === 'crud' &&
+                          routeResponse.default
+                        "
+                      >
+                        <span
+                          class="px-2 text-primary"
+                          ngbTooltip="Response linked to the data bucket for CRUD operations"
+                        >
+                          <app-svg icon="data"></app-svg>
+                        </span>
+                      </ng-container>
+                      <ng-container
+                        *ngIf="
+                          data.activeRoute?.type === 'http' ||
+                          data.activeRoute?.type === 'ws'
+                        "
+                      >
+                        <span
+                          *ngIf="routeResponse.default"
+                          class="px-2"
+                          (click)="setDefaultRouteResponse(null, $event)"
+                          [ngClass]="{
+                            'text-primary':
+                              !rulesNotUsingDefaultResponse.includes(
+                                data.activeRoute?.responseMode
+                              ),
+                            'text-muted': rulesNotUsingDefaultResponse.includes(
+                              data.activeRoute?.responseMode
+                            )
+                          }"
+                          [ngbTooltip]="data.defaultResponseTooltip"
+                        >
+                          <app-svg icon="flag"></app-svg>
+                        </span>
+                        <span
+                          *ngIf="!routeResponse.default"
+                          (click)="
+                            setDefaultRouteResponse(routeResponse.uuid, $event)
+                          "
+                          class="text-muted px-2"
+                          ngbTooltip="Make route response as default"
+                        >
+                          <app-svg icon="outlined_flag"></app-svg>
+                        </span>
+                      </ng-container>
+                    </button>
+                  }
+                </div>
               </div>
             </div>
 

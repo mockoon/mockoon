@@ -176,9 +176,11 @@ export const environmentReducer = (
           filters: {
             ...state.filters,
             routes: '',
+            templates: '',
             databuckets: '',
             callbacks: '',
-            logs: ''
+            logs: '',
+            routeResponses: ''
           },
           settings: {
             ...state.settings,
@@ -236,9 +238,11 @@ export const environmentReducer = (
         filters: {
           ...state.filters,
           routes: '',
+          templates: '',
           databuckets: '',
           callbacks: '',
-          logs: ''
+          logs: '',
+          routeResponses: ''
         }
       };
       break;
@@ -393,6 +397,10 @@ export const environmentReducer = (
           settings: {
             ...state.settings,
             collapsedFolders: newCollapsedFolders
+          },
+          filters: {
+            ...state.filters,
+            routeResponses: ''
           }
         };
         break;
@@ -528,8 +536,10 @@ export const environmentReducer = (
           ...state.filters,
           routes: '',
           databuckets: '',
+          templates: '',
           callbacks: '',
-          logs: ''
+          logs: '',
+          routeResponses: ''
         },
         settings: newSettings
       };
@@ -558,6 +568,8 @@ export const environmentReducer = (
         filters: {
           ...state.filters,
           routes: '',
+          templates: '',
+          routeResponses: '',
           databuckets: '',
           callbacks: '',
           logs: ''
@@ -891,7 +903,8 @@ export const environmentReducer = (
         uiUpdate = {
           filters: {
             ...state.filters,
-            routes: ''
+            routes: '',
+            routeResponses: ''
           }
         };
       }
@@ -961,7 +974,8 @@ export const environmentReducer = (
           activeView: 'ENV_ROUTES',
           filters: {
             ...state.filters,
-            routes: ''
+            routes: '',
+            routeResponses: ''
           }
         };
       }
@@ -1202,7 +1216,11 @@ export const environmentReducer = (
           activeTab: responseTabForcedNavigation(
             state,
             action.routeResponseUUID
-          )
+          ),
+          filters: {
+            ...state.filters,
+            routeResponses: ''
+          }
         };
         break;
       }
@@ -1418,8 +1436,10 @@ export const environmentReducer = (
           ...state.filters,
           routes: '',
           databuckets: '',
+          templates: '',
           callbacks: '',
-          logs: ''
+          logs: '',
+          routeResponses: ''
         }
       };
       break;
@@ -1475,7 +1495,9 @@ export const environmentReducer = (
           ...state.filters,
           routes: '',
           databuckets: '',
+          templates: '',
           callbacks: '',
+          routeResponses: '',
           logs: ''
         }
       };

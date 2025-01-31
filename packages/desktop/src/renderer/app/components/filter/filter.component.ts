@@ -2,9 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   HostListener,
-  Input,
   OnDestroy,
-  OnInit
+  OnInit,
+  input
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { Observable, Subject, debounceTime, from, takeUntil, tap } from 'rxjs';
@@ -23,9 +23,9 @@ import { Store } from 'src/renderer/app/stores/store';
   standalone: false
 })
 export class FilterComponent implements OnInit, OnDestroy {
-  @Input({ required: true }) public filterName: keyof StoreType['filters'];
-  @Input({ required: true }) public focusableInput: FocusableInputs;
-  @Input() public classes: string;
+  public readonly filterName = input.required<keyof StoreType['filters']>();
+  public readonly focusableInput = input.required<FocusableInputs>();
+  public readonly classes = input<string>(undefined);
 
   public filter: UntypedFormControl;
   public os: string;
@@ -79,14 +79,14 @@ export class FilterComponent implements OnInit, OnDestroy {
       .pipe(
         debounceTime(10),
         tap((search) =>
-          this.store.update(updateFilterAction(this.filterName, search))
+          this.store.update(updateFilterAction(this.filterName(), search))
         ),
         takeUntil(this.destroy$)
       )
       .subscribe();
 
     this.store
-      .selectFilter(this.filterName)
+      .selectFilter(this.filterName())
       .pipe(
         tap((search) => {
           this.filter.patchValue(search, { emitEvent: false });
@@ -102,6 +102,6 @@ export class FilterComponent implements OnInit, OnDestroy {
   }
 
   public clearFilter() {
-    this.store.update(updateFilterAction(this.filterName, ''));
+    this.store.update(updateFilterAction(this.filterName(), ''));
   }
 }

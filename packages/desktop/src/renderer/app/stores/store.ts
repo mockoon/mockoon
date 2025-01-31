@@ -60,7 +60,8 @@ export const storeDefaultState: StoreType = {
     databuckets: '',
     templates: '',
     callbacks: '',
-    logs: ''
+    logs: '',
+    routeResponses: ''
   },
   user: null,
   callbackSettings: {
