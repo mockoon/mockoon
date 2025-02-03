@@ -11,7 +11,7 @@ let server: Server = null;
  * Start a server to listen for the auth callback from the website
  * and send the token to the renderer process
  */
-export const startAuthCallbackServer = async (page: 'login' | 'signup') => {
+export const startAuthCallbackServer = async () => {
   // Close the server if already started
   if (server) {
     server.close();
@@ -42,7 +42,7 @@ export const startAuthCallbackServer = async (page: 'login' | 'signup') => {
 
   server.listen(0, '127.0.0.1', () => {
     shell.openExternal(
-      `${page === 'login' ? Config.loginURL : Config.signupURL}?authCallback=http://127.0.0.1:${(server.address() as AddressInfo).port}`
+      `${Config.loginURL}?authCallback=http://127.0.0.1:${(server.address() as AddressInfo).port}`
     );
   });
 };

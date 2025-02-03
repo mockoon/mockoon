@@ -43,8 +43,6 @@ export const SharedConfig = (options: {
     },
     // should not be used directly. Instead use the flow methods in the user service
     loginURL: `${options.websiteURL}login/`,
-    // should not be used directly. Instead use the flow methods in the user service
-    signupURL: `${options.websiteURL}signup/`,
     accountUrl: `${options.websiteURL}account/subscription/`,
     cloudPlansURL: `${options.websiteURL}cloud/`,
     maxPromptLength: 500,

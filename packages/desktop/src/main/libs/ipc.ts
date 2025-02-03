@@ -122,8 +122,8 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     showFolderInExplorer(name);
   });
 
-  ipcMain.on('APP_AUTH', (event, page) => {
-    startAuthCallbackServer(page);
+  ipcMain.on('APP_AUTH', (event) => {
+    startAuthCallbackServer();
   });
 
   ipcMain.on('APP_AUTH_STOP_SERVER', () => {

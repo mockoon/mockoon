@@ -92,8 +92,8 @@ export interface MainAPIModel {
       | 'APP_HIDE_WINDOW'
       | 'APP_APPLY_UPDATE'
       | 'APP_AUTH_STOP_SERVER'
+      | 'APP_AUTH'
   ): void;
-  send(channel: 'APP_AUTH', page: 'login' | 'signup'): void;
   send(
     channel: 'APP_SHOW_FILE' | 'APP_OPEN_FILE',
     path: string,

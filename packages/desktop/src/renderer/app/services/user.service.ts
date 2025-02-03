@@ -114,16 +114,7 @@ export class UserService extends Logger {
    */
   public startLoginFlow() {
     this.uiService.openModal('auth');
-    MainAPI.send('APP_AUTH', 'login');
-  }
-
-  /**
-   * Start the signup flow
-   * Open the auth modal and send the APP_AUTH event to the main process
-   */
-  public startSignupFlow() {
-    this.uiService.openModal('auth');
-    MainAPI.send('APP_AUTH', 'signup');
+    MainAPI.send('APP_AUTH');
   }
 
   public stopAuthFlow() {

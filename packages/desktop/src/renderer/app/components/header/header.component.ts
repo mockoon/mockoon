@@ -147,10 +147,6 @@ export class HeaderComponent implements OnInit {
     this.userService.startLoginFlow();
   }
 
-  public signup() {
-    this.userService.startSignupFlow();
-  }
-
   /**
    * Logout the user
    */
