@@ -40,7 +40,7 @@ import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
-import { environment } from 'src/renderer/environments/environment';
+import { environment as appEnvironment } from 'src/renderer/environments/environment';
 import {
   EnvironmentsCategories,
   RecentLocalEnvironment,
@@ -76,7 +76,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public syncAlert$: Observable<string>;
   public clearRecentLocalEnvironmentsConfirm$ = new TimedBoolean();
   public offlineWarningLink = Config.docs.cloudSyncOffline;
-  public isWeb = environment.web;
+  public isWeb = appEnvironment.web;
   public alertLabels = {
     VERSION_TOO_OLD_WARNING:
       'We will soon not support your Mockoon version anymore. Please update.',

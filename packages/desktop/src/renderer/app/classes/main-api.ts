@@ -18,10 +18,14 @@ export const initMainApi = (): MainAPIModel => ({
           result = data[0] as string;
           break;
 
-        case 'APP_GET_PLATFORM':
+        case 'APP_GET_OS':
           result = navigator.platform as string;
           break;
 
+        // noop
+        case 'APP_UNWATCH_FILE':
+        case 'APP_UNWATCH_ALL_FILE':
+        case 'APP_UPDATE_MENU_STATE':
         default:
           result = undefined;
           break;
@@ -45,13 +49,6 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
   ipcMain.on('APP_HIDE_WINDOW', () => {
     mainWindow.hide();
   });
-
-  ipcMain.on(
-    'APP_UPDATE_MENU_STATE',
-    (event, state: MenuStateUpdatePayload) => {
-      updateMenuState(state);
-    }
-  );
 
   ipcMain.on('APP_LOGS', (event, data) => {
     if (data.type === 'info') {
@@ -99,17 +96,7 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     }
   });
 
-  ipcMain.handle(
-    'APP_UNWATCH_FILE',
-    async (event, uuid) => await unwatchEnvironmentFile(uuid)
-  );
 
-  ipcMain.handle(
-    'APP_UNWATCH_ALL_FILE',
-    async () => await unwatchAllEnvironmentFiles()
-  );
-
-  ipcMain.handle('APP_GET_OS', () => process.platform);
 
   ipcMain.handle(
     'APP_READ_ENVIRONMENT_DATA',
