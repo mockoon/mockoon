@@ -38,7 +38,6 @@ export interface MainAPIModel {
     storagePrettyPrint?: boolean
   ): Promise<void>;
   invoke(channel: 'APP_READ_CLIPBOARD'): Promise<any>;
-  invoke(channel: 'APP_GET_PLATFORM'): Promise<NodeJS.Platform>;
   invoke(
     channel: 'APP_SHOW_OPEN_DIALOG',
     options: OpenDialogOptions
@@ -82,7 +81,7 @@ export interface MainAPIModel {
     channel: 'APP_STOP_SERVER' | 'APP_UNWATCH_FILE',
     uuid: string
   ): Promise<void>;
-  invoke(channel: 'APP_GET_OS'): Promise<string>;
+  invoke(channel: 'APP_GET_OS'): Promise<NodeJS.Platform>;
   invoke(channel: 'APP_UNWATCH_ALL_FILE'): Promise<void>;
 
   send(channel: 'APP_UPDATE_MENU_STATE', state: MenuStateUpdatePayload): void;

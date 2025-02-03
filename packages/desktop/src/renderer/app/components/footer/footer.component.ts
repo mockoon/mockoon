@@ -28,7 +28,7 @@ export class FooterComponent implements OnInit {
   @Input() public isTemplateModalOpen: boolean;
   @Input() public isTemplateLoading: boolean;
   public updateAvailable$: BehaviorSubject<string | null>;
-  public platform$ = from(MainAPI.invoke('APP_GET_PLATFORM'));
+  public platform$ = from(MainAPI.invoke('APP_GET_OS'));
   public uiState$: Observable<UIState>;
   public generatingTemplate$ = this.templateService.generatingTemplate$;
   public generatingEndpoint$ = this.templateService.generatingEndpoint$;

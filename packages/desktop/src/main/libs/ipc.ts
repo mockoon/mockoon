@@ -240,8 +240,6 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     }
   });
 
-  ipcMain.handle('APP_GET_PLATFORM', () => process.platform);
-
   ipcMain.handle('APP_BUILD_STORAGE_FILEPATH', (event, name: string) =>
     pathJoin(getDataPath(), `${name}.json`)
   );
