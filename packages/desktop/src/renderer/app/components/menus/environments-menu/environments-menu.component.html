@@ -104,15 +104,17 @@
             >
             </app-dropdown-menu>
           }
-          <button
-            type="button"
-            class="btn btn-link btn-icon btn-sm"
-            (click)="collapseCategory(category.id, category.collapsed)"
-          >
-            <app-svg
-              [icon]="category.collapsed ? 'unfold_more' : 'unfold_less'"
-            ></app-svg>
-          </button>
+          @if (!isWeb) {
+            <button
+              type="button"
+              class="btn btn-link btn-icon btn-sm"
+              (click)="collapseCategory(category.id, category.collapsed)"
+            >
+              <app-svg
+                [icon]="category.collapsed ? 'unfold_more' : 'unfold_less'"
+              ></app-svg>
+            </button>
+          }
         </div>
       </div>
 

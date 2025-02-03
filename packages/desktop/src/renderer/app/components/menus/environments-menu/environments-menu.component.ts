@@ -40,6 +40,7 @@ import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
+import { environment } from 'src/renderer/environments/environment';
 import {
   EnvironmentsCategories,
   RecentLocalEnvironment,
@@ -75,6 +76,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public syncAlert$: Observable<string>;
   public clearRecentLocalEnvironmentsConfirm$ = new TimedBoolean();
   public offlineWarningLink = Config.docs.cloudSyncOffline;
+  public isWeb = environment.web;
   public alertLabels = {
     VERSION_TOO_OLD_WARNING:
       'We will soon not support your Mockoon version anymore. Please update.',
@@ -443,8 +445,11 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
           })
         ),
         collapsed: false
-      },
-      {
+      }
+    ];
+
+    if (!this.isWeb) {
+      this.categories.push({
         id: 'local',
         label: 'Local',
         icon$: of('computer'),
@@ -453,8 +458,9 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
           'Each local environment is a separate file on your computer (Right-click → Show data file in explorer/finder)'
         ),
         collapsed: false
-      }
-    ];
+      });
+    }
+
     this.initForms();
     this.initFormValues();
   }
