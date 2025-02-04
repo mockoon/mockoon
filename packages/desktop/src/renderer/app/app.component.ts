@@ -99,6 +99,10 @@ export class AppComponent extends Logger implements OnInit {
     this.deployService.init().subscribe();
     this.mainApiService.init();
 
+    if (environment.web) {
+      this.userService.authQueryParamHandler().subscribe();
+    }
+
     this.logMessage('info', 'INITIALIZING_APP');
 
     from(MainAPI.invoke('APP_GET_OS'))

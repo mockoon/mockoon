@@ -143,6 +143,10 @@ export class HeaderComponent implements OnInit {
     this.environmentsService.toggleEnvironment();
   }
 
+  public openSettings() {
+    this.uiService.openModal('settings');
+  }
+
   public login() {
     this.userService.startLoginFlow();
   }

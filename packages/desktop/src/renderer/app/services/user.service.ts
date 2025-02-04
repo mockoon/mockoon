@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import {
   Auth,
+  authState,
   idToken,
   reload,
   signInWithCustomToken
@@ -15,6 +16,7 @@ import {
   mergeMap,
   of,
   switchMap,
+  take,
   tap,
   throwError
 } from 'rxjs';
@@ -139,6 +141,42 @@ export class UserService extends Logger {
         this.logMessage('error', 'LOGIN_ERROR');
 
         return EMPTY;
+      })
+    );
+  }
+
+  /**
+   * Process the token query param and authenticate the user.
+   * If no token is present, check if a redirect to the login page is needed.
+   * Used in the web app
+   *
+   * @returns
+   */
+  public authQueryParamHandler(): any {
+    const token = new URLSearchParams(window.location.search).get('token');
+
+    if (token) {
+      return this.authWithToken(token).pipe(
+        tap(() => {
+          this.logMessage('info', 'LOGIN_SUCCESS');
+
+          // remove the token from the URL
+          window.history.replaceState(null, '', window.location.pathname);
+        }),
+        catchError(() => {
+          this.logMessage('error', 'LOGIN_ERROR');
+
+          return EMPTY;
+        })
+      );
+    }
+
+    return authState(this.auth).pipe(
+      take(1),
+      tap((user) => {
+        if (!user) {
+          window.location.href = `${Config.loginURL}?webapp=true`;
+        }
       })
     );
   }
