@@ -6733,7 +6733,8 @@
     "certPath": "",
     "keyPath": "",
     "caPath": "",
-    "passphrase": ""
+    "passphrase": "",
+    "requestCert": false
   },
   "cors": true,
   "headers": [
