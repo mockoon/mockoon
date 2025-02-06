@@ -1,4 +1,4 @@
-import { initMainApi } from 'src/renderer/app/classes/main-api';
+import { initMainApi } from 'src/renderer/app/classes/main-api-web';
 import { MainAPIModel } from 'src/renderer/app/models/main-api.model';
 import { environment } from 'src/renderer/environments/environment';
 

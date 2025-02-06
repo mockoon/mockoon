@@ -140,6 +140,7 @@ import {
 import { ReducerDirectionType } from 'src/renderer/app/stores/reducer';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
+import { environment as appEnvironment } from 'src/renderer/environments/environment';
 import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 
 @Injectable({
@@ -184,24 +185,30 @@ export class EnvironmentsService extends Logger {
     ]).pipe(
       switchMap(([settings, demoFilePath]) => {
         if (!settings.environments.length && !settings.welcomeShown) {
-          this.logMessage('info', 'FIRST_LOAD_DEMO_ENVIRONMENT');
+          if (appEnvironment.web) {
+            return of({
+              settings,
+              environmentsData: []
+            });
+          } else {
+            this.logMessage('info', 'FIRST_LOAD_DEMO_ENVIRONMENT');
+            const defaultEnvironment = BuildDemoEnvironment();
 
-          const defaultEnvironment = BuildDemoEnvironment();
-
-          return of({
-            settings,
-            environmentsData: [
-              {
-                environment: defaultEnvironment,
-                environmentDescriptor: {
-                  uuid: defaultEnvironment.uuid,
-                  path: demoFilePath,
-                  cloud: false,
-                  lastServerHash: null
-                } as EnvironmentDescriptor
-              }
-            ]
-          });
+            return of({
+              settings,
+              environmentsData: [
+                {
+                  environment: defaultEnvironment,
+                  environmentDescriptor: {
+                    uuid: defaultEnvironment.uuid,
+                    path: demoFilePath,
+                    cloud: false,
+                    lastServerHash: null
+                  } as EnvironmentDescriptor
+                }
+              ]
+            });
+          }
         }
 
         return forkJoin(

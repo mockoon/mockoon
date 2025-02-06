@@ -18,7 +18,6 @@ import {
 } from '@mockoon/commons';
 import { Observable, Subject, combineLatest, merge, of } from 'rxjs';
 import {
-  combineLatestWith,
   distinctUntilChanged,
   distinctUntilKeyChanged,
   filter,
@@ -221,6 +220,13 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
     }
   ];
   public localDropdownMenuItems$: Observable<DropdownMenuElement[]>;
+  public offlineReasonsLabels = {
+    [SyncErrors.TOO_MANY_DEVICES]: 'too many devices connected.',
+    [SyncErrors.VERSION_TOO_OLD]:
+      'your Mockoon version is too old, please update.',
+    [SyncDisconnectReasons.ROOM_INCOMPATIBLE_VERSION]:
+      'your sync space was updated and is not compatible with your current version of Mockoon, please update.'
+  };
   private localDropdownMenuStaticItems: DropdownMenuElement[] = [
     {
       label: 'New local environment',
@@ -251,19 +257,9 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   private categories: {
     id: EnvironmentsCategories;
     label: string;
-    icon$: Observable<string>;
-    iconTooltip$?: Observable<string>;
-    iconClasses$?: Observable<string>;
     collapsed: boolean;
   }[];
   private destroy$ = new Subject<void>();
-  private offlineReasonsLabels = {
-    [SyncErrors.TOO_MANY_DEVICES]: 'too many devices connected.',
-    [SyncErrors.VERSION_TOO_OLD]:
-      'your Mockoon version is too old, please update.',
-    [SyncDisconnectReasons.ROOM_INCOMPATIBLE_VERSION]:
-      'your sync space was updated and is not compatible with your current version of Mockoon, please update.'
-  };
 
   constructor(
     private formBuilder: UntypedFormBuilder,
@@ -404,46 +400,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
     this.categories = [
       {
         id: 'cloud',
-        label: 'Cloud',
-        icon$: this.userAndSync$.pipe(
-          map(([user, sync]) =>
-            user && user.plan !== 'FREE' && sync.status ? 'cloud' : 'cloud_off'
-          )
-        ),
-        iconClasses$: this.userAndSync$.pipe(
-          combineLatestWith(this.cloudEnvironments$),
-          map(([[user, sync], cloudEnvironments]) =>
-            !user || user.plan === 'FREE' || !sync.status
-              ? `${
-                  cloudEnvironments.length > 0 ? 'text-danger' : 'text-warning'
-                } cursor-pointer`
-              : 'cursor-default'
-          )
-        ),
-        iconTooltip$: this.userAndSync$.pipe(
-          combineLatestWith(this.cloudEnvironments$),
-          map(([[user, sync], cloudEnvironments]) => {
-            if (!sync.status) {
-              if (sync.offlineReason) {
-                return `Sync disabled: ${
-                  this.offlineReasonsLabels[sync.offlineReason]
-                }`;
-              }
-
-              if (!user) {
-                return 'Sync disabled: not logged in';
-              }
-
-              if (user.plan === 'FREE') {
-                return 'Sync disabled: free plan';
-              }
-
-              return 'Sync disabled: please check your internet connection and your credentials. Click to try to reconnect.';
-            } else {
-              return `Sync enabled: quota ${cloudEnvironments.length}/${user?.cloudSyncItemsQuota}`;
-            }
-          })
-        ),
+        label: this.isWeb ? 'APIs' : 'Cloud',
         collapsed: false
       }
     ];
@@ -452,11 +409,6 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       this.categories.push({
         id: 'local',
         label: 'Local',
-        icon$: of('computer'),
-        iconClasses$: of('cursor-default'),
-        iconTooltip$: of(
-          'Each local environment is a separate file on your computer (Right-click → Show data file in explorer/finder)'
-        ),
         collapsed: false
       });
     }
@@ -530,6 +482,10 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
     event.preventDefault();
 
     this.userService.startLoginFlow();
+  }
+
+  public addCloudEnvironment() {
+    this.environmentsService.addCloudEnvironment(null, true).subscribe();
   }
 
   /**

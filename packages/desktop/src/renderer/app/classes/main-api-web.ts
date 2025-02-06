@@ -1,13 +1,135 @@
+import { Environment } from '@mockoon/commons';
+import { major } from 'semver';
 import { MainAPIModel } from 'src/renderer/app/models/main-api.model';
+import { Config } from 'src/renderer/config';
 import { Settings } from 'src/shared/models/settings.model';
 
+/* let dbConnection;
+
+const connectDB = () => {
+  return new Promise<void>((resolve, reject) => {
+    // Opens a connection to the existing database or creates a new one
+    const req = window.indexedDB.open('mockoon-db', major(Config.appVersion));
+    req.onsuccess = (ev) => {
+      // Saves an instance of the connection to our custom object
+      dbConnection = (ev.target as any).result;
+
+      resolve();
+    };
+
+    req.onupgradeneeded = (event) => {
+      // Only fired once per db version, used to initiliaze the db
+      dbConnection = (event.target as any).result;
+
+      resolve();
+    };
+
+    req.onerror = (e) => {
+      // Returns error event
+      reject(e);
+    };
+  });
+}; */
+const writeEnvironmentData = (environment: Environment): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('mockoon-db', major(Config.appVersion));
+
+    request.onupgradeneeded = (event) => {
+      console.log('onupgradeneeded');
+      const db = (event.target as IDBOpenDBRequest).result;
+      if (!db.objectStoreNames.contains('environments')) {
+        db.createObjectStore('environments', { keyPath: 'uuid' }); // Ensure a keyPath
+      }
+    };
+
+    request.onsuccess = (event) => {
+      console.log('onsuccess');
+      const db = (event.target as IDBOpenDBRequest).result;
+      const transaction = db.transaction(['environments'], 'readwrite');
+
+      transaction.oncomplete = () => db.close();
+      transaction.onerror = (event) => {
+        reject((event.target as any).error);
+      };
+
+      const store = transaction.objectStore('environments');
+      const addRequest = store.put(environment);
+
+      addRequest.onsuccess = () => {
+        resolve();
+      };
+      addRequest.onerror = (event) => {
+        reject((event.target as any).error);
+      };
+    };
+
+    request.onerror = (event) => {
+      reject((event.target as any).error);
+    };
+  });
+};
+
+const readEnvironmentData = (
+  uuid: string
+): Promise<Environment | undefined> => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('mockoon-db', major(Config.appVersion));
+
+    request.onsuccess = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      const transaction = db.transaction(['environments'], 'readonly');
+      const store = transaction.objectStore('environments');
+      const getRequest = store.get(uuid);
+
+      getRequest.onsuccess = (event) => {
+        resolve((event.target as any).result);
+      };
+      getRequest.onerror = (event) => {
+        reject((event.target as any).error);
+      };
+
+      transaction.oncomplete = () => db.close();
+    };
+
+    request.onerror = (event) => {
+      reject((event.target as any).error);
+    };
+  });
+};
+
 export const initMainApi = (): MainAPIModel => ({
-  send: function () {},
+  send: function (channel: string, ...data: any[]) {
+    return new Promise<any>((resolve) => {
+      let result;
+
+      switch (channel) {
+        // noop
+        case 'APP_LOGS':
+        case 'APP_UPDATE_MENU_STATE':
+        case 'APP_UPDATE_ENVIRONMENT':
+        case 'APP_AUTH':
+        case 'APP_AUTH_STOP_SERVER':
+        case 'APP_APPLY_UPDATE':
+        case 'APP_ZOOM':
+        default:
+          result = undefined;
+          break;
+      }
+
+      resolve(result);
+    });
+  },
   invoke: function (channel: string, ...data: any[]) {
     return new Promise<any>((resolve) => {
       let result;
 
       switch (channel) {
+        case 'APP_READ_ENVIRONMENT_DATA':
+          result = readEnvironmentData(data[0] as string);
+          break;
+        case 'APP_WRITE_ENVIRONMENT_DATA':
+          result = writeEnvironmentData(data[0] as Environment);
+          break;
         case 'APP_READ_SETTINGS_DATA':
           result = JSON.parse(localStorage.getItem('appSettings')) as Settings;
           break;
@@ -17,15 +139,29 @@ export const initMainApi = (): MainAPIModel => ({
         case 'APP_BUILD_STORAGE_FILEPATH':
           result = data[0] as string;
           break;
+        case 'APP_GET_HASH':
+          {
+            const msgUint8 = new TextEncoder().encode(data[0]);
 
+            result = window.crypto.subtle
+              .digest('SHA-1', msgUint8)
+              .then((hashBuffer) => {
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+                return hashArray
+                  .map((b) => b.toString(16).padStart(2, '0'))
+                  .join('');
+              });
+          }
+          break;
         case 'APP_GET_OS':
+          // TODO do like before (darwin, etc)
           result = navigator.platform as string;
           break;
 
         // noop
         case 'APP_UNWATCH_FILE':
         case 'APP_UNWATCH_ALL_FILE':
-        case 'APP_UPDATE_MENU_STATE':
         default:
           result = undefined;
           break;
@@ -50,13 +186,6 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     mainWindow.hide();
   });
 
-  ipcMain.on('APP_LOGS', (event, data) => {
-    if (data.type === 'info') {
-      logInfo(data.message, data.payload);
-    } else if (data.type === 'error') {
-      logError(data.message, data.payload);
-    }
-  });
 
   ipcMain.on('APP_SHOW_FILE', (event, filePath, relativeToFile) => {
     shell.showItemInFolder(buildFilePath(filePath, relativeToFile));
@@ -66,62 +195,12 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     showFolderInExplorer(name);
   });
 
-  ipcMain.on('APP_AUTH', (event, page) => {
-    startAuthCallbackServer(page);
-  });
-
-  ipcMain.on('APP_AUTH_STOP_SERVER', () => {
-    stopAuthCallbackServer();
-  });
 
   ipcMain.on('APP_WRITE_CLIPBOARD', async (event, data) => {
     clipboard.writeText(data, 'clipboard');
   });
 
-  ipcMain.on('APP_UPDATE_ENVIRONMENT', (event, environments: Environments) => {
-    ServerInstance.updateEnvironments(environments);
-  });
 
-  ipcMain.on('APP_APPLY_UPDATE', () => {
-    applyUpdate();
-  });
-
-  ipcMain.on('APP_ZOOM', (event, action: 'IN' | 'OUT' | 'RESET') => {
-    if (action === 'IN') {
-      handleZoomIn(mainWindow);
-    } else if (action === 'OUT') {
-      handleZoomOut(mainWindow);
-    } else if (action === 'RESET') {
-      handleZoomReset(mainWindow);
-    }
-  });
-
-
-
-  ipcMain.handle(
-    'APP_READ_ENVIRONMENT_DATA',
-    async (event, path: string) => await readJSONData(path)
-  );
-
-  ipcMain.handle(
-    'APP_WRITE_ENVIRONMENT_DATA',
-    async (
-      event,
-      data,
-      descriptor: EnvironmentDescriptor,
-      storagePrettyPrint?: boolean
-    ) => {
-      if (!descriptor.cloud) {
-        unwatchEnvironmentFile(data.uuid);
-      }
-
-      await writeJSONData(data, descriptor.path, storagePrettyPrint);
-
-      if (!descriptor.cloud) {
-        watchEnvironmentFile(data.uuid, descriptor.path);
-      }
-    }
-  );
 
   ipcMain.handle(
     'APP_READ_FILE',
@@ -180,9 +259,6 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     return parsedPath.name;
   });
 
-  ipcMain.handle('APP_GET_HASH', (event, str) =>
-    createHash('sha1').update(str, 'utf-8').digest('hex')
-  );
 
   ipcMain.handle(
     'APP_OPENAPI_CONVERT_FROM',
