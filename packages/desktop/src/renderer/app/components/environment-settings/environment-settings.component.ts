@@ -8,6 +8,7 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Environment, EnvironmentDefault } from '@mockoon/commons';
 import { Observable, Subject, merge } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
+import { buildApiUrl } from 'src/renderer/app/libs/utils.lib';
 import { ToggleItems } from 'src/renderer/app/models/common.model';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
@@ -24,6 +25,7 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;
   public activeEnvironmentForm: UntypedFormGroup;
   public tlsOptionsFormGroup: UntypedFormGroup;
+  public buildApiUrl = buildApiUrl;
   public Infinity = Infinity;
   public certTypes: ToggleItems = [
     {

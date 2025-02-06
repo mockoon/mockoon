@@ -103,6 +103,13 @@ export const initMainApi = (): MainAPIModel => ({
       let result;
 
       switch (channel) {
+        case 'APP_WRITE_CLIPBOARD':
+          {
+            if (navigator.clipboard) {
+              navigator.clipboard.writeText(data[0]);
+            }
+          }
+          break;
         // noop
         case 'APP_LOGS':
         case 'APP_UPDATE_MENU_STATE':
@@ -110,7 +117,9 @@ export const initMainApi = (): MainAPIModel => ({
         case 'APP_AUTH':
         case 'APP_AUTH_STOP_SERVER':
         case 'APP_APPLY_UPDATE':
+        case 'APP_HIDE_WINDOW':
         case 'APP_ZOOM':
+        case 'APP_SHOW_FILE':
         default:
           result = undefined;
           break;
@@ -154,12 +163,14 @@ export const initMainApi = (): MainAPIModel => ({
               });
           }
           break;
+
         case 'APP_GET_OS':
           // TODO do like before (darwin, etc)
           result = navigator.platform as string;
           break;
 
         // noop
+        case 'APP_READ_CLIPBOARD':
         case 'APP_UNWATCH_FILE':
         case 'APP_UNWATCH_ALL_FILE':
         default:
@@ -182,23 +193,11 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     mainWindow.destroy();
   });
 
-  ipcMain.on('APP_HIDE_WINDOW', () => {
-    mainWindow.hide();
-  });
-
-
-  ipcMain.on('APP_SHOW_FILE', (event, filePath, relativeToFile) => {
-    shell.showItemInFolder(buildFilePath(filePath, relativeToFile));
-  });
-
   ipcMain.on('APP_SHOW_FOLDER', (event, name) => {
     showFolderInExplorer(name);
   });
 
 
-  ipcMain.on('APP_WRITE_CLIPBOARD', async (event, data) => {
-    clipboard.writeText(data, 'clipboard');
-  });
 
 
 
@@ -213,9 +212,6 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
       await fsPromises.writeFile(filePath, data, 'utf-8')
   );
 
-  ipcMain.handle('APP_READ_CLIPBOARD', async () =>
-    clipboard.readText('clipboard')
-  );
 
   ipcMain.handle('APP_SHOW_OPEN_DIALOG', async (event, options) => {
     options.defaultPath = getDialogDefaultPath();

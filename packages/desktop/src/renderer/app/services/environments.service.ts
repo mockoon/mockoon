@@ -865,9 +865,13 @@ export class EnvironmentsService extends Logger {
 
     return this.uiService
       .showConfirmDialog({
-        title: 'Delete from the cloud',
-        text: 'This will delete the environment from the cloud and convert it to a local environment on all other clients. Are you sure?',
-        sub: `<span class="text-break-all">Your local copy located in <strong>${environmentDescriptor.path}</strong> will not be deleted.</span>`,
+        title: appEnvironment.web ? 'Delete' : 'Delete from the cloud',
+        text: appEnvironment.web
+          ? 'This will delete the environment. Are you sure? This action cannot be undone.'
+          : 'This will delete the environment from the cloud and convert it to a local environment on all other clients. Are you sure?',
+        sub: appEnvironment.web
+          ? undefined
+          : `<span class="text-break-all">Your local copy located in <strong>${environmentDescriptor.path}</strong> will not be deleted.</span>`,
         subIcon: 'info',
         confirmButtonText: 'Delete',
         cancelButtonText: 'Cancel'

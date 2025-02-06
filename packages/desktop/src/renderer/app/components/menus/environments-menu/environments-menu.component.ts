@@ -30,6 +30,7 @@ import {
   DropdownMenuElement,
   DropdownMenuItem
 } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { buildApiUrl } from 'src/renderer/app/libs/utils.lib';
 import { EnvironmentsStatuses } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
@@ -65,6 +66,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public editingName = false;
   public activeEnvironmentForm: UntypedFormGroup;
   public dragEnabled = true;
+  public buildApiUrl = buildApiUrl;
   public logsRecording$ = this.eventsService.logsRecording$;
   public user$ = this.store.select('user');
   public sync$ = this.store.select('sync');
@@ -88,7 +90,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   };
   public commonDropdownMenuItems: DropdownMenuItem[] = [
     {
-      label: 'Duplicate to the cloud',
+      label: appEnvironment.web ? 'Duplicate' : 'Duplicate to the cloud',
       icon: 'cloud',
       twoSteps: false,
       disabled$: () =>
@@ -97,18 +99,22 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
         this.environmentsService.duplicateToCloud(environmentUuid).subscribe();
       }
     },
+    ...(appEnvironment.web
+      ? []
+      : [
+          {
+            label: 'Duplicate to local',
+            icon: 'content_copy',
+            twoSteps: false,
+            action: ({ environmentUuid }: dropdownMenuPayload) => {
+              this.environmentsService
+                .duplicateEnvironment(environmentUuid)
+                .subscribe();
+            }
+          }
+        ]),
     {
-      label: 'Duplicate to local',
-      icon: 'content_copy',
-      twoSteps: false,
-      action: ({ environmentUuid }: dropdownMenuPayload) => {
-        this.environmentsService
-          .duplicateEnvironment(environmentUuid)
-          .subscribe();
-      }
-    },
-    {
-      label: 'Deploy to the cloud',
+      label: appEnvironment.web ? 'Deploy' : 'Deploy to the cloud',
       icon: 'backup',
       twoSteps: false,
       disabled$: () =>
@@ -119,14 +125,20 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
         this.uiService.openModal('deploy', environmentUuid);
       }
     },
-    {
-      label: 'Copy configuration to clipboard (JSON)',
-      icon: 'assignment',
-      twoSteps: false,
-      action: ({ environmentUuid }: dropdownMenuPayload) => {
-        this.environmentsService.copyEnvironmentToClipboard(environmentUuid);
-      }
-    }
+    ...(appEnvironment.web
+      ? []
+      : [
+          {
+            label: 'Copy configuration to clipboard (JSON)',
+            icon: 'assignment',
+            twoSteps: false,
+            action: ({ environmentUuid }: dropdownMenuPayload) => {
+              this.environmentsService.copyEnvironmentToClipboard(
+                environmentUuid
+              );
+            }
+          }
+        ])
   ];
   public localEnvironmentDropdownMenuItems: DropdownMenuItem[] = [
     ...this.commonDropdownMenuItems,
@@ -159,28 +171,34 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   ];
   public cloudEnvironmentDropdownMenuItems: DropdownMenuItem[] = [
     ...this.commonDropdownMenuItems,
+    ...(appEnvironment.web
+      ? []
+      : [
+          {
+            label: 'Show local backup data file in explorer/finder',
+            icon: 'folder',
+            twoSteps: false,
+            action: ({ environmentUuid }: dropdownMenuPayload) => {
+              this.environmentsService.showEnvironmentFileInFolder(
+                environmentUuid
+              );
+            }
+          },
+          {
+            label: 'Delete from cloud and convert to local',
+            icon: 'cloud_remove',
+            twoSteps: false,
+            disabled$: () =>
+              this.store.select('sync').pipe(map((sync) => !sync.status)),
+            action: ({ environmentUuid }: dropdownMenuPayload) => {
+              this.environmentsService
+                .convertCloudToLocal(environmentUuid)
+                .subscribe();
+            }
+          }
+        ]),
     {
-      label: 'Show local backup data file in explorer/finder',
-      icon: 'folder',
-      twoSteps: false,
-      action: ({ environmentUuid }: dropdownMenuPayload) => {
-        this.environmentsService.showEnvironmentFileInFolder(environmentUuid);
-      }
-    },
-    {
-      label: 'Delete from cloud and convert to local',
-      icon: 'cloud_remove',
-      twoSteps: false,
-      disabled$: () =>
-        this.store.select('sync').pipe(map((sync) => !sync.status)),
-      action: ({ environmentUuid }: dropdownMenuPayload) => {
-        this.environmentsService
-          .convertCloudToLocal(environmentUuid)
-          .subscribe();
-      }
-    },
-    {
-      label: 'Delete from cloud and close',
+      label: appEnvironment.web ? 'Delete' : 'Delete from cloud and close',
       icon: 'cloud_remove',
       twoSteps: false,
       disabled$: () =>

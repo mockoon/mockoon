@@ -1,3 +1,4 @@
+import { DeployInstance } from '@mockoon/cloud';
 import {
   Environment,
   ParsedJSONBodyMimeTypes,
@@ -6,6 +7,7 @@ import {
   stringIncludesArrayItems
 } from '@mockoon/commons';
 import { EditorModes } from 'src/renderer/app/models/editor.model';
+import { environment as appEnvironment } from 'src/renderer/environments/environment';
 
 export const ArrayContainsObjectKey = (
   obj: Record<string, any>,
@@ -182,3 +184,21 @@ export type DeepPartial<T> = T extends object
       [P in keyof T]?: DeepPartial<T[P]>;
     }
   : T;
+
+export const buildApiUrl = (
+  activeEnvironment: Environment,
+  instance?: DeployInstance
+) => {
+  const subdomain = instance?.subdomain ? instance?.subdomain : '{subdomain}';
+
+  return `${
+    appEnvironment.web
+      ? subdomain + '.mockoon.app'
+      : activeEnvironment?.hostname ||
+        'localhost' + ':' + activeEnvironment?.port
+  }/${
+    activeEnvironment?.endpointPrefix
+      ? activeEnvironment?.endpointPrefix + '/'
+      : ''
+  }*`;
+};

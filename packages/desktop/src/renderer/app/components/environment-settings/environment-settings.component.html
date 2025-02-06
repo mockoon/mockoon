@@ -18,12 +18,7 @@
   <app-title-separator
     [heading]="isWeb ? 'API prefix' : 'API URL'"
     icon="power"
-    subheading="API is available on {{
-      isWeb
-        ? '*.mockoon.app'
-        : activeEnvironment?.hostname ||
-          'localhost' + ':' + activeEnvironment?.port
-    }}/{{ activeEnvironment?.endpointPrefix }}/*"
+    subheading="API is available on {{ buildApiUrl(activeEnvironment) }}"
   ></app-title-separator>
 
   <div class="input-group align-items-center">

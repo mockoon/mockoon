@@ -290,7 +290,8 @@
                   "
                 ></app-svg>
               }
-              @if (environment.tlsOptions.enabled) {
+              <!-- No need to display TLS indicator on web -->
+              @if (environment.tlsOptions.enabled && !isWeb) {
                 <app-svg
                   class="text-warning me-2"
                   icon="lock"
@@ -314,11 +315,12 @@
                   ngbTooltip="Recording in progress"
                 ></app-svg>
               }
-              <span class="text-truncate">
-                {{ environment.hostname || 'localhost' }}:{{
-                  environment.port
-                }}/{{ environment.endpointPrefix }}
-              </span>
+              <!-- display url on desktop or on web when instance is running -->
+              @if (!isWeb || instances[environment.uuid] !== undefined) {
+                <span class="text-truncate">
+                  {{ buildApiUrl(environment, instances[environment.uuid]) }}
+                </span>
+              }
             </div>
           </div>
           <div
