@@ -7,7 +7,7 @@ import {
   stringIncludesArrayItems
 } from '@mockoon/commons';
 import { EditorModes } from 'src/renderer/app/models/editor.model';
-import { environment as appEnvironment } from 'src/renderer/environments/environment';
+import { environment as env } from 'src/renderer/environments/environment';
 
 export const ArrayContainsObjectKey = (
   obj: Record<string, any>,
@@ -192,7 +192,7 @@ export const buildApiUrl = (
   const subdomain = instance?.subdomain ? instance?.subdomain : '{subdomain}';
 
   return `${
-    appEnvironment.web
+    env.web
       ? subdomain + '.mockoon.app'
       : activeEnvironment?.hostname ||
         'localhost' + ':' + activeEnvironment?.port

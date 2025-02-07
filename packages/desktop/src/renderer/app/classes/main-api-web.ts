@@ -4,32 +4,6 @@ import { MainAPIModel } from 'src/renderer/app/models/main-api.model';
 import { Config } from 'src/renderer/config';
 import { Settings } from 'src/shared/models/settings.model';
 
-/* let dbConnection;
-
-const connectDB = () => {
-  return new Promise<void>((resolve, reject) => {
-    // Opens a connection to the existing database or creates a new one
-    const req = window.indexedDB.open('mockoon-db', major(Config.appVersion));
-    req.onsuccess = (ev) => {
-      // Saves an instance of the connection to our custom object
-      dbConnection = (ev.target as any).result;
-
-      resolve();
-    };
-
-    req.onupgradeneeded = (event) => {
-      // Only fired once per db version, used to initiliaze the db
-      dbConnection = (event.target as any).result;
-
-      resolve();
-    };
-
-    req.onerror = (e) => {
-      // Returns error event
-      reject(e);
-    };
-  });
-}; */
 const writeEnvironmentData = (environment: Environment): Promise<void> => {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open('mockoon-db', major(Config.appVersion));

@@ -95,7 +95,18 @@ export const environmentReducer = (
     case ActionTypes.UPDATE_DEPLOY_INSTANCES: {
       newState = {
         ...state,
-        deployInstances: [...action.instances]
+        deployInstances: [...action.instances],
+        environmentsStatus: {
+          ...state.environmentsStatus,
+          ...action.instances.reduce((instances, instance) => {
+            instances[instance.environmentUuid] = {
+              running: true,
+              needRestart: false
+            };
+
+            return instances;
+          }, {})
+        }
       };
       break;
     }

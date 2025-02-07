@@ -52,6 +52,7 @@ export class HeaderComponent implements OnInit {
     ENV_PROXY: 'tour-environment-proxy'
   };
   public isDev = !env.production;
+  public isWeb = env.web;
   public accountUrl = Config.accountUrl;
 
   constructor(
@@ -139,8 +140,12 @@ export class HeaderComponent implements OnInit {
   /**
    * Toggle active environment running state (start/stop)
    */
-  public toggleEnvironment() {
-    this.environmentsService.toggleEnvironment();
+  public toggleEnvironment(environmentUuid: string) {
+    if (this.isWeb) {
+      this.uiService.openModal('deploy', environmentUuid);
+    } else {
+      this.environmentsService.toggleEnvironment();
+    }
   }
 
   public openSettings() {

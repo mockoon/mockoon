@@ -39,7 +39,7 @@ import { EnvironmentsService } from 'src/renderer/app/services/environments.serv
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
-import { environment as appEnvironment } from 'src/renderer/environments/environment';
+import { environment as env } from 'src/renderer/environments/environment';
 import { Settings } from 'src/shared/models/settings.model';
 
 type FullFolder = {
@@ -105,7 +105,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
         );
       }
     },
-    ...(appEnvironment.web
+    ...(env.web
       ? []
       : [
           {

@@ -140,7 +140,7 @@ import {
 import { ReducerDirectionType } from 'src/renderer/app/stores/reducer';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
-import { environment as appEnvironment } from 'src/renderer/environments/environment';
+import { environment as env } from 'src/renderer/environments/environment';
 import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 
 @Injectable({
@@ -185,7 +185,7 @@ export class EnvironmentsService extends Logger {
     ]).pipe(
       switchMap(([settings, demoFilePath]) => {
         if (!settings.environments.length && !settings.welcomeShown) {
-          if (appEnvironment.web) {
+          if (env.web) {
             return of({
               settings,
               environmentsData: []
@@ -865,11 +865,11 @@ export class EnvironmentsService extends Logger {
 
     return this.uiService
       .showConfirmDialog({
-        title: appEnvironment.web ? 'Delete' : 'Delete from the cloud',
-        text: appEnvironment.web
+        title: env.web ? 'Delete' : 'Delete from the cloud',
+        text: env.web
           ? 'This will delete the environment. Are you sure? This action cannot be undone.'
           : 'This will delete the environment from the cloud and convert it to a local environment on all other clients. Are you sure?',
-        sub: appEnvironment.web
+        sub: env.web
           ? undefined
           : `<span class="text-break-all">Your local copy located in <strong>${environmentDescriptor.path}</strong> will not be deleted.</span>`,
         subIcon: 'info',
