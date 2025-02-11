@@ -98,14 +98,18 @@ export const environmentReducer = (
         deployInstances: [...action.instances],
         environmentsStatus: {
           ...state.environmentsStatus,
-          ...action.instances.reduce((instances, instance) => {
-            instances[instance.environmentUuid] = {
-              running: true,
-              needRestart: false
-            };
+          ...action.instances.reduce<EnvironmentsStatuses>(
+            (instances, instance) => {
+              instances[instance.environmentUuid] = {
+                running: true,
+                needRestart: false,
+                redeploying: false
+              };
 
-            return instances;
-          }, {})
+              return instances;
+            },
+            {}
+          )
         }
       };
       break;
@@ -532,7 +536,8 @@ export const environmentReducer = (
           ...state.environmentsStatus,
           [newEnvironment.uuid]: {
             running: false,
-            needRestart: false
+            needRestart: false,
+            redeploying: false
           }
         },
         environmentsLogs: {

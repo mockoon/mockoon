@@ -140,9 +140,17 @@ export class HeaderComponent implements OnInit {
   /**
    * Toggle active environment running state (start/stop)
    */
-  public toggleEnvironment(environmentUuid: string) {
+  public toggleEnvironment(
+    environmentUuid: string,
+    environmentStatus: EnvironmentStatus
+  ) {
     if (this.isWeb) {
-      this.uiService.openModal('deploy', environmentUuid);
+      // quick re-deploy
+      if (environmentStatus.needRestart) {
+        this.deployService.quickRedeploy(environmentUuid).subscribe();
+      } else {
+        this.uiService.openModal('deploy', environmentUuid);
+      }
     } else {
       this.environmentsService.toggleEnvironment();
     }
