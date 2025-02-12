@@ -51,6 +51,18 @@ export const createAdminEndpoint = (
   }
 ): void => {
   const adminApiPrefix = '/mockoon-admin';
+  app.use((req, res, next) => {
+    res.setHeaders(
+      new Headers({
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods':
+          'GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS',
+        'Access-Control-Allow-Headers':
+          'Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With'
+      })
+    );
+    next();
+  });
 
   app.get(adminApiPrefix, (req, res) => {
     res.send({
