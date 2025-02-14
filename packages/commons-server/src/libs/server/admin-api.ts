@@ -33,6 +33,7 @@ export const createAdminEndpoint = (
     getGlobalVariables,
     setGlobalVariables,
     purgeGlobalVariables,
+    getDataBucket,
     getDataBuckets,
     purgeDataBuckets,
     getLogs,
@@ -43,7 +44,8 @@ export const createAdminEndpoint = (
     getGlobalVariables: (key: string) => any;
     setGlobalVariables: (key: string, value: any) => void;
     purgeGlobalVariables: () => void;
-    getDataBuckets: (nameOrId: string) => any;
+    getDataBucket: (nameOrId: string) => any;
+    getDataBuckets: () => any;
     purgeDataBuckets: () => void;
     getLogs: () => Transaction[];
     purgeLogs: () => void;
@@ -189,23 +191,38 @@ export const createAdminEndpoint = (
   };
 
   /**
-   * Get a data bucket current parsed value
+   * Get data buckets current states (without value)
    *
    * @param req
    * @param res
    */
   const getDataBucketsHandler = (req, res) => {
+    const buckets = getDataBuckets();
+
+    res.send(
+      buckets.map((bucket) => ({
+        id: bucket.id,
+        name: bucket.name,
+        parsed: bucket.parsed,
+        validJson: bucket.validJson
+      }))
+    );
+  };
+
+  /**
+   * Get a data bucket current parsed value
+   *
+   * @param req
+   * @param res
+   */
+  const getDataBucketHandler = (req, res) => {
     const nameOrId = req.params.nameOrId;
 
     if (nameOrId) {
-      const bucket = getDataBuckets(nameOrId);
+      const bucket = getDataBucket(nameOrId);
 
       if (bucket) {
-        res.send({
-          name: bucket.name,
-          id: bucket.id,
-          value: bucket.value
-        });
+        res.send(bucket);
       } else {
         res.status(404).send({ message: 'Data bucket not found' });
       }
@@ -290,7 +307,8 @@ export const createAdminEndpoint = (
   app.post(`${adminApiPrefix}/global-vars/purge`, purgeGlobalVarsHandler);
 
   // data buckets endpoints
-  app.get(`${adminApiPrefix}/data-buckets/:nameOrId`, getDataBucketsHandler);
+  app.get(`${adminApiPrefix}/data-buckets`, getDataBucketsHandler);
+  app.get(`${adminApiPrefix}/data-buckets/:nameOrId`, getDataBucketHandler);
   app.purge(`${adminApiPrefix}/data-buckets`, purgeDataBucketsHandler);
   app.post(`${adminApiPrefix}/data-buckets/purge`, purgeDataBucketsHandler);
 };
