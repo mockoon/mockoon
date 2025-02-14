@@ -2235,6 +2235,49 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
+   * Copy a log as cURL to the clipboard
+   *
+   * @param environmentUUID
+   * @param logUUID
+   */
+  public copyLogAsCurl(
+    environmentUUID: string,
+    logUUID: string,
+    proxied: boolean
+  ) {
+    const environmentsLogs = this.store.get('environmentsLogs');
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const log = environmentsLogs[environmentUUID].find(
+      (environmentLog) => environmentLog.UUID === logUUID
+    );
+    let baseUrl: string;
+
+    if (proxied) {
+      const hostname = activeEnvironment.proxyHost;
+      baseUrl = `${activeEnvironment.proxyHost}`;
+    } else {
+      const hostname = activeEnvironment.hostname ?? 'localhost';
+      baseUrl = `${hostname}:${activeEnvironment.port}`;
+    }
+
+    const command: string[] = ['curl', '--location'];
+
+    if (log.method == 'head') {
+      command.push('--head');
+    } else {
+      command.push('--request', log.method.toUpperCase());
+    }
+
+    command.push(`'${baseUrl}${log.url}'`);
+
+    for (const header of log.request.headers) {
+      command.push('--header', `'${header.key}: ${header.value}'`);
+    }
+
+    MainAPI.send('APP_WRITE_CLIPBOARD', command.join(' '));
+  }
+
+  /**
    * Verify data is not too recent or is a mockoon file.
    * To be used in switchMap mostly.
    *
