@@ -16,6 +16,7 @@ import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
+import { ServerService } from 'src/renderer/app/services/server.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { SyncService } from 'src/renderer/app/services/sync.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
@@ -53,7 +54,8 @@ export class AppComponent extends Logger implements OnInit {
     private tourService: TourService,
     private remoteConfigService: RemoteConfigService,
     private syncService: SyncService,
-    private deployService: DeployService
+    private deployService: DeployService,
+    private serverService: ServerService
   ) {
     super('[RENDERER][COMPONENT][APP] ', toastService);
 
@@ -63,6 +65,7 @@ export class AppComponent extends Logger implements OnInit {
     this.environmentsService.loadEnvironments().subscribe();
     this.environmentsService.saveEnvironments().subscribe();
     this.environmentsService.listenServerTransactions().subscribe();
+    this.serverService.init().subscribe();
   }
 
   @HostListener('document:click')
