@@ -52,7 +52,10 @@
         "
         [disabled]="!activeEnvironment"
       >
-        <app-svg [icon]="isWeb ? 'server' : 'stop'" size="20"></app-svg>
+        <app-svg
+          [icon]="isWeb ? 'server_settings' : 'stop'"
+          size="20"
+        ></app-svg>
       </button>
     } @else if (!activeEnvironmentState?.running) {
       <button
@@ -157,21 +160,27 @@
           </h6>
         </div>
         <a class="btn dropdown-item" href="{{ accountUrl }}" target="_blank">
+          <app-svg icon="account" class="pe-2"></app-svg>
           My account
           <app-svg icon="open_in_new" class="ps-2"></app-svg>
         </a>
         <button class="btn dropdown-item" (click)="refreshAccount()">
+          <app-svg icon="refresh" class="pe-2"></app-svg>
           Refresh account information
         </button>
-        <button class="btn dropdown-item" (click)="logout()">Log out</button>
+        <button class="btn dropdown-item" (click)="logout()">
+          <app-svg icon="logout" class="pe-2"></app-svg>
+          Log out
+        </button>
       } @else {
         <button class="btn dropdown-item" (click)="login()">
+          <app-svg icon="login" class="pe-2"></app-svg>
           Sign in
           <app-svg icon="open_in_new" class="ps-2"></app-svg>
         </button>
       }
       <button class="btn dropdown-item" (click)="openSettings()">
-        Application settings
+        <app-svg icon="settings" class="pe-2"></app-svg>Application settings
       </button>
 
       @if (isDev) {
