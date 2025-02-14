@@ -1,5 +1,7 @@
 import { Transaction } from '@mockoon/commons';
 import { Express, Request, Response } from 'express';
+import { MockoonServer } from './server';
+import { Sse } from './sse';
 
 /**
  * Creates the Admin API endpoints
@@ -28,11 +30,13 @@ import { Express, Request, Response } from 'express';
  */
 export const createAdminEndpoint = (
   app: Express,
+  serverInstance: MockoonServer,
   {
     statePurgeCallback,
     getGlobalVariables,
     setGlobalVariables,
     purgeGlobalVariables,
+    getDataBucket,
     getDataBuckets,
     purgeDataBuckets,
     getLogs,
@@ -43,7 +47,8 @@ export const createAdminEndpoint = (
     getGlobalVariables: (key: string) => any;
     setGlobalVariables: (key: string, value: any) => void;
     purgeGlobalVariables: () => void;
-    getDataBuckets: (nameOrId: string) => any;
+    getDataBucket: (nameOrId: string) => any;
+    getDataBuckets: () => any;
     purgeDataBuckets: () => void;
     getLogs: () => Transaction[];
     purgeLogs: () => void;
@@ -51,6 +56,8 @@ export const createAdminEndpoint = (
   }
 ): void => {
   const adminApiPrefix = '/mockoon-admin';
+  const events = new Sse();
+
   app.use((req, res, next) => {
     res.setHeaders(
       new Headers({
@@ -69,6 +76,17 @@ export const createAdminEndpoint = (
       response:
         "Welcome to Mockoon's admin API. Check the documentation at https://mockoon.com/docs/latest/admin-api/overview/ for more information."
     });
+  });
+
+  app.get(`${adminApiPrefix}/events`, events.requestListener);
+
+  serverInstance.on('stopped', () => {
+    events.close();
+  });
+
+  // listen to server events and send them through the SSE
+  serverInstance.on('transaction-complete', (transaction) => {
+    events.send({ event: 'transaction-complete', transaction });
   });
 
   const stateEndpoint = `${adminApiPrefix}/state`;
@@ -201,23 +219,38 @@ export const createAdminEndpoint = (
   };
 
   /**
-   * Get a data bucket current parsed value
+   * Get data buckets current states (without value)
    *
    * @param req
    * @param res
    */
   const getDataBucketsHandler = (req, res) => {
+    const buckets = getDataBuckets();
+
+    res.send(
+      buckets.map((bucket) => ({
+        id: bucket.id,
+        name: bucket.name,
+        parsed: bucket.parsed,
+        validJson: bucket.validJson
+      }))
+    );
+  };
+
+  /**
+   * Get a data bucket current parsed value
+   *
+   * @param req
+   * @param res
+   */
+  const getDataBucketHandler = (req, res) => {
     const nameOrId = req.params.nameOrId;
 
     if (nameOrId) {
-      const bucket = getDataBuckets(nameOrId);
+      const bucket = getDataBucket(nameOrId);
 
       if (bucket) {
-        res.send({
-          name: bucket.name,
-          id: bucket.id,
-          value: bucket.value
-        });
+        res.send(bucket);
       } else {
         res.status(404).send({ message: 'Data bucket not found' });
       }
@@ -302,7 +335,8 @@ export const createAdminEndpoint = (
   app.post(`${adminApiPrefix}/global-vars/purge`, purgeGlobalVarsHandler);
 
   // data buckets endpoints
-  app.get(`${adminApiPrefix}/data-buckets/:nameOrId`, getDataBucketsHandler);
+  app.get(`${adminApiPrefix}/data-buckets`, getDataBucketsHandler);
+  app.get(`${adminApiPrefix}/data-buckets/:nameOrId`, getDataBucketHandler);
   app.purge(`${adminApiPrefix}/data-buckets`, purgeDataBucketsHandler);
   app.post(`${adminApiPrefix}/data-buckets/purge`, purgeDataBucketsHandler);
 };

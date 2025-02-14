@@ -248,7 +248,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     if (this.options.enableAdminApi) {
       // admin endpoint must be created before all other routes to avoid conflicts
-      createAdminEndpoint(app, {
+      createAdminEndpoint(app, this, {
         statePurgeCallback: () => {
           // reset request numbers
           Object.keys(this.requestNumbers).forEach((routeUUID) => {
@@ -262,7 +262,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         purgeGlobalVariables: () => {
           this.globalVariables = {};
         },
-        getDataBuckets: this.getProcessedDatabucket.bind(this),
+        getDataBucket: this.getProcessedDatabucket.bind(this),
+        getDataBuckets: () => this.processedDatabuckets,
         purgeDataBuckets: () => {
           this.processedDatabuckets = [];
           this.generateDatabuckets(this.environment);
