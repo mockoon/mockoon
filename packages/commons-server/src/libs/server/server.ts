@@ -248,7 +248,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     if (this.options.enableAdminApi) {
       // admin endpoint must be created before all other routes to avoid conflicts
-      createAdminEndpoint(app, {
+      createAdminEndpoint(app, this, {
         statePurgeCallback: () => {
           // reset request numbers
           Object.keys(this.requestNumbers).forEach((routeUUID) => {
