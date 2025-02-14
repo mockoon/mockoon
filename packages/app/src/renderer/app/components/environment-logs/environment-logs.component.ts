@@ -141,6 +141,18 @@ export class EnvironmentLogsComponent implements OnInit {
           true
         );
       }
+    },
+    {
+      label: 'Copy as cURL',
+      icon: 'content_copy',
+      twoSteps: false,
+      action: ({ logUuid }: logsDropdownMenuPayload) => {
+        this.environmentsService.copyLogAsCurl(
+          this.store.get('activeEnvironmentUUID'),
+          logUuid,
+          false
+        );
+      }
     }
   ];
   public isWeb = Config.isWeb;
@@ -343,5 +355,26 @@ export class EnvironmentLogsComponent implements OnInit {
 
   public goToRoute(routeUUID: string) {
     this.environmentsService.navigateToRoute(routeUUID);
+  }
+
+  public mountDropdownMenuItems(proxied: boolean) {
+    const dropDownMenuItems = this.defaultDropdownMenuItems.slice();
+
+    if (proxied) {
+      dropDownMenuItems.push({
+        label: 'Copy proxied as cURL',
+        icon: 'content_copy',
+        twoSteps: false,
+        action: ({ logUuid }: logsDropdownMenuPayload) => {
+          this.environmentsService.copyLogAsCurl(
+            this.store.get('activeEnvironmentUUID'),
+            logUuid,
+            true
+          );
+        }
+      });
+    }
+
+    return [...,
   }
 }
