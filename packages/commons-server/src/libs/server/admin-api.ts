@@ -58,7 +58,7 @@ export const createAdminEndpoint = (
   const adminApiPrefix = '/mockoon-admin';
   const events = new Sse();
 
-  app.use((req, res, next) => {
+  app.use(`${adminApiPrefix}*`, (req, res, next) => {
     res.setHeaders(
       new Headers({
         'Access-Control-Allow-Origin': '*',
