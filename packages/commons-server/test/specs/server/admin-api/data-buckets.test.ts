@@ -33,17 +33,24 @@ describe('Admin API: data buckets', () => {
     strictEqual(await (await fetch(`${url}/data-bucket`)).text(), 'true');
   });
 
+  it('should get all data buckets statuses using admin endpoint', async () => {
+    strictEqual(
+      await (await fetch(`${url}/mockoon-admin/data-buckets`)).text(),
+      '[{"id":"vd0v","name":"test","parsed":true,"validJson":true},{"id":"abcd","name":"test2","parsed":true,"validJson":true}]'
+    );
+  });
+
   it('should get first data bucket value using admin endpoint', async () => {
     strictEqual(
       await (await fetch(`${url}/mockoon-admin/data-buckets/test`)).text(),
-      '{"name":"test","id":"vd0v","value":true}'
+      '{"uuid":"01efb79a-cf0b-4b40-8e3b-79f5a0ee63f4","id":"vd0v","name":"test","value":true,"parsed":true,"validJson":true}'
     );
   });
 
   it('should get second data bucket value using admin endpoint', async () => {
     strictEqual(
       await (await fetch(`${url}/mockoon-admin/data-buckets/test2`)).text(),
-      '{"name":"test2","id":"abcd","value":{"test":"value"}}'
+      '{"uuid":"e799d2fc-bb25-4a86-b7d0-43c796719717","id":"abcd","name":"test2","value":{"test":"value"},"parsed":true,"validJson":true}'
     );
   });
 

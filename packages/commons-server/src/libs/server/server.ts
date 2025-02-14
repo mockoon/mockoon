@@ -262,7 +262,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         purgeGlobalVariables: () => {
           this.globalVariables = {};
         },
-        getDataBuckets: this.getProcessedDatabucket.bind(this),
+        getDataBucket: this.getProcessedDatabucket.bind(this),
+        getDataBuckets: () => this.processedDatabuckets,
         purgeDataBuckets: () => {
           this.processedDatabuckets = [];
           this.generateDatabuckets(this.environment);
