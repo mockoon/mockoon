@@ -1,5 +1,7 @@
 import { Transaction } from '@mockoon/commons';
 import { Express, Request, Response } from 'express';
+import { MockoonServer } from './server';
+import { Sse } from './sse';
 
 /**
  * Creates the Admin API endpoints
@@ -55,6 +57,19 @@ export const createAdminEndpoint = (
 ): void => {
   const adminApiPrefix = '/mockoon-admin';
   const events = new Sse();
+
+  app.use((req, res, next) => {
+    res.setHeaders(
+      new Headers({
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods':
+          'GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS',
+        'Access-Control-Allow-Headers':
+          'Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With'
+      })
+    );
+    next();
+  });
 
   app.get(adminApiPrefix, (req, res) => {
     res.send({
