@@ -28,6 +28,7 @@ import { Express, Request, Response } from 'express';
  */
 export const createAdminEndpoint = (
   app: Express,
+  serverInstance: MockoonServer,
   {
     statePurgeCallback,
     getGlobalVariables,
@@ -53,12 +54,24 @@ export const createAdminEndpoint = (
   }
 ): void => {
   const adminApiPrefix = '/mockoon-admin';
+  const events = new Sse();
 
   app.get(adminApiPrefix, (req, res) => {
     res.send({
       response:
         "Welcome to Mockoon's admin API. Check the documentation at https://mockoon.com/docs/latest/admin-api/overview/ for more information."
     });
+  });
+
+  app.get(`${adminApiPrefix}/events`, events.requestListener);
+
+  serverInstance.on('stopped', () => {
+    events.close();
+  });
+
+  // listen to server events and send them through the SSE
+  serverInstance.on('transaction-complete', (transaction) => {
+    events.send({ event: 'transaction-complete', transaction });
   });
 
   const stateEndpoint = `${adminApiPrefix}/state`;
