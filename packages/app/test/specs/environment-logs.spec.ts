@@ -148,7 +148,7 @@ describe('Environment logs', () => {
         await utils.closeTooltip();
         const clipboardContent = await clipboard.read();
         expect(clipboardContent).toEqual(
-          "curl --location 'http://localhost:3000/prefix/endpoint/1?param1=value&param2[]=value1&param2[]=value2&param3[prop1]=value1&param3[prop2]=value2' --header 'Connection: keep-alive' --header 'Host: localhost:3000' --data-binary 'requestbody'"
+          "curl --location 'http://localhost:3000/prefix/endpoint/1?param1=value&param2[]=value1&param2[]=value2&param3[prop1]=value1&param3[prop2]=value2' --header 'connection: keep-alive' --header 'host: localhost:3000' --data-binary 'requestbody'"
         );
       });
 
@@ -263,7 +263,7 @@ describe('Environment logs', () => {
         await utils.closeTooltip();
         const clipboardContent = await clipboard.read();
         expect(clipboardContent).toEqual(
-          "curl --location 'http://localhost:3000/prefix/test' --header 'Connection: keep-alive' --header 'Host: localhost:3000'"
+          "curl --location 'http://localhost:3000/prefix/test' --header 'connection: keep-alive' --header 'host: localhost:3000'"
         );
       });
     });
@@ -318,7 +318,7 @@ describe('Environment logs', () => {
         await utils.closeTooltip();
         const clipboardContent = await clipboard.read();
         expect(clipboardContent).toEqual(
-          "curl --location 'http://localhost:3000/prefix/file' --header 'Connection: keep-alive' --header 'Host: localhost:3000'"
+          "curl --location 'http://localhost:3000/prefix/file' --header 'connection: keep-alive' --header 'host: localhost:3000'"
         );
       });
     });
