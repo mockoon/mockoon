@@ -2355,7 +2355,7 @@ export class EnvironmentsService {
       );
     }
 
-    if (log.request.body) {
+    if (log.request.bodyUnformatted) {
       // Use --data-binary to preserve the exact body bytes
       command.push(
         '--data-binary',
