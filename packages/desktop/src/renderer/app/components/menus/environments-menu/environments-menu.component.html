@@ -129,33 +129,6 @@
           }"
         >
         </ng-container>
-        @if (environments[category.id]?.length === 0) {
-          @if (
-            category.id === 'local' && environments[category.id]?.length === 0
-          ) {
-            <div class="message message-sm m-2">No local environment</div>
-          }
-
-          @if (
-            category.id === 'cloud' &&
-            isCloudEnabled &&
-            environments[category.id]?.length === 0
-          ) {
-            <div class="message message-sm m-2">No cloud environment</div>
-          }
-
-          @if (category.id === 'cloud' && !isCloudEnabled) {
-            <div class="message message-sm m-2">
-              @if (!isConnected) {
-                <a href="#" (click)="login($event)">Log in</a> or
-              }
-              <a [href]="cloudPlansURL" target="_blank"
-                >Subscribe to Mockoon Cloud</a
-              >
-              to create and deploy cloud environments
-            </div>
-          }
-        }
       </div>
     </div>
   }
@@ -302,16 +275,36 @@
             </div>
           </a>
         </li>
+      } @empty {
+        @if (isCloud) {
+          @if (isCloudEnabled) {
+            <div class="message message-sm m-2">No cloud environment</div>
+          } @else {
+            <div class="message message-sm m-2">
+              @if (!isConnected) {
+                <a href="#" (click)="login($event)">Log in</a> or
+              }
+              <a [href]="cloudPlansURL" target="_blank"
+                >Subscribe to Mockoon Cloud</a
+              >
+              to create and deploy cloud environments
+            </div>
+          }
+        } @else {
+          <div class="message message-sm m-2">No local environment</div>
+        }
       }
     </div>
-    @if (isCloud && isConnected) {
+
+    @if (isCloud && isCloudEnabled) {
       <li class="nav-item" (click)="openManageInstancesModal()">
         <a class="nav-link border-top mt-auto">
-          <small
-            >{{ deployInstances.length }}&nbsp;
+          <small>
+            <app-svg class="pe-2" icon="server_settings"></app-svg>
+            {{ deployInstances.length }}&nbsp;
             {{ deployInstances.length > 1 ? 'instances' : 'instance' }}
-            running</small
-          >
+            running
+          </small>
         </a>
       </li>
     }
