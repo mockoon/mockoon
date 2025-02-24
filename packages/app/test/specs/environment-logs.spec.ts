@@ -1,4 +1,5 @@
 import { promises as fs } from 'fs';
+import clipboard from '../libs/clipboard';
 import environments from '../libs/environments';
 import environmentsLogs from '../libs/environments-logs';
 import http from '../libs/http';
@@ -142,6 +143,15 @@ describe('Environment logs', () => {
         await environmentsLogs.assertLogBody('requestbody', 'request');
       });
 
+      it('should copy log as cURL command', async () => {
+        await environmentsLogs.clickCopyAsCurlButton(1);
+        await utils.closeTooltip();
+        const clipboardContent = await clipboard.read();
+        expect(clipboardContent).toEqual(
+          "curl --location 'http://localhost:3000/prefix/endpoint/1?param1=value&param2[]=value1&param2[]=value2&param3[prop1]=value1&param3[prop2]=value2' --header 'Connection: keep-alive' --header 'Host: localhost:3000' --data-binary 'requestbody'"
+        );
+      });
+
       it('should verify response tab content', async () => {
         await environmentsLogs.switchTab('RESPONSE');
         await environmentsLogs.assertLogItem(
@@ -246,6 +256,16 @@ describe('Environment logs', () => {
       it('should removed the prefix after mocking', async () => {
         await routes.assertActiveMenuEntryText('/test\nGET');
       });
+
+      it('should copy log as cURL command', async () => {
+        await navigation.switchView('ENV_LOGS');
+        await environmentsLogs.clickCopyAsCurlButton(1);
+        await utils.closeTooltip();
+        const clipboardContent = await clipboard.read();
+        expect(clipboardContent).toEqual(
+          "curl --location 'http://localhost:3000/prefix/test' --header 'Connection: keep-alive' --header 'Host: localhost:3000'"
+        );
+      });
     });
 
     describe('Verify environment logs after GET call to /prefix/file (binary)', () => {
@@ -290,6 +310,15 @@ describe('Environment logs', () => {
           'response',
           6,
           1
+        );
+      });
+
+      it('should copy log as cURL command', async () => {
+        await environmentsLogs.clickCopyAsCurlButton(1);
+        await utils.closeTooltip();
+        const clipboardContent = await clipboard.read();
+        expect(clipboardContent).toEqual(
+          "curl --location 'http://localhost:3000/prefix/file' --header 'Connection: keep-alive' --header 'Host: localhost:3000'"
         );
       });
     });
