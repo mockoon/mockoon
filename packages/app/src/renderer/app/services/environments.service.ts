@@ -2529,38 +2529,44 @@ export class EnvironmentsService {
    * @param environmentUUID
    * @param logUUID
    */
-  public copyLogAsCurl(
-    environmentUUID: string,
-    logUUID: string,
-    proxied: boolean
-  ) {
+  public copyLogAsCurl(environmentUUID: string, logUUID: string) {
     const environmentsLogs = this.store.get('environmentsLogs');
     const activeEnvironment = this.store.getActiveEnvironment();
     const log = environmentsLogs[environmentUUID].find(
       (environmentLog) => environmentLog.UUID === logUUID
     );
-    let baseUrl: string;
-
-    if (proxied) {
-      const hostname = activeEnvironment.proxyHost;
-      baseUrl = `${activeEnvironment.proxyHost}`;
-    } else {
-      const hostname = activeEnvironment.hostname ?? 'localhost';
-      baseUrl = `${hostname}:${activeEnvironment.port}`;
-    }
-
+    const hostname = activeEnvironment.hostname || 'localhost';
+    const baseUrl = `${hostname}:${activeEnvironment.port}`;
+    const queryParams = log.request.query ? `?${log.request.query}` : '';
     const command: string[] = ['curl', '--location'];
 
-    if (log.method == 'head') {
+    if (log.method === 'head') {
       command.push('--head');
-    } else {
+    } else if (log.method !== 'get') {
       command.push('--request', log.method.toUpperCase());
     }
 
-    command.push(`'${baseUrl}${log.url}'`);
+    const url = `${log.protocol}://${baseUrl}${log.url}${queryParams}`;
+    command.push(`'${url.replace(/'/g, "'\\''")}'`);
 
     for (const header of log.request.headers) {
-      command.push('--header', `'${header.key}: ${header.value}'`);
+      // Skip content-length as curl will calculate it
+      if (header.key.toLowerCase() === 'content-length') {
+        continue;
+      }
+
+      command.push(
+        '--header',
+        `'${header.key}: ${header.value.replace(/'/g, "'\\''")}'`
+      );
+    }
+
+    if (log.request.body) {
+      // Use --data-binary to preserve the exact body bytes
+      command.push(
+        '--data-binary',
+        `'${log.request.bodyUnformatted.replace(/'/g, "'\\''")}'`
+      );
     }
 
     MainAPI.send('APP_WRITE_CLIPBOARD', command.join(' '));
