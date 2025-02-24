@@ -11,6 +11,7 @@
 @let instances = instances$ | async;
 @let user = user$ | async;
 @let localDropdownMenuItems = localDropdownMenuItems$ | async;
+@let deployInstances = deployInstances$ | async;
 
 <div
   class="environments-menu d-flex flex-column h-100"
@@ -116,7 +117,7 @@
         </div>
       </div>
 
-      <div class="overflow-auto" [ngbCollapse]="category.collapsed">
+      <div class="overflow-auto flex-fill" [ngbCollapse]="category.collapsed">
         <ng-container
           [ngTemplateOutlet]="environmentListTemplate"
           [ngTemplateOutletContext]="{
@@ -176,128 +177,141 @@
   let-environmentsStatus="environmentsStatus"
   let-dragContainer="dragContainer"
 >
-  <ul class="nav flex-column flex-fill menu-list">
-    @for (environment of environments; track environment.uuid) {
-      <li
-        class="nav-item"
-        appDraggable
-        appDropzone
-        [dragContainer]="dragContainer"
-        [dragEnabled]="dragEnabled"
-        dragParentId="root"
-        [dragIsContainer]="false"
-        [dragId]="environment.uuid"
-        (dropped)="reorganizeEnvironments($event)"
-      >
-        <a
-          class="nav-link d-flex pe-0 hover-parent"
-          [ngClass]="{
-            active: activeEnvironment?.uuid === environment.uuid,
-            running:
-              environmentsStatus[environment.uuid]?.running &&
-              !environmentsStatus[environment.uuid]?.needRestart,
-            'need-restart': environmentsStatus[environment.uuid]?.needRestart
-          }"
-          appScrollWhenActive
-          (click)="selectEnvironment(environment.uuid)"
+  <ul class="nav h-100 flex-column">
+    <div class="flex-fill menu-list">
+      @for (environment of environments; track environment.uuid) {
+        <li
+          class="nav-item"
+          appDraggable
+          appDropzone
+          [dragContainer]="dragContainer"
+          [dragEnabled]="dragEnabled"
+          dragParentId="root"
+          [dragIsContainer]="false"
+          [dragId]="environment.uuid"
+          (dropped)="reorganizeEnvironments($event)"
         >
-          <div
-            [formGroup]="activeEnvironmentForm"
-            class="d-flex flex-column mw0"
+          <a
+            class="nav-link d-flex pe-0 hover-parent"
+            [ngClass]="{
+              active: activeEnvironment?.uuid === environment.uuid,
+              running:
+                environmentsStatus[environment.uuid]?.running &&
+                !environmentsStatus[environment.uuid]?.needRestart,
+              'need-restart': environmentsStatus[environment.uuid]?.needRestart
+            }"
+            appScrollWhenActive
+            (click)="selectEnvironment(environment.uuid)"
           >
             <div
-              class="nav-link-label"
-              [ngClass]="{
-                'text-truncate': settings.truncateRouteName,
-                'text-break': !settings.truncateRouteName
-              }"
+              [formGroup]="activeEnvironmentForm"
+              class="d-flex flex-column mw0"
             >
-              <app-editable-element
-                [text]="environment.name"
-                formControlName="name"
-                [editCondition]="activeEnvironment?.uuid === environment.uuid"
-                (editChange)="enableDrag(!$event)"
-              ></app-editable-element>
-            </div>
+              <div
+                class="nav-link-label"
+                [ngClass]="{
+                  'text-truncate': settings.truncateRouteName,
+                  'text-break': !settings.truncateRouteName
+                }"
+              >
+                <app-editable-element
+                  [text]="environment.name"
+                  formControlName="name"
+                  [editCondition]="activeEnvironment?.uuid === environment.uuid"
+                  (editChange)="enableDrag(!$event)"
+                ></app-editable-element>
+              </div>
 
-            <div
-              class="nav-link-subtitle mt-1 d-flex align-items-center svg-text-align"
-            >
-              @if (instances[environment.uuid]) {
-                <app-svg
-                  class="me-2"
-                  [ngClass]="{
-                    'text-success':
-                      instances[environment.uuid]?.status === 'RUNNING',
-                    'text-danger':
-                      instances[environment.uuid]?.status === 'STOPPED'
-                  }"
-                  icon="record"
-                  size="12"
-                  [ngbTooltip]="
-                    instances[environment.uuid]?.status === 'RUNNING'
-                      ? 'Instance running'
-                      : 'Instance stopped'
-                  "
-                ></app-svg>
-              }
-              @if (environment.tlsOptions.enabled) {
-                <app-svg
-                  class="text-warning me-2"
-                  icon="lock"
-                  size="12"
-                  ngbTooltip="TLS enabled"
-                ></app-svg>
-              }
-              @if (environment.proxyMode) {
-                <app-svg
-                  class="text-primary me-2"
-                  icon="security"
-                  size="12"
-                  ngbTooltip="Proxy mode enabled"
-                ></app-svg>
-              }
-              @if ((logsRecording$ | async)[environment.uuid] === true) {
-                <app-svg
-                  class="text-danger animation-flash me-2"
-                  icon="record"
-                  size="12"
-                  ngbTooltip="Recording in progress"
-                ></app-svg>
-              }
-              <span class="text-truncate">
-                {{ environment.hostname || 'localhost' }}:{{
-                  environment.port
-                }}/{{ environment.endpointPrefix }}
-              </span>
+              <div
+                class="nav-link-subtitle mt-1 d-flex align-items-center svg-text-align"
+              >
+                @if (instances[environment.uuid]) {
+                  <app-svg
+                    class="me-2"
+                    [ngClass]="{
+                      'text-success':
+                        instances[environment.uuid]?.status === 'RUNNING',
+                      'text-danger':
+                        instances[environment.uuid]?.status === 'STOPPED'
+                    }"
+                    icon="record"
+                    size="12"
+                    [ngbTooltip]="
+                      instances[environment.uuid]?.status === 'RUNNING'
+                        ? 'Instance running'
+                        : 'Instance stopped'
+                    "
+                  ></app-svg>
+                }
+                @if (environment.tlsOptions.enabled) {
+                  <app-svg
+                    class="text-warning me-2"
+                    icon="lock"
+                    size="12"
+                    ngbTooltip="TLS enabled"
+                  ></app-svg>
+                }
+                @if (environment.proxyMode) {
+                  <app-svg
+                    class="text-primary me-2"
+                    icon="security"
+                    size="12"
+                    ngbTooltip="Proxy mode enabled"
+                  ></app-svg>
+                }
+                @if ((logsRecording$ | async)[environment.uuid] === true) {
+                  <app-svg
+                    class="text-danger animation-flash me-2"
+                    icon="record"
+                    size="12"
+                    ngbTooltip="Recording in progress"
+                  ></app-svg>
+                }
+                <span class="text-truncate">
+                  {{ environment.hostname || 'localhost' }}:{{
+                    environment.port
+                  }}/{{ environment.endpointPrefix }}
+                </span>
+              </div>
             </div>
-          </div>
-          <div
-            class="ms-auto d-flex flex-column align-items-center justify-content-between"
+            <div
+              class="ms-auto d-flex flex-column align-items-center justify-content-between"
+            >
+              <app-dropdown-menu
+                [idPrefix]="'environment-' + environment.uuid"
+                [items]="
+                  isCloud
+                    ? cloudEnvironmentDropdownMenuItems
+                    : localEnvironmentDropdownMenuItems
+                "
+                [payload]="{
+                  environmentUuid: environment.uuid
+                }"
+                [iconFaded]="true"
+                [noYPadding]="true"
+              ></app-dropdown-menu>
+              <app-team-presence
+                [presence]="sync?.presence"
+                [user]="user"
+                [displaySelf]="false"
+                filterBy="environmentUuid"
+                [filterContext]="environment.uuid"
+                size="16"
+                [showTooltipList]="false"
+              ></app-team-presence>
+            </div>
+          </a>
+        </li>
+      }
+    </div>
+    @if (isCloud && isConnected) {
+      <li class="nav-item" (click)="openManageInstancesModal()">
+        <a class="nav-link border-top mt-auto">
+          <small
+            >{{ deployInstances.length }}&nbsp;
+            {{ deployInstances.length > 1 ? 'instances' : 'instance' }}
+            running</small
           >
-            <app-dropdown-menu
-              [idPrefix]="'environment-' + environment.uuid"
-              [items]="
-                isCloud
-                  ? cloudEnvironmentDropdownMenuItems
-                  : localEnvironmentDropdownMenuItems
-              "
-              [payload]="{
-                environmentUuid: environment.uuid
-              }"
-              [iconFaded]="true"
-              [noYPadding]="true"
-            ></app-dropdown-menu>
-            <app-team-presence
-              [presence]="sync?.presence"
-              [user]="user"
-              [displaySelf]="false"
-              filterBy="environmentUuid"
-              [filterContext]="environment.uuid"
-              size="16"
-              [showTooltipList]="false"
-            ></app-team-presence>
-          </div>
         </a>
       </li>
     }

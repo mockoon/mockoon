@@ -1,9 +1,7 @@
 <ng-container
   *ngIf="{
     generatingTemplate: generatingTemplate$ | async,
-    generatingEndpoint: generatingEndpoint$ | async,
-    deployInstances: deployInstances$ | async,
-    isConnected: isConnected$ | async
+    generatingEndpoint: generatingEndpoint$ | async
   } as data"
 >
   <div class="footer d-flex">
@@ -81,21 +79,6 @@
       >
         <app-svg icon="spinner" size="12" class="me-1"></app-svg>
         Generating endpoint
-      </button>
-    </div>
-
-    <div
-      *ngIf="data.isConnected"
-      class="footer-item with-border-start d-flex align-items-center px-2"
-    >
-      <button
-        class="btn btn-custom btn-xs"
-        (click)="openManageInstancesModal()"
-      >
-        <app-svg icon="cloud" size="12" class="me-1"></app-svg>
-        {{ data.deployInstances.length }}&nbsp;
-        {{ data.deployInstances.length > 1 ? 'instances' : 'instance' }}
-        deployed
       </button>
     </div>
   </div>

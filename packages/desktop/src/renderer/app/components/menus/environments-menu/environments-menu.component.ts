@@ -75,6 +75,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public syncAlert$: Observable<string>;
   public clearRecentLocalEnvironmentsConfirm$ = new TimedBoolean();
   public offlineWarningLink = Config.docs.cloudSyncOffline;
+  public deployInstances$ = this.store.select('deployInstances');
   public alertLabels = {
     VERSION_TOO_OLD_WARNING:
       'We will soon not support your Mockoon version anymore. Please update.',
@@ -524,6 +525,10 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
     event.preventDefault();
 
     this.userService.startLoginFlow();
+  }
+
+  public openManageInstancesModal() {
+    this.uiService.openModal('manageInstances', { refresh: true });
   }
 
   /**
