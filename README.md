@@ -5,7 +5,6 @@
   <br>
   <a href="https://mockoon.com/"><img src="https://img.shields.io/badge/Website-Go-green.svg?style=flat-square&colorB=1997c6"/></a>
   <a href="https://mockoon.com/newsletter/"><img src="https://img.shields.io/badge/Newsletter-Subscribe-green.svg?style=flat-square"/></a>
-  <a href="https://twitter.com/GetMockoon"><img src="https://img.shields.io/badge/Twitter_@GetMockoon-follow-blue.svg?style=flat-square&colorB=1da1f2"/></a>
   <a href="https://mockoon.com/discord/"><img src="https://img.shields.io/badge/Discord-go-blue.svg?style=flat-square&colorA=6c84d9&colorB=1da1f2"/></a>  
   <br>
   <br>
@@ -14,9 +13,9 @@
 
 Mockoon is the easiest and quickest way to design and run mock APIs. No remote deployment, no account required, free and open-source.
 
-It combines a [desktop application](https://mockoon.com/download/) to design and run mock servers locally, and a [CLI](https://mockoon.com/cli/) to self-host your fake APIs. A [cloud](#subscribe-to-mockoon-cloud) is also available to collaborate with your team, keep your data in sync, and deploy your mock APIs. 
+It combines a [desktop application](https://mockoon.com/download/) to design and run mock servers locally, and a [CLI](https://mockoon.com/cli/) to self-host your fake APIs. A [cloud](#subscribe-to-mockoon-cloud) is also available to collaborate with your team, keep your data in sync, and deploy your mock APIs.
 
-API mocking helps you speed up development and third-party API integration by reducing dependency on external services and their limitations: rate limits, costs, availability, etc. 
+API mocking helps you speed up development and third-party API integration by reducing dependency on external services and their limitations: rate limits, costs, availability, etc.
 It also allows you to test your applications in a controlled environment with predictable responses, status codes, and latencies, and easily simulate edge cases and error scenarios.
 Finally, you can onboard new team members faster by providing them with a consistent and reliable environment to test and develop their applications.
 
@@ -145,6 +144,4 @@ Please also take a look at our [Code of Conduct](https://github.com/mockoon/mock
 
 ## Roadmap
 
-If you want to know what will be coming in the next release you can check the global [Roadmap](https://mockoon.com/public-roadmap/).
-
-New releases will be announced on Mockoon's [Twitter account @GetMockoon](https://twitter.com/GetMockoon) and through the newsletter to which you can subscribe [here](https://mockoon.com/newsletter/).
+If you want to know what will be coming in the next release you can check the global [Roadmap](https://mockoon.com/public-roadmap/) or [subscribe to our newsletter](https://mockoon.com/newsletter/).
