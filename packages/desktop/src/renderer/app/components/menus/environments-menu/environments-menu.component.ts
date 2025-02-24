@@ -18,7 +18,6 @@ import {
 } from '@mockoon/commons';
 import { Observable, Subject, combineLatest, merge, of } from 'rxjs';
 import {
-  combineLatestWith,
   distinctUntilChanged,
   distinctUntilKeyChanged,
   filter,
@@ -31,6 +30,7 @@ import {
   DropdownMenuElement,
   DropdownMenuItem
 } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { buildApiUrl } from 'src/renderer/app/libs/utils.lib';
 import { EnvironmentsStatuses } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
@@ -40,6 +40,7 @@ import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
+import { environment as env } from 'src/renderer/environments/environment';
 import {
   EnvironmentsCategories,
   RecentLocalEnvironment,
@@ -65,6 +66,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public editingName = false;
   public activeEnvironmentForm: UntypedFormGroup;
   public dragEnabled = true;
+  public buildApiUrl = buildApiUrl;
   public logsRecording$ = this.eventsService.logsRecording$;
   public user$ = this.store.select('user');
   public sync$ = this.store.select('sync');
@@ -75,6 +77,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public syncAlert$: Observable<string>;
   public clearRecentLocalEnvironmentsConfirm$ = new TimedBoolean();
   public offlineWarningLink = Config.docs.cloudSyncOffline;
+  public isWeb = env.web;
   public deployInstances$ = this.store.select('deployInstances');
   public alertLabels = {
     VERSION_TOO_OLD_WARNING:
@@ -88,8 +91,8 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   };
   public commonDropdownMenuItems: DropdownMenuItem[] = [
     {
-      label: 'Duplicate to the cloud',
-      icon: 'cloud',
+      label: env.web ? 'Duplicate' : 'Duplicate to the cloud',
+      icon: env.web ? 'content_copy' : 'cloud',
       twoSteps: false,
       disabled$: () =>
         this.store.select('sync').pipe(map((sync) => !sync.status)),
@@ -97,18 +100,22 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
         this.environmentsService.duplicateToCloud(environmentUuid).subscribe();
       }
     },
+    ...(env.web
+      ? []
+      : [
+          {
+            label: 'Duplicate to local',
+            icon: 'content_copy',
+            twoSteps: false,
+            action: ({ environmentUuid }: dropdownMenuPayload) => {
+              this.environmentsService
+                .duplicateEnvironment(environmentUuid)
+                .subscribe();
+            }
+          }
+        ]),
     {
-      label: 'Duplicate to local',
-      icon: 'content_copy',
-      twoSteps: false,
-      action: ({ environmentUuid }: dropdownMenuPayload) => {
-        this.environmentsService
-          .duplicateEnvironment(environmentUuid)
-          .subscribe();
-      }
-    },
-    {
-      label: 'Deploy to the cloud',
+      label: env.web ? 'Manage deployment' : 'Deploy to the cloud',
       icon: 'backup',
       twoSteps: false,
       disabled$: () =>
@@ -119,14 +126,20 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
         this.uiService.openModal('deploy', environmentUuid);
       }
     },
-    {
-      label: 'Copy configuration to clipboard (JSON)',
-      icon: 'assignment',
-      twoSteps: false,
-      action: ({ environmentUuid }: dropdownMenuPayload) => {
-        this.environmentsService.copyEnvironmentToClipboard(environmentUuid);
-      }
-    }
+    ...(env.web
+      ? []
+      : [
+          {
+            label: 'Copy configuration to clipboard (JSON)',
+            icon: 'assignment',
+            twoSteps: false,
+            action: ({ environmentUuid }: dropdownMenuPayload) => {
+              this.environmentsService.copyEnvironmentToClipboard(
+                environmentUuid
+              );
+            }
+          }
+        ])
   ];
   public localEnvironmentDropdownMenuItems: DropdownMenuItem[] = [
     ...this.commonDropdownMenuItems,
@@ -159,29 +172,35 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   ];
   public cloudEnvironmentDropdownMenuItems: DropdownMenuItem[] = [
     ...this.commonDropdownMenuItems,
+    ...(env.web
+      ? []
+      : [
+          {
+            label: 'Show local backup data file in explorer/finder',
+            icon: 'folder',
+            twoSteps: false,
+            action: ({ environmentUuid }: dropdownMenuPayload) => {
+              this.environmentsService.showEnvironmentFileInFolder(
+                environmentUuid
+              );
+            }
+          },
+          {
+            label: 'Delete from cloud and convert to local',
+            icon: 'cloud_remove',
+            twoSteps: false,
+            disabled$: () =>
+              this.store.select('sync').pipe(map((sync) => !sync.status)),
+            action: ({ environmentUuid }: dropdownMenuPayload) => {
+              this.environmentsService
+                .convertCloudToLocal(environmentUuid)
+                .subscribe();
+            }
+          }
+        ]),
     {
-      label: 'Show local backup data file in explorer/finder',
-      icon: 'folder',
-      twoSteps: false,
-      action: ({ environmentUuid }: dropdownMenuPayload) => {
-        this.environmentsService.showEnvironmentFileInFolder(environmentUuid);
-      }
-    },
-    {
-      label: 'Delete from cloud and convert to local',
-      icon: 'cloud_remove',
-      twoSteps: false,
-      disabled$: () =>
-        this.store.select('sync').pipe(map((sync) => !sync.status)),
-      action: ({ environmentUuid }: dropdownMenuPayload) => {
-        this.environmentsService
-          .convertCloudToLocal(environmentUuid)
-          .subscribe();
-      }
-    },
-    {
-      label: 'Delete from cloud and close',
-      icon: 'cloud_remove',
+      label: env.web ? 'Delete' : 'Delete from cloud and close',
+      icon: env.web ? 'delete' : 'cloud_remove',
       twoSteps: false,
       disabled$: () =>
         this.store.select('sync').pipe(map((sync) => !sync.status)),
@@ -220,6 +239,13 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
     }
   ];
   public localDropdownMenuItems$: Observable<DropdownMenuElement[]>;
+  public offlineReasonsLabels = {
+    [SyncErrors.TOO_MANY_DEVICES]: 'too many devices connected.',
+    [SyncErrors.VERSION_TOO_OLD]:
+      'your Mockoon version is too old, please update.',
+    [SyncDisconnectReasons.ROOM_INCOMPATIBLE_VERSION]:
+      'your sync space was updated and is not compatible with your current version of Mockoon, please update.'
+  };
   private localDropdownMenuStaticItems: DropdownMenuElement[] = [
     {
       label: 'New local environment',
@@ -250,19 +276,9 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   private categories: {
     id: EnvironmentsCategories;
     label: string;
-    icon$: Observable<string>;
-    iconTooltip$?: Observable<string>;
-    iconClasses$?: Observable<string>;
     collapsed: boolean;
   }[];
   private destroy$ = new Subject<void>();
-  private offlineReasonsLabels = {
-    [SyncErrors.TOO_MANY_DEVICES]: 'too many devices connected.',
-    [SyncErrors.VERSION_TOO_OLD]:
-      'your Mockoon version is too old, please update.',
-    [SyncDisconnectReasons.ROOM_INCOMPATIBLE_VERSION]:
-      'your sync space was updated and is not compatible with your current version of Mockoon, please update.'
-  };
 
   constructor(
     private formBuilder: UntypedFormBuilder,
@@ -403,59 +419,19 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
     this.categories = [
       {
         id: 'cloud',
-        label: 'Cloud',
-        icon$: this.userAndSync$.pipe(
-          map(([user, sync]) =>
-            user && user.plan !== 'FREE' && sync.status ? 'cloud' : 'cloud_off'
-          )
-        ),
-        iconClasses$: this.userAndSync$.pipe(
-          combineLatestWith(this.cloudEnvironments$),
-          map(([[user, sync], cloudEnvironments]) =>
-            !user || user.plan === 'FREE' || !sync.status
-              ? `${
-                  cloudEnvironments.length > 0 ? 'text-danger' : 'text-warning'
-                } cursor-pointer`
-              : 'cursor-default'
-          )
-        ),
-        iconTooltip$: this.userAndSync$.pipe(
-          combineLatestWith(this.cloudEnvironments$),
-          map(([[user, sync], cloudEnvironments]) => {
-            if (!sync.status) {
-              if (sync.offlineReason) {
-                return `Sync disabled: ${
-                  this.offlineReasonsLabels[sync.offlineReason]
-                }`;
-              }
-
-              if (!user) {
-                return 'Sync disabled: not logged in';
-              }
-
-              if (user.plan === 'FREE') {
-                return 'Sync disabled: free plan';
-              }
-
-              return 'Sync disabled: please check your internet connection and your credentials. Click to try to reconnect.';
-            } else {
-              return `Sync enabled: quota ${cloudEnvironments.length}/${user?.cloudSyncItemsQuota}`;
-            }
-          })
-        ),
-        collapsed: false
-      },
-      {
-        id: 'local',
-        label: 'Local',
-        icon$: of('computer'),
-        iconClasses$: of('cursor-default'),
-        iconTooltip$: of(
-          'Each local environment is a separate file on your computer (Right-click → Show data file in explorer/finder)'
-        ),
+        label: this.isWeb ? 'APIs' : 'Cloud',
         collapsed: false
       }
     ];
+
+    if (!this.isWeb) {
+      this.categories.push({
+        id: 'local',
+        label: 'Local',
+        collapsed: false
+      });
+    }
+
     this.initForms();
     this.initFormValues();
   }
@@ -529,6 +505,10 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
 
   public openManageInstancesModal() {
     this.uiService.openModal('manageInstances', { refresh: true });
+  }
+
+  public addCloudEnvironment() {
+    this.environmentsService.addCloudEnvironment(null, true).subscribe();
   }
 
   /**

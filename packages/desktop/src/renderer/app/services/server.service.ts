@@ -1,6 +1,16 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Environment } from '@mockoon/commons';
-import { from } from 'rxjs';
+import {
+  catchError,
+  combineLatest,
+  EMPTY,
+  filter,
+  from,
+  map,
+  Observable,
+  switchMap,
+  tap
+} from 'rxjs';
 import { Logger } from 'src/renderer/app/classes/logger';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { MessageParams } from 'src/renderer/app/models/messages.model';
@@ -12,6 +22,7 @@ import {
   updateProcessedDatabucketsAction
 } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
+import { environment as env } from 'src/renderer/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ServerService extends Logger {
@@ -25,6 +36,59 @@ export class ServerService extends Logger {
     super('[RENDERER][SERVICE][SERVER] ', toastService);
 
     this.addEventListener();
+  }
+
+  /**
+   * Listen to SSE coming from the currently active environment admin API
+   */
+  public init() {
+    if (env.web) {
+      return combineLatest([
+        this.store
+          .select('activeEnvironmentUUID')
+          .pipe(filter((uuid) => !!uuid)),
+        this.store
+          .select('deployInstances')
+          .pipe(filter((instances) => !!instances && instances.length > 0))
+      ]).pipe(
+        map(([environmentUuid, instances]) => ({
+          instance: instances.find(
+            (instance) => instance.environmentUuid === environmentUuid
+          ),
+          environmentUuid
+        })),
+        filter(({ instance }) => !!instance),
+        switchMap(({ instance, environmentUuid }) =>
+          new Observable((observer) => {
+            const eventSource = new EventSource(
+              /* `http://localhost:59378/mockoon-admin/events` */ `${!env.production ? instance.url.replace('.app', '.appdev') : instance.url}/mockoon-admin/events`
+            );
+            eventSource.onmessage = (x) => observer.next(x.data);
+            eventSource.onerror = (x) => observer.error(x);
+
+            return () => {
+              eventSource.close();
+            };
+          }).pipe(
+            map((data: string) => ({
+              transaction: JSON.parse(data).transaction,
+              environmentUuid
+            }))
+          )
+        ),
+        tap(({ transaction, environmentUuid }) => {
+          this.eventsService.serverTransaction$.next({
+            environmentUUID: environmentUuid,
+            transaction
+          });
+        }),
+        catchError(() => {
+          return EMPTY;
+        })
+      );
+    } else {
+      return EMPTY;
+    }
   }
 
   /**

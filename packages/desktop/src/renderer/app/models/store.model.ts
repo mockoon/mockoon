@@ -46,6 +46,7 @@ export type TemplatesTabsName =
 export type EnvironmentStatus = {
   running: boolean;
   needRestart: boolean;
+  redeploying: boolean;
 };
 
 export type EnvironmentsStatuses = Record<string, EnvironmentStatus>;

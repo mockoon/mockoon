@@ -35,6 +35,14 @@
         "-l",
         "unknownhost"
       ]
+    },
+    {
+      "type": "chrome",
+      "request": "attach",
+      "name": "Web",
+      "port": 9222,
+      "urlFilter": "http://localhost:3001/*",
+      "webRoot": "${workspaceFolder}/packages/desktop"
     }
   ],
   "compounds": [

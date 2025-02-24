@@ -33,12 +33,16 @@ export class Logger {
       return;
     }
 
-    // Strip IPC error prefix
-    if (messageParams?.error?.message) {
-      messageParams.error.message = messageParams.error.message.replace(
-        /Error invoking remote method '[A-Z_]+': /,
-        ''
-      );
+    if (messageParams?.error) {
+      messageParams = { ...messageParams, error: { ...messageParams.error } };
+
+      // Strip IPC error prefix
+      if (messageParams?.error?.message) {
+        messageParams.error.message = messageParams.error.message.replace(
+          /Error invoking remote method '[A-Z_]+': /,
+          ''
+        );
+      }
     }
 
     const message = DesktopMessages[messageCode](messageParams);

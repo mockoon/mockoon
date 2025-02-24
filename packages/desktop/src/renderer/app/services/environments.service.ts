@@ -140,6 +140,7 @@ import {
 import { ReducerDirectionType } from 'src/renderer/app/stores/reducer';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
+import { environment as env } from 'src/renderer/environments/environment';
 import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 
 @Injectable({
@@ -184,24 +185,30 @@ export class EnvironmentsService extends Logger {
     ]).pipe(
       switchMap(([settings, demoFilePath]) => {
         if (!settings.environments.length && !settings.welcomeShown) {
-          this.logMessage('info', 'FIRST_LOAD_DEMO_ENVIRONMENT');
+          if (env.web) {
+            return of({
+              settings,
+              environmentsData: []
+            });
+          } else {
+            this.logMessage('info', 'FIRST_LOAD_DEMO_ENVIRONMENT');
+            const defaultEnvironment = BuildDemoEnvironment();
 
-          const defaultEnvironment = BuildDemoEnvironment();
-
-          return of({
-            settings,
-            environmentsData: [
-              {
-                environment: defaultEnvironment,
-                environmentDescriptor: {
-                  uuid: defaultEnvironment.uuid,
-                  path: demoFilePath,
-                  cloud: false,
-                  lastServerHash: null
-                } as EnvironmentDescriptor
-              }
-            ]
-          });
+            return of({
+              settings,
+              environmentsData: [
+                {
+                  environment: defaultEnvironment,
+                  environmentDescriptor: {
+                    uuid: defaultEnvironment.uuid,
+                    path: demoFilePath,
+                    cloud: false,
+                    lastServerHash: null
+                  } as EnvironmentDescriptor
+                }
+              ]
+            });
+          }
         }
 
         return forkJoin(
@@ -858,9 +865,13 @@ export class EnvironmentsService extends Logger {
 
     return this.uiService
       .showConfirmDialog({
-        title: 'Delete from the cloud',
-        text: 'This will delete the environment from the cloud and convert it to a local environment on all other clients. Are you sure?',
-        sub: `<span class="text-break-all">Your local copy located in <strong>${environmentDescriptor.path}</strong> will not be deleted.</span>`,
+        title: env.web ? 'Delete' : 'Delete from the cloud',
+        text: env.web
+          ? 'This will delete the environment. Are you sure? This action cannot be undone.'
+          : 'This will delete the environment from the cloud and convert it to a local environment on all other clients. Are you sure?',
+        sub: env.web
+          ? undefined
+          : `<span class="text-break-all">Your local copy located in <strong>${environmentDescriptor.path}</strong> will not be deleted.</span>`,
         subIcon: 'info',
         confirmButtonText: 'Delete',
         cancelButtonText: 'Cancel'

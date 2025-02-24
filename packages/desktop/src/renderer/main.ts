@@ -7,7 +7,6 @@ import { environment } from './environments/environment';
 declare global {
   interface Window {
     api: MainAPIModel;
-    electronRequire: NodeRequire;
   }
 }
 
