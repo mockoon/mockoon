@@ -298,7 +298,7 @@
 
     @if (isCloud && isCloudEnabled) {
       <li class="nav-item" (click)="openManageInstancesModal()">
-        <a class="nav-link border-top mt-auto">
+        <a class="nav-link border-top mt-auto text-truncate">
           <small>
             <app-svg class="pe-2" icon="server_settings"></app-svg>
             {{ deployInstances.length }}&nbsp;
