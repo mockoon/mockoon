@@ -32,6 +32,7 @@ export interface MainAPIModel {
     descriptor: EnvironmentDescriptor,
     storagePrettyPrint?: boolean
   ): Promise<void>;
+  invoke(channel: 'APP_DELETE_ENVIRONMENT_DATA', path: string): Promise<void>;
   invoke(
     channel: 'APP_WRITE_SETTINGS_DATA',
     newSettings: Settings,

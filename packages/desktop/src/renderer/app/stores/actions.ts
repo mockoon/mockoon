@@ -356,12 +356,12 @@ export const addEnvironmentAction = (
 /**
  * Remove an environment
  *
- * @param environmentUUID - environment UUID to remove
+ * @param environmentUuid - environment UUID to remove
  */
-export const removeEnvironmentAction = (environmentUUID: string) =>
+export const removeEnvironmentAction = (environmentUuid: string) =>
   ({
     type: ActionTypes.REMOVE_ENVIRONMENT,
-    environmentUUID
+    environmentUuid
   }) as const;
 
 /**

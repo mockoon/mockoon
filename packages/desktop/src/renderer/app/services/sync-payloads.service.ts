@@ -25,6 +25,7 @@ import {
   reloadEnvironmentAction,
   removeCallbackAction,
   removeDatabucketAction,
+  removeEnvironmentAction,
   removeFolderAction,
   removeRouteAction,
   removeRouteResponseAction,
@@ -41,6 +42,7 @@ import {
   updateSettingsEnvironmentDescriptorAction
 } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
+import { environment as env } from 'src/renderer/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class SyncPayloadsService {
@@ -58,6 +60,7 @@ export class SyncPayloadsService {
     const timestamp = Date.now() + timeDifference;
 
     switch (action.type) {
+      case ActionTypes.REMOVE_ENVIRONMENT:
       case ActionTypes.CONVERT_ENVIRONMENT_TO_LOCAL:
         return {
           type: SyncActionTypes.REMOVE_CLOUD_ENVIRONMENT,
@@ -286,6 +289,7 @@ export class SyncPayloadsService {
 
     if (
       (action.type === ActionTypes.CONVERT_ENVIRONMENT_TO_LOCAL ||
+        action.type === ActionTypes.REMOVE_ENVIRONMENT ||
         action.type === ActionTypes.UPDATE_ENVIRONMENT ||
         action.type === ActionTypes.ADD_ROUTE ||
         action.type === ActionTypes.UPDATE_ROUTE ||
@@ -368,9 +372,18 @@ export class SyncPayloadsService {
 
     switch (syncAction.type) {
       case SyncActionTypes.REMOVE_CLOUD_ENVIRONMENT:
-        reducerAction = convertEnvironmentToLocalAction(
-          syncAction.environmentUuid
-        );
+        // when using the web app, converting to a local environment doesn't make sense
+        if (env.web) {
+          reducerAction = removeEnvironmentAction(syncAction.environmentUuid);
+          MainAPI.invoke(
+            'APP_DELETE_ENVIRONMENT_DATA',
+            syncAction.environmentUuid
+          );
+        } else {
+          reducerAction = convertEnvironmentToLocalAction(
+            syncAction.environmentUuid
+          );
+        }
         break;
       case SyncActionTypes.UPDATE_ENVIRONMENT:
         reducerAction = updateEnvironmentAction(

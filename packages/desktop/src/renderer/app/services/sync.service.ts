@@ -247,7 +247,7 @@ export class SyncService extends Logger {
 
         const hashes$ = [];
 
-        this.environmentsService.convertAllToLocal(
+        this.environmentsService.updateClientEnvironments(
           updatedCloudEnvironmentsList
         );
 

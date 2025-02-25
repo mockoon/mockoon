@@ -71,6 +71,32 @@ const readEnvironmentData = (
   });
 };
 
+const deleteEnvironmentData = (uuid: string): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('mockoon-db', major(Config.appVersion));
+
+    request.onsuccess = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      const transaction = db.transaction(['environments'], 'readwrite');
+      const store = transaction.objectStore('environments');
+      const deleteRequest = store.delete(uuid);
+
+      deleteRequest.onsuccess = () => {
+        resolve();
+      };
+      deleteRequest.onerror = (event) => {
+        reject((event.target as any).error);
+      };
+
+      transaction.oncomplete = () => db.close();
+    };
+
+    request.onerror = (event) => {
+      reject((event.target as any).error);
+    };
+  });
+};
+
 export const initMainApi = (): MainAPIModel => ({
   send: function (channel: string, ...data: any[]) {
     return new Promise<any>((resolve) => {
@@ -112,6 +138,9 @@ export const initMainApi = (): MainAPIModel => ({
           break;
         case 'APP_WRITE_ENVIRONMENT_DATA':
           result = writeEnvironmentData(data[0] as Environment);
+          break;
+        case 'APP_DELETE_ENVIRONMENT_DATA':
+          result = deleteEnvironmentData(data[0] as string);
           break;
         case 'APP_READ_SETTINGS_DATA':
           result = JSON.parse(localStorage.getItem('appSettings')) as Settings;
