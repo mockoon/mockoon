@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Route, RouteType } from '@mockoon/commons';
 import { Observable, from, map } from 'rxjs';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { CharCode } from 'src/renderer/app/enums/charcode.enum';
@@ -8,7 +9,6 @@ import {
   ScoreAndPositions
 } from 'src/renderer/app/models/command-palette.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
-import { EventsService } from 'src/renderer/app/services/events.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { clearLogsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
@@ -20,8 +20,7 @@ export class CommandPaletteService {
   constructor(
     private environmentsService: EnvironmentsService,
     private uiService: UIService,
-    private store: Store,
-    private eventsService: EventsService
+    private store: Store
   ) {}
 
   public filterEntries(search$: Observable<string>) {
@@ -64,16 +63,6 @@ export class CommandPaletteService {
           .sort((a, b) => b.score - a.score)
       )
     );
-  }
-
-  public executeCommand(commandId: string) {
-    this.uiService.closeModal('commandPalette');
-
-    const command = this.generateCommands().find((c) => c.id === commandId);
-
-    if (command) {
-      command.action();
-    }
   }
 
   private ctrlOrCmd$(shortcuts: string[]) {
@@ -286,6 +275,11 @@ export class CommandPaletteService {
     return highlightedText;
   }
 
+  /**
+   * Generate commands based on the current state of the store
+   *
+   * @returns
+   */
   private generateCommands(): Commands {
     const hasAtLeastOneEnvironment = this.store.get('environments').length > 0;
     const hasMoreThanOneEnvironment = this.store.get('environments').length > 1;
@@ -836,18 +830,39 @@ export class CommandPaletteService {
       }));
 
     const selectRouteCommands: Commands =
-      this.store.getActiveEnvironment()?.routes.map((route) => ({
-        id: `SELECT_ROUTE_${route.uuid}`,
-        label: `Select ${route.type === 'http' ? 'HTTP' : 'CRUD'} Route ${
-          route.method === 'all' ? '' : route.method.toUpperCase()
-        } /${route.endpoint}`,
-        action: () => {
-          this.environmentsService.setActiveView('ENV_ROUTES');
-          this.environmentsService.setActiveRoute(route.uuid);
-        },
-        score: 1,
-        enabled: hasActiveEnvironment
-      })) || [];
+      this.store
+        .get('environments')
+        ?.reduce<(Route & { environmentUuid: string })[]>(
+          (allRoutes, environment) => {
+            return [
+              ...allRoutes,
+              ...environment.routes.map((route) => ({
+                ...route,
+                environmentUuid: environment.uuid
+              }))
+            ];
+          },
+          []
+        )
+        .map((route) => ({
+          id: `SELECT_ROUTE_${route.uuid}`,
+          label: `Select ${route.type.toUpperCase()} Route ${
+            route.method === 'all' ||
+            route.type === RouteType.WS ||
+            route.type === RouteType.CRUD
+              ? ''
+              : route.method.toUpperCase()
+          } /${route.endpoint}`,
+          action: () => {
+            this.environmentsService.setActiveView('ENV_ROUTES');
+            this.environmentsService.setActiveEnvironment(
+              route.environmentUuid
+            );
+            this.environmentsService.setActiveRoute(route.uuid);
+          },
+          score: 1,
+          enabled: hasActiveEnvironment
+        })) || [];
 
     const selectDatabucketCommands: Commands =
       this.store.getActiveEnvironment()?.data.map((databucket) => ({
