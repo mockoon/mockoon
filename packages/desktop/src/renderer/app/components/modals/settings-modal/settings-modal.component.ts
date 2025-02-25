@@ -14,6 +14,7 @@ import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
+import { environment as env } from 'src/renderer/environments/environment';
 import { FileWatcherOptions, Settings } from 'src/shared/models/settings.model';
 
 @Component({
@@ -34,6 +35,7 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
     { value: FileWatcherOptions.AUTO, label: 'Auto' }
   ];
   public settingsForm: UntypedFormGroup;
+  public isWeb = env.web;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -44,7 +46,9 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.settings$ = this.store.select('settings');
+    this.settings$ = this.store
+      .select('settings')
+      .pipe(filter((settings) => !!settings));
 
     this.initForms();
     this.initFormValues();
@@ -113,7 +117,6 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
     // subscribe to active environment changes to reset the form
     this.settings$
       .pipe(
-        filter((settings) => !!settings),
         tap((settings) => {
           this.settingsForm.setValue(
             {

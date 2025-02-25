@@ -95,9 +95,9 @@ export class Store {
   /**
    * Select store element
    */
-  public select<T extends keyof StoreType>(path: T): Observable<StoreType[T]> {
+  public select<T extends keyof StoreType>(path?: T): Observable<StoreType[T]> {
     return this.store$.asObservable().pipe(
-      map((store) => store?.[path]),
+      map((store) => (path ? store?.[path] : store)),
       distinctUntilChanged()
     );
   }
