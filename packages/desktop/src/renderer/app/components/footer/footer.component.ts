@@ -6,6 +6,7 @@ import {
   OnInit
 } from '@angular/core';
 import { BehaviorSubject, Observable, from } from 'rxjs';
+import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import {
@@ -24,7 +25,7 @@ import { Config } from 'src/renderer/config';
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, SvgComponent, AsyncPipe]
+  imports: [NgIf, SvgComponent, AsyncPipe, SpinnerComponent]
 })
 export class FooterComponent implements OnInit {
   @Input() public isTemplateModalOpen: boolean;

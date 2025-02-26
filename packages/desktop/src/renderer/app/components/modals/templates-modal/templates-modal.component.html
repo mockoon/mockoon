@@ -146,7 +146,7 @@
               *ngIf="data.generatingTemplate === 'INPROGRESS'"
               class="input-group-text"
             >
-              <app-svg icon="spinner"></app-svg>
+              <app-spinner></app-spinner>
             </div>
           </div>
           <app-editor
@@ -190,7 +190,7 @@
               *ngIf="data.generatingEndpoint === 'INPROGRESS'"
               class="input-group-text"
             >
-              <app-svg icon="spinner"></app-svg>
+              <app-spinner></app-spinner>
             </div>
           </div>
 
@@ -266,7 +266,7 @@
                 </button>
               </div>
               <div *ngIf="isDemoLoading$ | async" class="input-group-text">
-                <app-svg icon="spinner"></app-svg>
+                <app-spinner></app-spinner>
               </div>
             </div>
 

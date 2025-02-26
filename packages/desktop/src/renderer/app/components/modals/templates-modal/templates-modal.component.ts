@@ -54,6 +54,7 @@ import {
 } from 'rxjs';
 import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
 import { FilterComponent } from 'src/renderer/app/components/filter/filter.component';
+import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
 
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
@@ -95,6 +96,8 @@ import { Config } from 'src/renderer/config';
     ToggleComponent,
     AsyncPipe,
     UpperCasePipe,
+    SpinnerComponent,
+    // fixes a circular dependency (no idea where it comes from)
     forwardRef(() => FilterComponent)
   ]
 })

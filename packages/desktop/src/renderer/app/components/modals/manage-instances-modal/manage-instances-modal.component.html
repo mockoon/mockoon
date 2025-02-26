@@ -177,10 +177,10 @@
         <app-svg icon="open_in_new" class="ps-1" size="12"></app-svg>
       </a>
     </div>
-    <div class="ms-auto">
+    <div class="ms-auto d-flex align-items-center">
       @if (data.taskInProgress) {
         <div class="d-inline-block me-2">
-          <app-svg icon="spinner"></app-svg>
+          <app-spinner></app-spinner>
         </div>
       }
       <button

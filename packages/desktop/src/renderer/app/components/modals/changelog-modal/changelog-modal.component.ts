@@ -4,15 +4,15 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MarkdownComponent } from 'ngx-markdown';
 import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, startWith } from 'rxjs/operators';
-import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Config } from 'src/renderer/config';
+import { SpinnerComponent } from '../../spinner.component';
 
 @Component({
   selector: 'app-changelog-modal',
   templateUrl: './changelog-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, MarkdownComponent, SvgComponent, AsyncPipe]
+  imports: [NgIf, MarkdownComponent, AsyncPipe, SpinnerComponent]
 })
 export class ChangelogModalComponent implements OnInit {
   public appVersion = Config.appVersion;
