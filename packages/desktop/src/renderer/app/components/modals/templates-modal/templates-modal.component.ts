@@ -11,6 +11,7 @@ import {
 import {
   ChangeDetectionStrategy,
   Component,
+  forwardRef,
   Inject,
   OnDestroy,
   OnInit
@@ -31,21 +32,21 @@ import {
 import { NgbModal, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import {
   BehaviorSubject,
-  EMPTY,
-  Observable,
-  Subject,
   catchError,
   combineLatestWith,
   concat,
   concatMap,
   delay,
+  EMPTY,
   filter,
   from,
   map,
   merge,
   mergeMap,
+  Observable,
   of,
   repeat,
+  Subject,
   switchMap,
   takeUntil,
   tap,
@@ -53,6 +54,7 @@ import {
 } from 'rxjs';
 import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
 import { FilterComponent } from 'src/renderer/app/components/filter/filter.component';
+
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import { demoTemplates } from 'src/renderer/app/constants/demo-templates';
@@ -84,7 +86,6 @@ import { Config } from 'src/renderer/config';
     NgIf,
     NgClass,
     SvgComponent,
-    FilterComponent,
     NgFor,
     EditorComponent,
     FormsModule,
@@ -93,7 +94,8 @@ import { Config } from 'src/renderer/config';
     NgbTooltip,
     ToggleComponent,
     AsyncPipe,
-    UpperCasePipe
+    UpperCasePipe,
+    forwardRef(() => FilterComponent)
   ]
 })
 export class TemplatesModalComponent implements OnInit, OnDestroy {
