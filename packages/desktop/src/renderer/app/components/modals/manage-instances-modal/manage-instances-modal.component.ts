@@ -7,6 +7,7 @@ import {
   DropdownMenuComponent,
   DropdownMenuItem
 } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { HideAfterDirective } from 'src/renderer/app/directives/hide-after.directive';
@@ -30,7 +31,8 @@ type dropdownMenuPayload = { environmentUuid: string };
     NgClass,
     NgbTooltip,
     DropdownMenuComponent,
-    AsyncPipe
+    AsyncPipe,
+    SpinnerComponent
   ]
 })
 export class ManageInstancesModalComponent extends Logger implements OnInit {

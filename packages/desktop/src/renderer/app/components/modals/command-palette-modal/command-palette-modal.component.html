@@ -1,5 +1,5 @@
 @let focusedItemIndex = focusedItemIndex$ | async;
-@let commands = commands$ | async;
+
 <div class="input-group p-2">
   <span class="input-group-text">
     <app-svg icon="command_palette"></app-svg>
@@ -17,19 +17,27 @@
   class="list-group list-group-flush overflow-y-scroll command-list"
   role="listbox"
 >
-  @for (command of commands; track command.id; let commandIndex = $index) {
-    <button
-      #commandElement
-      role="option"
-      type="button"
-      class="list-group-item list-group-item-action py-2 d-flex"
-      [ngClass]="{ active: commandIndex === focusedItemIndex }"
-      (click)="onCommandActivate($event, command)"
-    >
-      <span [innerHTML]="command.labelDelimited || command.label"></span>
-      <span class="ms-auto" [innerHTML]="command.shortcut$ | async"></span>
-    </button>
-  } @empty {
-    <div class="list-group-item message message-md">No matching results</div>
+  @defer {
+    @let commands = commands$ | async;
+
+    @for (command of commands; track command.id; let commandIndex = $index) {
+      <button
+        #commandElement
+        role="option"
+        type="button"
+        class="list-group-item list-group-item-action py-2 d-flex"
+        [ngClass]="{ active: commandIndex === focusedItemIndex }"
+        (click)="onCommandActivate($event, command)"
+      >
+        <span [innerHTML]="command.labelDelimited || command.label"></span>
+        <span class="ms-auto" [innerHTML]="command.shortcut$ | async"></span>
+      </button>
+    } @empty {
+      <div class="list-group-item message message-md">No matching results</div>
+    }
+  } @placeholder {
+    <div class="list-group-item message message-md">
+      <app-spinner size="20"></app-spinner>
+    </div>
   }
 </div>

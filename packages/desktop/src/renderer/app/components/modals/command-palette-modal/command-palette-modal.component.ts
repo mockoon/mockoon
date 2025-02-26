@@ -29,6 +29,7 @@ import {
   takeUntil,
   tap
 } from 'rxjs';
+import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
@@ -50,7 +51,8 @@ import { UIService } from 'src/renderer/app/services/ui.service';
     FocusOnEventDirective,
     ReactiveFormsModule,
     NgClass,
-    AsyncPipe
+    AsyncPipe,
+    SpinnerComponent
   ]
 })
 export class CommandPaletteModalComponent implements OnInit, OnDestroy {

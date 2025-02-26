@@ -29,6 +29,7 @@ import {
   tap
 } from 'rxjs';
 import { Logger } from 'src/renderer/app/classes/logger';
+import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
@@ -51,7 +52,8 @@ import { Config } from 'src/renderer/config';
     NgbTooltip,
     ToggleComponent,
     NgClass,
-    AsyncPipe
+    AsyncPipe,
+    SpinnerComponent
   ]
 })
 export class DeployInstanceModalComponent extends Logger implements OnInit {

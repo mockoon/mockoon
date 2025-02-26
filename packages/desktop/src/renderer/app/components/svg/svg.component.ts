@@ -1,10 +1,10 @@
+import { NgSwitch, NgSwitchCase } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   HostBinding,
   Input
 } from '@angular/core';
-import { NgSwitch, NgSwitchCase } from '@angular/common';
 
 /**
  * Simple SVG component (KISS!)
@@ -40,7 +40,6 @@ export class SvgComponent {
     | 'more_vert'
     | 'file_open'
     | 'magic'
-    | 'spinner'
     | 'account'
     | 'people'
     | 'endpoint'

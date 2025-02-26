@@ -22,7 +22,7 @@ import {
   takeUntil,
   tap
 } from 'rxjs';
-import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
+import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 
@@ -30,7 +30,7 @@ import { UserService } from 'src/renderer/app/services/user.service';
   selector: 'app-auth-modal',
   templateUrl: './auth-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, ReactiveFormsModule, NgIf, SvgComponent, AsyncPipe]
+  imports: [FormsModule, ReactiveFormsModule, NgIf, AsyncPipe, SpinnerComponent]
 })
 export class AuthModalComponent implements OnInit, OnDestroy {
   public isLoading$ = new BehaviorSubject<boolean>(false);

@@ -1,8 +1,6 @@
 import {
   AsyncPipe,
   NgClass,
-  NgFor,
-  NgIf,
   NgStyle,
   NgTemplateOutlet,
   UpperCasePipe
@@ -54,6 +52,7 @@ import {
 } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { EditableElementComponent } from 'src/renderer/app/components/editable-element/editable-element.component';
 import { FilterComponent } from 'src/renderer/app/components/filter/filter.component';
+import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { DraggableDirective } from 'src/renderer/app/directives/draggable.directive';
@@ -92,7 +91,6 @@ type folderDropdownMenuPayload = { folder: Folder; folderUuid: string };
   styleUrls: ['./routes-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     NgbPopover,
     TourStepDirective,
     NgbDropdown,
@@ -102,7 +100,6 @@ type folderDropdownMenuPayload = { folder: Folder; folderUuid: string };
     FilterComponent,
     NgTemplateOutlet,
     ResizeColumnDirective,
-    NgFor,
     DraggableDirective,
     DropzoneDirective,
     NgClass,
@@ -114,7 +111,8 @@ type folderDropdownMenuPayload = { folder: Folder; folderUuid: string };
     DropdownMenuComponent,
     NgbTooltip,
     AsyncPipe,
-    UpperCasePipe
+    UpperCasePipe,
+    SpinnerComponent
   ]
 })
 export class RoutesMenuComponent implements OnInit, OnDestroy {
@@ -369,10 +367,6 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
 
     // manually scroll to the bottom when adding a new folder as they cannot use the scrollWhenActive directive
     this.uiService.scrollToBottom(this.routesMenu.nativeElement);
-  }
-
-  public trackByUuid(index: number, child: { data: { uuid: string } }) {
-    return child.data.uuid;
   }
 
   /**
