@@ -1,3 +1,4 @@
+import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,7 +8,13 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import {
   BuildResponseCallback,
   Callback,
@@ -16,10 +23,14 @@ import {
   Route,
   RouteResponse
 } from '@mockoon/commons';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
+import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { Texts } from 'src/renderer/app/constants/texts.constant';
+import { InputNumberDirective } from 'src/renderer/app/directives/input-number.directive';
 import { DropdownItems } from 'src/renderer/app/models/common.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { Store } from 'src/renderer/app/stores/store';
@@ -29,7 +40,18 @@ import { Store } from 'src/renderer/app/stores/store';
   templateUrl: 'route-callbacks.component.html',
   styleUrls: ['./route-callbacks.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgIf,
+    FormsModule,
+    ReactiveFormsModule,
+    NgFor,
+    NgClass,
+    CustomSelectComponent,
+    NgbTooltip,
+    SvgComponent,
+    InputNumberDirective,
+    AsyncPipe
+  ]
 })
 export class RouteCallbacksComponent implements OnInit, OnDestroy {
   @Input()

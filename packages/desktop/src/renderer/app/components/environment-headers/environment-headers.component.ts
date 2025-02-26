@@ -1,6 +1,8 @@
+import { AsyncPipe, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { CORSHeaders, Environment, Header } from '@mockoon/commons';
 import { Observable } from 'rxjs';
+import { HeadersListComponent } from 'src/renderer/app/components/headers-list/headers-list.component';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { updateEnvironmentAction } from 'src/renderer/app/stores/actions';
@@ -10,7 +12,7 @@ import { Store } from 'src/renderer/app/stores/store';
   selector: 'app-environment-headers',
   templateUrl: './environment-headers.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [NgIf, HeadersListComponent, AsyncPipe]
 })
 export class EnvironmentHeadersComponent implements OnInit {
   public activeEnvironment$: Observable<Environment>;

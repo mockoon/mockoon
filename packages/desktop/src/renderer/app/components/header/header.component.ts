@@ -1,9 +1,20 @@
+import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { User } from '@mockoon/cloud';
 import { Environment } from '@mockoon/commons';
+import {
+  NgbDropdown,
+  NgbDropdownMenu,
+  NgbDropdownToggle,
+  NgbPopover,
+  NgbTooltip
+} from '@ng-bootstrap/ng-bootstrap';
 import { EMPTY, Observable, forkJoin, from } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
+import { TeamPresenceComponent } from 'src/renderer/app/components/team-presence/team-presence.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
+import { TourStepDirective } from 'src/renderer/app/directives/tour-step.directive';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
   EnvironmentStatus,
@@ -25,7 +36,20 @@ import { environment as env } from 'src/renderer/environments/environment';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgIf,
+    NgbPopover,
+    TourStepDirective,
+    NgbTooltip,
+    SvgComponent,
+    NgFor,
+    NgClass,
+    TeamPresenceComponent,
+    NgbDropdown,
+    NgbDropdownToggle,
+    NgbDropdownMenu,
+    AsyncPipe
+  ]
 })
 export class HeaderComponent implements OnInit {
   public activeEnvironment$: Observable<Environment>;

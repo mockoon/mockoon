@@ -7,10 +7,7 @@ import { EventsService } from 'src/renderer/app/services/events.service';
 /**
  * Focus an input when an event is emitted with the input's name
  */
-@Directive({
-  selector: '[appFocusOnEvent]',
-  standalone: false
-})
+@Directive({ selector: '[appFocusOnEvent]' })
 export class FocusOnEventDirective implements OnInit, OnDestroy {
   @Input() public appFocusOnEvent: FocusableInputs;
 

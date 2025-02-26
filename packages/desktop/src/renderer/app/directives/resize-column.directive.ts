@@ -20,10 +20,7 @@ export type ColumnType = 'main' | 'secondary';
  * minWidth is passed as a parameter and max is calculated based on body size and a factor.
  */
 
-@Directive({
-  selector: '[appResizeColumn]',
-  standalone: false
-})
+@Directive({ selector: '[appResizeColumn]' })
 export class ResizeColumnDirective implements AfterViewInit {
   @Input()
   public type: ColumnType;

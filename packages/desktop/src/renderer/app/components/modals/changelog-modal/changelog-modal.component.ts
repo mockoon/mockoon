@@ -1,7 +1,10 @@
+import { AsyncPipe, NgIf } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { MarkdownComponent } from 'ngx-markdown';
 import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, startWith } from 'rxjs/operators';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Config } from 'src/renderer/config';
 
@@ -9,7 +12,7 @@ import { Config } from 'src/renderer/config';
   selector: 'app-changelog-modal',
   templateUrl: './changelog-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [NgIf, MarkdownComponent, SvgComponent, AsyncPipe]
 })
 export class ChangelogModalComponent implements OnInit {
   public appVersion = Config.appVersion;

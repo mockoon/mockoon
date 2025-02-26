@@ -4,6 +4,7 @@ import {
   HostBinding,
   Input
 } from '@angular/core';
+import { NgSwitch, NgSwitchCase } from '@angular/common';
 
 /**
  * Simple SVG component (KISS!)
@@ -23,7 +24,7 @@ import {
   templateUrl: './svg.component.html',
   styleUrls: ['./svg.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [NgSwitch, NgSwitchCase]
 })
 export class SvgComponent {
   @Input()

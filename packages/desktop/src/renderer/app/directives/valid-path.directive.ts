@@ -18,8 +18,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
       useExisting: forwardRef(() => ValidPathDirective),
       multi: true
     }
-  ],
-  standalone: false
+  ]
 })
 export class ValidPathDirective {
   public onChange: (_: any) => void;

@@ -12,8 +12,11 @@ import {
 import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR,
-  UntypedFormControl
+  UntypedFormControl,
+  FormsModule,
+  ReactiveFormsModule
 } from '@angular/forms';
+import { NgIf, NgClass } from '@angular/common';
 
 /**
  * Editable element (span) that switches to an input when clicked and save on Enter or blur.
@@ -31,7 +34,7 @@ import {
       multi: true
     }
   ],
-  standalone: false
+  imports: [NgIf, NgClass, FormsModule, ReactiveFormsModule]
 })
 export class EditableElementComponent implements ControlValueAccessor {
   /**

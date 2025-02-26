@@ -13,12 +13,13 @@ import { EnvironmentsService } from 'src/renderer/app/services/environments.serv
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { cancelEntityDuplicationToAnotherEnvironmentAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-duplicate-modal',
   templateUrl: './duplicate-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [NgIf, NgFor, AsyncPipe]
 })
 export class DuplicateModalComponent implements OnInit, OnDestroy {
   public environments$: Observable<Environment[]> = this.store

@@ -1,10 +1,15 @@
+import { AsyncPipe, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormControl
+} from '@angular/forms';
 import {
   BehaviorSubject,
   EMPTY,
@@ -17,6 +22,7 @@ import {
   takeUntil,
   tap
 } from 'rxjs';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 
@@ -24,7 +30,7 @@ import { UserService } from 'src/renderer/app/services/user.service';
   selector: 'app-auth-modal',
   templateUrl: './auth-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [FormsModule, ReactiveFormsModule, NgIf, SvgComponent, AsyncPipe]
 })
 export class AuthModalComponent implements OnInit, OnDestroy {
   public isLoading$ = new BehaviorSubject<boolean>(false);

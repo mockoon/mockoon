@@ -1,3 +1,4 @@
+import { AsyncPipe, NgClass, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,9 +7,17 @@ import {
   OnInit,
   input
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormControl
+} from '@angular/forms';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject, debounceTime, from, takeUntil, tap } from 'rxjs';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
+import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { StoreType } from 'src/renderer/app/models/store.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
@@ -20,7 +29,16 @@ import { Store } from 'src/renderer/app/stores/store';
   selector: 'app-filter',
   templateUrl: 'filter.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgClass,
+    FormsModule,
+    ReactiveFormsModule,
+    FocusOnEventDirective,
+    NgIf,
+    NgbTooltip,
+    SvgComponent,
+    AsyncPipe
+  ]
 })
 export class FilterComponent implements OnInit, OnDestroy {
   public readonly filterName = input.required<keyof StoreType['filters']>();

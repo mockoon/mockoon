@@ -1,3 +1,4 @@
+import { NgClass, NgFor, NgIf, UpperCasePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -9,10 +10,14 @@ import {
 } from '@angular/core';
 import {
   ControlValueAccessor,
+  FormsModule,
   NG_VALUE_ACCESSOR,
+  ReactiveFormsModule,
   UntypedFormControl
 } from '@angular/forms';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { ToggleItem, ToggleItems } from 'src/renderer/app/models/common.model';
 
 /**
@@ -31,7 +36,16 @@ import { ToggleItem, ToggleItems } from 'src/renderer/app/models/common.model';
     }
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgIf,
+    NgFor,
+    NgClass,
+    NgbTooltip,
+    FormsModule,
+    ReactiveFormsModule,
+    SvgComponent,
+    UpperCasePipe
+  ]
 })
 export class ToggleComponent
   implements OnInit, OnDestroy, ControlValueAccessor

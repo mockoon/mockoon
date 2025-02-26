@@ -1,4 +1,11 @@
 import {
+  AsyncPipe,
+  NgFor,
+  NgIf,
+  NgSwitch,
+  NgSwitchCase
+} from '@angular/common';
+import {
   ChangeDetectionStrategy,
   Component,
   HostListener,
@@ -6,8 +13,20 @@ import {
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Environment } from '@mockoon/commons';
+import { NgbToast } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, from, fromEvent, tap } from 'rxjs';
 import { Logger } from 'src/renderer/app/classes/logger';
+import { EnvironmentCallbacksComponent } from 'src/renderer/app/components/environment-callbacks/environment-callbacks.component';
+import { EnvironmentDatabucketsComponent } from 'src/renderer/app/components/environment-databuckets/environment-databuckets.component';
+import { EnvironmentHeadersComponent } from 'src/renderer/app/components/environment-headers/environment-headers.component';
+import { EnvironmentLogsComponent } from 'src/renderer/app/components/environment-logs/environment-logs.component';
+import { EnvironmentProxyComponent } from 'src/renderer/app/components/environment-proxy/environment-proxy.component';
+import { EnvironmentRoutesComponent } from 'src/renderer/app/components/environment-routes/environment-routes.component';
+import { EnvironmentSettingsComponent } from 'src/renderer/app/components/environment-settings/environment-settings.component';
+import { FooterComponent } from 'src/renderer/app/components/footer/footer.component';
+import { HeaderComponent } from 'src/renderer/app/components/header/header.component';
+import { EnvironmentsMenuComponent } from 'src/renderer/app/components/menus/environments-menu/environments-menu.component';
+import { TourComponent } from 'src/renderer/app/components/tour/tour.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { ViewsNameType } from 'src/renderer/app/models/store.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
@@ -30,7 +49,25 @@ import { environment } from 'src/renderer/environments/environment';
   selector: 'app-root',
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgFor,
+    NgbToast,
+    EnvironmentsMenuComponent,
+    HeaderComponent,
+    NgIf,
+    NgSwitch,
+    NgSwitchCase,
+    EnvironmentRoutesComponent,
+    EnvironmentDatabucketsComponent,
+    EnvironmentCallbacksComponent,
+    EnvironmentHeadersComponent,
+    EnvironmentLogsComponent,
+    EnvironmentProxyComponent,
+    EnvironmentSettingsComponent,
+    FooterComponent,
+    TourComponent,
+    AsyncPipe
+  ]
 })
 export class AppComponent extends Logger implements OnInit {
   public activeEnvironment$: Observable<Environment>;

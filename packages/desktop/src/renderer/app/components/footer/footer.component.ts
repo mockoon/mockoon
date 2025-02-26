@@ -1,3 +1,4 @@
+import { AsyncPipe, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,6 +6,7 @@ import {
   OnInit
 } from '@angular/core';
 import { BehaviorSubject, Observable, from } from 'rxjs';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import {
   TemplatesTabsName,
@@ -22,7 +24,7 @@ import { Config } from 'src/renderer/config';
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [NgIf, SvgComponent, AsyncPipe]
 })
 export class FooterComponent implements OnInit {
   @Input() public isTemplateModalOpen: boolean;

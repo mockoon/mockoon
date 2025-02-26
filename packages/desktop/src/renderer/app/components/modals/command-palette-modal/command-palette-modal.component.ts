@@ -1,3 +1,4 @@
+import { AsyncPipe, NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,7 +10,11 @@ import {
   QueryList,
   ViewChildren
 } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormControl
+} from '@angular/forms';
 import {
   BehaviorSubject,
   Observable,
@@ -24,6 +29,8 @@ import {
   takeUntil,
   tap
 } from 'rxjs';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
+import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import {
   Command,
@@ -37,7 +44,14 @@ import { UIService } from 'src/renderer/app/services/ui.service';
   selector: 'app-command-palette-modal',
   templateUrl: './command-palette-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    SvgComponent,
+    FormsModule,
+    FocusOnEventDirective,
+    ReactiveFormsModule,
+    NgClass,
+    AsyncPipe
+  ]
 })
 export class CommandPaletteModalComponent implements OnInit, OnDestroy {
   @HostBinding('class')

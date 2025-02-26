@@ -1,3 +1,4 @@
+import { AsyncPipe, NgFor, NgIf, NgStyle } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -7,13 +8,14 @@ import {
   ViewChild
 } from '@angular/core';
 import { Observable, map } from 'rxjs';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TourService } from 'src/renderer/app/services/tour.service';
 
 @Component({
   selector: 'app-tour',
   templateUrl: 'tour.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [NgFor, SvgComponent, NgIf, NgStyle, AsyncPipe]
 })
 export class TourComponent implements OnInit, AfterViewInit {
   @ViewChild('popover') public popoverRef: TemplateRef<HTMLElement>;

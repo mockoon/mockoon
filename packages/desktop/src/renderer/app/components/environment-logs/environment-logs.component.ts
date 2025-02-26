@@ -1,6 +1,16 @@
-import { DatePipe } from '@angular/common';
+import {
+  AsyncPipe,
+  DatePipe,
+  LowerCasePipe,
+  NgClass,
+  NgFor,
+  NgIf,
+  TitleCasePipe,
+  UpperCasePipe
+} from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { GetContentType, isContentTypeApplicationJson } from '@mockoon/commons';
+import { NgbCollapse, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { formatDistanceToNow } from 'date-fns';
 import { Observable, timer } from 'rxjs';
 import {
@@ -10,8 +20,15 @@ import {
   map
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
-import { DropdownMenuItem } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import {
+  DropdownMenuComponent,
+  DropdownMenuItem
+} from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
+import { FilterComponent } from 'src/renderer/app/components/filter/filter.component';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
+import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import {
   GetEditorModeFromContentType,
@@ -48,7 +65,23 @@ type logsDropdownMenuPayload = { logUuid: string };
   templateUrl: 'environment-logs.component.html',
   styleUrls: ['environment-logs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgIf,
+    NgbTooltip,
+    SvgComponent,
+    FilterComponent,
+    NgFor,
+    NgClass,
+    DropdownMenuComponent,
+    ResizeColumnDirective,
+    NgbCollapse,
+    EditorComponent,
+    AsyncPipe,
+    UpperCasePipe,
+    LowerCasePipe,
+    TitleCasePipe,
+    DatePipe
+  ]
 })
 export class EnvironmentLogsComponent implements OnInit {
   public environmentLogs$: Observable<

@@ -3,10 +3,7 @@ import { Directive, ElementRef, Input, OnInit } from '@angular/core';
 /**
  * Hide an element after a delay (in ms)
  */
-@Directive({
-  selector: '[appHideAfter]',
-  standalone: false
-})
+@Directive({ selector: '[appHideAfter]' })
 export class HideAfterDirective implements OnInit {
   // Delay in ms
   @Input() public appHideAfter: number;
