@@ -1,8 +1,15 @@
+import { AsyncPipe, NgClass, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, EMPTY, Observable, catchError, map, tap } from 'rxjs';
 import { Logger } from 'src/renderer/app/classes/logger';
-import { DropdownMenuItem } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import {
+  DropdownMenuComponent,
+  DropdownMenuItem
+} from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
+import { HideAfterDirective } from 'src/renderer/app/directives/hide-after.directive';
 import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
@@ -16,7 +23,15 @@ type dropdownMenuPayload = { environmentUuid: string };
   selector: 'app-manage-instances-modal',
   templateUrl: './manage-instances-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgIf,
+    HideAfterDirective,
+    SvgComponent,
+    NgClass,
+    NgbTooltip,
+    DropdownMenuComponent,
+    AsyncPipe
+  ]
 })
 export class ManageInstancesModalComponent extends Logger implements OnInit {
   public payload$ = this.uiService.getModalPayload$('manageInstances');

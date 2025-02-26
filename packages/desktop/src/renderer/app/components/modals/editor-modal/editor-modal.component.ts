@@ -1,4 +1,6 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
 import { UIService } from 'src/renderer/app/services/ui.service';
 
@@ -7,7 +9,7 @@ import { UIService } from 'src/renderer/app/services/ui.service';
   templateUrl: './editor-modal.component.html',
   styleUrls: ['editor-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [EditorComponent, AsyncPipe]
 })
 export class EditorModalComponent {
   public editorModalPayload$ = this.uiService.getModalPayload$('editor');

@@ -1,3 +1,4 @@
+import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,11 +9,14 @@ import {
   Output
 } from '@angular/core';
 import {
+  FormsModule,
+  ReactiveFormsModule,
   UntypedFormArray,
   UntypedFormBuilder,
   UntypedFormGroup
 } from '@angular/forms';
 import { Callback, Environment, Header, RouteResponse } from '@mockoon/commons';
+import { NgbTooltip, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject } from 'rxjs';
 import {
   debounceTime,
@@ -23,6 +27,7 @@ import {
   tap
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import {
   headerNames,
   headerValues
@@ -35,7 +40,17 @@ import { Store } from 'src/renderer/app/stores/store';
   selector: 'app-headers-list',
   templateUrl: 'headers-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgIf,
+    FormsModule,
+    ReactiveFormsModule,
+    NgFor,
+    NgClass,
+    NgbTypeahead,
+    NgbTooltip,
+    SvgComponent,
+    AsyncPipe
+  ]
 })
 export class HeadersListComponent implements OnInit, OnDestroy {
   @Input()

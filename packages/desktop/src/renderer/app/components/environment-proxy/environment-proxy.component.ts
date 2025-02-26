@@ -1,18 +1,27 @@
+import { AsyncPipe, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormGroup
+} from '@angular/forms';
 import {
   Environment,
   EnvironmentDefault,
   Header,
   IsValidURL
 } from '@mockoon/commons';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject, merge } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
+import { HeadersListComponent } from 'src/renderer/app/components/headers-list/headers-list.component';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { HeadersProperties } from 'src/renderer/app/models/common.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -22,7 +31,15 @@ import { Store } from 'src/renderer/app/stores/store';
   selector: 'app-environment-proxy',
   templateUrl: './environment-proxy.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgIf,
+    FormsModule,
+    ReactiveFormsModule,
+    SvgComponent,
+    NgbTooltip,
+    HeadersListComponent,
+    AsyncPipe
+  ]
 })
 export class EnvironmentProxyComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;

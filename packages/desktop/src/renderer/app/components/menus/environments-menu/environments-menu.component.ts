@@ -1,3 +1,4 @@
+import { AsyncPipe, NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,6 +6,8 @@ import {
   OnInit
 } from '@angular/core';
 import {
+  FormsModule,
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormControl,
   UntypedFormGroup
@@ -16,6 +19,11 @@ import {
   ReorderAction,
   ReorderableContainers
 } from '@mockoon/commons';
+import {
+  NgbCollapse,
+  NgbPopover,
+  NgbTooltip
+} from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject, combineLatest, merge, of } from 'rxjs';
 import {
   combineLatestWith,
@@ -28,9 +36,18 @@ import {
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import {
+  DropdownMenuComponent,
   DropdownMenuElement,
   DropdownMenuItem
 } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { EditableElementComponent } from 'src/renderer/app/components/editable-element/editable-element.component';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
+import { TeamPresenceComponent } from 'src/renderer/app/components/team-presence/team-presence.component';
+import { DraggableDirective } from 'src/renderer/app/directives/draggable.directive';
+import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directive';
+import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
+import { ScrollWhenActiveDirective } from 'src/renderer/app/directives/scroll-to-active.directive';
+import { TourStepDirective } from 'src/renderer/app/directives/tour-step.directive';
 import { EnvironmentsStatuses } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
@@ -53,7 +70,26 @@ type dropdownMenuPayload = { environmentUuid: string; syncStatus: boolean };
   templateUrl: './environments-menu.component.html',
   styleUrls: ['./environments-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgbPopover,
+    TourStepDirective,
+    NgStyle,
+    NgClass,
+    DraggableDirective,
+    DropzoneDirective,
+    SvgComponent,
+    NgbTooltip,
+    DropdownMenuComponent,
+    NgbCollapse,
+    NgTemplateOutlet,
+    ResizeColumnDirective,
+    ScrollWhenActiveDirective,
+    FormsModule,
+    ReactiveFormsModule,
+    EditableElementComponent,
+    TeamPresenceComponent,
+    AsyncPipe
+  ]
 })
 export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;

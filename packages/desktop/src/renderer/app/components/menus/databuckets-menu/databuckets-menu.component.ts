@@ -1,3 +1,4 @@
+import { AsyncPipe, NgClass, NgFor } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {
   DataBucket,
@@ -6,6 +7,7 @@ import {
   ReorderAction,
   ReorderableContainers
 } from '@mockoon/commons';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import {
   combineLatestWith,
@@ -13,8 +15,17 @@ import {
   filter,
   map
 } from 'rxjs/operators';
-import { DropdownMenuItem } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import {
+  DropdownMenuComponent,
+  DropdownMenuItem
+} from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { FilterComponent } from 'src/renderer/app/components/filter/filter.component';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
+import { DraggableDirective } from 'src/renderer/app/directives/draggable.directive';
+import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directive';
+import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
+import { ScrollWhenActiveDirective } from 'src/renderer/app/directives/scroll-to-active.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { textFilter, trackByUuid } from 'src/renderer/app/libs/utils.lib';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
@@ -29,7 +40,19 @@ type dropdownMenuPayload = { databucketUuid: string };
   templateUrl: './databuckets-menu.component.html',
   styleUrls: ['./databuckets-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgbTooltip,
+    SvgComponent,
+    FilterComponent,
+    NgFor,
+    DraggableDirective,
+    DropzoneDirective,
+    ScrollWhenActiveDirective,
+    NgClass,
+    DropdownMenuComponent,
+    ResizeColumnDirective,
+    AsyncPipe
+  ]
 })
 export class DatabucketsMenuComponent implements OnInit {
   public settings$: Observable<Settings>;

@@ -1,10 +1,16 @@
+import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormGroup
+} from '@angular/forms';
 import {
   BodyTypes,
   Callback,
@@ -14,6 +20,7 @@ import {
   Methods,
   MimeTypesWithTemplating
 } from '@mockoon/commons';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import {
   Observable,
   Subject,
@@ -27,8 +34,18 @@ import {
   tap,
   withLatestFrom
 } from 'rxjs';
-import { DropdownMenuItem } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
+import {
+  DropdownMenuComponent,
+  DropdownMenuItem
+} from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
+import { HeadersListComponent } from 'src/renderer/app/components/headers-list/headers-list.component';
+import { CallbacksMenuComponent } from 'src/renderer/app/components/menus/callbacks-menu/callbacks-menu.component';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
+import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
+import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import {
   CallbackResponseUsage,
@@ -52,7 +69,23 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
   templateUrl: './environment-callbacks.component.html',
   styleUrls: ['./environment-callbacks.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgIf,
+    CallbacksMenuComponent,
+    NgClass,
+    FormsModule,
+    ReactiveFormsModule,
+    FocusOnEventDirective,
+    CustomSelectComponent,
+    HeadersListComponent,
+    ToggleComponent,
+    EditorComponent,
+    NgbTooltip,
+    SvgComponent,
+    DropdownMenuComponent,
+    NgFor,
+    AsyncPipe
+  ]
 })
 export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;

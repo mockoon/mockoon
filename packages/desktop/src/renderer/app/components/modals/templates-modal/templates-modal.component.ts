@@ -1,5 +1,13 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { DOCUMENT } from '@angular/common';
+import {
+  AsyncPipe,
+  DOCUMENT,
+  NgClass,
+  NgFor,
+  NgIf,
+  NgTemplateOutlet,
+  UpperCasePipe
+} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,7 +15,12 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormControl, UntypedFormControl } from '@angular/forms';
+import {
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormControl
+} from '@angular/forms';
 import { Template, TemplateListItem, User } from '@mockoon/cloud';
 import {
   BuildHTTPRoute,
@@ -15,7 +28,7 @@ import {
   Route,
   RouteResponse
 } from '@mockoon/commons';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import {
   BehaviorSubject,
   EMPTY,
@@ -38,6 +51,10 @@ import {
   tap,
   withLatestFrom
 } from 'rxjs';
+import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
+import { FilterComponent } from 'src/renderer/app/components/filter/filter.component';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
+import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import { demoTemplates } from 'src/renderer/app/constants/demo-templates';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
@@ -63,7 +80,21 @@ import { Config } from 'src/renderer/config';
       ])
     ])
   ],
-  standalone: false
+  imports: [
+    NgIf,
+    NgClass,
+    SvgComponent,
+    FilterComponent,
+    NgFor,
+    EditorComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    NgTemplateOutlet,
+    NgbTooltip,
+    ToggleComponent,
+    AsyncPipe,
+    UpperCasePipe
+  ]
 })
 export class TemplatesModalComponent implements OnInit, OnDestroy {
   public isDemoLoading$ = new BehaviorSubject<boolean>(false);

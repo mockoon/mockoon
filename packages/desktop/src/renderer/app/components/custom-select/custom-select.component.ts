@@ -1,3 +1,4 @@
+import { AsyncPipe, NgClass, NgIf, NgStyle } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,12 +14,23 @@ import {
 } from '@angular/core';
 import {
   ControlValueAccessor,
+  FormsModule,
   NG_VALUE_ACCESSOR,
+  ReactiveFormsModule,
   UntypedFormControl
 } from '@angular/forms';
-import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbDropdown,
+  NgbDropdownButtonItem,
+  NgbDropdownItem,
+  NgbDropdownMenu,
+  NgbDropdownToggle,
+  NgbTooltip
+} from '@ng-bootstrap/ng-bootstrap';
+import { NgxMaskDirective } from 'ngx-mask';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { debounceTime, map, startWith } from 'rxjs/operators';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import {
   DropdownItem,
   DropdownItems,
@@ -42,7 +54,22 @@ import {
     }
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgIf,
+    NgbDropdown,
+    NgbDropdownToggle,
+    NgClass,
+    NgbDropdownMenu,
+    NgStyle,
+    FormsModule,
+    NgxMaskDirective,
+    ReactiveFormsModule,
+    NgbDropdownButtonItem,
+    NgbDropdownItem,
+    NgbTooltip,
+    SvgComponent,
+    AsyncPipe
+  ]
 })
 export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   @HostBinding('class')

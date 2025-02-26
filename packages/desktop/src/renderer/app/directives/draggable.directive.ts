@@ -11,10 +11,7 @@ import { DragService } from 'src/renderer/app/services/drag.service';
 /**
  * Directive to make an element draggable
  */
-@Directive({
-  selector: '[appDraggable]',
-  standalone: false
-})
+@Directive({ selector: '[appDraggable]' })
 export class DraggableDirective implements AfterViewInit {
   // Define a #dragHandle on a child to use it as the drag handle
   @ContentChild('dragHandle')

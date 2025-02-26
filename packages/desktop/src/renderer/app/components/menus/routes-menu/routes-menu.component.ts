@@ -1,4 +1,13 @@
 import {
+  AsyncPipe,
+  NgClass,
+  NgFor,
+  NgIf,
+  NgStyle,
+  NgTemplateOutlet,
+  UpperCasePipe
+} from '@angular/common';
+import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -6,7 +15,12 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormGroup
+} from '@angular/forms';
 import {
   Environment,
   Environments,
@@ -17,6 +31,13 @@ import {
   ResponseMode,
   Route
 } from '@mockoon/commons';
+import {
+  NgbDropdown,
+  NgbDropdownMenu,
+  NgbDropdownToggle,
+  NgbPopover,
+  NgbTooltip
+} from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject, merge, of } from 'rxjs';
 import {
   debounceTime,
@@ -27,8 +48,19 @@ import {
   tap,
   withLatestFrom
 } from 'rxjs/operators';
-import { DropdownMenuItem } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import {
+  DropdownMenuComponent,
+  DropdownMenuItem
+} from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { EditableElementComponent } from 'src/renderer/app/components/editable-element/editable-element.component';
+import { FilterComponent } from 'src/renderer/app/components/filter/filter.component';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
+import { DraggableDirective } from 'src/renderer/app/directives/draggable.directive';
+import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directive';
+import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
+import { ScrollWhenActiveDirective } from 'src/renderer/app/directives/scroll-to-active.directive';
+import { TourStepDirective } from 'src/renderer/app/directives/tour-step.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { buildFullPath, textFilter } from 'src/renderer/app/libs/utils.lib';
 import {
@@ -59,7 +91,31 @@ type folderDropdownMenuPayload = { folder: Folder; folderUuid: string };
   templateUrl: './routes-menu.component.html',
   styleUrls: ['./routes-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgIf,
+    NgbPopover,
+    TourStepDirective,
+    NgbDropdown,
+    NgbDropdownToggle,
+    SvgComponent,
+    NgbDropdownMenu,
+    FilterComponent,
+    NgTemplateOutlet,
+    ResizeColumnDirective,
+    NgFor,
+    DraggableDirective,
+    DropzoneDirective,
+    NgClass,
+    ScrollWhenActiveDirective,
+    NgStyle,
+    FormsModule,
+    ReactiveFormsModule,
+    EditableElementComponent,
+    DropdownMenuComponent,
+    NgbTooltip,
+    AsyncPipe,
+    UpperCasePipe
+  ]
 })
 export class RoutesMenuComponent implements OnInit, OnDestroy {
   @ViewChild('routesMenu')

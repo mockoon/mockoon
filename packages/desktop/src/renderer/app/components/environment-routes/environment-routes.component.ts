@@ -1,10 +1,16 @@
+import { AsyncPipe, NgClass, NgIf, NgStyle } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormGroup
+} from '@angular/forms';
 import {
   Environment,
   FileExtensionsWithTemplating,
@@ -28,7 +34,15 @@ import {
   StreamingMode,
   stringIncludesArrayItems
 } from '@mockoon/commons';
-import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbDropdown,
+  NgbDropdownButtonItem,
+  NgbDropdownItem,
+  NgbDropdownMenu,
+  NgbDropdownToggle,
+  NgbPopover,
+  NgbTooltip
+} from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject, combineLatest, from, merge } from 'rxjs';
 import {
   combineLatestWith,
@@ -41,7 +55,19 @@ import {
   tap
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
-import { DropdownMenuItem } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
+import {
+  DropdownMenuComponent,
+  DropdownMenuItem
+} from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
+import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
+import { FilterComponent } from 'src/renderer/app/components/filter/filter.component';
+import { HeadersListComponent } from 'src/renderer/app/components/headers-list/headers-list.component';
+import { RoutesMenuComponent } from 'src/renderer/app/components/menus/routes-menu/routes-menu.component';
+import { RouteCallbacksComponent } from 'src/renderer/app/components/route-callbacks/route-callbacks.component';
+import { RouteResponseRulesComponent } from 'src/renderer/app/components/route-response-rules/route-response-rules.component';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
+import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { statusCodeValidation } from 'src/renderer/app/constants/masks.constants';
 import {
@@ -49,6 +75,12 @@ import {
   defaultContentType
 } from 'src/renderer/app/constants/routes.constants';
 import { Texts } from 'src/renderer/app/constants/texts.constant';
+import { DraggableDirective } from 'src/renderer/app/directives/draggable.directive';
+import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directive';
+import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.directive';
+import { InputNumberDirective } from 'src/renderer/app/directives/input-number.directive';
+import { TourStepDirective } from 'src/renderer/app/directives/tour-step.directive';
+import { ValidPathDirective } from 'src/renderer/app/directives/valid-path.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { buildFullPath, textFilter } from 'src/renderer/app/libs/utils.lib';
 import {
@@ -72,7 +104,37 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
   templateUrl: './environment-routes.component.html',
   styleUrls: ['./environment-routes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgIf,
+    RoutesMenuComponent,
+    NgbPopover,
+    TourStepDirective,
+    FormsModule,
+    ReactiveFormsModule,
+    CustomSelectComponent,
+    ValidPathDirective,
+    FocusOnEventDirective,
+    NgbTooltip,
+    NgClass,
+    SvgComponent,
+    ToggleComponent,
+    InputNumberDirective,
+    NgbDropdown,
+    NgbDropdownToggle,
+    NgbDropdownMenu,
+    NgStyle,
+    FilterComponent,
+    NgbDropdownButtonItem,
+    NgbDropdownItem,
+    DraggableDirective,
+    DropzoneDirective,
+    EditorComponent,
+    DropdownMenuComponent,
+    HeadersListComponent,
+    RouteResponseRulesComponent,
+    RouteCallbacksComponent,
+    AsyncPipe
+  ]
 })
 export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;

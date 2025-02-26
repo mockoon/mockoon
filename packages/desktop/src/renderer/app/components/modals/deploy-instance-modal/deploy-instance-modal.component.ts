@@ -1,3 +1,4 @@
+import { AsyncPipe, NgClass, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,9 +7,15 @@ import {
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { DeployInstance, DeployInstanceVisibility, User } from '@mockoon/cloud';
 import { Environment } from '@mockoon/commons';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import {
   BehaviorSubject,
   catchError,
@@ -22,6 +29,8 @@ import {
   tap
 } from 'rxjs';
 import { Logger } from 'src/renderer/app/classes/logger';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
+import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { ToggleItems } from 'src/renderer/app/models/common.model';
 import { DeployService } from 'src/renderer/app/services/deploy.service';
@@ -34,7 +43,16 @@ import { Config } from 'src/renderer/config';
   selector: 'app-deploy-instance-modal',
   templateUrl: './deploy-instance-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgIf,
+    FormsModule,
+    ReactiveFormsModule,
+    SvgComponent,
+    NgbTooltip,
+    ToggleComponent,
+    NgClass,
+    AsyncPipe
+  ]
 })
 export class DeployInstanceModalComponent extends Logger implements OnInit {
   public taskInProgress$ = new BehaviorSubject<boolean>(false);

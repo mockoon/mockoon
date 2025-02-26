@@ -1,3 +1,4 @@
+import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,6 +9,8 @@ import {
   Output
 } from '@angular/core';
 import {
+  FormsModule,
+  ReactiveFormsModule,
   UntypedFormArray,
   UntypedFormBuilder,
   UntypedFormGroup
@@ -22,10 +25,16 @@ import {
   RouteResponse,
   RulesDisablingResponseModes
 } from '@mockoon/commons';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject } from 'rxjs';
 import { filter, takeUntil, tap } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
+import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
+import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import { Texts } from 'src/renderer/app/constants/texts.constant';
+import { DraggableDirective } from 'src/renderer/app/directives/draggable.directive';
+import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directive';
 import {
   DropdownItems,
   ToggleItems
@@ -39,7 +48,20 @@ import { Store } from 'src/renderer/app/stores/store';
   templateUrl: 'route-response-rules.component.html',
   styleUrls: ['./route-response-rules.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgIf,
+    FormsModule,
+    ReactiveFormsModule,
+    ToggleComponent,
+    NgFor,
+    DraggableDirective,
+    DropzoneDirective,
+    NgClass,
+    CustomSelectComponent,
+    NgbTooltip,
+    SvgComponent,
+    AsyncPipe
+  ]
 })
 export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   @Input()

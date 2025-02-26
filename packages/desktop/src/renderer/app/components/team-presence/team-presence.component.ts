@@ -1,5 +1,8 @@
+import { NgClass, NgStyle } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { SyncPresence, SyncUserPresence, User } from '@mockoon/cloud';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 
 /**
  * Display user presence bubbles.
@@ -14,7 +17,7 @@ import { SyncPresence, SyncUserPresence, User } from '@mockoon/cloud';
   templateUrl: './team-presence.component.html',
   styleUrls: ['./team-presence.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [NgbTooltip, NgStyle, SvgComponent, NgClass]
 })
 export class TeamPresenceComponent {
   @Input({ required: false })

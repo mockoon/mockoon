@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,6 +6,8 @@ import {
   Input,
   Output
 } from '@angular/core';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 
 /**
  * Heading and subheading can be passed through simple string inputs or
@@ -15,7 +18,7 @@ import {
   templateUrl: './title-separator.component.html',
   styleUrls: ['./title-separator.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [NgClass, NgbTooltip, SvgComponent]
 })
 export class TitleSeparatorComponent {
   @Input()

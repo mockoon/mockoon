@@ -1,17 +1,28 @@
+import { AsyncPipe, NgClass, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormGroup
+} from '@angular/forms';
 import {
   DataBucket,
   DataBucketDefault,
   ProcessedDatabucketWithoutValue
 } from '@mockoon/commons';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject, filter, map, merge, takeUntil, tap } from 'rxjs';
+import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
+import { DatabucketsMenuComponent } from 'src/renderer/app/components/menus/databuckets-menu/databuckets-menu.component';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
+import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { ServerService } from 'src/renderer/app/services/server.service';
@@ -23,7 +34,18 @@ import { Store } from 'src/renderer/app/stores/store';
   templateUrl: './environment-databuckets.component.html',
   styleUrls: ['./environment-databuckets.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    DatabucketsMenuComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    FocusOnEventDirective,
+    NgIf,
+    EditorComponent,
+    NgbTooltip,
+    NgClass,
+    SvgComponent,
+    AsyncPipe
+  ]
 })
 export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
   public hasDatabuckets$: Observable<boolean>;

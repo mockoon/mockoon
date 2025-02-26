@@ -1,13 +1,25 @@
+import { AsyncPipe, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormGroup
+} from '@angular/forms';
 import { Environment, EnvironmentDefault } from '@mockoon/commons';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject, merge } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
+import { TitleSeparatorComponent } from 'src/renderer/app/components/title-separator/title-separator.component';
+import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
+import { InputNumberDirective } from 'src/renderer/app/directives/input-number.directive';
+import { ValidPathDirective } from 'src/renderer/app/directives/valid-path.directive';
 import { ToggleItems } from 'src/renderer/app/models/common.model';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
@@ -17,7 +29,18 @@ import { Store } from 'src/renderer/app/stores/store';
   selector: 'app-environment-settings',
   templateUrl: './environment-settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgIf,
+    FormsModule,
+    ReactiveFormsModule,
+    TitleSeparatorComponent,
+    InputNumberDirective,
+    ValidPathDirective,
+    SvgComponent,
+    NgbTooltip,
+    ToggleComponent,
+    AsyncPipe
+  ]
 })
 export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;

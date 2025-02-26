@@ -1,14 +1,25 @@
+import { AsyncPipe, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormGroup
+} from '@angular/forms';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject, merge } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
+import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
+import { TitleSeparatorComponent } from 'src/renderer/app/components/title-separator/title-separator.component';
 import { FakerLocales } from 'src/renderer/app/constants/faker.constants';
 import { SettingsDefault } from 'src/renderer/app/constants/settings-schema.constants';
+import { InputNumberDirective } from 'src/renderer/app/directives/input-number.directive';
 import { DropdownItems } from 'src/renderer/app/models/common.model';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -21,7 +32,17 @@ import { FileWatcherOptions, Settings } from 'src/shared/models/settings.model';
   templateUrl: './settings-modal.component.html',
   styleUrls: ['settings-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgIf,
+    FormsModule,
+    ReactiveFormsModule,
+    TitleSeparatorComponent,
+    SvgComponent,
+    NgbTooltip,
+    InputNumberDirective,
+    CustomSelectComponent,
+    AsyncPipe
+  ]
 })
 export class SettingsModalComponent implements OnInit, OnDestroy {
   public settings$: Observable<Settings>;

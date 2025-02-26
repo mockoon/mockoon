@@ -1,5 +1,10 @@
+import { AsyncPipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbDropdown,
+  NgbDropdownMenu,
+  NgbDropdownToggle
+} from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
@@ -38,7 +43,14 @@ export type DropdownMenuElement = DropdownMenuItem | DropdownMenuSeparator;
   selector: 'app-dropdown-menu',
   templateUrl: './dropdown-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false
+  imports: [
+    NgbDropdown,
+    NgbDropdownToggle,
+    NgClass,
+    SvgComponent,
+    NgbDropdownMenu,
+    AsyncPipe
+  ]
 })
 export class DropdownMenuComponent {
   public readonly items = input.required<DropdownMenuElement[]>();

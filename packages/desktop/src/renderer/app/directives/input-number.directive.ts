@@ -19,8 +19,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       useExisting: forwardRef(() => InputNumberDirective),
       multi: true
     }
-  ],
-  standalone: false
+  ]
 })
 export class InputNumberDirective implements ControlValueAccessor {
   @Input('appInputNumber')

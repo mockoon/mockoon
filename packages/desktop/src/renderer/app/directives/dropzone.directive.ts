@@ -15,10 +15,7 @@ import { DragService } from 'src/renderer/app/services/drag.service';
 /**
  * Directive to make an element droppable
  */
-@Directive({
-  selector: '[appDropzone]',
-  standalone: false
-})
+@Directive({ selector: '[appDropzone]' })
 export class DropzoneDirective implements OnInit, OnDestroy {
   // arbitrary name of the dragged element's container (avoid drag and drop between different containers)
   @Input()
