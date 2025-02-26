@@ -1,45 +1,35 @@
-<ng-container
-  *ngIf="{
-    focusedItemIndex: focusedItemIndex$ | async,
-    commands: commands$ | async
-  } as data"
->
-  <div class="input-group p-2">
-    <span class="input-group-text">
-      <app-svg icon="command_palette"></app-svg>
-    </span>
-    <input
-      type="text"
-      class="form-control"
-      [appFocusOnEvent]="focusableInputs.DATABUCKET_NAME"
-      [formControl]="searchControl"
-      (keydown.enter)="onCommandActivate($event)"
-    />
-  </div>
-  <div
-    class="list-group list-group-flush overflow-y-scroll command-list"
-    role="listbox"
-  >
-    <ng-container *ngIf="data.commands?.length !== 0; else noResult">
-      <ng-container
-        *ngFor="let command of data.commands; index as commandIndex"
-      >
-        <button
-          #commandElement
-          role="option"
-          type="button"
-          class="list-group-item list-group-item-action py-2 d-flex"
-          [ngClass]="{ active: commandIndex === data.focusedItemIndex }"
-          (click)="onCommandActivate($event, command.id)"
-        >
-          <span [innerHTML]="command.labelDelimited || command.label"></span
-          ><span class="ms-auto" [innerHTML]="command.shortcut$ | async"></span>
-        </button>
-      </ng-container>
-    </ng-container>
-  </div>
-</ng-container>
+@let focusedItemIndex = focusedItemIndex$ | async;
+@let commands = commands$ | async;
+<div class="input-group p-2">
+  <span class="input-group-text">
+    <app-svg icon="command_palette"></app-svg>
+  </span>
 
-<ng-template #noResult>
-  <div class="list-group-item message message-md">No matching results</div>
-</ng-template>
+  <input
+    type="text"
+    class="form-control"
+    [appFocusOnEvent]="focusableInputs.DATABUCKET_NAME"
+    [formControl]="searchControl"
+    (keydown.enter)="onCommandActivate($event)"
+  />
+</div>
+<div
+  class="list-group list-group-flush overflow-y-scroll command-list"
+  role="listbox"
+>
+  @for (command of commands; track command.id; let commandIndex = $index) {
+    <button
+      #commandElement
+      role="option"
+      type="button"
+      class="list-group-item list-group-item-action py-2 d-flex"
+      [ngClass]="{ active: commandIndex === focusedItemIndex }"
+      (click)="onCommandActivate($event, command)"
+    >
+      <span [innerHTML]="command.labelDelimited || command.label"></span>
+      <span class="ms-auto" [innerHTML]="command.shortcut$ | async"></span>
+    </button>
+  } @empty {
+    <div class="list-group-item message message-md">No matching results</div>
+  }
+</div>

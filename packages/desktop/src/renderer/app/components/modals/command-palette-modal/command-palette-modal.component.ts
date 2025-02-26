@@ -25,7 +25,10 @@ import {
   tap
 } from 'rxjs';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
-import { Commands } from 'src/renderer/app/models/command-palette.model';
+import {
+  Command,
+  Commands
+} from 'src/renderer/app/models/command-palette.model';
 import { CommandPaletteService } from 'src/renderer/app/services/command-palette.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -134,14 +137,15 @@ export class CommandPaletteModalComponent implements OnInit, OnDestroy {
     this.destroy$.unsubscribe();
   }
 
-  public onCommandActivate(event: Event, commandId?: string) {
+  public onCommandActivate(event: Event, command?: Command) {
     // ensure that the enter key does not select entries in other modals (e.g. duplicate to env)
     event.preventDefault();
 
-    if (!commandId) {
-      commandId = this.commands[this.focusedItemIndex$.getValue()].id;
+    if (!command) {
+      command = this.commands[this.focusedItemIndex$.getValue()];
     }
 
-    this.commandPaletteService.executeCommand(commandId);
+    command.action();
+    this.uiService.closeModal('commandPalette');
   }
 }
