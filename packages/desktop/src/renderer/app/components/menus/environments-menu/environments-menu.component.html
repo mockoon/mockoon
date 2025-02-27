@@ -247,7 +247,7 @@
               <div
                 class="nav-link-subtitle mt-1 d-flex align-items-center svg-text-align"
               >
-                @if (instances[environment.uuid]) {
+                @if (!isWeb && instances[environment.uuid]) {
                   <app-svg
                     class="me-2"
                     [ngClass]="{

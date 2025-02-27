@@ -269,6 +269,13 @@ export class DeployService extends Logger {
         );
 
         this.store.update(
+          updateEnvironmentStatusAction(
+            { running: false, needRestart: false, redeploying: false },
+            environmentUuid
+          )
+        );
+
+        this.store.update(
           updateUserAction({
             deployInstancesQuotaUsed:
               this.store.get('user').deployInstancesQuotaUsed - 1
