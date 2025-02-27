@@ -140,6 +140,7 @@ import {
 import { ReducerDirectionType } from 'src/renderer/app/stores/reducer';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
+import { environment as env } from 'src/renderer/environments/environment';
 import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 
 @Injectable({
@@ -184,24 +185,30 @@ export class EnvironmentsService extends Logger {
     ]).pipe(
       switchMap(([settings, demoFilePath]) => {
         if (!settings.environments.length && !settings.welcomeShown) {
-          this.logMessage('info', 'FIRST_LOAD_DEMO_ENVIRONMENT');
+          if (env.web) {
+            return of({
+              settings,
+              environmentsData: []
+            });
+          } else {
+            this.logMessage('info', 'FIRST_LOAD_DEMO_ENVIRONMENT');
+            const defaultEnvironment = BuildDemoEnvironment();
 
-          const defaultEnvironment = BuildDemoEnvironment();
-
-          return of({
-            settings,
-            environmentsData: [
-              {
-                environment: defaultEnvironment,
-                environmentDescriptor: {
-                  uuid: defaultEnvironment.uuid,
-                  path: demoFilePath,
-                  cloud: false,
-                  lastServerHash: null
-                } as EnvironmentDescriptor
-              }
-            ]
-          });
+            return of({
+              settings,
+              environmentsData: [
+                {
+                  environment: defaultEnvironment,
+                  environmentDescriptor: {
+                    uuid: defaultEnvironment.uuid,
+                    path: demoFilePath,
+                    cloud: false,
+                    lastServerHash: null
+                  } as EnvironmentDescriptor
+                }
+              ]
+            });
+          }
         }
 
         return forkJoin(
@@ -858,9 +865,13 @@ export class EnvironmentsService extends Logger {
 
     return this.uiService
       .showConfirmDialog({
-        title: 'Delete from the cloud',
-        text: 'This will delete the environment from the cloud and convert it to a local environment on all other clients. Are you sure?',
-        sub: `<span class="text-break-all">Your local copy located in <strong>${environmentDescriptor.path}</strong> will not be deleted.</span>`,
+        title: env.web ? 'Delete' : 'Delete from the cloud',
+        text: env.web
+          ? 'This will permanently delete the environment. Are you sure? This action cannot be undone.'
+          : 'This will permanently delete the environment from the cloud and convert it to a local environment on all other clients. Are you sure?',
+        sub: env.web
+          ? 'Any running instance of this environment will continue to run until stopped.'
+          : `<span class="text-break-all">Your local copy located in <strong>${environmentDescriptor.path}</strong> will not be deleted.</span>`,
         subIcon: 'info',
         confirmButtonText: 'Delete',
         cancelButtonText: 'Cancel'
@@ -868,10 +879,20 @@ export class EnvironmentsService extends Logger {
       .pipe(
         switchMap((confirmed) => {
           if (confirmed) {
-            this.store.update(convertEnvironmentToLocalAction(environmentUuid));
+            // in web version, completely delete the environment an do not convert to local
+            if (env.web) {
+              this.store.update(removeEnvironmentAction(environmentUuid));
+              MainAPI.invoke('APP_DELETE_ENVIRONMENT_DATA', environmentUuid);
 
-            // Close the environment too
-            return this.closeEnvironment(environmentUuid, true);
+              return of(true);
+            } else {
+              this.store.update(
+                convertEnvironmentToLocalAction(environmentUuid)
+              );
+
+              // Close the environment too
+              return this.closeEnvironment(environmentUuid, true);
+            }
           }
 
           return EMPTY;
@@ -880,11 +901,12 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
-   * Convert all the cloud environments to local ones based on the current cloud environments list
+   * Check the list of cloud environments and either delete on the client
+   * when using the web app, or convert to local when using the desktop app
    *
    * @param currentCloudEnvironmentUuids
    */
-  public convertAllToLocal(
+  public updateClientEnvironments(
     currentCloudEnvironmentUuids: EnvironmentsListPayload
   ) {
     const environmentDescriptors = this.store.get('settings').environments;
@@ -899,21 +921,39 @@ export class EnvironmentsService extends Logger {
         )
     );
 
-    // convert to local environments
     deletedCloudEnvironments.forEach((deletedCloudEnvironment) => {
-      this.store.update(
-        convertEnvironmentToLocalAction(deletedCloudEnvironment.uuid),
-        true,
-        false
-      );
-
       const environment = this.store.getEnvironmentByUUID(
         deletedCloudEnvironment.uuid
       );
-      this.logMessage('error', 'CLOUD_ENVIRONMENT_CONVERTED', {
-        name: environment.name,
-        uuid: environment.uuid
-      });
+
+      if (env.web) {
+        // permanently delete from the web app
+        this.store.update(
+          removeEnvironmentAction(deletedCloudEnvironment.uuid)
+        );
+
+        MainAPI.invoke(
+          'APP_DELETE_ENVIRONMENT_DATA',
+          deletedCloudEnvironment.uuid
+        );
+
+        this.logMessage('error', 'CLOUD_ENVIRONMENT_DELETED', {
+          name: environment.name,
+          uuid: environment.uuid
+        });
+      } else {
+        // convert to local environments on desktop
+        this.store.update(
+          convertEnvironmentToLocalAction(deletedCloudEnvironment.uuid),
+          true,
+          false
+        );
+
+        this.logMessage('error', 'CLOUD_ENVIRONMENT_CONVERTED', {
+          name: environment.name,
+          uuid: environment.uuid
+        });
+      }
     });
   }
 

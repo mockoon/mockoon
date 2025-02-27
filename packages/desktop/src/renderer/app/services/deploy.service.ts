@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { DeployInstance, Plans } from '@mockoon/cloud';
 import {
   EMPTY,
+  Observable,
   catchError,
   filter,
   first,
@@ -18,6 +19,7 @@ import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import {
   updateDeployInstancesAction,
+  updateEnvironmentStatusAction,
   updateUserAction
 } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
@@ -183,6 +185,16 @@ export class DeployService extends Logger {
           );
 
           this.store.update(
+            updateEnvironmentStatusAction(
+              {
+                needRestart: false,
+                redeploying: false
+              },
+              environmentUuid
+            )
+          );
+
+          this.store.update(
             updateUserAction({
               deployInstancesQuotaUsed:
                 this.store.get('user').deployInstancesQuotaUsed + 1
@@ -191,6 +203,35 @@ export class DeployService extends Logger {
         }
       })
     );
+  }
+
+  /**
+   * Do a quick redeploy of an instance based on its previous configuration
+   *
+   * @param environmentUuid
+   * @returns
+   */
+  public quickRedeploy(environmentUuid: string): Observable<DeployInstance> {
+    this.store.update(
+      updateEnvironmentStatusAction({ redeploying: true }, environmentUuid)
+    );
+    const instances = this.store.get('deployInstances');
+    const existingInstance = instances.find(
+      (instance) => instance.environmentUuid === environmentUuid
+    );
+
+    if (!existingInstance) {
+      return EMPTY;
+    }
+
+    return this.deploy(
+      environmentUuid,
+      {
+        subdomain: existingInstance.subdomain,
+        visibility: existingInstance.visibility
+      },
+      true
+    ).pipe(tap());
   }
 
   /**

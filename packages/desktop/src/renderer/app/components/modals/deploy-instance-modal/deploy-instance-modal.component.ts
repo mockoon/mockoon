@@ -37,6 +37,7 @@ import { ToggleItems } from 'src/renderer/app/models/common.model';
 import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
+import { updateEnvironmentStatusAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
@@ -210,6 +211,9 @@ export class DeployInstanceModalComponent extends Logger implements OnInit {
           this.taskInProgress$.next(false);
 
           if (newInstance) {
+            this.store.update(
+              updateEnvironmentStatusAction({ running: true }, environmentUuid)
+            );
             this.uiService.closeModal('deploy', false);
             this.uiService.openModal('manageInstances', {
               environmentUuid,

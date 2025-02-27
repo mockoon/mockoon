@@ -2,7 +2,7 @@ import { AppEnvironment } from 'src/renderer/app/models/app-environment.model';
 
 export const environment: AppEnvironment = {
   production: true,
-  web: false,
+  web: true,
   remoteConfig: 'prod',
   useFirebaseEmulator: false,
   ci: false,

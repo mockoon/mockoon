@@ -68,6 +68,25 @@
             "browser": "src/renderer/main.ts"
           },
           "configurations": {
+            "production-web": {
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                }
+              },
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/renderer/environments/environment.ts",
+                  "with": "src/renderer/environments/environment.prod-web.ts"
+                }
+              ]
+            },
             "production": {
               "optimization": {
                 "scripts": true,
@@ -105,6 +124,14 @@
                 {
                   "replace": "src/renderer/environments/environment.ts",
                   "with": "src/renderer/environments/environment.dev.ts"
+                }
+              ]
+            },
+            "development-web": {
+              "fileReplacements": [
+                {
+                  "replace": "src/renderer/environments/environment.ts",
+                  "with": "src/renderer/environments/environment.dev-web.ts"
                 }
               ]
             }

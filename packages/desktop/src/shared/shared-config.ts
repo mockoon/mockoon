@@ -35,6 +35,7 @@ export const SharedConfig = (options: {
       rules: docsURL + 'route-responses/multiple-responses/',
       hostname: docsURL + 'server-configuration/listening-hostname/',
       faq: options.websiteURL + 'faq/',
+      cloudOverview: docsURL + 'mockoon-cloud/overview/',
       cloudSync:
         docsURL + 'mockoon-cloud/data-synchronization-team-collaboration/',
       cloudSyncOffline:

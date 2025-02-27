@@ -10,9 +10,11 @@ import {
 } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
+import { environment as env } from 'src/renderer/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class TourService {
+  public isWeb = env.web;
   public steps$ = new Subject<{
     data: TourStep;
     current: number;
@@ -21,23 +23,41 @@ export class TourService {
   public currentHostElement$ = new Subject<HTMLElement>();
   private currentStep = -1;
   private steps: TourStep[] = [
-    {
-      id: 'tour-environments-menu',
-      title: 'Environments list',
-      content:
-        'This is the list of your <strong>environments or mock APIs</strong>. Each local environment is a separate file on your computer and runs on a different localhost port (e.g. <code>http://localhost:3000</code>).<br/>You can also create <strong>cloud environments</strong> by subscribing to Mockoon Cloud.',
-      placement: 'right',
-      links: [
-        {
-          url: 'https://mockoon.com/docs/latest/mockoon-data-files/data-files-location/',
-          text: 'Local environments documentation'
-        },
-        {
-          url: Config.docs.cloudSync,
-          text: 'Cloud environments documentation'
-        }
-      ]
-    },
+    ...(this.isWeb
+      ? [
+          {
+            id: 'tour-environments-menu',
+            title: 'Mock APIs list',
+            content:
+              'This is the list of your <strong>mock APIs</strong> also called "environments". Each environment is running in our cloud and has a unique URL (e.g. <code>https://mock-1234.mockoon.app</code>). Your mock APIs are shared with your team and can be stopped or started at any time.',
+            placement: 'right',
+            links: [
+              {
+                url: Config.docs.cloudOverview,
+                text: 'Cloud documentation'
+              }
+            ]
+          } as TourStep
+        ]
+      : [
+          {
+            id: 'tour-environments-menu',
+            title: 'Environments list',
+            content:
+              'This is the list of your <strong>environments or mock APIs</strong>. Each local environment is a separate file on your computer and runs on a different localhost port (e.g. <code>http://localhost:3000</code>).<br/>You can also create <strong>cloud environments</strong> by subscribing to Mockoon Cloud.',
+            placement: 'right',
+            links: [
+              {
+                url: 'https://mockoon.com/docs/latest/mockoon-data-files/data-files-location/',
+                text: 'Local environments documentation'
+              },
+              {
+                url: Config.docs.cloudSync,
+                text: 'Cloud environments documentation'
+              }
+            ]
+          } as TourStep
+        ]),
     {
       id: 'tour-routes-menu',
       title: 'Routes list',
@@ -129,14 +149,28 @@ export class TourService {
         }
       ]
     },
-    {
-      id: 'tour-environment-start',
-      title: 'Run your environment',
-      content:
-        'After you configured your environment, you can start it, and it will <strong>run on your local machine</strong>. <br/>You can also run your mock API on your <strong>server or CI environment</strong> using our CLI or Docker image.',
-      placement: 'bottom-left',
-      links: [{ url: 'https://mockoon.com/cli/', text: 'Discover the CLI' }]
-    },
+    ...(this.isWeb
+      ? [
+          {
+            id: 'tour-environment-start',
+            title: 'Run your mock API',
+            content:
+              'After you configured your mock API, you can deploy it, and it will <strong>run in our cloud</strong>. Most of the changes you make to your mock API endpoints are <strong>instantly live</strong>, while some require a <strong>redeploy</strong> (i.e., changing the route paths, enabling the proxy mode, etc.).',
+            placement: 'bottom-left'
+          } as TourStep
+        ]
+      : [
+          {
+            id: 'tour-environment-start',
+            title: 'Run your environment',
+            content:
+              'After you configured your environment, you can start it, and it will <strong>run on your local machine</strong>. <br/>You can also run your mock API on your <strong>server or CI environment</strong> using our CLI or Docker image.',
+            placement: 'bottom-left',
+            links: [
+              { url: 'https://mockoon.com/cli/', text: 'Discover the CLI' }
+            ]
+          } as TourStep
+        ]),
     {
       id: 'tour-environment-logs',
       title: 'View your environment logs',

@@ -17,6 +17,16 @@
   border-radius: 20px;
 }
 
+/* Prevent autofill styles, only possible by delaying their appearance https://stackoverflow.com/a/69364368/4287789 */
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+input:-webkit-autofill:hover {
+  transition:
+    background-color 0s 600000s,
+    color 0s 600000s !important;
+}
+
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;

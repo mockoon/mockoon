@@ -33,6 +33,9 @@ export class SvgComponent {
   public size = '16';
   @Input()
   public icon:
+    | 'login'
+    | 'logout'
+    | 'server_settings' // custom icon (dns + cog)
     | 'key' // vpn_key
     | 'misc'
     | 'list'

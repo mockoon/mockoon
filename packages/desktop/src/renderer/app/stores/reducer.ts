@@ -95,7 +95,22 @@ export const environmentReducer = (
     case ActionTypes.UPDATE_DEPLOY_INSTANCES: {
       newState = {
         ...state,
-        deployInstances: [...action.instances]
+        deployInstances: [...action.instances],
+        environmentsStatus: {
+          ...state.environmentsStatus,
+          ...action.instances.reduce<EnvironmentsStatuses>(
+            (instances, instance) => {
+              instances[instance.environmentUuid] = {
+                running: true,
+                needRestart: false,
+                redeploying: false
+              };
+
+              return instances;
+            },
+            {}
+          )
+        }
       };
       break;
     }
@@ -521,7 +536,8 @@ export const environmentReducer = (
           ...state.environmentsStatus,
           [newEnvironment.uuid]: {
             running: false,
-            needRestart: false
+            needRestart: false,
+            redeploying: false
           }
         },
         environmentsLogs: {
@@ -548,16 +564,16 @@ export const environmentReducer = (
 
     case ActionTypes.REMOVE_ENVIRONMENT: {
       const newEnvironments = state.environments.filter(
-        (environment) => environment.uuid !== action.environmentUUID
+        (environment) => environment.uuid !== action.environmentUuid
       );
       const newEnvironmentsStatus = { ...state.environmentsStatus };
-      delete newEnvironmentsStatus[action.environmentUUID];
+      delete newEnvironmentsStatus[action.environmentUuid];
       const newEnvironmentsLogs = { ...state.environmentsLogs };
-      delete newEnvironmentsLogs[action.environmentUUID];
+      delete newEnvironmentsLogs[action.environmentUuid];
       const newActiveEnvironmentLogsUUID = {
         ...state.activeEnvironmentLogsUUID
       };
-      delete newActiveEnvironmentLogsUUID[action.environmentUUID];
+      delete newActiveEnvironmentLogsUUID[action.environmentUuid];
 
       newState = {
         ...state,
@@ -577,12 +593,12 @@ export const environmentReducer = (
         settings: {
           ...state.settings,
           environments: state.settings.environments.filter(
-            (environment) => environment.uuid !== action.environmentUUID
+            (environment) => environment.uuid !== action.environmentUuid
           )
         }
       };
 
-      if (state.activeEnvironmentUUID === action.environmentUUID) {
+      if (state.activeEnvironmentUUID === action.environmentUuid) {
         if (newEnvironments.length) {
           const {
             routeUUID: activeRouteUUID,

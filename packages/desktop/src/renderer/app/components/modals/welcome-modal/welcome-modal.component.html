@@ -3,18 +3,22 @@
 </div>
 <div class="modal-body">
   <p>
-    Thank you for installing Mockoon. We hope you will enjoy using it as much as
-    we enjoyed building it. If you have any questions, please refer to the
+    Thank you for {{ isWeb ? 'using' : 'installing' }} Mockoon. We hope you will
+    enjoy using it as much as we enjoyed building it. If you have any questions,
+    please refer to the
     <a href="https://mockoon.com/docs/latest/about/" target="_blank"
       >documentation</a
     >
     or <a href="https://mockoon.com/contact/" target="_blank">contact us</a>.
   </p>
-  <p>
-    While you're here, Mockoon is a free and open-source project built by dozens
-    of contributors. If you find it valuable, please consider
-    <a href="https://mockoon.com/sponsor-us/" target="_blank">supporting us</a>!
-  </p>
+  @if (!isWeb) {
+    <p>
+      While you're here, Mockoon is a free and open-source project built by
+      dozens of contributors. If you find it valuable, please consider
+      <a href="https://mockoon.com/sponsor-us/" target="_blank">supporting us</a
+      >!
+    </p>
+  }
 </div>
 <div class="modal-footer">
   <button

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { TourService } from 'src/renderer/app/services/tour.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
+import { environment as env } from 'src/renderer/environments/environment';
 
 @Component({
   selector: 'app-welcome-modal',
@@ -9,6 +10,8 @@ import { UIService } from 'src/renderer/app/services/ui.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WelcomeModalComponent {
+  public isWeb = env.web;
+
   constructor(
     private settingsService: SettingsService,
     private uiservice: UIService,

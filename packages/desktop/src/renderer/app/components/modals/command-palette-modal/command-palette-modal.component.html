@@ -30,7 +30,9 @@
         (click)="onCommandActivate($event, command)"
       >
         <span [innerHTML]="command.labelDelimited || command.label"></span>
-        <span class="ms-auto" [innerHTML]="command.shortcut$ | async"></span>
+        @if (!isWeb) {
+          <span class="ms-auto" [innerHTML]="command.shortcut$ | async"></span>
+        }
       </button>
     } @empty {
       <div class="list-group-item message message-md">No matching results</div>

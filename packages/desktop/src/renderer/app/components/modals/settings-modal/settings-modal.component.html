@@ -1,33 +1,34 @@
-<ng-container *ngIf="settings$ | async as settings">
-  <div class="modal-header">
-    <h4 class="modal-title">Settings</h4>
-  </div>
-  <div class="modal-body" [formGroup]="settingsForm">
-    <div>
-      <app-title-separator
-        heading="User interface"
-        [isFirst]="true"
-        icon="web_asset"
-      ></app-title-separator>
+<div class="modal-header">
+  <h4 class="modal-title">Settings</h4>
+</div>
 
-      <div class="ps-4">
-        <div class="mb-3">
-          <div class="form-check">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              id="settings-truncate-route-name"
-              formControlName="truncateRouteName"
-            />
-            <label class="form-check-label" for="settings-truncate-route-name"
-              >Truncate long paths in lists (environments, routes, logs,
-              etc.)</label
-            >
-          </div>
+<div class="modal-body" [formGroup]="settingsForm">
+  <div>
+    <app-title-separator
+      heading="User interface"
+      [isFirst]="true"
+      icon="web_asset"
+    ></app-title-separator>
+
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="form-check">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="settings-truncate-route-name"
+            formControlName="truncateRouteName"
+          />
+          <label class="form-check-label" for="settings-truncate-route-name"
+            >Truncate long paths in lists (environments, routes, logs,
+            etc.)</label
+          >
         </div>
       </div>
     </div>
+  </div>
 
+  @if (!isWeb) {
     <app-title-separator
       heading="Environment variables"
       icon="list"
@@ -64,13 +65,15 @@
         </div>
       </div>
     </div>
+  }
 
-    <app-title-separator
-      heading="Environment logs"
-      icon="history"
-    ></app-title-separator>
+  <app-title-separator
+    heading="Environment logs"
+    icon="history"
+  ></app-title-separator>
 
-    <div class="ps-4">
+  <div class="ps-4">
+    @if (!isWeb) {
       <div class="mb-3">
         <div class="input-group align-items-center">
           <div class="form-check mb-0">
@@ -102,22 +105,25 @@
           </div>
         </div>
       </div>
-      <div class="mb-3">
-        <div class="input-group">
-          <label for="settings-log-max-count" class="col-form-label pe-2">
-            Maximum log entries displayed in the "Logs" tab (per environment)
-          </label>
-          <input
-            type="number"
-            class="form-control col-1"
-            id="settings-log-max-count"
-            [appInputNumber]="{ min: 1, max: Infinity, canBeEmpty: false }"
-            formControlName="maxLogsPerEnvironment"
-          />
-        </div>
+    }
+
+    <div class="mb-3">
+      <div class="input-group">
+        <label for="settings-log-max-count" class="col-form-label pe-2">
+          Maximum log entries displayed in the "Logs" tab (per environment)
+        </label>
+        <input
+          type="number"
+          class="form-control col-1"
+          id="settings-log-max-count"
+          [appInputNumber]="{ min: 1, max: Infinity, canBeEmpty: false }"
+          formControlName="maxLogsPerEnvironment"
+        />
       </div>
     </div>
+  </div>
 
+  @if (!isWeb) {
     <app-title-separator
       heading="Faker.js"
       subheading="Templating system supports Faker.js"
@@ -314,15 +320,11 @@
         </div>
       </div>
     </div>
-  </div>
+  }
+</div>
 
-  <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-secondary modal-close"
-      (click)="close()"
-    >
-      Close
-    </button>
-  </div>
-</ng-container>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary modal-close" (click)="close()">
+    Close
+  </button>
+</div>

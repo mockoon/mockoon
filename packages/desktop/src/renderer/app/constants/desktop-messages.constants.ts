@@ -299,6 +299,13 @@ export const DesktopMessages: Record<
     toastType: 'success',
     showToast: true
   }),
+  CLOUD_ENVIRONMENT_DELETED: (messageParams) => ({
+    message: `Environment "${messageParams.name}" was not present on the server and was deleted.`,
+    log: true,
+    logPayload: messageParams,
+    toastType: 'success',
+    showToast: true
+  }),
   CLOUD_SYNC_QUOTA_EXCEEDED: (messageParams) => ({
     message: `Your cloud account has exceeded its synchronization quota (${messageParams.quota}). Please upgrade your plan or delete environments to free up space.`,
     log: false,

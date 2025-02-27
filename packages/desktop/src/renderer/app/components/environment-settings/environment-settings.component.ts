@@ -20,10 +20,12 @@ import { TitleSeparatorComponent } from 'src/renderer/app/components/title-separ
 import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import { InputNumberDirective } from 'src/renderer/app/directives/input-number.directive';
 import { ValidPathDirective } from 'src/renderer/app/directives/valid-path.directive';
+import { buildApiUrl } from 'src/renderer/app/libs/utils.lib';
 import { ToggleItems } from 'src/renderer/app/models/common.model';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { Store } from 'src/renderer/app/stores/store';
+import { environment as env } from 'src/renderer/environments/environment';
 
 @Component({
   selector: 'app-environment-settings',
@@ -45,7 +47,9 @@ import { Store } from 'src/renderer/app/stores/store';
 export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;
   public activeEnvironmentForm: UntypedFormGroup;
+  public currentInstance$ = this.store.selectActiveEnvironmentInstance();
   public tlsOptionsFormGroup: UntypedFormGroup;
+  public buildApiUrl = buildApiUrl;
   public Infinity = Infinity;
   public certTypes: ToggleItems = [
     {
@@ -57,6 +61,7 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
       label: 'PFX'
     }
   ];
+  public isWeb = env.web;
   private destroy$ = new Subject<void>();
 
   constructor(

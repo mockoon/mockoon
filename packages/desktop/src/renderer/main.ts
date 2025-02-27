@@ -46,7 +46,6 @@ import { environment } from 'src/renderer/environments/environment';
 declare global {
   interface Window {
     api: MainAPIModel;
-    electronRequire: NodeRequire;
   }
 }
 

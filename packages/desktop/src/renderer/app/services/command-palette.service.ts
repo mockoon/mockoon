@@ -9,9 +9,11 @@ import {
   ScoreAndPositions
 } from 'src/renderer/app/models/command-palette.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { TourService } from 'src/renderer/app/services/tour.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { clearLogsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
+import { environment as env } from 'src/renderer/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class CommandPaletteService {
@@ -20,7 +22,8 @@ export class CommandPaletteService {
   constructor(
     private environmentsService: EnvironmentsService,
     private uiService: UIService,
-    private store: Store
+    private store: Store,
+    private tourService: TourService
   ) {}
 
   public filterEntries(search$: Observable<string>) {
@@ -299,6 +302,15 @@ export class CommandPaletteService {
 
     const commonCommands: Commands = [
       {
+        id: 'NEW_CLOUD_ENVIRONMENT',
+        label: 'Create a New Cloud Environment',
+        action: () => {
+          this.environmentsService.addCloudEnvironment(null, true).subscribe();
+        },
+        score: 1,
+        enabled: true
+      },
+      {
         id: 'VIEW_SELECT_PREVIOUS_ENVIRONMENT',
         label: 'Select Previous Environment',
         shortcut$: this.ctrlOrCmd$(['Up']),
@@ -432,56 +444,6 @@ export class CommandPaletteService {
         enabled: hasActiveEnvironment && hasActiveRoute
       },
       {
-        id: 'VIEW_ZOOM_IN',
-        label: 'Zoom in',
-        shortcut$: this.ctrlOrCmd$(['+']),
-        action: () => {
-          MainAPI.send('APP_ZOOM', 'IN');
-        },
-        score: 1,
-        enabled: true
-      },
-      {
-        id: 'VIEW_ZOOM_OUT',
-        label: 'Zoom out',
-        shortcut$: this.ctrlOrCmd$(['-']),
-        action: () => {
-          MainAPI.send('APP_ZOOM', 'OUT');
-        },
-        score: 1,
-        enabled: true
-      },
-      {
-        id: 'VIEW_ZOOM_RESET',
-        label: 'Reset zoom',
-        shortcut$: this.ctrlOrCmd$(['0']),
-        action: () => {
-          MainAPI.send('APP_ZOOM', 'RESET');
-        },
-        score: 1,
-        enabled: true
-      },
-      {
-        id: 'RUN_START_ENVIRONMENT_CURRENT',
-        label: 'Start/Stop/Reload Current Environment',
-        shortcut$: this.ctrlOrCmd$(['Shift', 'S']),
-        action: () => {
-          this.environmentsService.toggleEnvironment();
-        },
-        score: 1,
-        enabled: hasActiveEnvironment
-      },
-      {
-        id: 'RUN_START_ENVIRONMENT_ALL',
-        label: 'Start/Stop/Reload All Environments',
-        shortcut$: this.ctrlOrCmd$(['Shift', 'A']),
-        action: () => {
-          this.environmentsService.toggleAllEnvironments();
-        },
-        score: 1,
-        enabled: hasAtLeastOneEnvironment
-      },
-      {
         id: 'OPEN_SETTINGS',
         label: 'Open Application Settings',
         shortcut$: this.ctrlOrCmd$([',']),
@@ -490,103 +452,6 @@ export class CommandPaletteService {
         },
         score: 1,
         enabled: true
-      },
-      {
-        id: 'OPEN_APP_DATA_FOLDER',
-        label: 'Open Application Data Folder',
-        action: () => {
-          MainAPI.send('APP_SHOW_FOLDER', 'userData');
-        },
-        score: 1,
-        enabled: true
-      },
-      {
-        id: 'OPEN_LOGS_FOLDER',
-        label: 'Open Application Logs Folder',
-        action: () => {
-          MainAPI.send('APP_SHOW_FOLDER', 'logs');
-        },
-        score: 1,
-        enabled: true
-      },
-      {
-        id: 'NEW_ENVIRONMENT',
-        label: 'Create a New Local Environment',
-        shortcut$: this.ctrlOrCmd$(['N']),
-        action: () => {
-          this.environmentsService
-            .addEnvironment({ setActive: true })
-            .subscribe();
-        },
-        score: 1,
-        enabled: true
-      },
-      {
-        id: 'NEW_ENVIRONMENT_CLIPBOARD',
-        label: 'Create a New Local Environment From Clipboard',
-        action: () => {
-          this.environmentsService.newEnvironmentFromClipboard().subscribe();
-        },
-        score: 1,
-        enabled: true
-      },
-      {
-        id: 'OPEN_ENVIRONMENT',
-        label: 'Open Local Environment',
-        shortcut$: this.ctrlOrCmd$(['O']),
-        action: () => {
-          this.environmentsService.openEnvironment().subscribe();
-        },
-        score: 1,
-        enabled: true
-      },
-      {
-        id: 'DUPLICATE_ENVIRONMENT',
-        label: 'Duplicate Current Environment to Local',
-        shortcut$: this.ctrlOrCmd$(['D']),
-        action: () => {
-          this.environmentsService.duplicateEnvironment().subscribe();
-        },
-        score: 1,
-        enabled: hasActiveEnvironment
-      },
-      {
-        id: 'CLOSE_ENVIRONMENT',
-        label: 'Close Current Environment',
-        shortcut$: this.ctrlOrCmd$(['F4']),
-        action: () => {
-          this.environmentsService.closeEnvironment().subscribe();
-        },
-        score: 1,
-        enabled:
-          hasActiveEnvironment &&
-          environmentDescriptors.find(
-            (descriptor) =>
-              descriptor.uuid === activeEnvironment.uuid &&
-              descriptor.cloud === false
-          ) !== undefined
-      },
-      {
-        id: 'COPY_ENVIRONMENT_CLIPBOARD',
-        label: 'Copy Current Environment Configuration to Clipboard',
-        action: () => {
-          this.environmentsService.copyEnvironmentToClipboard(
-            activeEnvironmentUuid
-          );
-        },
-        score: 1,
-        enabled: hasActiveEnvironment
-      },
-      {
-        id: 'SHOW_ENVIRONMENT_FILE_EXPLORER',
-        label: 'Show Current Environment Data File in Explorer/Finder',
-        action: () => {
-          this.environmentsService.showEnvironmentFileInFolder(
-            activeEnvironmentUuid
-          );
-        },
-        score: 1,
-        enabled: hasActiveEnvironment
       },
       {
         id: 'CREATE_DATA_BUCKET',
@@ -728,15 +593,6 @@ export class CommandPaletteService {
         enabled: hasActiveEnvironment
       },
       {
-        id: 'COPY_ROUTE_CLIPBOARD',
-        label: 'Copy Current Route Configuration to Clipboard',
-        action: () => {
-          this.environmentsService.copyRouteToClipboard(activeRouteUuid);
-        },
-        score: 1,
-        enabled: hasActiveEnvironment
-      },
-      {
         id: 'COPY_ROUTE_FULL_PATH',
         label: 'Copy Current Route Full Path to Clipboard',
         action: () => {
@@ -760,15 +616,6 @@ export class CommandPaletteService {
         score: 1,
         enabled:
           hasActiveEnvironment && hasActiveRoute && hasMoreThanOneEnvironment
-      },
-      {
-        id: 'TOGGLE_ROUTE',
-        label: 'Toggle Current Route (Enable/Disable)',
-        action: () => {
-          this.environmentsService.toggleRoute(activeRouteUuid);
-        },
-        score: 1,
-        enabled: hasActiveEnvironment && hasActiveRoute
       },
       {
         id: 'CREATE_ROUTE_RESPONSE',
@@ -800,7 +647,6 @@ export class CommandPaletteService {
         score: 1,
         enabled: hasActiveEnvironment
       },
-
       {
         id: 'ENVIRONMENT_TOGGLE_PROXY',
         label: 'Toggle Proxy for Current Environment',
@@ -814,8 +660,197 @@ export class CommandPaletteService {
         },
         score: 1,
         enabled: hasActiveEnvironment
+      },
+      {
+        id: 'OPEN_CHANGELOG',
+        label: 'Open the Changelog',
+        action: () => {
+          this.uiService.openModal('changelog');
+        },
+        score: 1,
+        enabled: true
+      },
+      {
+        id: 'TOUR_START',
+        label: 'Take the tour',
+        action: () => {
+          this.tourService.start();
+        },
+        score: 1,
+        enabled: true
       }
     ];
+
+    if (!env.web) {
+      commonCommands.push(
+        {
+          id: 'VIEW_ZOOM_IN',
+          label: 'Zoom in',
+          shortcut$: this.ctrlOrCmd$(['+']),
+          action: () => {
+            MainAPI.send('APP_ZOOM', 'IN');
+          },
+          score: 1,
+          enabled: true
+        },
+        {
+          id: 'VIEW_ZOOM_OUT',
+          label: 'Zoom out',
+          shortcut$: this.ctrlOrCmd$(['-']),
+          action: () => {
+            MainAPI.send('APP_ZOOM', 'OUT');
+          },
+          score: 1,
+          enabled: true
+        },
+        {
+          id: 'VIEW_ZOOM_RESET',
+          label: 'Reset zoom',
+          shortcut$: this.ctrlOrCmd$(['0']),
+          action: () => {
+            MainAPI.send('APP_ZOOM', 'RESET');
+          },
+          score: 1,
+          enabled: true
+        },
+        {
+          id: 'RUN_START_ENVIRONMENT_CURRENT',
+          label: 'Start/Stop/Reload Current Environment',
+          shortcut$: this.ctrlOrCmd$(['Shift', 'S']),
+          action: () => {
+            this.environmentsService.toggleEnvironment();
+          },
+          score: 1,
+          enabled: hasActiveEnvironment
+        },
+        {
+          id: 'RUN_START_ENVIRONMENT_ALL',
+          label: 'Start/Stop/Reload All Environments',
+          shortcut$: this.ctrlOrCmd$(['Shift', 'A']),
+          action: () => {
+            this.environmentsService.toggleAllEnvironments();
+          },
+          score: 1,
+          enabled: hasAtLeastOneEnvironment
+        },
+        {
+          id: 'OPEN_APP_DATA_FOLDER',
+          label: 'Open Application Data Folder',
+          action: () => {
+            MainAPI.send('APP_SHOW_FOLDER', 'userData');
+          },
+          score: 1,
+          enabled: true
+        },
+        {
+          id: 'OPEN_LOGS_FOLDER',
+          label: 'Open Application Logs Folder',
+          action: () => {
+            MainAPI.send('APP_SHOW_FOLDER', 'logs');
+          },
+          score: 1,
+          enabled: true
+        },
+        {
+          id: 'NEW_ENVIRONMENT',
+          label: 'Create a New Local Environment',
+          shortcut$: this.ctrlOrCmd$(['N']),
+          action: () => {
+            this.environmentsService
+              .addEnvironment({ setActive: true })
+              .subscribe();
+          },
+          score: 1,
+          enabled: true
+        },
+        {
+          id: 'NEW_ENVIRONMENT_CLIPBOARD',
+          label: 'Create a New Local Environment From Clipboard',
+          action: () => {
+            this.environmentsService.newEnvironmentFromClipboard().subscribe();
+          },
+          score: 1,
+          enabled: true
+        },
+        {
+          id: 'OPEN_ENVIRONMENT',
+          label: 'Open Local Environment',
+          shortcut$: this.ctrlOrCmd$(['O']),
+          action: () => {
+            this.environmentsService.openEnvironment().subscribe();
+          },
+          score: 1,
+          enabled: true
+        },
+        {
+          id: 'DUPLICATE_ENVIRONMENT',
+          label: 'Duplicate Current Environment to Local',
+          shortcut$: this.ctrlOrCmd$(['D']),
+          action: () => {
+            this.environmentsService.duplicateEnvironment().subscribe();
+          },
+          score: 1,
+          enabled: hasActiveEnvironment
+        },
+        {
+          id: 'CLOSE_ENVIRONMENT',
+          label: 'Close Current Environment',
+          shortcut$: this.ctrlOrCmd$(['F4']),
+          action: () => {
+            this.environmentsService.closeEnvironment().subscribe();
+          },
+          score: 1,
+          enabled:
+            hasActiveEnvironment &&
+            environmentDescriptors.find(
+              (descriptor) =>
+                descriptor.uuid === activeEnvironment.uuid &&
+                descriptor.cloud === false
+            ) !== undefined
+        },
+        {
+          id: 'COPY_ENVIRONMENT_CLIPBOARD',
+          label: 'Copy Current Environment Configuration to Clipboard',
+          action: () => {
+            this.environmentsService.copyEnvironmentToClipboard(
+              activeEnvironmentUuid
+            );
+          },
+          score: 1,
+          enabled: hasActiveEnvironment
+        },
+        {
+          id: 'SHOW_ENVIRONMENT_FILE_EXPLORER',
+          label: 'Show Current Environment Data File in Explorer/Finder',
+          action: () => {
+            this.environmentsService.showEnvironmentFileInFolder(
+              activeEnvironmentUuid
+            );
+          },
+          score: 1,
+          enabled: hasActiveEnvironment
+        },
+        // toggling disabled in the web app as it is a local setting
+        {
+          id: 'TOGGLE_ROUTE',
+          label: 'Toggle Current Route (Enable/Disable)',
+          action: () => {
+            this.environmentsService.toggleRoute(activeRouteUuid);
+          },
+          score: 1,
+          enabled: hasActiveEnvironment && hasActiveRoute
+        },
+        {
+          id: 'COPY_ROUTE_CLIPBOARD',
+          label: 'Copy Current Route Configuration to Clipboard',
+          action: () => {
+            this.environmentsService.copyRouteToClipboard(activeRouteUuid);
+          },
+          score: 1,
+          enabled: hasActiveEnvironment
+        }
+      );
+    }
 
     const selectEnvironmentCommands: Commands = this.store
       .get('environments')

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { DeployInstance } from '@mockoon/cloud';
 import {
   Callback,
   DataBucket,
@@ -95,9 +96,9 @@ export class Store {
   /**
    * Select store element
    */
-  public select<T extends keyof StoreType>(path: T): Observable<StoreType[T]> {
+  public select<T extends keyof StoreType>(path?: T): Observable<StoreType[T]> {
     return this.store$.asObservable().pipe(
-      map((store) => store?.[path]),
+      map((store) => (path ? store?.[path] : store)),
       distinctUntilChanged()
     );
   }
@@ -159,6 +160,22 @@ export class Store {
             store.environmentsStatus[store.activeEnvironmentUUID]
         )
       );
+  }
+
+  /**
+   * Select active environment cloud instance
+   */
+  public selectActiveEnvironmentInstance(): Observable<DeployInstance> {
+    return this.store$.asObservable().pipe(
+      map(
+        (store: StoreType) =>
+          store.deployInstances.find(
+            (instance) =>
+              instance.environmentUuid === store.activeEnvironmentUUID
+          ) ?? null
+      ),
+      distinctUntilChanged()
+    );
   }
 
   /**

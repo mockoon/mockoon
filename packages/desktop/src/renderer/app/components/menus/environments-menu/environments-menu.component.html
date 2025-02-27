@@ -44,18 +44,53 @@
         (dropped)="reorganizeEnvironmentsCategories($event)"
       >
         <div class="d-flex align-items-center mw0">
-          <button
-            type="button"
-            class="btn btn-link btn-icon btn-sm p-0"
-            [ngClass]="category.iconClasses$ | async"
-            (click)="cloudReconnect()"
-          >
-            <app-svg
-              [icon]="category.icon$ | async"
-              [ngbTooltip]="category.iconTooltip$ | async"
-              class="pe-2"
-            ></app-svg>
-          </button>
+          @if (category.id === 'cloud') {
+            <button
+              type="button"
+              class="btn btn-link btn-icon btn-sm p-0"
+              [ngClass]="{
+                'text-danger':
+                  (!user || user.plan === 'FREE' || !sync.status) &&
+                  environments.cloud.length > 0,
+                'text-warning':
+                  (!user || user.plan === 'FREE' || !sync.status) &&
+                  environments.cloud.length === 0,
+                'cursor-pointer': !user || user.plan === 'FREE' || !sync.status,
+                'cursor-default': user && user.plan !== 'FREE' && sync.status
+              }"
+              (click)="cloudReconnect()"
+            >
+              <ng-template #clouIconTooltip>
+                @if (!sync.status) {
+                  @if (sync.offlineReason) {
+                    Disconnected: {{ offlineReasonsLabels[sync.offlineReason] }}
+                  } @else if (!user) {
+                    Disconnected: not logged in
+                  } @else if (user.plan === 'FREE') {
+                    Disconnected: free plan
+                  } @else {
+                    Disconnected: please check your internet connection and your
+                    credentials. Click to try to reconnect.
+                  }
+                } @else {
+                  Connected: quota {{ environments.cloud.length }}/{{
+                    user?.cloudSyncItemsQuota
+                  }}
+                }
+              </ng-template>
+              <app-svg
+                [icon]="
+                  user && user.plan !== 'FREE' && sync.status
+                    ? 'cloud'
+                    : 'cloud_off'
+                "
+                [ngbTooltip]="category.id === 'cloud' ? clouIconTooltip : null"
+                class="pe-2"
+              ></app-svg>
+            </button>
+          } @else {
+            <app-svg icon="computer" class="pe-2"></app-svg>
+          }
           <div class="text-truncate">
             {{ category.label }}
             @if (category.id === 'cloud' && syncAlert) {
@@ -86,14 +121,26 @@
             </span>
           }
           @if (category.id === 'cloud') {
-            <app-dropdown-menu
-              idPrefix="cloud-environments-add"
-              icon="add_box"
-              [items]="cloudDropdownMenuItems"
-              [iconFaded]="true"
-              [noYPadding]="true"
-            >
-            </app-dropdown-menu>
+            @if (isWeb) {
+              <button
+                type="button"
+                class="btn btn-link btn-icon btn-sm"
+                ngbTooltip="Add cloud environment"
+                (click)="addCloudEnvironment()"
+                [disabled]="!sync?.status"
+              >
+                <app-svg icon="cloud_add"></app-svg>
+              </button>
+            } @else {
+              <app-dropdown-menu
+                idPrefix="cloud-environments-add"
+                icon="add_box"
+                [items]="cloudDropdownMenuItems"
+                [iconFaded]="true"
+                [noYPadding]="true"
+              >
+              </app-dropdown-menu>
+            }
           } @else if (category.id === 'local') {
             <app-dropdown-menu
               idPrefix="local-environments-add"
@@ -105,15 +152,17 @@
             >
             </app-dropdown-menu>
           }
-          <button
-            type="button"
-            class="btn btn-link btn-icon btn-sm"
-            (click)="collapseCategory(category.id, category.collapsed)"
-          >
-            <app-svg
-              [icon]="category.collapsed ? 'unfold_more' : 'unfold_less'"
-            ></app-svg>
-          </button>
+          @if (!isWeb) {
+            <button
+              type="button"
+              class="btn btn-link btn-icon btn-sm"
+              (click)="collapseCategory(category.id, category.collapsed)"
+            >
+              <app-svg
+                [icon]="category.collapsed ? 'unfold_more' : 'unfold_less'"
+              ></app-svg>
+            </button>
+          }
         </div>
       </div>
 
@@ -216,7 +265,8 @@
                     "
                   ></app-svg>
                 }
-                @if (environment.tlsOptions.enabled) {
+                <!-- No need to display TLS indicator on web -->
+                @if (environment.tlsOptions.enabled && !isWeb) {
                   <app-svg
                     class="text-warning me-2"
                     icon="lock"
@@ -240,11 +290,12 @@
                     ngbTooltip="Recording in progress"
                   ></app-svg>
                 }
-                <span class="text-truncate">
-                  {{ environment.hostname || 'localhost' }}:{{
-                    environment.port
-                  }}/{{ environment.endpointPrefix }}
-                </span>
+                <!-- display url on desktop or on web when instance is running -->
+                @if (!isWeb || instances[environment.uuid] !== undefined) {
+                  <span class="text-truncate">
+                    {{ buildApiUrl(environment, instances[environment.uuid]) }}
+                  </span>
+                }
               </div>
             </div>
             <div
