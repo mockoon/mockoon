@@ -20,7 +20,7 @@ What **we recommend before contributing**:
 - If you’re uncertain whether a feature fits Mockoon’s scope or if an issue is indeed a bug, [start a discussion first](https://github.com/mockoon/mockoon/discussions). This helps clarify ideas before creating an issue or working on a pull request.
 - If you’re planning to contribute a new feature, please open an issue to discuss it with the maintainers. This ensures alignment with the project’s goals and gives the community a chance to provide feedback.
 
-You can join our [Discord server](https://mockoon.com/discord/) to discuss your ideas, ask questions, or just chat with other Mockoon users and contributors. But support requests and new ideas should be discussed on the [GitHub Discussions](https://github.com/mockoon/mockoon/discussions) as they are more easily searchable.
+You can discuss all things related to Mockoon and ask for help on the [official community](https://github.com/mockoon/mockoon/discussions).
 
 What **we don't recommend**:
 
