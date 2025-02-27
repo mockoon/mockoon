@@ -73,8 +73,7 @@ export class DeployInstanceModalComponent extends Logger implements OnInit {
     visibility: this.formBuilder.control<DeployInstanceVisibility>(
       DeployInstanceVisibility.PRIVATE,
       Validators.required
-    ),
-    enableAdminApi: this.formBuilder.control<boolean>(true)
+    )
   });
   public visibilityToggle: ToggleItems = [
     {
@@ -122,8 +121,7 @@ export class DeployInstanceModalComponent extends Logger implements OnInit {
         if (existingInstance) {
           this.optionsForm.patchValue({
             subdomain: existingInstance.subdomain,
-            visibility: existingInstance.visibility,
-            enableAdminApi: existingInstance.enableAdminApi
+            visibility: existingInstance.visibility
           });
         }
 

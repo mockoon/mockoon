@@ -72,29 +72,7 @@
           <div class="input-group-text">
             <app-svg
               icon="info"
-              ngbTooltip="Public instances are accessible by anyone with the URL. Private instances are only accessible by you and your team members using a token."
-            ></app-svg>
-          </div>
-        </div>
-      </div>
-
-      <div class="">
-        <div class="input-group align-items-center">
-          <div class="form-check">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              id="enableAdminApi"
-              formControlName="enableAdminApi"
-            />
-            <label class="form-check-label" for="enableAdminApi">
-              Enable admin API
-            </label>
-          </div>
-          <div class="input-group-text">
-            <app-svg
-              icon="info"
-              ngbTooltip="Enable the admin API exposed on /mockoon-admin endpoint. This API allows you to manage your mocks remotely."
+              ngbTooltip="Public instances are accessible by anyone with the URL. Private instances are only accessible using a token. The instance's admin API is always protected by a token."
             ></app-svg>
           </div>
         </div>

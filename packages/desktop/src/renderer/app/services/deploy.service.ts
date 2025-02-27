@@ -119,10 +119,7 @@ export class DeployService extends Logger {
    */
   public deploy(
     environmentUuid: string,
-    options: Pick<
-      DeployInstance,
-      'visibility' | 'subdomain' | 'enableAdminApi'
-    >,
+    options: Pick<DeployInstance, 'visibility' | 'subdomain'>,
     redeploy = false
   ) {
     const environment = this.store.getEnvironmentByUUID(environmentUuid);
