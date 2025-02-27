@@ -30,6 +30,7 @@
           <th scope="col">Environment name</th>
           <th scope="col">URL</th>
           <th scope="col">Visibility</th>
+          <th scope="col">API key</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -94,18 +95,17 @@
                   } @else {
                     <app-svg icon="lock" class="me-2"></app-svg>Private
                   }
-
-                  @if (instance.apiKey) {
-                    <button
-                      type="button"
-                      class="btn btn-sm btn-link btn-icon p-0 ms-2"
-                      ngbTooltip="Click to copy the API key. The API key must be used in the Authorization header to access the API."
-                      (click)="copyToClipboard(instance.apiKey)"
-                    >
-                      <app-svg icon="assignment"></app-svg>
-                    </button>
-                  }
                 </div>
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-link btn-icon p-0 ms-2"
+                  ngbTooltip="Click to copy the API key. The API key must be used in the Authorization header to access the API when private. The API key is always required to access the admin API."
+                  (click)="copyToClipboard(instance.apiKey)"
+                >
+                  <app-svg icon="key"></app-svg>
+                </button>
               </td>
               <td>
                 <app-dropdown-menu
@@ -121,7 +121,7 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="5" class="text-center text-muted">
+              <td colspan="6" class="text-center text-muted">
                 <div class="d-flex align-items-center justify-content-center">
                   <div class="me-2">No instances deployed.</div>
                   <app-dropdown-menu
@@ -139,7 +139,7 @@
           }
         } @else {
           <tr>
-            <td colspan="5" class="text-center text-muted">
+            <td colspan="6" class="text-center text-muted">
               <a [href]="cloudPlansURL" target="_blank"
                 >Subscribe to Mockoon Cloud</a
               >

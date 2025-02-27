@@ -52,7 +52,6 @@ import {
 } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { EditableElementComponent } from 'src/renderer/app/components/editable-element/editable-element.component';
 import { FilterComponent } from 'src/renderer/app/components/filter/filter.component';
-import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { DraggableDirective } from 'src/renderer/app/directives/draggable.directive';
@@ -111,8 +110,7 @@ type folderDropdownMenuPayload = { folder: Folder; folderUuid: string };
     DropdownMenuComponent,
     NgbTooltip,
     AsyncPipe,
-    UpperCasePipe,
-    SpinnerComponent
+    UpperCasePipe
   ]
 })
 export class RoutesMenuComponent implements OnInit, OnDestroy {
