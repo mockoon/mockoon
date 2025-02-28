@@ -40,7 +40,7 @@
     "build:dev:all": "npm run clean-dist && npm run build:dev:renderer && npm run build:dev:main",
     "build:ci:all": "npm run clean-dist && npm run build:ci:renderer && npm run build:ci:main",
     "build:prod:all": "npm run clean-dist && npm run build:prod:renderer && npm run build:prod:main",
-    "start:web": "http-server ./dist/renderer -p 3001 -a localhost",
+    "start:web": "http-server ./dist/renderer -p 3001 -P http://localhost:3001?",
     "start": "electron . --remote-debugging-port=8888 --data-folder=./tmp --enable-dev-tools",
     "start:2": "electron . --remote-debugging-port=8889 --data-folder=./tmp2 --enable-dev-tools",
     "start:3": "electron . --remote-debugging-port=8890 --data-folder=./tmp3 --enable-dev-tools",
