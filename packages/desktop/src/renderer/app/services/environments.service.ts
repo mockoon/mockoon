@@ -2235,6 +2235,55 @@ export class EnvironmentsService extends Logger {
   }
 
   /**
+   * Copy a log as cURL to the clipboard
+   *
+   * @param environmentUUID
+   * @param logUUID
+   */
+  public copyLogAsCurl(environmentUUID: string, logUUID: string) {
+    const environmentsLogs = this.store.get('environmentsLogs');
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const log = environmentsLogs[environmentUUID].find(
+      (environmentLog) => environmentLog.UUID === logUUID
+    );
+    const hostname = activeEnvironment.hostname || 'localhost';
+    const baseUrl = `${hostname}:${activeEnvironment.port}`;
+    const queryParams = log.request.query ? `?${log.request.query}` : '';
+    const command: string[] = ['curl', '--location'];
+
+    if (log.method === 'head') {
+      command.push('--head');
+    } else if (log.method !== 'get') {
+      command.push('--request', log.method.toUpperCase());
+    }
+
+    const url = `${log.protocol}://${baseUrl}${log.url}${queryParams}`;
+    command.push(`'${url.replace(/'/g, "'\\''")}'`);
+
+    for (const header of log.request.headers) {
+      // Skip content-length as curl will calculate it
+      if (header.key.toLowerCase() === 'content-length') {
+        continue;
+      }
+
+      command.push(
+        '--header',
+        `'${header.key}: ${header.value.replace(/'/g, "'\\''")}'`
+      );
+    }
+
+    if (log.request.bodyUnformatted) {
+      // Use --data-binary to preserve the exact body bytes
+      command.push(
+        '--data-binary',
+        `'${log.request.bodyUnformatted.replace(/'/g, "'\\''")}'`
+      );
+    }
+
+    MainAPI.send('APP_WRITE_CLIPBOARD', command.join(' '));
+  }
+
+  /**
    * Verify data is not too recent or is a mockoon file.
    * To be used in switchMap mostly.
    *
