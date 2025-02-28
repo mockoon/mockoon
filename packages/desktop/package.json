@@ -60,6 +60,7 @@
     "chokidar": "3.6.0",
     "electron-json-storage": "4.6.0",
     "electron-window-state": "5.0.3",
+    "extended-eventsource": "2.1.0",
     "mime-types": "2.1.35",
     "mkdirp": "3.0.1",
     "object-path": "0.11.8",

@@ -1,5 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Environment } from '@mockoon/commons';
+import { EventSource } from 'extended-eventsource';
 import {
   catchError,
   combineLatest,
@@ -61,10 +62,19 @@ export class ServerService extends Logger {
         switchMap(({ instance, environmentUuid }) =>
           new Observable((observer) => {
             const eventSource = new EventSource(
-              /* `http://localhost:59378/mockoon-admin/events` */ `${!env.production ? instance.url.replace('.app', '.appdev') : instance.url}/mockoon-admin/events`
+              /* `http://localhost:59378/mockoon-admin/events` */ `${!env.production ? instance.url.replace('.app', '.appdev') : instance.url}/mockoon-admin/events`,
+              {
+                headers: { Authorization: `Bearer ${instance.apiKey}` }
+              }
             );
-            eventSource.onmessage = (x) => observer.next(x.data);
-            eventSource.onerror = (x) => observer.error(x);
+
+            eventSource.onmessage = (event) => {
+              observer.next(event.data);
+            };
+
+            eventSource.onerror = (error) => {
+              observer.error(error);
+            };
 
             return () => {
               eventSource.close();
