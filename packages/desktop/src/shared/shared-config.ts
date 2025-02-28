@@ -42,7 +42,8 @@ export const SharedConfig = (options: {
         docsURL +
         'mockoon-cloud/data-synchronization-team-collaboration/#offline-editing'
     },
-    // should not be used directly. Instead use the flow methods in the user service
+    // URLs should not be used directly in desktop app (but there is a redirection for the web app in user service). Instead use the flow methods in the user service
+    appAuthURL: `${options.websiteURL}app-auth/`,
     loginURL: `${options.websiteURL}login/`,
     accountUrl: `${options.websiteURL}account/subscription/`,
     cloudPlansURL: `${options.websiteURL}cloud/`,

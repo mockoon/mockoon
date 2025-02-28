@@ -30,9 +30,11 @@ import {
 } from 'src/renderer/app/stores/actions';
 import { Store, storeDefaultState } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
+import { environment as env } from 'src/renderer/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class UserService extends Logger {
+  private isWeb = env.web;
   private auth: Auth = inject(Auth);
   private idToken$ = idToken(this.auth);
 
@@ -148,7 +150,8 @@ export class UserService extends Logger {
   /**
    * Process the token query param and authenticate the user.
    * If no token is present, check if a redirect to the login page is needed.
-   * Used in the web app
+   *
+   * Used in the web app (shouldn't be used in the desktop app)
    *
    * @returns
    */
@@ -165,6 +168,7 @@ export class UserService extends Logger {
         }),
         catchError(() => {
           this.logMessage('error', 'LOGIN_ERROR');
+          window.history.replaceState(null, '', window.location.pathname);
 
           return EMPTY;
         })
@@ -175,7 +179,7 @@ export class UserService extends Logger {
       take(1),
       tap((user) => {
         if (!user) {
-          window.location.href = `${Config.loginURL}?webapp=true`;
+          window.location.href = `${Config.appAuthURL}?webapp=true`;
         }
       })
     );
@@ -188,6 +192,10 @@ export class UserService extends Logger {
           updateDeployInstancesAction(storeDefaultState.deployInstances)
         );
         this.store.update(updateUserAction(storeDefaultState.user));
+
+        if (this.isWeb) {
+          window.location.href = Config.websiteURL;
+        }
       })
     );
   }
