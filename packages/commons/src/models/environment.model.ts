@@ -34,6 +34,8 @@ export type Callback = {
 export type EnvironmentTLSOptions = {
   // TLS enabled, old `https` flag
   enabled: boolean;
+  // clientAuth
+  requestCert: boolean;
   type: TLSOptionsType;
   // path to PFX or PKCS12 encoded private key and certificate
   pfxPath: string;

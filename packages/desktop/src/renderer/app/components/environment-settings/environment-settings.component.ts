@@ -107,7 +107,8 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
       certPath: [EnvironmentDefault.tlsOptions.certPath],
       keyPath: [EnvironmentDefault.tlsOptions.keyPath],
       caPath: [EnvironmentDefault.tlsOptions.caPath],
-      passphrase: [EnvironmentDefault.tlsOptions.passphrase]
+      passphrase: [EnvironmentDefault.tlsOptions.passphrase],
+      requestCert: [EnvironmentDefault.tlsOptions.requestCert]
     });
 
     this.activeEnvironmentForm = this.formBuilder.group({
