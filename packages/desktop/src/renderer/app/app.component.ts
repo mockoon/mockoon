@@ -102,7 +102,17 @@ export class AppComponent extends Logger implements OnInit {
     this.environmentsService.loadEnvironments().subscribe();
     this.environmentsService.saveEnvironments().subscribe();
     this.environmentsService.listenServerTransactions().subscribe();
-    this.serverService.init().subscribe();
+    this.appQuitService.init().subscribe();
+    this.remoteConfigService.init().subscribe();
+    this.userService.init().subscribe();
+    this.syncService.init().subscribe();
+    this.deployService.init().subscribe();
+    this.mainApiService.init();
+
+    if (environment.web) {
+      this.serverService.init().subscribe();
+      this.userService.authQueryParamHandler().subscribe();
+    }
   }
 
   @HostListener('document:click')
@@ -133,17 +143,6 @@ export class AppComponent extends Logger implements OnInit {
   }
 
   ngOnInit() {
-    this.appQuitService.init().subscribe();
-    this.remoteConfigService.init().subscribe();
-    this.userService.init().subscribe();
-    this.syncService.init().subscribe();
-    this.deployService.init().subscribe();
-    this.mainApiService.init();
-
-    if (environment.web) {
-      this.userService.authQueryParamHandler().subscribe();
-    }
-
     this.logMessage('info', 'INITIALIZING_APP');
 
     from(MainAPI.invoke('APP_GET_OS'))

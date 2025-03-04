@@ -1,5 +1,10 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Environment } from '@mockoon/commons';
+import {
+  Environment,
+  ProcessedDatabucketWithoutValue,
+  ServerEvents,
+  Transaction
+} from '@mockoon/commons';
 import { EventSource } from 'extended-eventsource';
 import {
   catchError,
@@ -43,62 +48,55 @@ export class ServerService extends Logger {
    * Listen to SSE coming from the currently active environment admin API
    */
   public init() {
-    if (env.web) {
-      return combineLatest([
-        this.store
-          .select('activeEnvironmentUUID')
-          .pipe(filter((uuid) => !!uuid)),
-        this.store
-          .select('deployInstances')
-          .pipe(filter((instances) => !!instances && instances.length > 0))
-      ]).pipe(
-        map(([environmentUuid, instances]) => ({
-          instance: instances.find(
-            (instance) => instance.environmentUuid === environmentUuid
-          ),
-          environmentUuid
-        })),
-        filter(({ instance }) => !!instance),
-        switchMap(({ instance, environmentUuid }) =>
-          new Observable((observer) => {
-            const eventSource = new EventSource(
-              /* `http://localhost:59378/mockoon-admin/events` */ `${!env.production ? instance.url.replace('.app', '.appdev') : instance.url}/mockoon-admin/events`,
-              {
-                headers: { Authorization: `Bearer ${instance.apiKey}` }
-              }
-            );
-
-            eventSource.onmessage = (event) => {
-              observer.next(event.data);
-            };
-
-            eventSource.onerror = (error) => {
-              observer.error(error);
-            };
-
-            return () => {
-              eventSource.close();
-            };
-          }).pipe(
-            map((data: string) => ({
-              transaction: JSON.parse(data).transaction,
-              environmentUuid
-            }))
-          )
+    return combineLatest([
+      this.store.select('activeEnvironmentUUID').pipe(filter((uuid) => !!uuid)),
+      this.store
+        .select('deployInstances')
+        .pipe(filter((instances) => !!instances && instances.length > 0))
+    ]).pipe(
+      map(([environmentUuid, instances]) => ({
+        instance: instances.find(
+          (instance) => instance.environmentUuid === environmentUuid
         ),
-        tap(({ transaction, environmentUuid }) => {
-          this.eventsService.serverTransaction$.next({
-            environmentUUID: environmentUuid,
-            transaction
-          });
-        }),
-        catchError(() => {
-          return EMPTY;
-        })
-      );
-    } else {
-      return EMPTY;
-    }
+        environmentUuid
+      })),
+      filter(({ instance }) => !!instance),
+      switchMap(({ instance, environmentUuid }) =>
+        new Observable((observer) => {
+          const eventSource = new EventSource(
+            `${!env.production ? instance.url.replace('.app', '.appdev') : instance.url}/mockoon-admin/events`,
+            {
+              headers: { Authorization: `Bearer ${instance.apiKey}` }
+            }
+          );
+
+          eventSource.onmessage = (event) => {
+            observer.next(event.data);
+          };
+
+          eventSource.onerror = (error) => {
+            observer.error(error);
+          };
+
+          return () => {
+            eventSource.close();
+          };
+        }).pipe(
+          tap((message: string) => {
+            const payload: {
+              event: keyof ServerEvents;
+              transaction?: Transaction;
+              dataBuckets?: ProcessedDatabucketWithoutValue[];
+            } = JSON.parse(message);
+
+            this.processEvent(environmentUuid, payload.event, payload);
+          })
+        )
+      ),
+      catchError(() => {
+        return EMPTY;
+      })
+    );
   }
 
   /**
@@ -143,97 +141,101 @@ export class ServerService extends Logger {
    */
   private addEventListener() {
     MainAPI.receive('APP_SERVER_EVENT', (environmentUuid, eventName, data) => {
-      const environment = this.store.getEnvironmentByUUID(environmentUuid);
-
-      if (!environment) {
-        return;
-      }
-
-      const loggerMessageParams: MessageParams = {
-        port: environment.port,
-        uuid: environment.uuid,
-        hostname: environment.hostname,
-        proxyHost: environment.proxyHost
-      };
-
-      switch (eventName) {
-        case 'started':
-          this.zone.run(() => {
-            this.store.update(
-              updateEnvironmentStatusAction(
-                { running: true, needRestart: false },
-                environment.uuid
-              )
-            );
-          });
-          break;
-
-        case 'stopped':
-          this.zone.run(() => {
-            this.store.update(
-              updateEnvironmentStatusAction(
-                {
-                  running: false,
-                  needRestart: false
-                },
-                environment.uuid
-              )
-            );
-
-            this.store.update(
-              updateProcessedDatabucketsAction(environmentUuid, null)
-            );
-          });
-          break;
-
-        case 'entering-request':
-          this.telemetryService.sendEvent();
-          break;
-
-        case 'ws-new-connection':
-          if (data.inflightRequest) {
-            this.zone.run(() => {
-              this.eventsService.serverTransaction$.next({
-                environmentUUID: environmentUuid,
-                inflightRequest: data.inflightRequest
-              });
-            });
-          }
-          break;
-
-        case 'transaction-complete':
-          if (data.transaction) {
-            this.zone.run(() => {
-              this.eventsService.serverTransaction$.next({
-                environmentUUID: environmentUuid,
-                transaction: data.transaction
-              });
-            });
-          }
-          break;
-
-        case 'data-bucket-processed':
-          if (data.dataBuckets) {
-            this.zone.run(() => {
-              this.store.update(
-                updateProcessedDatabucketsAction(
-                  environmentUuid,
-                  data.dataBuckets
-                )
-              );
-            });
-          }
-          break;
-
-        case 'error':
-          this.logMessage('error', data.errorCode, {
-            error: data.originalError,
-            ...loggerMessageParams
-          });
-          break;
-        default:
-          break;
-      }
+      this.processEvent(environmentUuid, eventName, data);
     });
+  }
+
+  private processEvent(environmentUuid: string, eventName: string, data: any) {
+    const environment = this.store.getEnvironmentByUUID(environmentUuid);
+
+    if (!environment) {
+      return;
+    }
+
+    const loggerMessageParams: MessageParams = {
+      port: environment.port,
+      uuid: environment.uuid,
+      hostname: environment.hostname,
+      proxyHost: environment.proxyHost
+    };
+
+    switch (eventName) {
+      case 'started':
+        this.zone.run(() => {
+          this.store.update(
+            updateEnvironmentStatusAction(
+              { running: true, needRestart: false },
+              environment.uuid
+            )
+          );
+        });
+        break;
+
+      case 'stopped':
+        this.zone.run(() => {
+          this.store.update(
+            updateEnvironmentStatusAction(
+              {
+                running: false,
+                needRestart: false
+              },
+              environment.uuid
+            )
+          );
+
+          this.store.update(
+            updateProcessedDatabucketsAction(environmentUuid, null)
+          );
+        });
+        break;
+
+      case 'entering-request':
+        this.telemetryService.sendEvent();
+        break;
+
+      case 'ws-new-connection':
+        if (data.inflightRequest) {
+          this.zone.run(() => {
+            this.eventsService.serverTransaction$.next({
+              environmentUUID: environmentUuid,
+              inflightRequest: data.inflightRequest
+            });
+          });
+        }
+        break;
+
+      case 'transaction-complete':
+        if (data.transaction) {
+          this.zone.run(() => {
+            this.eventsService.serverTransaction$.next({
+              environmentUUID: environmentUuid,
+              transaction: data.transaction
+            });
+          });
+        }
+        break;
+
+      case 'data-bucket-processed':
+        if (data.dataBuckets) {
+          this.zone.run(() => {
+            this.store.update(
+              updateProcessedDatabucketsAction(
+                environmentUuid,
+                data.dataBuckets
+              )
+            );
+          });
+        }
+        break;
+
+      case 'error':
+        this.logMessage('error', data.errorCode, {
+          error: data.originalError,
+          ...loggerMessageParams
+        });
+        break;
+      default:
+        break;
+    }
   }
 }
