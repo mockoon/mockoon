@@ -1,25 +1,23 @@
 import { Injectable } from '@angular/core';
 import { EMPTY, from } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { Logger } from 'src/renderer/app/classes/logger';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { DataService } from 'src/renderer/app/services/data.service';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
-import { ToastsService } from 'src/renderer/app/services/toasts.service';
+import { LoggerService } from 'src/renderer/app/services/logger-service';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { Store } from 'src/renderer/app/stores/store';
 
 @Injectable({ providedIn: 'root' })
-export class ImportExportService extends Logger {
+export class ImportExportService {
   constructor(
-    protected toastService: ToastsService,
     private store: Store,
     private dialogsService: DialogsService,
     private environmentsService: EnvironmentsService,
-    private dataService: DataService
-  ) {
-    super('[RENDERER][SERVICE][IMPORT-EXPORT] ', toastService);
-  }
+    private dataService: DataService,
+    private mainApiService: MainApiService,
+    private loggerService: LoggerService
+  ) {}
 
   /**
    * Import an OpenAPI (v2/v3) file in Mockoon's format.
@@ -32,7 +30,7 @@ export class ImportExportService extends Logger {
         switchMap((filePaths) => {
           if (filePaths) {
             return from(
-              MainAPI.invoke(
+              this.mainApiService.invoke(
                 'APP_OPENAPI_CONVERT_FROM',
                 filePaths[0],
                 this.dataService.getNewEnvironmentPort()
@@ -47,14 +45,18 @@ export class ImportExportService extends Logger {
             .addEnvironment({ environment, setActive: true })
             .pipe(
               tap(() => {
-                this.logMessage('info', 'OPENAPI_IMPORT_SUCCESS', {
-                  environmentName: environment.name
-                });
+                this.loggerService.logMessage(
+                  'info',
+                  'OPENAPI_IMPORT_SUCCESS',
+                  {
+                    environmentName: environment.name
+                  }
+                );
               })
             )
         ),
         catchError((error) => {
-          this.logMessage('error', 'OPENAPI_IMPORT_ERROR', {
+          this.loggerService.logMessage('error', 'OPENAPI_IMPORT_ERROR', {
             error
           });
 
@@ -79,7 +81,10 @@ export class ImportExportService extends Logger {
         switchMap((filePath) => {
           if (filePath) {
             return from(
-              MainAPI.invoke('APP_OPENAPI_CONVERT_TO', activeEnvironment)
+              this.mainApiService.invoke(
+                'APP_OPENAPI_CONVERT_TO',
+                activeEnvironment
+              )
             ).pipe(
               map((data) => ({
                 data,
@@ -91,16 +96,18 @@ export class ImportExportService extends Logger {
           return EMPTY;
         }),
         switchMap(({ data, filePath }) =>
-          from(MainAPI.invoke('APP_WRITE_FILE', filePath, data)).pipe(
+          from(
+            this.mainApiService.invoke('APP_WRITE_FILE', filePath, data)
+          ).pipe(
             tap(() => {
-              this.logMessage('info', 'OPENAPI_EXPORT_SUCCESS', {
+              this.loggerService.logMessage('info', 'OPENAPI_EXPORT_SUCCESS', {
                 environmentName: activeEnvironment.name
               });
             })
           )
         ),
         catchError((error) => {
-          this.logMessage('error', 'OPENAPI_EXPORT_ERROR', {
+          this.loggerService.logMessage('error', 'OPENAPI_EXPORT_ERROR', {
             error,
             environmentName: activeEnvironment.name,
             environmentUUID: activeEnvironment.uuid

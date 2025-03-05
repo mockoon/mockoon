@@ -44,7 +44,6 @@ import { HeadersListComponent } from 'src/renderer/app/components/headers-list/h
 import { CallbacksMenuComponent } from 'src/renderer/app/components/menus/callbacks-menu/callbacks-menu.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import {
@@ -59,6 +58,7 @@ import {
 } from 'src/renderer/app/models/common.model';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
 
@@ -170,7 +170,7 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
       action: ({ environmentUuid, filePath }: fileDropdownMenuPayload) => {
         const environmentPath = this.store.getEnvironmentPath(environmentUuid);
 
-        MainAPI.send('APP_OPEN_FILE', filePath, environmentPath);
+        this.mainApiService.send('APP_OPEN_FILE', filePath, environmentPath);
       }
     },
     {
@@ -180,7 +180,7 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
       action: ({ environmentUuid, filePath }: fileDropdownMenuPayload) => {
         const environmentPath = this.store.getEnvironmentPath(environmentUuid);
 
-        MainAPI.send('APP_OPEN_FILE', filePath, environmentPath);
+        this.mainApiService.send('APP_OPEN_FILE', filePath, environmentPath);
       }
     }
   ];
@@ -191,7 +191,8 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
     private store: Store,
     private environmentsService: EnvironmentsService,
     private formBuilder: UntypedFormBuilder,
-    private dialogsService: DialogsService
+    private dialogsService: DialogsService,
+    private mainApiService: MainApiService
   ) {}
 
   ngOnInit() {
@@ -216,7 +217,7 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
       filter((filePath) => !!filePath),
       distinctUntilChanged(),
       mergeMap((filePath) =>
-        from(MainAPI.invoke('APP_GET_MIME_TYPE', filePath))
+        from(this.mainApiService.invoke('APP_GET_MIME_TYPE', filePath))
       ),
       map((mimeType) => ({
         mimeType,

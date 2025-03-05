@@ -1,11 +1,11 @@
 import { ErrorHandler, Injectable } from '@angular/core';
-import { Logger } from 'src/renderer/app/classes/logger';
+import { LoggerService } from 'src/renderer/app/services/logger-service';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
-  private logger = new Logger('[RENDERER] ');
+  constructor(private loggerService: LoggerService) {}
 
   public handleError(error: Error) {
-    this.logger.logMessage('error', 'UNKNOWN_ERROR', { error });
+    this.loggerService.logMessage('error', 'UNKNOWN_ERROR', { error });
   }
 }

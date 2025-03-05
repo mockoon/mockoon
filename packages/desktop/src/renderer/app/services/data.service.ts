@@ -15,23 +15,20 @@ import {
   isContentTypeApplicationJson,
   repairRefs
 } from '@mockoon/commons';
-import { Logger } from 'src/renderer/app/classes/logger';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
+import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { MigrationService } from 'src/renderer/app/services/migration.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
-import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { Store } from 'src/renderer/app/stores/store';
 
 @Injectable({ providedIn: 'root' })
-export class DataService extends Logger {
+export class DataService {
   constructor(
-    protected toastsService: ToastsService,
     private store: Store,
     private migrationService: MigrationService,
-    private settingsService: SettingsService
-  ) {
-    super('[RENDERER][SERVICE][DATA] ', toastsService);
-  }
+    private settingsService: SettingsService,
+    private loggerService: LoggerService
+  ) {}
 
   /**
    * Migrate an environment and validate it against the schema
@@ -48,7 +45,7 @@ export class DataService extends Logger {
       migratedEnvironment =
         this.migrationService.migrateEnvironment(environment);
     } catch (_error) {
-      this.logMessage('error', 'ENVIRONMENT_MIGRATION_FAILED', {
+      this.loggerService.logMessage('error', 'ENVIRONMENT_MIGRATION_FAILED', {
         environmentName: environment.name,
         environmentUUID: environment.uuid
       });

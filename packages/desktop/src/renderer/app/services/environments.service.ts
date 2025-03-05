@@ -61,8 +61,6 @@ import {
   tap,
   withLatestFrom
 } from 'rxjs/operators';
-import { Logger } from 'src/renderer/app/classes/logger';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import {
   HumanizeText,
@@ -85,9 +83,10 @@ import {
 import { DataService } from 'src/renderer/app/services/data.service';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
+import { LoggerService } from 'src/renderer/app/services/logger-service';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { ServerService } from 'src/renderer/app/services/server.service';
 import { StorageService } from 'src/renderer/app/services/storage.service';
-import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import {
   Actions,
@@ -146,7 +145,7 @@ import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 @Injectable({
   providedIn: 'root'
 })
-export class EnvironmentsService extends Logger {
+export class EnvironmentsService {
   private environmentChangesNotified = false;
   private environmentChanges$ = new BehaviorSubject<
     {
@@ -164,11 +163,10 @@ export class EnvironmentsService extends Logger {
     private uiService: UIService,
     private storageService: StorageService,
     private dialogsService: DialogsService,
-    protected toastService: ToastsService,
-    private http: HttpClient
-  ) {
-    super('[RENDERER][SERVICE][ENVIRONMENTS] ', toastService);
-  }
+    private http: HttpClient,
+    private mainApiService: MainApiService,
+    private loggerService: LoggerService
+  ) {}
 
   /**
    * Load environments after waiting for the settings to load
@@ -181,7 +179,7 @@ export class EnvironmentsService extends Logger {
         filter((settings) => !!settings),
         first()
       ),
-      from(MainAPI.invoke('APP_BUILD_STORAGE_FILEPATH', 'demo'))
+      from(this.mainApiService.invoke('APP_BUILD_STORAGE_FILEPATH', 'demo'))
     ]).pipe(
       switchMap(([settings, demoFilePath]) => {
         if (!settings.environments.length && !settings.welcomeShown) {
@@ -191,7 +189,10 @@ export class EnvironmentsService extends Logger {
               environmentsData: []
             });
           } else {
-            this.logMessage('info', 'FIRST_LOAD_DEMO_ENVIRONMENT');
+            this.loggerService.logMessage(
+              'info',
+              'FIRST_LOAD_DEMO_ENVIRONMENT'
+            );
             const defaultEnvironment = BuildDemoEnvironment();
 
             return of({
@@ -321,7 +322,10 @@ export class EnvironmentsService extends Logger {
         )
       ),
       tap((modifiedEnvironments) => {
-        MainAPI.send('APP_UPDATE_ENVIRONMENT', modifiedEnvironments);
+        this.mainApiService.send(
+          'APP_UPDATE_ENVIRONMENT',
+          modifiedEnvironments
+        );
       }),
       withLatestFrom(
         this.store.select('settings').pipe(filter((settings) => !!settings))
@@ -439,7 +443,7 @@ export class EnvironmentsService extends Logger {
       tap((newEnvironment) => {
         // if environment UUID changed, unwatch
         if (newEnvironment.uuid !== previousUUID) {
-          MainAPI.invoke('APP_UNWATCH_FILE', previousUUID);
+          this.mainApiService.invoke('APP_UNWATCH_FILE', previousUUID);
         }
 
         this.store.update(
@@ -522,7 +526,10 @@ export class EnvironmentsService extends Logger {
       );
     } else if (!options.promptSave && options.environment) {
       filePath$ = from(
-        MainAPI.invoke('APP_BUILD_STORAGE_FILEPATH', options.environment.uuid)
+        this.mainApiService.invoke(
+          'APP_BUILD_STORAGE_FILEPATH',
+          options.environment.uuid
+        )
       );
     }
 
@@ -544,7 +551,7 @@ export class EnvironmentsService extends Logger {
 
         return zip(
           of(filePath),
-          from(MainAPI.invoke('APP_GET_FILENAME', filePath))
+          from(this.mainApiService.invoke('APP_GET_FILENAME', filePath))
         );
       }),
       switchMap(([filePath, filename]) => {
@@ -566,7 +573,7 @@ export class EnvironmentsService extends Logger {
 
         if (options.cloud) {
           observable = from(
-            MainAPI.invoke(
+            this.mainApiService.invoke(
               'APP_GET_HASH',
               deterministicStringify(newEnvironment)
             )
@@ -593,7 +600,7 @@ export class EnvironmentsService extends Logger {
         );
       }),
       catchError((errorCode) => {
-        this.logMessage('error', errorCode as MessageCodes);
+        this.loggerService.logMessage('error', errorCode as MessageCodes);
 
         return EMPTY;
       })
@@ -604,7 +611,7 @@ export class EnvironmentsService extends Logger {
    * Add and save a new environment from the clipboard
    */
   public newEnvironmentFromClipboard(): Observable<any> {
-    return from(MainAPI.invoke('APP_READ_CLIPBOARD')).pipe(
+    return from(this.mainApiService.invoke('APP_READ_CLIPBOARD')).pipe(
       map((data: string) => JSON.parse(data)),
       switchMap((environment: Environment) => this.verifyData(environment)),
       switchMap((environment: Environment) => {
@@ -617,9 +624,13 @@ export class EnvironmentsService extends Logger {
         });
       }),
       catchError((error) => {
-        this.logMessage('error', 'NEW_ENVIRONMENT_CLIPBOARD_ERROR', {
-          error
-        });
+        this.loggerService.logMessage(
+          'error',
+          'NEW_ENVIRONMENT_CLIPBOARD_ERROR',
+          {
+            error
+          }
+        );
 
         return EMPTY;
       })
@@ -634,7 +645,9 @@ export class EnvironmentsService extends Logger {
    */
   public newEnvironmentFromURL(url: string) {
     if (url) {
-      this.logMessage('info', 'NEW_ENVIRONMENT_FROM_URL', { url });
+      this.loggerService.logMessage('info', 'NEW_ENVIRONMENT_FROM_URL', {
+        url
+      });
 
       return this.http.get(url, { responseType: 'text' }).pipe(
         map<string, Environment>((data) => JSON.parse(data)),
@@ -646,7 +659,7 @@ export class EnvironmentsService extends Logger {
           return this.addEnvironment({ environment: migratedEnvironment });
         }),
         catchError((error) => {
-          this.logMessage('error', 'NEW_ENVIRONMENT_URL_ERROR', {
+          this.loggerService.logMessage('error', 'NEW_ENVIRONMENT_URL_ERROR', {
             error
           });
 
@@ -710,13 +723,13 @@ export class EnvironmentsService extends Logger {
       );
 
     if (cloudEnvironments.length >= user.cloudSyncItemsQuota) {
-      this.logMessage('error', 'CLOUD_SYNC_QUOTA_EXCEEDED', {
+      this.loggerService.logMessage('error', 'CLOUD_SYNC_QUOTA_EXCEEDED', {
         quota: user.cloudSyncItemsQuota
       });
 
       return EMPTY;
     } else if (getEnvironmentByteSize(environment) > user.cloudSyncSizeQuota) {
-      this.logMessage('error', 'CLOUD_ENVIRONMENT_TOO_LARGE', {
+      this.loggerService.logMessage('error', 'CLOUD_ENVIRONMENT_TOO_LARGE', {
         maxSize: this.store.get('user').cloudSyncSizeQuota
       });
 
@@ -760,7 +773,7 @@ export class EnvironmentsService extends Logger {
       );
 
     if (cloudEnvironments.length >= user.cloudSyncItemsQuota) {
-      this.logMessage('error', 'CLOUD_SYNC_QUOTA_EXCEEDED', {
+      this.loggerService.logMessage('error', 'CLOUD_SYNC_QUOTA_EXCEEDED', {
         quota: user.cloudSyncItemsQuota
       });
 
@@ -777,9 +790,13 @@ export class EnvironmentsService extends Logger {
               if (
                 getEnvironmentByteSize(environment) > user.cloudSyncSizeQuota
               ) {
-                this.logMessage('error', 'CLOUD_ENVIRONMENT_TOO_LARGE', {
-                  maxSize: this.store.get('user').cloudSyncSizeQuota
-                });
+                this.loggerService.logMessage(
+                  'error',
+                  'CLOUD_ENVIRONMENT_TOO_LARGE',
+                  {
+                    maxSize: this.store.get('user').cloudSyncSizeQuota
+                  }
+                );
 
                 return EMPTY;
               }
@@ -882,7 +899,10 @@ export class EnvironmentsService extends Logger {
             // in web version, completely delete the environment an do not convert to local
             if (env.web) {
               this.store.update(removeEnvironmentAction(environmentUuid));
-              MainAPI.invoke('APP_DELETE_ENVIRONMENT_DATA', environmentUuid);
+              this.mainApiService.invoke(
+                'APP_DELETE_ENVIRONMENT_DATA',
+                environmentUuid
+              );
 
               return of(true);
             } else {
@@ -932,12 +952,12 @@ export class EnvironmentsService extends Logger {
           removeEnvironmentAction(deletedCloudEnvironment.uuid)
         );
 
-        MainAPI.invoke(
+        this.mainApiService.invoke(
           'APP_DELETE_ENVIRONMENT_DATA',
           deletedCloudEnvironment.uuid
         );
 
-        this.logMessage('error', 'CLOUD_ENVIRONMENT_DELETED', {
+        this.loggerService.logMessage('error', 'CLOUD_ENVIRONMENT_DELETED', {
           name: environment.name,
           uuid: environment.uuid
         });
@@ -949,7 +969,7 @@ export class EnvironmentsService extends Logger {
           false
         );
 
-        this.logMessage('error', 'CLOUD_ENVIRONMENT_CONVERTED', {
+        this.loggerService.logMessage('error', 'CLOUD_ENVIRONMENT_CONVERTED', {
           name: environment.name,
           uuid: environment.uuid
         });
@@ -1050,7 +1070,7 @@ export class EnvironmentsService extends Logger {
           this.store.update(removeEnvironmentAction(environmentUUID));
         }
         this.store.update(updateUIStateAction({ saving: false }));
-        MainAPI.invoke('APP_UNWATCH_FILE', environmentUUID);
+        this.mainApiService.invoke('APP_UNWATCH_FILE', environmentUUID);
       })
     );
   }
@@ -1286,7 +1306,7 @@ export class EnvironmentsService extends Logger {
    * Add a new route and save it in the store
    */
   public addRouteFromClipboard() {
-    return from(MainAPI.invoke('APP_READ_CLIPBOARD')).pipe(
+    return from(this.mainApiService.invoke('APP_READ_CLIPBOARD')).pipe(
       map((data: string) => JSON.parse(data)),
       switchMap((route: Route) => {
         route = RouteSchema.validate(route).value;
@@ -1324,7 +1344,7 @@ export class EnvironmentsService extends Logger {
         this.uiService.focusInput(FocusableInputs.ROUTE_PATH);
       }),
       catchError((error) => {
-        this.logMessage('error', 'NEW_ROUTE_CLIPBOARD_ERROR', {
+        this.loggerService.logMessage('error', 'NEW_ROUTE_CLIPBOARD_ERROR', {
           error
         });
 
@@ -2072,7 +2092,7 @@ export class EnvironmentsService extends Logger {
       (environment) => environment.uuid === environmentUUID
     ).path;
 
-    MainAPI.send('APP_SHOW_FILE', environmentPath);
+    this.mainApiService.send('APP_SHOW_FILE', environmentPath);
   }
 
   /**
@@ -2107,11 +2127,11 @@ export class EnvironmentsService extends Logger {
 
           return zip(
             of(filePath),
-            from(MainAPI.invoke('APP_GET_FILENAME', filePath))
+            from(this.mainApiService.invoke('APP_GET_FILENAME', filePath))
           );
         }),
         catchError((errorCode) => {
-          this.logMessage('error', errorCode as MessageCodes);
+          this.loggerService.logMessage('error', errorCode as MessageCodes);
 
           return EMPTY;
         }),
@@ -2135,7 +2155,7 @@ export class EnvironmentsService extends Logger {
           // trigger a save to update the environment file, otherwise file will be created only during next modification
           this.store.update(refreshEnvironmentAction(environmentUUID));
 
-          this.logMessage('info', 'ENVIRONMENT_MOVED', {
+          this.loggerService.logMessage('info', 'ENVIRONMENT_MOVED', {
             environmentUUID
           });
         })
@@ -2151,14 +2171,24 @@ export class EnvironmentsService extends Logger {
     const environment = this.store.getEnvironmentByUUID(environmentUUID);
 
     try {
-      MainAPI.send('APP_WRITE_CLIPBOARD', JSON.stringify(environment, null, 4));
+      this.mainApiService.send(
+        'APP_WRITE_CLIPBOARD',
+        JSON.stringify(environment, null, 4)
+      );
 
-      this.logMessage('info', 'COPY_ENVIRONMENT_CLIPBOARD_SUCCESS');
+      this.loggerService.logMessage(
+        'info',
+        'COPY_ENVIRONMENT_CLIPBOARD_SUCCESS'
+      );
     } catch (error) {
-      this.logMessage('error', 'COPY_ENVIRONMENT_CLIPBOARD_ERROR', {
-        environmentUUID,
-        error
-      });
+      this.loggerService.logMessage(
+        'error',
+        'COPY_ENVIRONMENT_CLIPBOARD_ERROR',
+        {
+          environmentUUID,
+          error
+        }
+      );
     }
   }
 
@@ -2171,11 +2201,14 @@ export class EnvironmentsService extends Logger {
     const route = this.store.getRouteByUUID(routeUUID);
 
     try {
-      MainAPI.send('APP_WRITE_CLIPBOARD', JSON.stringify(route, null, 4));
+      this.mainApiService.send(
+        'APP_WRITE_CLIPBOARD',
+        JSON.stringify(route, null, 4)
+      );
 
-      this.logMessage('info', 'COPY_ROUTE_CLIPBOARD_SUCCESS');
+      this.loggerService.logMessage('info', 'COPY_ROUTE_CLIPBOARD_SUCCESS');
     } catch (error) {
-      this.logMessage('error', 'COPY_ROUTE_CLIPBOARD_ERROR', {
+      this.loggerService.logMessage('error', 'COPY_ROUTE_CLIPBOARD_ERROR', {
         routeUUID,
         error
       });
@@ -2283,13 +2316,13 @@ export class EnvironmentsService extends Logger {
    */
   private verifyData(environment: Environment): Observable<Environment> {
     if (!environment || typeof environment !== 'object') {
-      this.logMessage('error', 'ENVIRONMENT_INVALID');
+      this.loggerService.logMessage('error', 'ENVIRONMENT_INVALID');
 
       return EMPTY;
     }
 
     if (environment.lastMigration > HighestMigrationId) {
-      this.logMessage('info', 'ENVIRONMENT_MORE_RECENT_VERSION', {
+      this.loggerService.logMessage('info', 'ENVIRONMENT_MORE_RECENT_VERSION', {
         environmentName: environment.name,
         environmentUUID: environment.uuid
       });

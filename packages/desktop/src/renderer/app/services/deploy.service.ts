@@ -13,9 +13,7 @@ import {
   switchMap,
   tap
 } from 'rxjs';
-import { Logger } from 'src/renderer/app/classes/logger';
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
-import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import {
   updateDeployInstancesAction,
@@ -26,16 +24,13 @@ import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
 @Injectable({ providedIn: 'root' })
-export class DeployService extends Logger {
+export class DeployService {
   constructor(
     private userService: UserService,
     private store: Store,
     private remoteConfig: RemoteConfigService,
-    protected toastsService: ToastsService,
     private httpClient: HttpClient
-  ) {
-    super('[RENDERER][SERVICE][DEPLOY] ', toastsService);
-  }
+  ) {}
 
   public init() {
     return this.userService

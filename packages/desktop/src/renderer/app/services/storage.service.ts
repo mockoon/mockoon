@@ -7,21 +7,21 @@ import {
   mergeMap,
   tap
 } from 'rxjs/operators';
-import { Logger } from 'src/renderer/app/classes/logger';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
-import { ToastsService } from 'src/renderer/app/services/toasts.service';
+import { LoggerService } from 'src/renderer/app/services/logger-service';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import {
   EnvironmentDescriptor,
   Settings
 } from 'src/shared/models/settings.model';
 
 @Injectable({ providedIn: 'root' })
-export class StorageService extends Logger {
+export class StorageService {
   private saving$ = new BehaviorSubject<boolean>(false);
 
-  constructor(protected toastsService: ToastsService) {
-    super('[RENDERER][SERVICE][STORAGE] ', toastsService);
-  }
+  constructor(
+    private mainApiService: MainApiService,
+    private loggerService: LoggerService
+  ) {}
 
   /**
    * Saving in progress observable
@@ -44,9 +44,14 @@ export class StorageService extends Logger {
    * @param path - storage file full path
    */
   public loadEnvironment(path: string): Observable<Environment> {
-    return from(MainAPI.invoke('APP_READ_ENVIRONMENT_DATA', path)).pipe(
+    return from(
+      this.mainApiService.invoke('APP_READ_ENVIRONMENT_DATA', path)
+    ).pipe(
       catchError((error) => {
-        this.logMessage('error', 'STORAGE_LOAD_ERROR', { path, error });
+        this.loggerService.logMessage('error', 'STORAGE_LOAD_ERROR', {
+          path,
+          error
+        });
 
         return EMPTY;
       })
@@ -70,7 +75,7 @@ export class StorageService extends Logger {
     return of(true).pipe(
       mergeMap(() =>
         from(
-          MainAPI.invoke(
+          this.mainApiService.invoke(
             'APP_WRITE_ENVIRONMENT_DATA',
             data,
             descriptor,
@@ -78,7 +83,7 @@ export class StorageService extends Logger {
           )
         ).pipe(
           catchError((error) => {
-            this.logMessage('error', 'STORAGE_SAVE_ERROR', {
+            this.loggerService.logMessage('error', 'STORAGE_SAVE_ERROR', {
               path: descriptor.path,
               error
             });
@@ -99,9 +104,9 @@ export class StorageService extends Logger {
    *
    */
   public loadSettings(): Observable<Settings> {
-    return from(MainAPI.invoke('APP_READ_SETTINGS_DATA')).pipe(
+    return from(this.mainApiService.invoke('APP_READ_SETTINGS_DATA')).pipe(
       catchError((error) => {
-        this.logMessage('error', 'STORAGE_LOAD_ERROR', {
+        this.loggerService.logMessage('error', 'STORAGE_LOAD_ERROR', {
           path: 'settings',
           error
         });
@@ -123,10 +128,14 @@ export class StorageService extends Logger {
     return of(true).pipe(
       mergeMap(() =>
         from(
-          MainAPI.invoke('APP_WRITE_SETTINGS_DATA', data, storagePrettyPrint)
+          this.mainApiService.invoke(
+            'APP_WRITE_SETTINGS_DATA',
+            data,
+            storagePrettyPrint
+          )
         ).pipe(
           catchError((error) => {
-            this.logMessage('error', 'STORAGE_SAVE_ERROR', {
+            this.loggerService.logMessage('error', 'STORAGE_SAVE_ERROR', {
               path: 'settings',
               error
             });

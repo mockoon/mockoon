@@ -6,14 +6,15 @@ import {
   PostMigrationAction,
   PostMigrationActions
 } from '@mockoon/commons';
-import { Logger } from 'src/renderer/app/classes/logger';
+import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 
 @Injectable({ providedIn: 'root' })
-export class MigrationService extends Logger {
-  constructor(private settingsService: SettingsService) {
-    super('[RENDERER][SERVICE][MIGRATION] ');
-  }
+export class MigrationService {
+  constructor(
+    private settingsService: SettingsService,
+    private loggerService: LoggerService
+  ) {}
 
   /**
    * Migrate one environment.
@@ -23,7 +24,7 @@ export class MigrationService extends Logger {
     const migrationStartId = this.getMigrationStartId(environment);
 
     if (migrationStartId > -1) {
-      this.logMessage('info', 'MIGRATING_ENVIRONMENT', {
+      this.loggerService.logMessage('info', 'MIGRATING_ENVIRONMENT', {
         environmentUUID: environment.uuid,
         environmentName: environment.name,
         migrationStartId

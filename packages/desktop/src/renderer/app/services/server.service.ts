@@ -1,6 +1,9 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, NgZone } from '@angular/core';
+import { DeployInstance } from '@mockoon/cloud';
 import {
   Environment,
+  ProcessedDatabucket,
   ProcessedDatabucketWithoutValue,
   ServerEvents,
   Transaction
@@ -17,12 +20,11 @@ import {
   switchMap,
   tap
 } from 'rxjs';
-import { Logger } from 'src/renderer/app/classes/logger';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { MessageParams } from 'src/renderer/app/models/messages.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
+import { LoggerService } from 'src/renderer/app/services/logger-service';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
-import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import {
   updateEnvironmentStatusAction,
   updateProcessedDatabucketsAction
@@ -31,16 +33,16 @@ import { Store } from 'src/renderer/app/stores/store';
 import { environment as env } from 'src/renderer/environments/environment';
 
 @Injectable({ providedIn: 'root' })
-export class ServerService extends Logger {
+export class ServerService {
   constructor(
-    protected toastService: ToastsService,
     private store: Store,
     private zone: NgZone,
     private telemetryService: TelemetryService,
-    private eventsService: EventsService
+    private eventsService: EventsService,
+    private mainApiService: MainApiService,
+    private loggerService: LoggerService,
+    private httpClient: HttpClient
   ) {
-    super('[RENDERER][SERVICE][SERVER] ', toastService);
-
     this.addEventListener();
   }
 
@@ -64,7 +66,7 @@ export class ServerService extends Logger {
       switchMap(({ instance, environmentUuid }) =>
         new Observable((observer) => {
           const eventSource = new EventSource(
-            `${!env.production ? instance.url.replace('.app', '.appdev') : instance.url}/mockoon-admin/events`,
+            `${this.buildRemoteInstanceUrl(instance)}/events`,
             {
               headers: { Authorization: `Bearer ${instance.apiKey}` }
             }
@@ -105,7 +107,11 @@ export class ServerService extends Logger {
    * @param environment
    */
   public async start(environment: Environment, environmentPath: string) {
-    MainAPI.invoke('APP_START_SERVER', environment, environmentPath);
+    this.mainApiService.invoke(
+      'APP_START_SERVER',
+      environment,
+      environmentPath
+    );
   }
 
   /**
@@ -114,35 +120,60 @@ export class ServerService extends Logger {
    * @param environmentUuid
    */
   public stop(environmentUuid: string) {
-    MainAPI.invoke('APP_STOP_SERVER', environmentUuid);
+    this.mainApiService.invoke('APP_STOP_SERVER', environmentUuid);
   }
 
   /**
-   * Get the processed value of a databucket from the server
+   * Get the processed value of a databucket from the local server
+   * or from the remote admin API
    *
-   * @param environmentUuid
+   * @param activeEnvironmentUuid
    * @param databucketUuid
    */
   public getProcessedDatabucketValue(
-    environmentUuid: string,
+    activeEnvironmentUuid: string,
     databucketUuid: string
   ) {
-    return from(
-      MainAPI.invoke(
-        'APP_SERVER_GET_PROCESSED_DATABUCKET_VALUE',
-        environmentUuid,
-        databucketUuid
-      )
-    );
+    if (env.web) {
+      const activeEnvironmentInstance = this.store
+        .get('deployInstances')
+        .find((instance) => instance.environmentUuid === activeEnvironmentUuid);
+
+      if (!activeEnvironmentInstance) {
+        return EMPTY;
+      }
+
+      return this.httpClient
+        .get<ProcessedDatabucket>(
+          `${this.buildRemoteInstanceUrl(activeEnvironmentInstance)}/data-buckets/${databucketUuid}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + activeEnvironmentInstance.apiKey
+            }
+          }
+        )
+        .pipe(map((response) => response.value));
+    } else {
+      return from(
+        this.mainApiService.invoke(
+          'APP_SERVER_GET_PROCESSED_DATABUCKET_VALUE',
+          activeEnvironmentUuid,
+          databucketUuid
+        )
+      );
+    }
   }
 
   /**
    * Listen to server events coming from main process
    */
   private addEventListener() {
-    MainAPI.receive('APP_SERVER_EVENT', (environmentUuid, eventName, data) => {
-      this.processEvent(environmentUuid, eventName, data);
-    });
+    this.mainApiService.receive(
+      'APP_SERVER_EVENT',
+      (environmentUuid, eventName, data) => {
+        this.processEvent(environmentUuid, eventName, data);
+      }
+    );
   }
 
   private processEvent(environmentUuid: string, eventName: string, data: any) {
@@ -229,7 +260,7 @@ export class ServerService extends Logger {
         break;
 
       case 'error':
-        this.logMessage('error', data.errorCode, {
+        this.loggerService.logMessage('error', data.errorCode, {
           error: data.originalError,
           ...loggerMessageParams
         });
@@ -237,5 +268,16 @@ export class ServerService extends Logger {
       default:
         break;
     }
+  }
+
+  /**
+   * Use .appdev locally (in your hosts file, see API docs for more info)
+   * as .app always requires HTTPS (due to HSTS mechanism)
+   *
+   * @param instance
+   * @returns
+   */
+  private buildRemoteInstanceUrl(instance: DeployInstance) {
+    return `${!env.production ? instance.url.replace('.app', '.appdev') : instance.url}/mockoon-admin`;
   }
 }

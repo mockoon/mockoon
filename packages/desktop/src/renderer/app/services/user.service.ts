@@ -20,9 +20,8 @@ import {
   tap,
   throwError
 } from 'rxjs';
-import { Logger } from 'src/renderer/app/classes/logger';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
-import { ToastsService } from 'src/renderer/app/services/toasts.service';
+import { LoggerService } from 'src/renderer/app/services/logger-service';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import {
   updateDeployInstancesAction,
@@ -33,7 +32,7 @@ import { Config } from 'src/renderer/config';
 import { environment as env } from 'src/renderer/environments/environment';
 
 @Injectable({ providedIn: 'root' })
-export class UserService extends Logger {
+export class UserService {
   private isWeb = env.web;
   private auth: Auth = inject(Auth);
   private idToken$ = idToken(this.auth);
@@ -42,10 +41,9 @@ export class UserService extends Logger {
     private httpClient: HttpClient,
     private store: Store,
     private uiService: UIService,
-    protected toastsService: ToastsService
-  ) {
-    super('[RENDERER][SERVICE][USER] ', toastsService);
-  }
+    private mainApiService: MainApiService,
+    private loggerService: LoggerService
+  ) {}
 
   /**
    * Monitor auth token state and update the store
@@ -118,11 +116,11 @@ export class UserService extends Logger {
    */
   public startLoginFlow() {
     this.uiService.openModal('auth');
-    MainAPI.send('APP_AUTH');
+    this.mainApiService.send('APP_AUTH');
   }
 
   public stopAuthFlow() {
-    MainAPI.send('APP_AUTH_STOP_SERVER');
+    this.mainApiService.send('APP_AUTH_STOP_SERVER');
   }
 
   /**
@@ -135,12 +133,12 @@ export class UserService extends Logger {
     return this.authWithToken(token).pipe(
       tap(() => {
         this.uiService.closeModal('auth');
-        this.logMessage('info', 'LOGIN_SUCCESS');
+        this.loggerService.logMessage('info', 'LOGIN_SUCCESS');
 
         this.stopAuthFlow();
       }),
       catchError(() => {
-        this.logMessage('error', 'LOGIN_ERROR');
+        this.loggerService.logMessage('error', 'LOGIN_ERROR');
 
         return EMPTY;
       })
@@ -161,13 +159,13 @@ export class UserService extends Logger {
     if (token) {
       return this.authWithToken(token).pipe(
         tap(() => {
-          this.logMessage('info', 'LOGIN_SUCCESS');
+          this.loggerService.logMessage('info', 'LOGIN_SUCCESS');
 
           // remove the token from the URL
           window.history.replaceState(null, '', window.location.pathname);
         }),
         catchError(() => {
-          this.logMessage('error', 'LOGIN_ERROR');
+          this.loggerService.logMessage('error', 'LOGIN_ERROR');
           window.history.replaceState(null, '', window.location.pathname);
 
           return EMPTY;

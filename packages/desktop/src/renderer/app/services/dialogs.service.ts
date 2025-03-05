@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { OpenDialogOptions } from 'electron';
 import { from, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { updateSettingsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 
@@ -15,7 +15,10 @@ export class DialogsService {
     json: [{ name: 'JSON', extensions: ['json'] }]
   };
 
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store,
+    private mainApiService: MainApiService
+  ) {}
 
   /**
    * Show the save dialog and return the path or null if cancelled
@@ -26,7 +29,7 @@ export class DialogsService {
     defaultPath?: string
   ): Observable<string | null> {
     return from(
-      MainAPI.invoke('APP_SHOW_SAVE_DIALOG', {
+      this.mainApiService.invoke('APP_SHOW_SAVE_DIALOG', {
         filters: this.filters.json,
         title,
         defaultPath
@@ -39,7 +42,7 @@ export class DialogsService {
         }
 
         return from(
-          MainAPI.invoke('APP_GET_BASE_PATH', dialogResult.filePath)
+          this.mainApiService.invoke('APP_GET_BASE_PATH', dialogResult.filePath)
         ).pipe(
           tap((directory) => {
             if (saveWorkingDir) {
@@ -50,7 +53,7 @@ export class DialogsService {
           }),
           switchMap(() =>
             from(
-              MainAPI.invoke(
+              this.mainApiService.invoke(
                 'APP_REPLACE_FILEPATH_EXTENSION',
                 dialogResult.filePath
               )
@@ -80,7 +83,9 @@ export class DialogsService {
       options.properties.push('multiSelections');
     }
 
-    return from(MainAPI.invoke('APP_SHOW_OPEN_DIALOG', options)).pipe(
+    return from(
+      this.mainApiService.invoke('APP_SHOW_OPEN_DIALOG', options)
+    ).pipe(
       switchMap((dialogResult) => {
         if (dialogResult.canceled || !dialogResult.filePaths?.[0]) {
           return of(null);
@@ -88,7 +93,10 @@ export class DialogsService {
 
         // Get the directory
         return from(
-          MainAPI.invoke('APP_GET_BASE_PATH', dialogResult.filePaths[0])
+          this.mainApiService.invoke(
+            'APP_GET_BASE_PATH',
+            dialogResult.filePaths[0]
+          )
         ).pipe(
           tap((directory) => {
             if (saveWorkingDir) {

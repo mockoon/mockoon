@@ -13,7 +13,6 @@ import { EMPTY, Observable, forkJoin, from } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TeamPresenceComponent } from 'src/renderer/app/components/team-presence/team-presence.component';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { TourStepDirective } from 'src/renderer/app/directives/tour-step.directive';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
@@ -22,6 +21,7 @@ import {
 } from 'src/renderer/app/models/store.model';
 import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { SyncService } from 'src/renderer/app/services/sync.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
@@ -87,11 +87,12 @@ export class HeaderComponent implements OnInit {
     private uiService: UIService,
     private syncService: SyncService,
     private toastsService: ToastsService,
-    private deployService: DeployService
+    private deployService: DeployService,
+    private mainApiService: MainApiService
   ) {}
 
   ngOnInit() {
-    this.os$ = from(MainAPI.invoke('APP_GET_OS'));
+    this.os$ = from(this.mainApiService.invoke('APP_GET_OS'));
     this.user$ = this.store.select('user');
     this.activeView$ = this.store.select('activeView');
     this.activeEnvironment$ = this.store.selectActiveEnvironment();

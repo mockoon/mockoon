@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { combineLatest, fromEvent, race, timer } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { StorageService } from 'src/renderer/app/services/storage.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { updateUIStateAction } from 'src/renderer/app/stores/actions';
@@ -17,7 +17,8 @@ export class AppQuitService {
   constructor(
     private store: Store,
     private storageService: StorageService,
-    private telemetryService: TelemetryService
+    private telemetryService: TelemetryService,
+    private mainApiService: MainApiService
   ) {}
 
   /**
@@ -42,7 +43,7 @@ export class AppQuitService {
         this.closing = true;
 
         this.store.update(updateUIStateAction({ closing: true }));
-        MainAPI.send('APP_HIDE_WINDOW');
+        this.mainApiService.send('APP_HIDE_WINDOW');
 
         this.telemetryService.closeSession();
       }),
@@ -66,7 +67,7 @@ export class AppQuitService {
         );
       }),
       tap(() => {
-        MainAPI.send('APP_QUIT');
+        this.mainApiService.send('APP_QUIT');
       })
     );
   }

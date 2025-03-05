@@ -16,11 +16,11 @@ import {
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject, debounceTime, from, takeUntil, tap } from 'rxjs';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { StoreType } from 'src/renderer/app/models/store.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { updateFilterAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
@@ -54,7 +54,8 @@ export class FilterComponent implements OnInit, OnDestroy {
     private store: Store,
     private formBuilder: UntypedFormBuilder,
     private eventsService: EventsService,
-    private uiService: UIService
+    private uiService: UIService,
+    private mainApiService: MainApiService
   ) {}
 
   @HostListener('keydown', ['$event'])
@@ -87,7 +88,7 @@ export class FilterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.os$ = from(MainAPI.invoke('APP_GET_OS')).pipe(
+    this.os$ = from(this.mainApiService.invoke('APP_GET_OS')).pipe(
       tap((os) => {
         this.os = os;
       })

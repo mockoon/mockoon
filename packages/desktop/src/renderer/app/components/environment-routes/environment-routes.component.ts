@@ -68,7 +68,6 @@ import { RouteCallbacksComponent } from 'src/renderer/app/components/route-callb
 import { RouteResponseRulesComponent } from 'src/renderer/app/components/route-response-rules/route-response-rules.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { statusCodeValidation } from 'src/renderer/app/constants/masks.constants';
 import {
   StatusCodes,
@@ -94,6 +93,7 @@ import {
 } from 'src/renderer/app/models/store.model';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
 
@@ -328,7 +328,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       action: ({ environmentUuid, filePath }: fileDropdownMenuPayload) => {
         const environmentPath = this.store.getEnvironmentPath(environmentUuid);
 
-        MainAPI.send('APP_SHOW_FILE', filePath, environmentPath);
+        this.mainApiService.send('APP_SHOW_FILE', filePath, environmentPath);
       }
     },
     {
@@ -338,7 +338,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       action: ({ environmentUuid, filePath }: fileDropdownMenuPayload) => {
         const environmentPath = this.store.getEnvironmentPath(environmentUuid);
 
-        MainAPI.send('APP_OPEN_FILE', filePath, environmentPath);
+        this.mainApiService.send('APP_OPEN_FILE', filePath, environmentPath);
       }
     }
   ];
@@ -349,7 +349,8 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     private store: Store,
     private formBuilder: UntypedFormBuilder,
     private dialogsService: DialogsService,
-    private environmentsService: EnvironmentsService
+    private environmentsService: EnvironmentsService,
+    private mainApiService: MainApiService
   ) {}
 
   ngOnInit() {
@@ -391,7 +392,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       filter((filePath) => !!filePath),
       distinctUntilChanged(),
       mergeMap((filePath) =>
-        from(MainAPI.invoke('APP_GET_MIME_TYPE', filePath)).pipe(
+        from(this.mainApiService.invoke('APP_GET_MIME_TYPE', filePath)).pipe(
           map((mimeType) => ({
             mimeType,
             filePath

@@ -40,6 +40,7 @@ import { NgbTooltipConfigFactory } from 'src/renderer/app/modules-config/ngb-too
 import { NgbTypeaheadConfigFactory } from 'src/renderer/app/modules-config/ngb-typeahead.config';
 import { NgbConfigFactory } from 'src/renderer/app/modules-config/ngb.config';
 import { GlobalErrorHandler } from 'src/renderer/app/services/global-error-handler';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { Config } from 'src/renderer/config';
 import { environment } from 'src/renderer/environments/environment';
 
@@ -121,7 +122,12 @@ bootstrapApplication(AppComponent, {
 
       return functions;
     }),
-    provideAnimations()
+    provideAnimations(),
+    {
+      /* Either get the main API from window.api (electron's preload script) or from a service, for the web version */
+      provide: MainApiService,
+      useFactory: () => (environment.web ? new MainApiService() : window.api)
+    }
   ]
 })
   // eslint-disable-next-line no-console

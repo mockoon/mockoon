@@ -21,10 +21,10 @@ import { Observable, Subject, filter, map, merge, takeUntil, tap } from 'rxjs';
 import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
 import { DatabucketsMenuComponent } from 'src/renderer/app/components/menus/databuckets-menu/databuckets-menu.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { ServerService } from 'src/renderer/app/services/server.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
@@ -64,7 +64,8 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
     private store: Store,
     private environmentsService: EnvironmentsService,
     private formBuilder: UntypedFormBuilder,
-    private serverService: ServerService
+    private serverService: ServerService,
+    private mainApiService: MainApiService
   ) {}
 
   ngOnInit() {
@@ -86,7 +87,7 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
   }
 
   public copyToClipboard(databucketId: string) {
-    MainAPI.send('APP_WRITE_CLIPBOARD', databucketId);
+    this.mainApiService.send('APP_WRITE_CLIPBOARD', databucketId);
   }
 
   public showDatabucketValue(
@@ -94,11 +95,10 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
     validJson: boolean,
     databucketName: string
   ) {
+    const activeEnvironmentUuid = this.store.get('activeEnvironmentUUID');
+
     this.serverService
-      .getProcessedDatabucketValue(
-        this.store.getActiveEnvironment().uuid,
-        databucketUuid
-      )
+      .getProcessedDatabucketValue(activeEnvironmentUuid, databucketUuid)
       .subscribe((d) => {
         this.uiService.openModal('editor', {
           title: `"${databucketName}" databucket value`,

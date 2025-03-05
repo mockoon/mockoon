@@ -10,8 +10,8 @@ import {
 } from '@mockoon/cloud';
 import { Environment, deterministicStringify } from '@mockoon/commons';
 import { from } from 'rxjs';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import {
   ActionTypes,
   Actions,
@@ -50,7 +50,8 @@ export class SyncPayloadsService {
 
   constructor(
     private store: Store,
-    private environmentsService: EnvironmentsService
+    private environmentsService: EnvironmentsService,
+    private mainApiService: MainApiService
   ) {}
 
   public reducerActionToSyncActionBuilder(
@@ -325,7 +326,9 @@ export class SyncPayloadsService {
    * @returns
    */
   public computeHash(obj: any) {
-    return from(MainAPI.invoke('APP_GET_HASH', deterministicStringify(obj)));
+    return from(
+      this.mainApiService.invoke('APP_GET_HASH', deterministicStringify(obj))
+    );
   }
 
   /**
@@ -375,7 +378,7 @@ export class SyncPayloadsService {
         // when using the web app, converting to a local environment doesn't make sense
         if (env.web) {
           reducerAction = removeEnvironmentAction(syncAction.environmentUuid);
-          MainAPI.invoke(
+          this.mainApiService.invoke(
             'APP_DELETE_ENVIRONMENT_DATA',
             syncAction.environmentUuid
           );

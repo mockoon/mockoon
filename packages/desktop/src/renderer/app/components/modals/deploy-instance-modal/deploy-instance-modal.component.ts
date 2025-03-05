@@ -28,14 +28,13 @@ import {
   switchMap,
   tap
 } from 'rxjs';
-import { Logger } from 'src/renderer/app/classes/logger';
 import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { ToggleItems } from 'src/renderer/app/models/common.model';
 import { DeployService } from 'src/renderer/app/services/deploy.service';
-import { ToastsService } from 'src/renderer/app/services/toasts.service';
+import { LoggerService } from 'src/renderer/app/services/logger-service';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { updateEnvironmentStatusAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
@@ -57,7 +56,7 @@ import { Config } from 'src/renderer/config';
     SpinnerComponent
   ]
 })
-export class DeployInstanceModalComponent extends Logger implements OnInit {
+export class DeployInstanceModalComponent implements OnInit {
   public taskInProgress$ = new BehaviorSubject<boolean>(false);
   public existingInstance$: Observable<DeployInstance>;
   public instanceExists$: Observable<boolean>;
@@ -94,11 +93,10 @@ export class DeployInstanceModalComponent extends Logger implements OnInit {
     private uiService: UIService,
     private store: Store,
     private deployService: DeployService,
-    protected toastService: ToastsService,
-    private formBuilder: FormBuilder
-  ) {
-    super('[RENDERER][COMPONENT][DEPLOY-INSTANCE-MODAL] ', toastService);
-  }
+    private formBuilder: FormBuilder,
+    private mainApiService: MainApiService,
+    private loggerService: LoggerService
+  ) {}
 
   ngOnInit() {
     this.environment$ = this.environmentUuid$.pipe(
@@ -191,7 +189,7 @@ export class DeployInstanceModalComponent extends Logger implements OnInit {
       user.deployInstancesQuotaUsed >= user.deployInstancesQuota &&
       !existingInstance
     ) {
-      this.logMessage('error', 'CLOUD_DEPLOY_QUOTA_EXCEEDED', {
+      this.loggerService.logMessage('error', 'CLOUD_DEPLOY_QUOTA_EXCEEDED', {
         quota: user.deployInstancesQuota
       });
 
@@ -223,11 +221,17 @@ export class DeployInstanceModalComponent extends Logger implements OnInit {
         }),
         catchError((error) => {
           if (error.status === 413) {
-            this.logMessage('error', 'CLOUD_DEPLOY_START_TOO_BIG_ERROR');
+            this.loggerService.logMessage(
+              'error',
+              'CLOUD_DEPLOY_START_TOO_BIG_ERROR'
+            );
           } else if (error.status === 409) {
-            this.logMessage('error', 'CLOUD_DEPLOY_START_SUBDOMAIN_TAKEN');
+            this.loggerService.logMessage(
+              'error',
+              'CLOUD_DEPLOY_START_SUBDOMAIN_TAKEN'
+            );
           } else {
-            this.logMessage('error', 'CLOUD_DEPLOY_START_ERROR');
+            this.loggerService.logMessage('error', 'CLOUD_DEPLOY_START_ERROR');
           }
 
           this.taskInProgress$.next(false);
@@ -239,7 +243,7 @@ export class DeployInstanceModalComponent extends Logger implements OnInit {
   }
 
   public copyToClipboard(url: string) {
-    MainAPI.send('APP_WRITE_CLIPBOARD', url);
+    this.mainApiService.send('APP_WRITE_CLIPBOARD', url);
   }
 
   public deleteInstance(environmentUuid: string) {
@@ -252,7 +256,7 @@ export class DeployInstanceModalComponent extends Logger implements OnInit {
           this.taskInProgress$.next(false);
         }),
         catchError(() => {
-          this.logMessage('error', 'CLOUD_DEPLOY_STOP_ERROR');
+          this.loggerService.logMessage('error', 'CLOUD_DEPLOY_STOP_ERROR');
 
           this.taskInProgress$.next(false);
 

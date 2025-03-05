@@ -1,19 +1,21 @@
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
+import { Injectable } from '@angular/core';
 import { DesktopMessages } from 'src/renderer/app/constants/desktop-messages.constants';
 import {
   MessageCodes,
   MessageLevels,
   MessageParams
 } from 'src/renderer/app/models/messages.model';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 
 /**
  * Logger class that can be used as is or extended
  */
-export class Logger {
+@Injectable({ providedIn: 'root' })
+export class LoggerService {
   constructor(
-    private loggerPrefix: string,
-    protected toastService?: ToastsService
+    private mainApiService: MainApiService,
+    private toastService: ToastsService
   ) {}
 
   /**
@@ -54,7 +56,7 @@ export class Logger {
       );
     }
 
-    if (this.toastService && message.showToast) {
+    if (message.showToast) {
       this.toastService.addToast(message.toastType, message.message);
     }
   }
@@ -65,9 +67,9 @@ export class Logger {
    * @param message
    */
   private info(message: string, payload: any) {
-    MainAPI.send('APP_LOGS', {
+    this.mainApiService.send('APP_LOGS', {
       type: 'info',
-      message: this.buildMessage(message),
+      message,
       payload
     });
   }
@@ -78,14 +80,10 @@ export class Logger {
    * @param message
    */
   private error(message: string, payload: any) {
-    MainAPI.send('APP_LOGS', {
+    this.mainApiService.send('APP_LOGS', {
       type: 'error',
-      message: this.buildMessage(message),
+      message,
       payload
     });
-  }
-
-  private buildMessage(message: string) {
-    return `${this.loggerPrefix}${message}`;
   }
 }

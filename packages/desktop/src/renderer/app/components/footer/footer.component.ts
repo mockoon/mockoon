@@ -8,12 +8,12 @@ import {
 import { BehaviorSubject, Observable, from } from 'rxjs';
 import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import {
   TemplatesTabsName,
   UIState
 } from 'src/renderer/app/models/store.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { TemplatesService } from 'src/renderer/app/services/templates.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { setActiveTemplatesTabAction } from 'src/renderer/app/stores/actions';
@@ -31,7 +31,7 @@ export class FooterComponent implements OnInit {
   @Input() public isTemplateModalOpen: boolean;
   @Input() public isTemplateLoading: boolean;
   public updateAvailable$: BehaviorSubject<string | null>;
-  public platform$ = from(MainAPI.invoke('APP_GET_OS'));
+  public platform$ = from(this.mainApiService.invoke('APP_GET_OS'));
   public uiState$: Observable<UIState>;
   public generatingTemplate$ = this.templateService.generatingTemplate$;
   public generatingEndpoint$ = this.templateService.generatingEndpoint$;
@@ -41,7 +41,8 @@ export class FooterComponent implements OnInit {
     private store: Store,
     private eventsService: EventsService,
     private uiService: UIService,
-    private templateService: TemplatesService
+    private templateService: TemplatesService,
+    private mainApiService: MainApiService
   ) {}
 
   ngOnInit() {
@@ -53,7 +54,7 @@ export class FooterComponent implements OnInit {
    * Apply the update
    */
   public applyUpdate() {
-    MainAPI.send('APP_APPLY_UPDATE');
+    this.mainApiService.send('APP_APPLY_UPDATE');
   }
 
   public openTemplateModal(tab: TemplatesTabsName) {

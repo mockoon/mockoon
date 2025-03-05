@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Route, RouteType } from '@mockoon/commons';
 import { Observable, from, map } from 'rxjs';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { CharCode } from 'src/renderer/app/enums/charcode.enum';
 import { buildFullPath } from 'src/renderer/app/libs/utils.lib';
 import {
@@ -9,6 +8,7 @@ import {
   ScoreAndPositions
 } from 'src/renderer/app/models/command-palette.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { TourService } from 'src/renderer/app/services/tour.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { clearLogsAction } from 'src/renderer/app/stores/actions';
@@ -23,7 +23,8 @@ export class CommandPaletteService {
     private environmentsService: EnvironmentsService,
     private uiService: UIService,
     private store: Store,
-    private tourService: TourService
+    private tourService: TourService,
+    private mainApiService: MainApiService
   ) {}
 
   public filterEntries(search$: Observable<string>) {
@@ -69,7 +70,7 @@ export class CommandPaletteService {
   }
 
   private ctrlOrCmd$(shortcuts: string[]) {
-    return from(MainAPI.invoke('APP_GET_OS')).pipe(
+    return from(this.mainApiService.invoke('APP_GET_OS')).pipe(
       map(
         (os) =>
           `<kbd>${os === 'darwin' ? 'Cmd' : 'Ctrl'}</kbd>${shortcuts.reduce(
@@ -491,7 +492,7 @@ export class CommandPaletteService {
         id: 'COPY_DATA_BUCKET_ID_CLIPBOARD',
         label: 'Copy Current Data Bucket Id to Clipboard',
         action: () => {
-          MainAPI.send('APP_WRITE_CLIPBOARD', activeDatabucket.id);
+          this.mainApiService.send('APP_WRITE_CLIPBOARD', activeDatabucket.id);
         },
         score: 1,
         enabled: hasActiveEnvironment && hasActiveDatabucket
@@ -596,7 +597,7 @@ export class CommandPaletteService {
         id: 'COPY_ROUTE_FULL_PATH',
         label: 'Copy Current Route Full Path to Clipboard',
         action: () => {
-          MainAPI.send(
+          this.mainApiService.send(
             'APP_WRITE_CLIPBOARD',
             buildFullPath(activeEnvironment, activeRoute)
           );
@@ -688,7 +689,7 @@ export class CommandPaletteService {
           label: 'Zoom in',
           shortcut$: this.ctrlOrCmd$(['+']),
           action: () => {
-            MainAPI.send('APP_ZOOM', 'IN');
+            this.mainApiService.send('APP_ZOOM', 'IN');
           },
           score: 1,
           enabled: true
@@ -698,7 +699,7 @@ export class CommandPaletteService {
           label: 'Zoom out',
           shortcut$: this.ctrlOrCmd$(['-']),
           action: () => {
-            MainAPI.send('APP_ZOOM', 'OUT');
+            this.mainApiService.send('APP_ZOOM', 'OUT');
           },
           score: 1,
           enabled: true
@@ -708,7 +709,7 @@ export class CommandPaletteService {
           label: 'Reset zoom',
           shortcut$: this.ctrlOrCmd$(['0']),
           action: () => {
-            MainAPI.send('APP_ZOOM', 'RESET');
+            this.mainApiService.send('APP_ZOOM', 'RESET');
           },
           score: 1,
           enabled: true
@@ -737,7 +738,7 @@ export class CommandPaletteService {
           id: 'OPEN_APP_DATA_FOLDER',
           label: 'Open Application Data Folder',
           action: () => {
-            MainAPI.send('APP_SHOW_FOLDER', 'userData');
+            this.mainApiService.send('APP_SHOW_FOLDER', 'userData');
           },
           score: 1,
           enabled: true
@@ -746,7 +747,7 @@ export class CommandPaletteService {
           id: 'OPEN_LOGS_FOLDER',
           label: 'Open Application Logs Folder',
           action: () => {
-            MainAPI.send('APP_SHOW_FOLDER', 'logs');
+            this.mainApiService.send('APP_SHOW_FOLDER', 'logs');
           },
           score: 1,
           enabled: true

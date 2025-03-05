@@ -15,8 +15,8 @@ import {
   tap
 } from 'rxjs/operators';
 import { gt as semverGt } from 'semver';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { SettingsSchema } from 'src/renderer/app/constants/settings-schema.constants';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { StorageService } from 'src/renderer/app/services/storage.service';
 import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -35,7 +35,8 @@ export class SettingsService {
     private store: Store,
     private storageService: StorageService,
     private telemetryService: TelemetryService,
-    private uiService: UIService
+    private uiService: UIService,
+    private mainApiService: MainApiService
   ) {}
 
   /**
@@ -53,7 +54,7 @@ export class SettingsService {
             currentSettings.fileWatcherEnabled &&
             currentSettings.fileWatcherEnabled === FileWatcherOptions.DISABLED)
         ) {
-          MainAPI.invoke('APP_UNWATCH_ALL_FILE');
+          this.mainApiService.invoke('APP_UNWATCH_ALL_FILE');
         }
       })
     );

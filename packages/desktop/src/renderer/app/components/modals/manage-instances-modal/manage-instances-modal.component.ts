@@ -2,18 +2,17 @@ import { AsyncPipe, NgClass, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, EMPTY, Observable, catchError, map, tap } from 'rxjs';
-import { Logger } from 'src/renderer/app/classes/logger';
 import {
   DropdownMenuComponent,
   DropdownMenuItem
 } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { HideAfterDirective } from 'src/renderer/app/directives/hide-after.directive';
 import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
-import { ToastsService } from 'src/renderer/app/services/toasts.service';
+import { LoggerService } from 'src/renderer/app/services/logger-service';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
@@ -35,7 +34,7 @@ type dropdownMenuPayload = { environmentUuid: string };
     SpinnerComponent
   ]
 })
-export class ManageInstancesModalComponent extends Logger implements OnInit {
+export class ManageInstancesModalComponent implements OnInit {
   public payload$ = this.uiService.getModalPayload$('manageInstances');
   public taskInProgress$ = new BehaviorSubject<boolean>(false);
   public instances$ = this.store.select('deployInstances');
@@ -99,7 +98,7 @@ export class ManageInstancesModalComponent extends Logger implements OnInit {
               this.taskInProgress$.next(false);
             }),
             catchError(() => {
-              this.logMessage('error', 'CLOUD_DEPLOY_STOP_ERROR');
+              this.loggerService.logMessage('error', 'CLOUD_DEPLOY_STOP_ERROR');
 
               this.taskInProgress$.next(false);
 
@@ -116,10 +115,9 @@ export class ManageInstancesModalComponent extends Logger implements OnInit {
     private store: Store,
     private environmentsService: EnvironmentsService,
     private deployService: DeployService,
-    protected toastService: ToastsService
-  ) {
-    super('[RENDERER][COMPONENT][MANAGE-INSTANCE-MODAL] ', toastService);
-  }
+    private mainApiService: MainApiService,
+    private loggerService: LoggerService
+  ) {}
 
   ngOnInit() {
     this.environmentList$ = this.store.select('environments').pipe(
@@ -142,7 +140,7 @@ export class ManageInstancesModalComponent extends Logger implements OnInit {
   }
 
   public copyToClipboard(text: string) {
-    MainAPI.send('APP_WRITE_CLIPBOARD', text);
+    this.mainApiService.send('APP_WRITE_CLIPBOARD', text);
   }
 
   public navigateToEnvironment(environmentUuid: string, event: MouseEvent) {

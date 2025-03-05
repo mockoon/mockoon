@@ -53,7 +53,6 @@ import {
 import { EditableElementComponent } from 'src/renderer/app/components/editable-element/editable-element.component';
 import { FilterComponent } from 'src/renderer/app/components/filter/filter.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { DraggableDirective } from 'src/renderer/app/directives/draggable.directive';
 import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directive';
 import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
@@ -66,6 +65,7 @@ import {
   EnvironmentsStatuses
 } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
@@ -178,7 +178,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
         const activeEnvironment = this.store.getActiveEnvironment();
         const route = this.store.getRouteByUUID(routeUuid);
 
-        MainAPI.send(
+        this.mainApiService.send(
           'APP_WRITE_CLIPBOARD',
           buildFullPath(activeEnvironment, route)
         );
@@ -264,7 +264,8 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
     private environmentsService: EnvironmentsService,
     private store: Store,
     private uiService: UIService,
-    private formBuilder: UntypedFormBuilder
+    private formBuilder: UntypedFormBuilder,
+    private mainApiService: MainApiService
   ) {}
 
   ngOnInit() {

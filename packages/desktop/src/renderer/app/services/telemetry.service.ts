@@ -23,9 +23,9 @@ import {
   tap,
   throttleTime
 } from 'rxjs/operators';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { TelemetrySession } from 'src/renderer/app/models/telemetry.model';
 import { LocalStorageService } from 'src/renderer/app/services/local-storage.service';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
@@ -52,7 +52,8 @@ export class TelemetryService {
     private remoteConfigService: RemoteConfigService,
     private localStorageService: LocalStorageService,
     private store: Store,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private mainApiService: MainApiService
   ) {}
 
   /**
@@ -188,7 +189,7 @@ export class TelemetryService {
    * Get current OS from main process
    */
   private getOS() {
-    return from(MainAPI.invoke('APP_GET_OS')).pipe(
+    return from(this.mainApiService.invoke('APP_GET_OS')).pipe(
       tap((os) => {
         this.session.os = os;
       })

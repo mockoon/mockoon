@@ -1,187 +1,315 @@
-import { Injectable, NgZone } from '@angular/core';
-import { combineLatest } from 'rxjs';
-import { distinctUntilChanged, tap } from 'rxjs/operators';
-import { Logger } from 'src/renderer/app/classes/logger';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
-import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
-import { EventsService } from 'src/renderer/app/services/events.service';
-import { ImportExportService } from 'src/renderer/app/services/import-export.service';
-import { ToastsService } from 'src/renderer/app/services/toasts.service';
-import { TourService } from 'src/renderer/app/services/tour.service';
-import { UIService } from 'src/renderer/app/services/ui.service';
-import { UserService } from 'src/renderer/app/services/user.service';
-import { Store } from 'src/renderer/app/stores/store';
-import { environment as env } from 'src/renderer/environments/environment';
-import { FileWatcherOptions } from 'src/shared/models/settings.model';
+import { Injectable } from '@angular/core';
+import { Environment } from '@mockoon/commons';
+import { major } from 'semver';
+import { MainAPIModel } from 'src/renderer/app/models/main-api.model';
+import { Config } from 'src/renderer/config';
+import { Settings } from 'src/shared/models/settings.model';
 
+const deleteEnvironmentData = (uuid: string): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('mockoon-db', major(Config.appVersion));
+
+    request.onsuccess = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      const transaction = db.transaction(['environments'], 'readwrite');
+      const store = transaction.objectStore('environments');
+      const deleteRequest = store.delete(uuid);
+
+      deleteRequest.onsuccess = () => {
+        resolve();
+      };
+      deleteRequest.onerror = (event) => {
+        reject((event.target as any).error);
+      };
+
+      transaction.oncomplete = () => db.close();
+    };
+
+    request.onerror = (event) => {
+      reject((event.target as any).error);
+    };
+  });
+};
+
+const writeEnvironmentData = (environment: Environment): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('mockoon-db', major(Config.appVersion));
+
+    request.onupgradeneeded = (event) => {
+      console.log('onupgradeneeded');
+      const db = (event.target as IDBOpenDBRequest).result;
+      if (!db.objectStoreNames.contains('environments')) {
+        db.createObjectStore('environments', { keyPath: 'uuid' }); // Ensure a keyPath
+      }
+    };
+
+    request.onsuccess = (event) => {
+      console.log('onsuccess');
+      const db = (event.target as IDBOpenDBRequest).result;
+      const transaction = db.transaction(['environments'], 'readwrite');
+
+      transaction.oncomplete = () => db.close();
+      transaction.onerror = (event) => {
+        reject((event.target as any).error);
+      };
+
+      const store = transaction.objectStore('environments');
+      const addRequest = store.put(environment);
+
+      addRequest.onsuccess = () => {
+        resolve();
+      };
+      addRequest.onerror = (event) => {
+        reject((event.target as any).error);
+      };
+    };
+
+    request.onerror = (event) => {
+      reject((event.target as any).error);
+    };
+  });
+};
+
+const readEnvironmentData = (
+  uuid: string
+): Promise<Environment | undefined> => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('mockoon-db', major(Config.appVersion));
+
+    request.onsuccess = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      const transaction = db.transaction(['environments'], 'readonly');
+      const store = transaction.objectStore('environments');
+      const getRequest = store.get(uuid);
+
+      getRequest.onsuccess = (event) => {
+        resolve((event.target as any).result);
+      };
+      getRequest.onerror = (event) => {
+        reject((event.target as any).error);
+      };
+
+      transaction.oncomplete = () => db.close();
+    };
+
+    request.onerror = (event) => {
+      reject((event.target as any).error);
+    };
+  });
+};
+
+/**
+ * Main API service used to emulate Electron's main process in the web version
+ *
+ * Some methods are noops as they are not needed in the web version
+ *
+ */
 @Injectable({ providedIn: 'root' })
-export class MainApiService extends Logger {
-  constructor(
-    private environmentsService: EnvironmentsService,
-    private eventsService: EventsService,
-    private importExportService: ImportExportService,
-    private store: Store,
-    private zone: NgZone,
-    private userService: UserService,
-    protected toastsService: ToastsService,
-    private uiService: UIService,
-    private tourService: TourService
-  ) {
-    super('[RENDERER][SERVICE][API] ', toastsService);
+export class MainApiService implements MainAPIModel {
+  public invoke(channel: string, ...data: any[]) {
+    return new Promise<any>((resolve) => {
+      let result;
+
+      switch (channel) {
+        case 'APP_READ_ENVIRONMENT_DATA':
+          result = readEnvironmentData(data[0] as string);
+          break;
+        case 'APP_WRITE_ENVIRONMENT_DATA':
+          result = writeEnvironmentData(data[0] as Environment);
+          break;
+        case 'APP_DELETE_ENVIRONMENT_DATA':
+          result = deleteEnvironmentData(data[0] as string);
+          break;
+        case 'APP_READ_SETTINGS_DATA':
+          result = JSON.parse(localStorage.getItem('appSettings')) as Settings;
+          break;
+        case 'APP_WRITE_SETTINGS_DATA':
+          result = localStorage.setItem('appSettings', JSON.stringify(data[0]));
+          break;
+        case 'APP_BUILD_STORAGE_FILEPATH':
+          result = data[0] as string;
+          break;
+        case 'APP_GET_HASH':
+          {
+            const msgUint8 = new TextEncoder().encode(data[0]);
+
+            result = window.crypto.subtle
+              .digest('SHA-1', msgUint8)
+              .then((hashBuffer) => {
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+                return hashArray
+                  .map((b) => b.toString(16).padStart(2, '0'))
+                  .join('');
+              });
+          }
+          break;
+
+        case 'APP_GET_OS':
+          // TODO do like before (darwin, etc)
+          result = navigator.platform as string;
+          break;
+
+        // noop
+        case 'APP_SERVER_GET_PROCESSED_DATABUCKET_VALUE':
+        case 'APP_READ_CLIPBOARD':
+        case 'APP_UNWATCH_FILE':
+        case 'APP_UNWATCH_ALL_FILE':
+        default:
+          result = undefined;
+          break;
+      }
+
+      resolve(result);
+    });
   }
 
-  public init() {
-    if (!env.web) {
-      MainAPI.receive('APP_UPDATE_AVAILABLE', (version) => {
-        this.zone.run(() => {
-          this.eventsService.updateAvailable$.next(version);
-        });
-      });
-      MainAPI.receive('APP_AUTH_CALLBACK', (token) => {
-        this.zone.run(() => {
-          this.userService.authCallbackHandler(token).subscribe();
-        });
-      });
+  public send(channel: string, ...data: any[]) {
+    return new Promise<any>((resolve) => {
+      let result;
 
-      // set listeners on main process messages
-      MainAPI.receive('APP_MENU', (action) => {
-        this.zone.run(async () => {
-          switch (action) {
-            case 'NEW_ENVIRONMENT':
-              this.environmentsService
-                .addEnvironment({ setActive: true })
-                .subscribe();
-              break;
-            case 'NEW_CLOUD_ENVIRONMENT':
-              this.environmentsService
-                .addCloudEnvironment(null, true)
-                .subscribe();
-              break;
-            case 'NEW_ENVIRONMENT_CLIPBOARD':
-              this.environmentsService
-                .newEnvironmentFromClipboard()
-                .subscribe();
-              break;
-            case 'OPEN_ENVIRONMENT':
-              this.environmentsService.openEnvironment().subscribe();
-              break;
-            case 'DUPLICATE_ENVIRONMENT':
-              this.environmentsService.duplicateEnvironment().subscribe();
-              break;
-            case 'CLOSE_ENVIRONMENT':
-              this.environmentsService.closeEnvironment().subscribe();
-              break;
-            case 'NEW_ROUTE':
-              this.environmentsService.addHTTPRoute('root');
-              break;
-            case 'NEW_ROUTE_CLIPBOARD':
-              this.environmentsService.addRouteFromClipboard().subscribe();
-              break;
-            case 'START_ENVIRONMENT':
-              this.environmentsService.toggleEnvironment();
-              break;
-            case 'START_ALL_ENVIRONMENTS':
-              this.environmentsService.toggleAllEnvironments();
-              break;
-            case 'DUPLICATE_ROUTE':
-              this.environmentsService.duplicateRoute('root');
-              break;
-            case 'DELETE_ROUTE':
-              this.environmentsService.removeRoute();
-              break;
-            case 'PREVIOUS_ENVIRONMENT':
-              this.environmentsService.setActiveEnvironment('previous');
-              break;
-            case 'NEXT_ENVIRONMENT':
-              this.environmentsService.setActiveEnvironment('next');
-              break;
-            case 'OPEN_SETTINGS':
-              this.uiService.openModal('settings');
-              break;
-            case 'TOUR_START':
-              this.tourService.start();
-              break;
-            case 'OPEN_CHANGELOG':
-              this.uiService.openModal('changelog');
-              break;
-            case 'IMPORT_OPENAPI_FILE':
-              this.importExportService.importOpenAPIFile().subscribe();
-              break;
-            case 'EXPORT_OPENAPI_FILE':
-              this.importExportService.exportOpenAPIFile().subscribe();
-              break;
-          }
-        });
-      });
-
-      // listen to custom protocol queries
-      MainAPI.receive('APP_CUSTOM_PROTOCOL', (action, parameters) => {
-        this.zone.run(() => {
-          switch (action) {
-            case 'auth':
-              this.userService
-                .authCallbackHandler(parameters.token)
-                .subscribe();
-              break;
-            case 'load-environment':
-              this.environmentsService
-                .newEnvironmentFromURL(parameters.url)
-                .subscribe();
-              break;
-          }
-        });
-      });
-
-      // listen to file external changes
-      MainAPI.receive(
-        'APP_FILE_EXTERNAL_CHANGE',
-        (UUID: string, environmentPath: string) => {
-          this.zone.run(() => {
-            if (
-              this.store.get('settings').fileWatcherEnabled ===
-              FileWatcherOptions.AUTO
-            ) {
-              this.environmentsService
-                .reloadEnvironment(UUID, environmentPath)
-                .subscribe();
-            } else if (
-              this.store.get('settings').fileWatcherEnabled ===
-              FileWatcherOptions.PROMPT
-            ) {
-              this.environmentsService
-                .notifyExternalChange(UUID, environmentPath)
-                .subscribe();
+      switch (channel) {
+        case 'APP_WRITE_CLIPBOARD':
+          {
+            if (navigator.clipboard) {
+              navigator.clipboard.writeText(data[0]);
             }
-          });
-        }
-      );
+          }
+          break;
+        // noop
+        case 'APP_LOGS':
+        case 'APP_UPDATE_MENU_STATE':
+        case 'APP_UPDATE_ENVIRONMENT':
+        case 'APP_AUTH':
+        case 'APP_AUTH_STOP_SERVER':
+        case 'APP_APPLY_UPDATE':
+        case 'APP_HIDE_WINDOW':
+        case 'APP_ZOOM':
+        case 'APP_SHOW_FILE':
+        default:
+          result = undefined;
+          break;
+      }
 
-      // listen to environments and enable/disable some menu entries
-      combineLatest([
-        this.store.select('environments').pipe(distinctUntilChanged()),
-        this.store.selectActiveEnvironment().pipe(distinctUntilChanged()),
-        this.store.select('settings').pipe(distinctUntilChanged()),
-        this.store.select('sync').pipe(distinctUntilChanged())
-      ])
-        .pipe(
-          tap(([environments, activeEnvironment, settings, sync]) => {
-            MainAPI.send('APP_UPDATE_MENU_STATE', {
-              cloudEnabled: sync.status,
-              environmentsCount: environments.length,
-              hasActiveEnvironment: !!activeEnvironment,
-              isActiveEnvironmentCloud: activeEnvironment
-                ? !!settings?.environments.find(
-                    (environmentDescriptor) =>
-                      environmentDescriptor.uuid === activeEnvironment.uuid &&
-                      environmentDescriptor.cloud
-                  )
-                : false,
-              activeEnvironmentRoutesCount:
-                activeEnvironment?.routes.length ?? 0
-            });
-          })
-        )
-        .subscribe();
-    }
+      resolve(result);
+    });
+  }
+
+  public receive(_channel: string, _callback: (...args: any[]) => void) {
+    /* noop */
   }
 }
+
+/*
+
+export const initIPCListeners = (mainWindow: BrowserWindow) => {
+  // Quit requested by renderer (when waiting for save to finish)
+  ipcMain.on('APP_QUIT', () => {
+    // destroy the window otherwise app.quit() will trigger beforeunload again. Also there is no app.quit for macos
+    mainWindow.destroy();
+  });
+
+  ipcMain.on('APP_SHOW_FOLDER', (event, name) => {
+    showFolderInExplorer(name);
+  });
+
+
+
+
+
+  ipcMain.handle(
+    'APP_READ_FILE',
+    async (event, filePath) => await fsPromises.readFile(filePath, 'utf-8')
+  );
+
+  ipcMain.handle(
+    'APP_WRITE_FILE',
+    async (event, filePath, data) =>
+      await fsPromises.writeFile(filePath, data, 'utf-8')
+  );
+
+
+  ipcMain.handle('APP_SHOW_OPEN_DIALOG', async (event, options) => {
+    options.defaultPath = getDialogDefaultPath();
+
+    if (IS_TESTING) {
+      return { filePaths: [dialogMocks.open.pop()] };
+    } else {
+      return await dialog.showOpenDialog(mainWindow, options);
+    }
+  });
+
+  ipcMain.handle('APP_SHOW_SAVE_DIALOG', async (event, options) => {
+    if (!options.defaultPath) {
+      options.defaultPath = getDialogDefaultPath();
+    }
+
+    if (IS_TESTING) {
+      return { filePath: dialogMocks.save.pop() };
+    } else {
+      return await dialog.showSaveDialog(mainWindow, options);
+    }
+  });
+
+
+  ipcMain.handle(
+    'APP_GET_BASE_PATH',
+    (event, filePath: string) => pathParse(filePath).dir
+  );
+
+  ipcMain.handle('APP_REPLACE_FILEPATH_EXTENSION', (event, filePath: string) =>
+    pathFormat({ ...pathParse(filePath), base: '', ext: '.json' })
+  );
+
+  ipcMain.handle('APP_GET_MIME_TYPE', (event, filePath) =>
+    mimeTypeLookup(filePath)
+  );
+
+  ipcMain.handle('APP_GET_FILENAME', (event, filePath) => {
+    const parsedPath = pathParse(filePath);
+
+    return parsedPath.name;
+  });
+
+
+  ipcMain.handle(
+    'APP_OPENAPI_CONVERT_FROM',
+    async (event, filePath: string, port?: number) => {
+      const openApiConverter = new OpenAPIConverter();
+
+      return await openApiConverter.convertFromOpenAPI(filePath, port);
+    }
+  );
+
+  ipcMain.handle('APP_OPENAPI_CONVERT_TO', async (event, data: Environment) => {
+    const openApiConverter = new OpenAPIConverter();
+
+    return await openApiConverter.convertToOpenAPIV3(data);
+  });
+
+  ipcMain.handle(
+    'APP_START_SERVER',
+    (event, environment: Environment, environmentPath: string) => {
+      new ServerInstance(environment, environmentPath);
+    }
+  );
+
+  ipcMain.handle('APP_STOP_SERVER', (event, uuid: string) => {
+    ServerInstance.stop(uuid);
+  });
+
+  ipcMain.on(
+    'APP_OPEN_FILE',
+    async (event, filePath: string, relativeToFile: string) => {
+      const result = await shell.openPath(
+        buildFilePath(filePath, relativeToFile)
+      );
+
+      if (result) {
+        logError(`Failed to open file in default editor: ${result}`);
+      }
+    }
+  );
+};
+
+ */

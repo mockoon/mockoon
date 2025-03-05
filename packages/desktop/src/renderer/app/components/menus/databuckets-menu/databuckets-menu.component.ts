@@ -21,7 +21,6 @@ import {
 } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { FilterComponent } from 'src/renderer/app/components/filter/filter.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { DraggableDirective } from 'src/renderer/app/directives/draggable.directive';
 import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directive';
 import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
@@ -29,6 +28,7 @@ import { ScrollWhenActiveDirective } from 'src/renderer/app/directives/scroll-to
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { textFilter, trackByUuid } from 'src/renderer/app/libs/utils.lib';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { Settings } from 'src/shared/models/settings.model';
@@ -97,7 +97,7 @@ export class DatabucketsMenuComponent implements OnInit {
       action: ({ databucketUuid }: dropdownMenuPayload) => {
         const databucket = this.store.getDatabucketByUUID(databucketUuid);
 
-        MainAPI.send('APP_WRITE_CLIPBOARD', databucket.id);
+        this.mainApiService.send('APP_WRITE_CLIPBOARD', databucket.id);
       }
     },
     {
@@ -114,7 +114,8 @@ export class DatabucketsMenuComponent implements OnInit {
 
   constructor(
     private environmentsService: EnvironmentsService,
-    private store: Store
+    private store: Store,
+    private mainApiService: MainApiService
   ) {}
 
   ngOnInit() {
@@ -169,6 +170,6 @@ export class DatabucketsMenuComponent implements OnInit {
   }
 
   public copyToClipboard(databucketId: string) {
-    MainAPI.send('APP_WRITE_CLIPBOARD', databucketId);
+    this.mainApiService.send('APP_WRITE_CLIPBOARD', databucketId);
   }
 }

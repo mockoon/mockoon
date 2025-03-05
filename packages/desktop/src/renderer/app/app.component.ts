@@ -15,7 +15,6 @@ import { Title } from '@angular/platform-browser';
 import { Environment } from '@mockoon/commons';
 import { NgbToast } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, from, fromEvent, tap } from 'rxjs';
-import { Logger } from 'src/renderer/app/classes/logger';
 import { EnvironmentCallbacksComponent } from 'src/renderer/app/components/environment-callbacks/environment-callbacks.component';
 import { EnvironmentDatabucketsComponent } from 'src/renderer/app/components/environment-databuckets/environment-databuckets.component';
 import { EnvironmentHeadersComponent } from 'src/renderer/app/components/environment-headers/environment-headers.component';
@@ -27,12 +26,13 @@ import { FooterComponent } from 'src/renderer/app/components/footer/footer.compo
 import { HeaderComponent } from 'src/renderer/app/components/header/header.component';
 import { EnvironmentsMenuComponent } from 'src/renderer/app/components/menus/environments-menu/environments-menu.component';
 import { TourComponent } from 'src/renderer/app/components/tour/tour.component';
-import { MainAPI } from 'src/renderer/app/constants/common.constants';
 import { ViewsNameType } from 'src/renderer/app/models/store.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
 import { AppQuitService } from 'src/renderer/app/services/app-quit.services';
 import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { LoggerService } from 'src/renderer/app/services/logger-service';
+import { MainApiListenerService } from 'src/renderer/app/services/main-api-listener.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { ServerService } from 'src/renderer/app/services/server.service';
@@ -70,7 +70,7 @@ import { environment } from 'src/renderer/environments/environment';
     AsyncPipe
   ]
 })
-export class AppComponent extends Logger implements OnInit {
+export class AppComponent implements OnInit {
   public activeEnvironment$: Observable<Environment>;
   public activeView$: Observable<ViewsNameType>;
   public scrollToBottom = this.uiService.scrollToBottom;
@@ -81,9 +81,9 @@ export class AppComponent extends Logger implements OnInit {
     private telemetryService: TelemetryService,
     private environmentsService: EnvironmentsService,
     private store: Store,
-    protected toastService: ToastsService,
+    private toastService: ToastsService,
     private uiService: UIService,
-    private mainApiService: MainApiService,
+    private mainApiListenerService: MainApiListenerService,
     private settingsService: SettingsService,
     private appQuitService: AppQuitService,
     private userService: UserService,
@@ -92,10 +92,10 @@ export class AppComponent extends Logger implements OnInit {
     private remoteConfigService: RemoteConfigService,
     private syncService: SyncService,
     private deployService: DeployService,
-    private serverService: ServerService
+    private serverService: ServerService,
+    private mainApiService: MainApiService,
+    private loggerService: LoggerService
   ) {
-    super('[RENDERER][COMPONENT][APP] ', toastService);
-
     this.settingsService.monitorSettings().subscribe();
     this.settingsService.loadSettings().subscribe();
     this.settingsService.saveSettings().subscribe();
@@ -107,7 +107,7 @@ export class AppComponent extends Logger implements OnInit {
     this.userService.init().subscribe();
     this.syncService.init().subscribe();
     this.deployService.init().subscribe();
-    this.mainApiService.init();
+    this.mainApiListenerService.init();
 
     if (environment.web) {
       this.serverService.init().subscribe();
@@ -143,9 +143,9 @@ export class AppComponent extends Logger implements OnInit {
   }
 
   ngOnInit() {
-    this.logMessage('info', 'INITIALIZING_APP');
+    this.loggerService.logMessage('info', 'INITIALIZING_APP');
 
-    from(MainAPI.invoke('APP_GET_OS'))
+    from(this.mainApiService.invoke('APP_GET_OS'))
       .pipe(
         tap((os) => {
           this.os = os;

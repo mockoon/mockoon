@@ -39,11 +39,10 @@ import {
   tap
 } from 'rxjs';
 import { Socket, io } from 'socket.io-client';
-import { Logger } from 'src/renderer/app/classes/logger';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
+import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { SyncPayloadsService } from 'src/renderer/app/services/sync-payloads.service';
-import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import {
@@ -54,7 +53,7 @@ import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
 @Injectable({ providedIn: 'root' })
-export class SyncService extends Logger {
+export class SyncService {
   private deviceId: string;
   private socket: Socket;
   private timeDifference: number;
@@ -67,10 +66,8 @@ export class SyncService extends Logger {
     private environmentsService: EnvironmentsService,
     private remoteConfig: RemoteConfigService,
     private uiService: UIService,
-    protected toastsService: ToastsService
-  ) {
-    super('[RENDERER][SERVICE][SYNC] ', toastsService);
-  }
+    private loggerService: LoggerService
+  ) {}
 
   /**
    * Initialize the socket connection.
@@ -683,11 +680,11 @@ export class SyncService extends Logger {
       }
 
       if (acknowledgment.error === SyncErrors.QUOTA_EXCEEDED) {
-        this.logMessage('error', 'CLOUD_SYNC_QUOTA_EXCEEDED', {
+        this.loggerService.logMessage('error', 'CLOUD_SYNC_QUOTA_EXCEEDED', {
           quota: this.store.get('user').cloudSyncItemsQuota
         });
       } else if (acknowledgment.error === SyncErrors.ENVIRONMENT_TOO_LARGE) {
-        this.logMessage('error', 'CLOUD_ENVIRONMENT_TOO_LARGE', {
+        this.loggerService.logMessage('error', 'CLOUD_ENVIRONMENT_TOO_LARGE', {
           maxSize: this.store.get('user').cloudSyncSizeQuota
         });
       }
