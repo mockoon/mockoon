@@ -88,7 +88,7 @@ export const createAdminEndpoint = (
   });
 
   serverInstance.on('data-bucket-processed', (dataBuckets) => {
-    events.send({ event: 'data-bucket-processed', dataBuckets });
+    events.send({ event: 'data-bucket-processed', dataBuckets }, true);
   });
 
   app.get(`${adminApiPrefix}/events`, events.requestListener);

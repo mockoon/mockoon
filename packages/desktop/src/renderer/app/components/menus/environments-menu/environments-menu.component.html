@@ -60,7 +60,7 @@
               }"
               (click)="cloudReconnect()"
             >
-              <ng-template #clouIconTooltip>
+              <ng-template #cloudIconTooltip>
                 @if (!sync.status) {
                   @if (sync.offlineReason) {
                     Disconnected: {{ offlineReasonsLabels[sync.offlineReason] }}
@@ -84,7 +84,7 @@
                     ? 'cloud'
                     : 'cloud_off'
                 "
-                [ngbTooltip]="category.id === 'cloud' ? clouIconTooltip : null"
+                [ngbTooltip]="category.id === 'cloud' ? cloudIconTooltip : null"
                 class="pe-2"
               ></app-svg>
             </button>
