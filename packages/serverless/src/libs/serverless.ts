@@ -13,7 +13,7 @@ import { RequestListener } from 'http';
 import ServerlessHttp from 'serverless-http';
 
 export class MockoonServerless {
-  private options: ServerOptions & { logTransaction: boolean } = {
+  private options: Partial<ServerOptions> & { logTransaction: boolean } = {
     logTransaction: false,
     disabledRoutes: [],
     fakerOptions: {},

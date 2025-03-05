@@ -1,5 +1,6 @@
 import { Environment } from '@mockoon/commons';
 import { strictEqual } from 'node:assert';
+import { resolve as pathResolve } from 'node:path';
 import { after, before, describe, it } from 'node:test';
 import { MockoonServer } from '../../../src';
 import { getEnvironment } from '../../libs/environment';
@@ -12,7 +13,9 @@ describe('Range headers', () => {
     environment = await getEnvironment('test');
     environment.port = 3010;
 
-    server = new MockoonServer(environment);
+    server = new MockoonServer(environment, {
+      environmentDirectory: pathResolve('./test/data/environments/')
+    });
 
     await new Promise((resolve, reject) => {
       server.on('started', () => {

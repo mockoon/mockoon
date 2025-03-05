@@ -43,7 +43,7 @@ import {
 } from 'https';
 import killable from 'killable';
 import { lookup as mimeTypeLookup } from 'mime-types';
-import { basename, extname } from 'path';
+import { basename, extname, isAbsolute, resolve } from 'path';
 import { match } from 'path-to-regexp';
 import { parse as qsParse } from 'qs';
 import rangeParser from 'range-parser';
@@ -97,6 +97,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   // templating global variables
   private globalVariables: Record<string, any> = {};
   private options: ServerOptions = {
+    environmentDirectory: '.',
     disabledRoutes: [],
     envVarsPrefix: defaultEnvironmentVariablesPrefix,
     enableAdminApi: true,
@@ -873,25 +874,9 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       enabledRouteResponse.bodyType === BodyTypes.FILE &&
       enabledRouteResponse.filePath
     ) {
-      const templateParser = (contentData: string) =>
-        TemplateParser({
-          shouldOmitDataHelper: false,
-          content: contentData,
-          environment: this.environment,
-          processedDatabuckets: this.processedDatabuckets,
-          globalVariables: this.globalVariables,
-          request: finalRequest,
-          envVarsPrefix: this.options.envVarsPrefix
-        });
-
-      // resolve file location
-      let filePath = templateParser(
-        // replace backslashes with forward slashes, but not if followed by a dot (to allow helpers with paths containing properties with dots: e.g. {{queryParam 'path.prop\.with\.dots'}})
-        enabledRouteResponse.filePath.replace(/\\(?!\.)/g, '/')
-      );
-      filePath = resolvePathFromEnvironment(
-        filePath,
-        this.options.environmentDirectory
+      const filePath = this.getSafeFilePath(
+        enabledRouteResponse.filePath,
+        finalRequest
       );
 
       serveFileContentInWs(
@@ -900,7 +885,16 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         enabledRouteResponse,
         this,
         filePath,
-        templateParser
+        (contentData: string) =>
+          TemplateParser({
+            shouldOmitDataHelper: false,
+            content: contentData,
+            environment: this.environment,
+            processedDatabuckets: this.processedDatabuckets,
+            globalVariables: this.globalVariables,
+            request: finalRequest,
+            envVarsPrefix: this.options.envVarsPrefix
+          })
       );
 
       return;
@@ -1428,21 +1422,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         envVarsPrefix: this.options.envVarsPrefix
       });
 
-      let filePath = TemplateParser({
-        shouldOmitDataHelper: false,
-        // replace backslashes with forward slashes, but not if followed by a dot (to allow helpers with paths containing properties with dots: e.g. {{queryParam 'path.prop\.with\.dots'}})
-        content: callback.filePath.replace(/\\(?!\.)/g, '/'),
-        environment: this.environment,
-        processedDatabuckets: this.processedDatabuckets,
-        globalVariables: this.globalVariables,
-        request: serverRequest,
-        envVarsPrefix: this.options.envVarsPrefix
-      });
-
-      filePath = resolvePathFromEnvironment(
-        filePath,
-        this.options.environmentDirectory
-      );
+      const filePath = this.getSafeFilePath(callback.filePath, serverRequest);
 
       const fileMimeType = mimeTypeLookup(filePath) || '';
 
@@ -1579,20 +1559,9 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     const serverRequest = fromExpressRequest(request);
     try {
-      let filePath = TemplateParser({
-        shouldOmitDataHelper: false,
-        // replace backslashes with forward slashes, but not if followed by a dot (to allow helpers with paths containing properties with dots: e.g. {{queryParam 'path.prop\.with\.dots'}})
-        content: routeResponse.filePath.replace(/\\(?!\.)/g, '/'),
-        environment: this.environment,
-        processedDatabuckets: this.processedDatabuckets,
-        globalVariables: this.globalVariables,
-        request: serverRequest,
-        envVarsPrefix: this.options.envVarsPrefix
-      });
-
-      filePath = resolvePathFromEnvironment(
-        filePath,
-        this.options.environmentDirectory
+      const filePath = this.getSafeFilePath(
+        routeResponse.filePath,
+        serverRequest
       );
 
       const fileMimeType = mimeTypeLookup(filePath) || '';
@@ -2432,5 +2401,72 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     if (response.locals.statusCode !== undefined) {
       response.status(response.locals.statusCode);
     }
+  }
+
+  /**
+   * Parse file paths and prevent path traversal
+   *
+   * If the path is absolute, it must stay within its original static base
+   * (before the first {{...}})
+   * If the path is relative, it must stay within the environment base directory
+   *
+   * @param filePath
+   * @param request
+   * @returns
+   */
+  private getSafeFilePath(filePath: string, request?: ServerRequest) {
+    const resolvePath = (path: string) => {
+      const isPathAbsolute = isAbsolute(path);
+
+      return isPathAbsolute
+        ? resolve(path)
+        : resolve(this.options.environmentDirectory, path);
+    };
+    // Convert backslashes to forward slashes (Windows compatibility)
+    const rawFilePath = filePath.replace(/\\(?!\.)/g, '/');
+
+    // Check if there is any templating helper in the file path
+    const hasTemplatingHelper = /{{2,3}[^}]+}{2,3}/.test(rawFilePath);
+
+    if (!hasTemplatingHelper) {
+      // If no templating helper, allow unrestricted access
+      return resolvePath(rawFilePath);
+    }
+
+    // Extract static base from templated string (before first {{...}})
+    const staticBaseMatch = rawFilePath.match(/^([^{}]+)/);
+    const staticBaseDir = staticBaseMatch ? resolve(staticBaseMatch[1]) : null;
+
+    const parsedFilePath = TemplateParser({
+      shouldOmitDataHelper: false,
+      content: rawFilePath,
+      environment: this.environment,
+      processedDatabuckets: this.processedDatabuckets,
+      globalVariables: this.globalVariables,
+      request,
+      envVarsPrefix: this.options.envVarsPrefix
+    });
+
+    // Determine if the path is absolute or relative
+    const isPathAbsolute = isAbsolute(parsedFilePath);
+    const resolvedPath = resolvePath(parsedFilePath);
+
+    if (isPathAbsolute) {
+      // Absolute paths must stay within their original static base
+      if (!staticBaseDir || !resolvedPath.startsWith(staticBaseDir)) {
+        throw new Error(
+          `Access to absolute path outside of the original static base directory (${resolvedPath})`
+        );
+      }
+    } else {
+      // Relative paths must stay within the environment base directory
+      if (!resolvedPath.startsWith(this.options.environmentDirectory)) {
+        throw new Error(
+          `Access to relative path outside of the environment base directory (${resolvedPath})`
+        );
+      }
+    }
+
+    return resolvedPath;
   }
 }

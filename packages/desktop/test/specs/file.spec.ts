@@ -11,12 +11,78 @@ describe('File serving', () => {
     await environments.open('basic-data');
   });
 
+  describe('Path escape', () => {
+    it('should allow escaping when there is no templating', async () => {
+      await environments.start();
+      await routes.select(2);
+      await routes.selectBodyType(BodyTypes.FILE);
+      await routes.setFile('../window-state.json');
+
+      await utils.waitForAutosave();
+
+      await http.assertCall({
+        // this file always exists in the data folder
+        path: '/answer',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: {
+            contains: 'isFullScreen'
+          }
+        }
+      });
+    });
+
+    it('should return an error when trying to escape a relative path', async () => {
+      await routes.select(2);
+      await routes.selectBodyType(BodyTypes.FILE);
+      await routes.setFile("./{{queryParam 'filename'}}");
+
+      await utils.waitForAutosave();
+
+      await http.assertCall({
+        // this file always exists in the data folder
+        path: '/answer?filename=../window-state.json',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: {
+            contains:
+              'Error while serving the content: Access to relative path outside of the environment base directory'
+          }
+        }
+      });
+    });
+
+    it('should return an error when trying to escape an absolute path', async () => {
+      await routes.select(2);
+      await routes.selectBodyType(BodyTypes.FILE);
+      await routes.setFile(
+        `${process.cwd()}/tmp/storage/{{queryParam 'filename'}}`
+      );
+      await utils.waitForAutosave();
+
+      await http.assertCall({
+        // this file always exists in the data folder
+        path: '/answer?filename=../window-state.json',
+        method: 'GET',
+        testedResponse: {
+          status: 200,
+          body: {
+            contains:
+              'Error while serving the content: Access to absolute path outside of the original static base directory'
+          }
+        }
+      });
+    });
+  });
+
   describe('File not found', () => {
     it('should return an error and keep the defined status', async () => {
       await routes.select(2);
       await routes.selectBodyType(BodyTypes.FILE);
       await routes.setFile('./non-existing-file.txt');
-      await environments.start();
+      await utils.waitForAutosave();
 
       await http.assertCall({
         path: '/answer',
