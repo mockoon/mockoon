@@ -28,7 +28,7 @@ export class LoggerService {
   public logMessage(
     level: MessageLevels,
     messageCode: MessageCodes,
-    messageParams: MessageParams = { error: { message: '', name: '' } }
+    messageParams: MessageParams
   ) {
     // if message not implemented, return
     if (!DesktopMessages[messageCode]) {
@@ -36,7 +36,14 @@ export class LoggerService {
     }
 
     if (messageParams?.error) {
-      messageParams = { ...messageParams, error: { ...messageParams.error } };
+      messageParams = {
+        ...messageParams,
+        error: {
+          message: messageParams.error.message,
+          code: messageParams.error.code,
+          stack: messageParams.error.stack
+        }
+      };
 
       // Strip IPC error prefix
       if (messageParams?.error?.message) {

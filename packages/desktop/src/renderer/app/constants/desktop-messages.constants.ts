@@ -39,8 +39,8 @@ export const DesktopMessages: Record<
     const errorInfo =
       typeof messageParams.error === 'string'
         ? messageParams.error
-        : `${messageParams.error.message || ''} - ${
-            messageParams.error.stack || ''
+        : `${messageParams?.error?.message || ''} - ${
+            messageParams?.error?.stack || ''
           }`;
 
     return {
@@ -79,37 +79,37 @@ export const DesktopMessages: Record<
     toastType: 'error'
   }),
   CERT_FILE_NOT_FOUND: (messageParams) => ({
-    message: `Certificate file not found: ${messageParams.error.message}`,
+    message: `Certificate file not found: ${messageParams?.error?.message}`,
     showToast: true,
     log: false,
     toastType: 'error'
   }),
   ROUTE_CREATION_ERROR: (messageParams) => ({
-    message: `Error while creating the route: ${messageParams.error.message}`,
+    message: `Error while creating the route: ${messageParams?.error?.message}`,
     log: false,
     showToast: true,
     toastType: 'error'
   }),
   ROUTE_CREATION_ERROR_REGEX: (messageParams) => ({
-    message: `Error while creating the route, regex path is invalid: ${messageParams.error.message}`,
+    message: `Error while creating the route, regex path is invalid: ${messageParams?.error?.message}`,
     log: false,
     showToast: true,
     toastType: 'error'
   }),
   ROUTE_SERVING_ERROR: (messageParams) => ({
-    message: `Error while serving the content: ${messageParams.error.message}`,
+    message: `Error while serving the content: ${messageParams?.error?.message}`,
     log: false,
     showToast: true,
     toastType: 'warning'
   }),
   ROUTE_FILE_SERVING_ERROR: (messageParams) => ({
-    message: `Error while serving the file content: ${messageParams.error.message}`,
+    message: `Error while serving the file content: ${messageParams?.error?.message}`,
     log: false,
     showToast: true,
     toastType: 'warning'
   }),
   UNKNOWN_SERVER_ERROR: (messageParams) => ({
-    message: `An unknown server error occured: ${messageParams.error.message}`,
+    message: `An unknown server error occured: ${messageParams?.error?.message}`,
     log: false,
     showToast: true,
     toastType: 'error'
@@ -121,7 +121,7 @@ export const DesktopMessages: Record<
     toastType: 'success'
   }),
   OPENAPI_EXPORT_ERROR: (messageParams) => ({
-    message: `Error while exporting environment to OpenAPI format: ${messageParams.error.message}`,
+    message: `Error while exporting environment to OpenAPI format: ${messageParams?.error?.message}`,
     log: true,
     logPayload: {
       environmentUUID: messageParams.environmentUUID,
@@ -137,7 +137,7 @@ export const DesktopMessages: Record<
     toastType: 'success'
   }),
   OPENAPI_IMPORT_ERROR: (messageParams) => ({
-    message: `Error while importing environment from OpenAPI format: ${messageParams.error.message}`,
+    message: `Error while importing environment from OpenAPI format: ${messageParams?.error?.message}`,
     showToast: true,
     log: true,
     toastType: 'error'
@@ -149,7 +149,7 @@ export const DesktopMessages: Record<
     toastType: 'success'
   }),
   COPY_ENVIRONMENT_CLIPBOARD_ERROR: (messageParams) => ({
-    message: `An error occured while copying the environment to the clipboard: ${messageParams.error.message}`,
+    message: `An error occured while copying the environment to the clipboard: ${messageParams?.error?.message}`,
     showToast: true,
     log: true,
     logPayload: { environmentUUID: messageParams.environmentUUID },
@@ -167,7 +167,7 @@ export const DesktopMessages: Record<
     toastType: 'success'
   }),
   COPY_ROUTE_CLIPBOARD_ERROR: (messageParams) => ({
-    message: `An error occured while copying the route to the clipboard: ${messageParams.error.message}`,
+    message: `An error occured while copying the route to the clipboard: ${messageParams?.error?.message}`,
     log: true,
     logPayload: { routeUUID: messageParams.routeUUID },
     showToast: true,
@@ -179,19 +179,19 @@ export const DesktopMessages: Record<
     showToast: false
   }),
   NEW_ENVIRONMENT_CLIPBOARD_ERROR: (messageParams) => ({
-    message: `Error while loading environment from clipboard: ${messageParams.error.message}`,
+    message: `Error while loading environment from clipboard: ${messageParams?.error?.message}`,
     log: true,
     showToast: true,
     toastType: 'error'
   }),
   NEW_ENVIRONMENT_URL_ERROR: (messageParams) => ({
-    message: `Error while loading environment from URL: ${messageParams.error.message}`,
+    message: `Error while loading environment from URL: ${messageParams?.error?.message}`,
     log: true,
     showToast: true,
     toastType: 'error'
   }),
   NEW_ROUTE_CLIPBOARD_ERROR: (messageParams) => ({
-    message: `Error while loading route from clipboard: ${messageParams.error.message}`,
+    message: `Error while loading route from clipboard: ${messageParams?.error?.message}`,
     log: true,
     showToast: true,
     toastType: 'error'
@@ -246,8 +246,8 @@ export const DesktopMessages: Record<
   STORAGE_LOAD_ERROR: (messageParams) => ({
     message: `Error while loading ${messageParams.path}. Please restart the application.`,
     loggerMessage: `Error while loading ${messageParams.path}: ${
-      messageParams.error.code || ''
-    } ${messageParams.error.message || ''}`,
+      messageParams?.error?.code || ''
+    } ${messageParams?.error?.message || ''}`,
     log: true,
     showToast: true,
     toastType: 'error'
@@ -255,8 +255,8 @@ export const DesktopMessages: Record<
   STORAGE_SAVE_ERROR: (messageParams) => ({
     message: `Error while saving ${messageParams.path}. If the problem persists please restart the application.`,
     loggerMessage: `Error while saving ${messageParams.path}: ${
-      messageParams.error.code || ''
-    } ${messageParams.error.message || ''}`,
+      messageParams?.error?.code || ''
+    } ${messageParams?.error?.message || ''}`,
     log: true,
     showToast: true,
     toastType: 'error'

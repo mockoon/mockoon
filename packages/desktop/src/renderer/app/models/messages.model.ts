@@ -1,10 +1,7 @@
 import { ServerErrorCodes } from '@mockoon/commons';
 
 export type MessageLevels = 'error' | 'info';
-export type MessageParams = {
-  [key: string]: any;
-  error?: Error & { code?: string };
-};
+export type MessageParams = Record<string, any>;
 export type MessageCodes =
   | keyof typeof ServerErrorCodes
   | 'INITIALIZING_APP'

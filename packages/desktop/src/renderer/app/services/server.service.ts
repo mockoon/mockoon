@@ -42,63 +42,74 @@ export class ServerService {
     private mainApiService: MainApiService,
     private loggerService: LoggerService,
     private httpClient: HttpClient
-  ) {
-    this.addEventListener();
-  }
+  ) {}
 
   /**
    * Listen to SSE coming from the currently active environment admin API
    */
   public init() {
-    return combineLatest([
-      this.store.select('activeEnvironmentUUID').pipe(filter((uuid) => !!uuid)),
-      this.store
-        .select('deployInstances')
-        .pipe(filter((instances) => !!instances && instances.length > 0))
-    ]).pipe(
-      map(([environmentUuid, instances]) => ({
-        instance: instances.find(
-          (instance) => instance.environmentUuid === environmentUuid
-        ),
-        environmentUuid
-      })),
-      filter(({ instance }) => !!instance),
-      switchMap(({ instance, environmentUuid }) =>
-        new Observable((observer) => {
-          const eventSource = new EventSource(
-            `${this.buildRemoteInstanceUrl(instance)}/events`,
-            {
-              headers: { Authorization: `Bearer ${instance.apiKey}` }
-            }
-          );
-
-          eventSource.onmessage = (event) => {
-            observer.next(event.data);
-          };
-
-          eventSource.onerror = (error) => {
-            observer.error(error);
-          };
-
-          return () => {
-            eventSource.close();
-          };
-        }).pipe(
-          tap((message: string) => {
-            const payload: {
-              event: keyof ServerEvents;
-              transaction?: Transaction;
-              dataBuckets?: ProcessedDatabucketWithoutValue[];
-            } = JSON.parse(message);
-
-            this.processEvent(environmentUuid, payload.event, payload);
-          })
-        )
-      ),
-      catchError(() => {
-        return EMPTY;
-      })
+    this.mainApiService.receive(
+      'APP_SERVER_EVENT',
+      (environmentUuid, eventName, data) => {
+        this.processEvent(environmentUuid, eventName, data);
+      }
     );
+
+    if (env.web) {
+      return combineLatest([
+        this.store
+          .select('activeEnvironmentUUID')
+          .pipe(filter((uuid) => !!uuid)),
+        this.store
+          .select('deployInstances')
+          .pipe(filter((instances) => !!instances && instances.length > 0))
+      ]).pipe(
+        map(([environmentUuid, instances]) => ({
+          instance: instances.find(
+            (instance) => instance.environmentUuid === environmentUuid
+          ),
+          environmentUuid
+        })),
+        filter(({ instance }) => !!instance),
+        switchMap(({ instance, environmentUuid }) =>
+          new Observable((observer) => {
+            const eventSource = new EventSource(
+              `${this.buildRemoteInstanceUrl(instance)}/events`,
+              {
+                headers: { Authorization: `Bearer ${instance.apiKey}` }
+              }
+            );
+
+            eventSource.onmessage = (event) => {
+              observer.next(event.data);
+            };
+
+            eventSource.onerror = (error) => {
+              observer.error(error);
+            };
+
+            return () => {
+              eventSource.close();
+            };
+          }).pipe(
+            tap((message: string) => {
+              const payload: {
+                event: keyof ServerEvents;
+                transaction?: Transaction;
+                dataBuckets?: ProcessedDatabucketWithoutValue[];
+              } = JSON.parse(message);
+
+              this.processEvent(environmentUuid, payload.event, payload);
+            })
+          )
+        ),
+        catchError(() => {
+          return EMPTY;
+        })
+      );
+    } else {
+      return EMPTY;
+    }
   }
 
   /**
@@ -162,18 +173,6 @@ export class ServerService {
         )
       );
     }
-  }
-
-  /**
-   * Listen to server events coming from main process
-   */
-  private addEventListener() {
-    this.mainApiService.receive(
-      'APP_SERVER_EVENT',
-      (environmentUuid, eventName, data) => {
-        this.processEvent(environmentUuid, eventName, data);
-      }
-    );
   }
 
   private processEvent(environmentUuid: string, eventName: string, data: any) {

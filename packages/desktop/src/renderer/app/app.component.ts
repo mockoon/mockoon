@@ -108,9 +108,9 @@ export class AppComponent implements OnInit {
     this.syncService.init().subscribe();
     this.deployService.init().subscribe();
     this.mainApiListenerService.init();
+    this.serverService.init().subscribe();
 
     if (environment.web) {
-      this.serverService.init().subscribe();
       this.userService.authQueryParamHandler().subscribe();
     }
   }
