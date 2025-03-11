@@ -1,4 +1,3 @@
-import { Environment } from './environment.model';
 import { FakerAvailableLocales } from './faker.model';
 import { Header, Methods } from './route.model';
 
@@ -96,11 +95,6 @@ export type ServerOptions = {
    * Can also accept strings containing a route partial path, e.g. 'users' will disable all routes containing 'users' in their path.
    */
   disabledRoutes?: string[];
-
-  /**
-   * Method used by the library to refresh the environment information
-   */
-  refreshEnvironmentFunction?: (environmentUUID: string) => Environment | null;
 
   /**
    * Faker options: seed and locale

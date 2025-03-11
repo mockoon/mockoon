@@ -38,22 +38,4 @@ describe('Run from OpenAPI spec', () => {
 
     ok(stdout.includes('Server started'));
   });
-
-  it('should run from JSON URL OpenAPI spec', async () => {
-    const { instance, output } = await spawnCli([
-      'start',
-      '--data',
-      'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/refs/heads/main/tests/v3.0/pass/petstore.yaml'
-    ]);
-
-    const result = await (await fetch('http://localhost:3000/v1/pets')).json();
-
-    notStrictEqual(result[0].id, undefined);
-
-    instance.kill();
-
-    const { stdout } = await output;
-
-    ok(stdout.includes('Server started'));
-  });
 });

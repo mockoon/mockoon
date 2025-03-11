@@ -11,7 +11,7 @@
   <h1>@Mockoon/commons-server</h1>
 </div>
 
-Mockoon's Commons server library regroups Mockoon's shared code used in the [desktop application](https://github.com/mockoon/mockoon/blob/main/packages/desktop) and the [CLI](https://github.com/mockoon/mockoon/blob/main/packages/cli). It contains mostly "server side" code designed to be used in a Node.js environments.
+Mockoon's Commons server library regroups Mockoon's shared code used in the [desktop application](https://github.com/mockoon/mockoon/blob/main/packages/app) and the [CLI](https://github.com/mockoon/mockoon/blob/main/packages/cli). It contains mostly "server side" code designed to be used in a Node.js environments.
 
 ---
 
