@@ -89,7 +89,7 @@ export type ServerOptions = {
   /**
    * Directory where to find the environment file.
    */
-  environmentDirectory?: string;
+  environmentDirectory: string;
 
   /**
    * List of routes uuids to disable.
