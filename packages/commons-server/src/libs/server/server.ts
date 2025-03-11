@@ -242,8 +242,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     app.disable('x-powered-by');
     app.disable('etag');
 
-    this.generateDatabuckets(this.environment);
-
     // This middleware is required to parse the body for createAdminEndpoint requests
     app.use(this.parseBody);
 
@@ -276,6 +274,9 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         envVarsPrefix: this.options.envVarsPrefix
       });
     }
+
+    // process databuckets after admin endpoint creation to properly catch the databucket processed event
+    this.generateDatabuckets(this.environment);
 
     app.use(this.emitEvent);
     app.use(this.delayResponse);

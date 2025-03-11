@@ -78,8 +78,6 @@ export const createAdminEndpoint = (
     });
   });
 
-  app.get(`${adminApiPrefix}/events`, events.requestListener);
-
   serverInstance.on('stopped', () => {
     events.close();
   });
@@ -88,6 +86,12 @@ export const createAdminEndpoint = (
   serverInstance.on('transaction-complete', (transaction) => {
     events.send({ event: 'transaction-complete', transaction });
   });
+
+  serverInstance.on('data-bucket-processed', (dataBuckets) => {
+    events.send({ event: 'data-bucket-processed', dataBuckets }, true);
+  });
+
+  app.get(`${adminApiPrefix}/events`, events.requestListener);
 
   const stateEndpoint = `${adminApiPrefix}/state`;
   const purgeHandler = (req, res) => {
