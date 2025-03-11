@@ -3,7 +3,6 @@ export type TelemetrySession = {
   startTime: string;
   endTime: string;
   firstSession: boolean;
-  country: string;
   version: string;
   os: string;
   environmentsCount: number;

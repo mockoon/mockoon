@@ -4,7 +4,6 @@ import { generateUUID } from '@mockoon/commons';
 import { differenceInMilliseconds, endOfDay } from 'date-fns';
 import {
   BehaviorSubject,
-  Observable,
   Subject,
   combineLatest,
   from,
@@ -17,7 +16,6 @@ import {
   distinctUntilChanged,
   filter,
   first,
-  map,
   startWith,
   switchMap,
   tap,
@@ -37,7 +35,6 @@ export class TelemetryService {
   private session: TelemetrySession = {
     installationId: null,
     firstSession: false,
-    country: null,
     startTime: new Date().toISOString(),
     endTime: null,
     os: null,
@@ -61,21 +58,18 @@ export class TelemetryService {
    * @returns
    */
   public init() {
-    // only emit if telemetry is globally enabled, locally enabled and geoipEndpoint is available in remote config (cache)
+    // only emit if telemetry is globally and locally enabled
     return combineLatest([
       this.remoteConfigService
         .get('enableTelemetry')
         .pipe(filter((enableTelemetry) => enableTelemetry)),
-      this.remoteConfigService
-        .get('geoipEndpoint')
-        .pipe(filter((geoipEndpoint) => !!geoipEndpoint)),
       this.store.select('settings').pipe(
         filter((settings) => settings?.enableTelemetry),
         first()
       )
     ]).pipe(
-      switchMap(([_enableTelemetry, geoipEndpoint, _settings]) =>
-        combineLatest([this.getDataFromStorage(geoipEndpoint), this.getOS()])
+      switchMap(([_enableTelemetry, _settings]) =>
+        combineLatest([this.getDataFromStorage(), this.getOS()])
       ),
       switchMap(() =>
         this.event$.pipe(
@@ -156,30 +150,13 @@ export class TelemetryService {
   /**
    * Get stored user data or create them
    */
-  private getDataFromStorage(
-    geoipEndpoint: string
-  ): Observable<[string, string]> {
-    return combineLatest([
-      of(this.localStorageService.getItem('installationId') || generateUUID()),
-      of(this.localStorageService.getItem('country')).pipe(
-        switchMap((country) =>
-          country
-            ? of(country)
-            : this.httpClient
-                .get(geoipEndpoint)
-                .pipe(
-                  map(
-                    (location: { countryCode: string }) => location.countryCode
-                  )
-                )
-        )
-      )
-    ]).pipe(
-      tap(([installationId, country]) => {
+  private getDataFromStorage() {
+    return of(
+      this.localStorageService.getItem('installationId') || generateUUID()
+    ).pipe(
+      tap((installationId) => {
         this.session.installationId = installationId;
-        this.session.country = country;
         this.localStorageService.setItem('installationId', installationId);
-        this.localStorageService.setItem('country', country);
       })
     );
   }
