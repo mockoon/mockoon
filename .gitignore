@@ -34,6 +34,7 @@ node_modules/
 /typings
 tsconfig.tsbuildinfo
 oclif.manifest.json
+.firebase
 
 # logs
 logs

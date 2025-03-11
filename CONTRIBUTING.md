@@ -55,7 +55,7 @@ Mockoon is using a monorepo setup (with Lerna). We have 4 packages in the `./pac
 
 - _@mockoon/cli_; the CLI built with Oclif
 - _@mockoon/serverless_; the package to run Mockoon as a serverless function (AWS lambda, etc.)
-- _@mockoon/desktop_: the desktop application built with Electron and Angular (for the renderer process)
+- _@mockoon/app_: the desktop application built with Electron and Angular (for the renderer process), and the web app (only the Angular part).
 
 ## Build and run the applications locally during development
 
@@ -98,7 +98,7 @@ When a feature or bugfix requires a change in the data model (`Environment`, `Ro
 
 - Add a new migration function in the @mockoon/commons library `./packages/commons/src/libs/migrations.ts` file.
 - Add a new test for the migration in the same library `./packages/commons/test/data/migrations/{MIGRATION_ID}/environments.json` and `./packages/commons//test/suites/migrations.spec.ts` files.
-- Use the script `./packages/desktop/scripts/migrate-tests.js` in the desktop package in order to migrate the tests' JSON samples (usually located in `./packages/{package_name}/test/data/...`) to the latest migration. Please note that some folders/sample files are excluded from the migration on purpose.
+- Use the script `./packages/app/scripts/migrate-tests.js` in the app package in order to migrate the tests' JSON samples (usually located in `./packages/{package_name}/test/data/...`) to the latest migration. Please note that some folders/sample files are excluded from the migration on purpose.
 
 Some data model changes may not require a migration, for example, adding a new choice in an enum (translated in the UI by a dropdown).
 
@@ -131,7 +131,7 @@ To run the desktop application tests, first you need to package the application 
 - `package:desktop:test:mac`
 - `package:desktop:test:linux`
 
-This will create a packaged version of the desktop application (without installer) in the `./packages/desktop/packages/{win-unpacked|mac|linux-unpacked}` folder.
+This will create a packaged version of the desktop application (without installer) in the `./packages/app/packages/{win-unpacked|mac|linux-unpacked}` folder.
 
 You can then run the tests with one of the following commands:
 
@@ -194,7 +194,7 @@ To build the desktop application locally in production mode, you can use the fol
 - Or `npm run package:desktop:mac:unsigned` to package the application for macOS.
 - Or `npm run package:desktop:linux` to package the application for Linux.
 
-This will create a packaged version of the desktop application in the `./packages/desktop/packages/` folder.
+This will create a packaged version of the desktop application in the `./packages/app/packages/` folder.
 
 > 💡 Note: Code signing should be ignored on Windows when building locally. For macOS, the command `npm run package:desktop:mac:unsigned` will create an unsigned package, ignoring code signing and notarization.
 

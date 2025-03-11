@@ -35,18 +35,18 @@ jobs:
           npm run package:desktop:mac
       - name: Verify notarization
         run: |
-          codesign --verify --deep --strict --verbose=2 ./packages/desktop/packages/mac/Mockoon.app
-          codesign --verify --deep --strict --verbose=2 ./packages/desktop/packages/mac-arm64/Mockoon.app
-          codesign --verify --deep --strict --verbose=2 ./packages/desktop/packages/mac-universal/Mockoon.app
+          codesign --verify --deep --strict --verbose=2 ./packages/app/packages/mac/Mockoon.app
+          codesign --verify --deep --strict --verbose=2 ./packages/app/packages/mac-arm64/Mockoon.app
+          codesign --verify --deep --strict --verbose=2 ./packages/app/packages/mac-universal/Mockoon.app
       - name: Get dmg binaries shasum
         run: |
-          shasum -a 256 ./packages/desktop/packages/mockoon.setup.*.arm64.dmg
-          shasum -a 256 ./packages/desktop/packages/mockoon.setup.*.x64.dmg
+          shasum -a 256 ./packages/app/packages/mockoon.setup.*.arm64.dmg
+          shasum -a 256 ./packages/app/packages/mockoon.setup.*.x64.dmg
       - name: Upload macOS dmg
         uses: actions/upload-artifact@v4
         with:
           name: dmg
-          path: ./packages/desktop/packages/mockoon.setup*.dmg
+          path: ./packages/app/packages/mockoon.setup*.dmg
 
   build-linux:
     name: Build Linux binaries
@@ -71,22 +71,22 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: appimage
-          path: ./packages/desktop/packages/mockoon-*.AppImage
+          path: ./packages/app/packages/mockoon-*.AppImage
       - name: Upload Linux deb
         uses: actions/upload-artifact@v4
         with:
           name: deb
-          path: ./packages/desktop/packages/mockoon-*.deb
+          path: ./packages/app/packages/mockoon-*.deb
       - name: Upload Linux rpm
         uses: actions/upload-artifact@v4
         with:
           name: rpm
-          path: ./packages/desktop/packages/mockoon-*.rpm
+          path: ./packages/app/packages/mockoon-*.rpm
       - name: Upload Linux snap
         uses: actions/upload-artifact@v4
         with:
           name: snap
-          path: ./packages/desktop/packages/mockoon-*.snap
+          path: ./packages/app/packages/mockoon-*.snap
 
   build-windows:
     name: Build Windows binaries
@@ -115,12 +115,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: exe
-          path: ./packages/desktop/packages/mockoon.setup.*.exe
+          path: ./packages/app/packages/mockoon.setup.*.exe
       - name: Upload Windows portable exe
         uses: actions/upload-artifact@v4
         with:
           name: exe-portable
-          path: ./packages/desktop/packages/mockoon.portable.*.exe
+          path: ./packages/app/packages/mockoon.portable.*.exe
 
   # APPX build requires no code signing env vars to work, thus the separated job
   build-windows-appx:
@@ -145,4 +145,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: appx
-          path: ./packages/desktop/packages/mockoon.*.appx
+          path: ./packages/app/packages/mockoon.*.appx

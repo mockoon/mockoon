@@ -1,0 +1,409 @@
+@import './boostrap-overrides.scss';
+@import './animations.scss';
+
+// custom scrollbar
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: lighten($gray-900, 6%);
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 20px;
+}
+
+/* Prevent autofill styles, only possible by delaying their appearance https://stackoverflow.com/a/69364368/4287789 */
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+input:-webkit-autofill:hover {
+  transition:
+    background-color 0s 600000s,
+    color 0s 600000s !important;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+// ace editor custom scrollbar
+.ace_scrollbar.ace_scrollbar-v::-webkit-scrollbar-thumb {
+  background: lighten($gray-900, 5%);
+}
+
+::selection {
+  background: rgba($blue, 0.5);
+}
+
+body {
+  user-select: none;
+  cursor: default;
+  overflow: hidden;
+}
+
+html,
+body {
+  height: 100vh;
+}
+
+select,
+input,
+.btn,
+.dropdown-item {
+  transition: all ease-in-out 100ms;
+}
+
+.dropdown-menu {
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: $box-shadow;
+
+  &::-webkit-scrollbar-track,
+  *::-webkit-scrollbar-track {
+    background-color: $custom-gray;
+  }
+
+  &::-webkit-scrollbar-thumb,
+  *::-webkit-scrollbar-thumb {
+    background: lighten($gray-900, 15%);
+  }
+
+  &-height-content {
+    max-height: fit-content;
+  }
+}
+
+.hover-parent {
+  *.hover-fade {
+    transition: opacity 100ms;
+    opacity: 0.2;
+  }
+
+  &.active,
+  &:hover {
+    *.hover-fade {
+      opacity: 1;
+    }
+  }
+}
+
+.main-content {
+  background-color: darken($gray-900, 2%);
+}
+
+.menu-list {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+// avoid list style when dragging (item is created outside of a .nav)
+.nav-item {
+  list-style: none;
+}
+
+.scroll-content {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.cursor-default {
+  cursor: default !important;
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.cursor-grab {
+  cursor: grab !important;
+}
+
+.cursor-text {
+  cursor: text !important;
+}
+
+// route method colors
+$method-colors:
+  ('crud', lighten($cyan, 15%)), ('all', lighten($teal, 15%)),
+  ('get', lighten($blue, 10%)), ('put', lighten($orange, 10%)),
+  ('post', lighten($green, 10%)), ('delete', lighten($red, 17%)),
+  ('head', lighten($purple, 25%)), ('patch', $yellow),
+  ('options', lighten($dark-blue, 30%)),
+  ('propfind', lighten($custom-gray, 45%)),
+  ('proppatch', lighten($custom-gray, 45%)),
+  ('copy', lighten($custom-gray, 45%)), ('move', lighten($custom-gray, 45%)),
+  ('lock', lighten($custom-gray, 45%)), ('unlock', lighten($custom-gray, 45%)),
+  ('mkcol', lighten($custom-gray, 45%)), ('ws', lighten($pink, 20%));
+@each $method in $method-colors {
+  .color-method-#{nth($method, 1)} {
+    color: #{nth($method, 2)};
+  }
+}
+
+// status code colors
+$status-code-colors:
+  ('4xx', lighten($orange, 10%)), ('2xx', lighten($green, 10%)),
+  ('5xx', lighten($red, 17%)), ('3xx', lighten($purple, 25%)),
+  ('1xx', lighten($custom-gray, 45%));
+@each $status-color in $status-code-colors {
+  .color-status-#{nth($status-color, 1)} {
+    color: #{nth($status-color, 2)};
+  }
+}
+
+.toasts-container {
+  z-index: 5000;
+  position: absolute;
+  width: 250px;
+  top: calc($spacer / 2) + 2rem;
+  right: calc($spacer / 2);
+}
+.toast {
+  word-break: break-word;
+}
+
+.toast-success {
+  .toast-body {
+    background-color: $green;
+    border-color: lighten($green, 10%);
+  }
+}
+
+.toast-warning {
+  .toast-body {
+    background-color: $orange;
+    border-color: lighten($orange, 10%);
+  }
+}
+
+.toast-error {
+  .toast-body {
+    background-color: $red;
+    border-color: lighten($red, 10%);
+  }
+}
+
+.message {
+  text-align: center;
+  font-size: $font-size-lg;
+  color: $gray-500;
+  font-weight: $font-weight-light;
+
+  &-md {
+    font-size: $font-size-md;
+  }
+
+  &-sm {
+    font-size: $font-size-sm;
+  }
+}
+
+.success-message {
+  font-size: 0.8rem;
+  color: $success;
+}
+.error-message {
+  font-size: 0.8rem;
+  color: $danger;
+}
+.warning-message {
+  font-size: 0.8rem;
+  color: $warning;
+}
+
+.resize-column {
+  position: absolute;
+  width: 4px;
+  height: 100%;
+  right: 0;
+  top: 0;
+  cursor: col-resize;
+
+  &:hover,
+  &.dragging {
+    animation-name: fadeIn;
+    animation-duration: 100ms;
+    animation-fill-mode: forwards;
+  }
+}
+
+.brackets {
+  background-image:
+    linear-gradient($gray-500, $gray-500), linear-gradient($gray-500, $gray-500);
+  background-repeat: no-repeat;
+  background-size: 8px 3px;
+  background-position:
+    top left,
+    bottom left;
+  border-left: 3px solid $gray-500;
+  margin: calc($spacer / 2);
+  width: 11px;
+}
+
+.drag-item.drag-highlight {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    border: 2px solid rgba($blue, 0.8);
+  }
+}
+
+.drag-item.drag-highlight-top {
+  position: relative;
+
+  &::before {
+    position: absolute;
+    z-index: 1000;
+    content: '';
+    height: 2px;
+    left: 0;
+    right: 0;
+    border-top: 2px solid rgba($blue, 0.8);
+  }
+}
+
+.drag-item.drag-highlight-top:not(:first-of-type) {
+  &::before {
+    top: -1px;
+  }
+}
+
+.drag-item.drag-highlight-top:first-of-type {
+  &::before {
+    top: 0;
+  }
+}
+
+.drag-item.drag-highlight-bottom {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    z-index: 1000;
+    content: '';
+    height: 2px;
+    left: 0;
+    right: 0;
+    border-top: 2px solid rgba($blue, 0.8);
+  }
+}
+
+.drag-item.drag-highlight-bottom:not(:last-of-type) {
+  &::after {
+    bottom: -1px;
+  }
+}
+
+.drag-item.drag-highlight-bottom:last-of-type {
+  &::after {
+    bottom: 0px;
+  }
+}
+
+.with-indicator {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: $green;
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+}
+
+.no-interact {
+  pointer-events: none;
+  user-select: none;
+}
+
+.text-shadow {
+  text-shadow: $box-shadow !important;
+}
+
+.modal-backdrop-transparent {
+  background-color: transparent;
+}
+
+.modal-dialog-max-height {
+  .modal-content {
+    max-height: 40vh;
+  }
+}
+
+.modal-dialog-transparent-backdrop {
+  .modal-content {
+    box-shadow: 0px 0px 8px 2px #111111;
+  }
+}
+
+.modal-dialog-rounded {
+  .modal-content {
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+}
+
+.tour-highlight {
+  pointer-events: none;
+  user-select: none;
+}
+
+.warning-backdrop {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: $zindex-modal-backdrop;
+  background-color: $modal-backdrop-bg;
+  opacity: 0.4;
+}
+
+.tour-backdrop {
+  position: fixed;
+  z-index: $zindex-modal-backdrop;
+  background-color: $modal-backdrop-bg;
+  opacity: 0.8;
+}
+
+.dropdown-toggle-no-caret {
+  &::after {
+    display: none;
+  }
+}
+
+.dropdown-menu-with-fixed-search {
+  flex-direction: column;
+  overflow: hidden;
+
+  &.show {
+    display: flex;
+  }
+  .dropdown-menu-content {
+    overflow-y: auto;
+  }
+}
+
+.text-break-all {
+  word-break: break-all;
+}
+
+.svg-text-align svg {
+  vertical-align: baseline;
+}

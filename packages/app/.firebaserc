@@ -1,0 +1,17 @@
+{
+  "projects": {
+    "default": "mockoon-ba3e2"
+  },
+  "targets": {
+    "mockoon-ba3e2": {
+      "hosting": {
+        "website": [
+          "mockoon-ba3e2"
+        ],
+        "webapp": [
+          "mockoon-webapp"
+        ]
+      }
+    }
+  }
+}

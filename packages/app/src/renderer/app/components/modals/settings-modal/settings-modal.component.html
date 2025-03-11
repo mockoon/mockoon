@@ -1,0 +1,330 @@
+<div class="modal-header">
+  <h4 class="modal-title">Settings</h4>
+</div>
+
+<div class="modal-body" [formGroup]="settingsForm">
+  <div>
+    <app-title-separator
+      heading="User interface"
+      [isFirst]="true"
+      icon="web_asset"
+    ></app-title-separator>
+
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="form-check">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="settings-truncate-route-name"
+            formControlName="truncateRouteName"
+          />
+          <label class="form-check-label" for="settings-truncate-route-name"
+            >Truncate long paths in lists (environments, routes, logs,
+            etc.)</label
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (!isWeb) {
+    <app-title-separator
+      heading="Environment variables"
+      icon="list"
+    ></app-title-separator>
+
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="input-group">
+          <label for="settings-env-vars-prefix" class="col-form-label pe-2">
+            Environment variables prefix
+          </label>
+          <input
+            type="text"
+            class="form-control col-1"
+            id="settings-env-vars-prefix"
+            formControlName="envVarsPrefix"
+          />
+          <div class="input-group-text">
+            <app-svg icon="info" [ngbTooltip]="envVarsPrefixTooltip"></app-svg>
+            <ng-template #envVarsPrefixTooltip>
+              <div>
+                Restrict access to environment variables starting with the
+                specified prefix. Leave empty to disable prefix filtering.
+              </div>
+              <div class="mt-2">
+                ⚠️ Requires a server restart to take effect
+              </div>
+              <div class="mt-2">
+                ⚠️ Updating the environment variables requires an application
+                restart
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <app-title-separator
+    heading="Environment logs"
+    icon="history"
+  ></app-title-separator>
+
+  <div class="ps-4">
+    @if (!isWeb) {
+      <div class="mb-3">
+        <div class="input-group align-items-center">
+          <div class="form-check mb-0">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="settings-log-transactions"
+              formControlName="logTransactions"
+            />
+            <label class="form-check-label" for="settings-log-transactions"
+              >Log the full transactions</label
+            >
+          </div>
+          <div class="input-group-text">
+            <app-svg
+              icon="info"
+              [ngbTooltip]="logTransactionsTooltip"
+            ></app-svg>
+            <ng-template #logTransactionsTooltip>
+              <div>
+                Logs the full transaction (for requests, responses and
+                callbacks) in the application log files. Greatly increases the
+                volume of logs.
+              </div>
+              <div class="mt-2">
+                ⚠️ Requires a server restart to take effect
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    }
+
+    <div class="mb-3">
+      <div class="input-group">
+        <label for="settings-log-max-count" class="col-form-label pe-2">
+          Maximum log entries displayed in the "Logs" tab (per environment)
+        </label>
+        <input
+          type="number"
+          class="form-control col-1"
+          id="settings-log-max-count"
+          [appInputNumber]="{ min: 1, max: Infinity, canBeEmpty: false }"
+          formControlName="maxLogsPerEnvironment"
+        />
+      </div>
+    </div>
+  </div>
+
+  @if (!isWeb) {
+    <app-title-separator
+      heading="Faker.js"
+      subheading="Templating system supports Faker.js"
+      icon="code"
+    ></app-title-separator>
+
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="input-group">
+          <label class="col-form-label pe-2"> Locale </label>
+          <app-custom-select
+            class="col-3"
+            formControlName="fakerLocale"
+            [enableCustomInput]="false"
+            [items]="fakerLocales"
+            dropdownId="settings-faker-locale"
+          ></app-custom-select>
+          <div class="input-group-text">
+            <app-svg icon="info" [ngbTooltip]="fakerLocaleTooltip"></app-svg>
+            <ng-template #fakerLocaleTooltip>
+              <div>
+                Set Faker.js's primary locale. Faker.js will fallback to English
+                for helpers not covered by this locale
+              </div>
+              <div class="mt-2">
+                ⚠️ Requires a server restart to take effect
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <div class="input-group">
+          <label for="settings-faker-seed" class="col-form-label pe-2">
+            Seed
+          </label>
+          <!-- input number is important for the seed -->
+          <input
+            type="number"
+            class="form-control col-4"
+            id="settings-faker-seed"
+            placeholder="Number or empty for no seed"
+            [appInputNumber]="{ min: 0, max: Infinity, canBeEmpty: true }"
+            formControlName="fakerSeed"
+          />
+          <div class="input-group-text">
+            <app-svg icon="info" [ngbTooltip]="fakerSeedTooltip"></app-svg>
+            <ng-template #fakerSeedTooltip>
+              <div>
+                By setting a seed, Faker.js will always generate the same data
+                sequence
+              </div>
+              <div class="mt-2">
+                ⚠️ Requires a server restart to take effect
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <app-title-separator
+      heading="Environments options"
+      icon="misc"
+    ></app-title-separator>
+
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="input-group">
+          <div class="form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="settings-start-environments-on-load"
+              formControlName="startEnvironmentsOnLoad"
+            />
+            <label
+              class="form-check-label"
+              for="settings-start-environments-on-load"
+            >
+              Start all environments on application startup
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="input-group align-items-center">
+          <div class="form-check mb-0">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="settings-enable-random-latency"
+              formControlName="enableRandomLatency"
+            />
+            <label
+              class="form-check-label"
+              for="settings-enable-random-latency"
+            >
+              Randomize latencies
+            </label>
+          </div>
+          <div class="input-group-text">
+            <app-svg icon="info" [ngbTooltip]="latencyTooltip"></app-svg>
+            <ng-template #latencyTooltip>
+              <div>
+                Randomize global and responses latencies between 0 and the
+                specified value
+              </div>
+              <div class="mt-2">
+                ⚠️ Requires application restart to take effect
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <app-title-separator heading="Storage" icon="save"></app-title-separator>
+
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="input-group file-watcher-input-group">
+          <label class="col-form-label pe-2"> Environment files watcher </label>
+          <app-custom-select
+            class="col-2"
+            formControlName="fileWatcherEnabled"
+            [enableCustomInput]="false"
+            [items]="fileWatcherOptions"
+            dropdownId="settings-storage-file-watcher"
+          ></app-custom-select>
+          <div class="input-group-text">
+            <app-svg
+              icon="info"
+              ngbTooltip="Mockoon will watch environment files for external changes and prompt (or not) for reload"
+            ></app-svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="form-check">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="settings-storage-pretty-print"
+            formControlName="storagePrettyPrint"
+          />
+          <label class="form-check-label" for="settings-storage-pretty-print">
+            Pretty print JSON storage files (settings and environments)</label
+          >
+        </div>
+      </div>
+    </div>
+
+    <app-title-separator
+      heading="Telemetry"
+      icon="show_chart"
+    ></app-title-separator>
+
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="input-group align-items-center">
+          <div class="form-check mb-0">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="settings-enable-telemetry"
+              formControlName="enableTelemetry"
+            />
+            <label class="form-check-label" for="settings-enable-telemetry"
+              >Enable telemetry
+            </label>
+          </div>
+          <div class="input-group-text">
+            <a href="{{ faqUrl }}" target="_blank">
+              <app-svg icon="info" [ngbTooltip]="telemetryTooltip"></app-svg>
+            </a>
+            <ng-template #telemetryTooltip>
+              <div>
+                Our custom telemetry system is collecting a minimal amount of
+                information and no personal data
+              </div>
+              <div class="mt-2">
+                ⚠️ Requires application restart to take effect
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary modal-close" (click)="close()">
+    Close
+  </button>
+</div>
