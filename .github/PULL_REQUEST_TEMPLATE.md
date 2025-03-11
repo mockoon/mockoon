@@ -20,7 +20,7 @@ IMPORTANT RULES:
 - [ ] commons lib tests added (@mockoon/commons)
 - [ ] commons-server lib tests added (@mockoon/commons-server)
 - [ ] CLI tests added (@mockoon/cli)
-- [ ] desktop UI automated tests added (@mockoon/desktop)
+- [ ] desktop UI automated tests added (@mockoon/app)
 
 <!-- Link to the original issue -->
 

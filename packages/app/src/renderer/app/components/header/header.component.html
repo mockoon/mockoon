@@ -1,0 +1,206 @@
+@let user = user$ | async;
+@let activeEnvironment = activeEnvironment$ | async;
+@let activeEnvironmentState = activeEnvironmentState$ | async;
+@let activeView = activeView$ | async;
+@let sync = sync$ | async;
+@let os = os$ | async;
+
+<div class="header d-flex align-items-center">
+  <div appTourStep="tour-environment-start">
+    @if (
+      isWeb &&
+      activeEnvironmentState?.running &&
+      activeEnvironmentState?.needRestart &&
+      activeEnvironmentState?.redeploying
+    ) {
+      <button
+        class="btn btn-link btn-icon text-gray"
+        type="button"
+        ngbTooltip="Re-deploy in progress"
+      >
+        <app-svg icon="spinner" size="20"></app-svg>
+      </button>
+    } @else if (
+      activeEnvironmentState?.running &&
+      activeEnvironmentState?.needRestart &&
+      !activeEnvironmentState?.redeploying
+    ) {
+      <button
+        id="header-btn-server-restart"
+        class="btn btn-link text-warning"
+        type="button"
+        [ngbTooltip]="
+          isWeb ? 'Quick re-deploy to apply changes' : 'Server needs restart'
+        "
+        (click)="
+          toggleEnvironment(activeEnvironment.uuid, activeEnvironmentState)
+        "
+        [disabled]="!activeEnvironment"
+      >
+        <app-svg icon="refresh" size="20"></app-svg>
+      </button>
+    } @else if (
+      activeEnvironmentState?.running && !activeEnvironmentState?.needRestart
+    ) {
+      <button
+        id="header-btn-server-stop"
+        class="btn btn-link"
+        type="button"
+        [ngClass]="{
+          'text-danger': !isWeb,
+          'text-success': isWeb
+        }"
+        [ngbTooltip]="isWeb ? 'Manage deployment' : 'Stop server'"
+        (click)="
+          toggleEnvironment(activeEnvironment.uuid, activeEnvironmentState)
+        "
+        [disabled]="!activeEnvironment"
+      >
+        <app-svg
+          [icon]="isWeb ? 'server_settings' : 'stop'"
+          size="20"
+        ></app-svg>
+      </button>
+    } @else if (!activeEnvironmentState?.running) {
+      <button
+        id="header-btn-server-start"
+        class="btn btn-link text-success"
+        type="button"
+        [ngbTooltip]="isWeb ? 'Deploy API' : 'Start server'"
+        (click)="
+          toggleEnvironment(activeEnvironment.uuid, activeEnvironmentState)
+        "
+        [disabled]="!activeEnvironment"
+      >
+        <app-svg icon="play_arrow" size="20"></app-svg>
+      </button>
+    }
+  </div>
+
+  <ul class="nav nav-tabs">
+    <li
+      *ngFor="let tab of tabs"
+      class="nav-item"
+      [appTourStep]="tourIds[tab.id]"
+    >
+      <a
+        class="nav-link d-flex align-items-center"
+        [ngClass]="{
+          active: activeView === tab.id && activeEnvironment,
+          disabled: !activeEnvironment
+        }"
+        (click)="setActiveView(tab.id)"
+      >
+        <app-svg [icon]="tab.icon" class="pe-2"></app-svg>
+        {{ tab.title }}
+        <span
+          *ngIf="tab.count$ | async as tabCount"
+          class="badge badge-hollow fw-bold ms-2"
+        >
+          {{ tabCount }}
+        </span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="ms-auto d-flex align-items-center">
+    <!-- Display solo devices presence -->
+    <div
+      *ngIf="sync.status && sync.presence?.devices > 1"
+      ngbTooltip="{{ sync.presence.devices - 1 }} other {{
+        sync.presence.devices - 1 > 1 ? 'devices' : 'device'
+      }} connected"
+      class="badge badge-custom align-middle"
+    >
+      <app-svg icon="computer"></app-svg>
+      <span class="number-indicator">
+        {{ sync.presence.devices - 1 }}
+      </span>
+    </div>
+
+    <!-- Display team users presence -->
+    <app-team-presence
+      *ngIf="sync.presence?.users?.length > 0"
+      class="mx-2"
+      [presence]="sync?.presence"
+      [user]="user"
+      [displaySelf]="true"
+      [maxDisplayedUsers]="5"
+    ></app-team-presence>
+
+    <div>
+      <button
+        type="button"
+        class="btn btn-link btn-icon"
+        [ngbTooltip]="
+          'Command palette (' + (os === 'darwin' ? 'Cmd' : 'Ctrl') + '+P)'
+        "
+        (click)="openCommandPalette()"
+      >
+        <app-svg class="align-bottom" icon="command_palette"></app-svg>
+      </button>
+    </div>
+  </div>
+
+  <div ngbDropdown placement="bottom-right" #dropdownElement>
+    <button
+      class="btn btn-link btn-icon dropdown-toggle dropdown-toggle-icon me-1"
+      type="button"
+      ngbDropdownToggle
+    >
+      <span [ngClass]="{ 'with-indicator': !!user }">
+        <app-svg icon="account"></app-svg>
+      </span>
+    </button>
+    <div class="dropdown-menu" ngbDropdownMenu>
+      @if (user) {
+        <div>
+          <h6 class="dropdown-header d-flex flex-column">
+            <div class="d-flex align-items-center">
+              <div class="pe-2">{{ user?.email }}</div>
+              <div class="badge text-bg-warning">
+                {{ planLabels[user?.plan] }} plan
+              </div>
+            </div>
+          </h6>
+        </div>
+        <a class="btn dropdown-item" href="{{ accountUrl }}" target="_blank">
+          <app-svg icon="account" class="pe-2"></app-svg>
+          My account
+          <app-svg icon="open_in_new" class="ps-2"></app-svg>
+        </a>
+        <button class="btn dropdown-item" (click)="refreshAccount()">
+          <app-svg icon="refresh" class="pe-2"></app-svg>
+          Refresh account information
+        </button>
+        <button class="btn dropdown-item" (click)="logout()">
+          <app-svg icon="logout" class="pe-2"></app-svg>
+          Log out
+        </button>
+      } @else {
+        <button class="btn dropdown-item" (click)="login()">
+          <app-svg icon="login" class="pe-2"></app-svg>
+          Sign in
+          <app-svg icon="open_in_new" class="ps-2"></app-svg>
+        </button>
+      }
+      <button class="btn dropdown-item" (click)="openSettings()">
+        <app-svg icon="settings" class="pe-2"></app-svg>Application settings
+      </button>
+
+      @if (isDev) {
+        <!-- Debug menu -->
+        <div><hr class="dropdown-divider" /></div>
+        <div>
+          <button class="btn dropdown-item" disabled>Debug</button>
+          <button class="btn dropdown-item" (click)="disconnectSync()">
+            Disconnect sync server
+          </button>
+          <button class="btn dropdown-item" (click)="refreshAuthToken()">
+            Refresh auth token
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</div>

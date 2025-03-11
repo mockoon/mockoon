@@ -1,32 +1,11 @@
-import { Transaction } from '@mockoon/commons';
+import { Environment, EnvironmentSchema, Transaction } from '@mockoon/commons';
 import { Express, Request, Response } from 'express';
 import { MockoonServer } from './server';
 import { Sse } from './sse';
 
 /**
  * Creates the Admin API endpoints
- * Documentation: https://mockoon.com/docs/latest/admin-api/overview/
- *
- * PURGE /mockoon-admin/state
- * POST /mockoon-admin/state/purge
- *
- * POST /mockoon-admin/env-vars
- * PUT /mockoon-admin/env-vars
- * PATCH /mockoon-admin/env-vars
- *
- * POST /mockoon-admin/global-vars
- * PUT /mockoon-admin/global-vars
- * PATCH /mockoon-admin/global-vars
- * PURGE /mockoon-admin/global-vars
- * POST /mockoon-admin/global-vars/purge
- *
- * PURGE /mockoon-admin/data-buckets
- * POST /mockoon-admin/data-buckets/purge
- *
- * GET /mockoon-admin/logs
- * PURGE /mockoon-admin/logs
- * POST /mockoon-admin/logs/purge
- *
+ * Documentation: https://mockoon.com/docs/latest/admin-api/overview/ *
  */
 export const createAdminEndpoint = (
   app: Express,
@@ -41,7 +20,8 @@ export const createAdminEndpoint = (
     purgeDataBuckets,
     getLogs,
     purgeLogs,
-    envVarsPrefix
+    envVarsPrefix,
+    updateEnvironment
   }: {
     statePurgeCallback: () => void;
     getGlobalVariables: (key: string) => any;
@@ -53,6 +33,7 @@ export const createAdminEndpoint = (
     getLogs: () => Transaction[];
     purgeLogs: () => void;
     envVarsPrefix: string;
+    updateEnvironment: (environment: Environment) => void;
   }
 ): void => {
   const adminApiPrefix = '/mockoon-admin';
@@ -343,4 +324,41 @@ export const createAdminEndpoint = (
   app.get(`${adminApiPrefix}/data-buckets/:nameOrId`, getDataBucketHandler);
   app.purge(`${adminApiPrefix}/data-buckets`, purgeDataBucketsHandler);
   app.post(`${adminApiPrefix}/data-buckets/purge`, purgeDataBucketsHandler);
+
+  /**
+   * Update the environment
+   *
+   * Note: not everything can be updated during runtime, only:
+   * - some environment properties (headers, proxy headers, latency, etc.)
+   * - route responses (headers, latency, status code, etc.)
+   * - some route properties (response mode)
+   *
+   * What cannot be updated:
+   * - route paths and methods
+   * - environment port, hostname, and proxy target
+   * - adding or removing routes
+   * - data buckets
+   * - callbacks
+   */
+  app.put(`${adminApiPrefix}/environment`, (req, res) => {
+    try {
+      const environment: Environment = EnvironmentSchema.validate(
+        req.body
+      ).value;
+
+      if (!environment) {
+        res.status(400).send({ message: 'Invalid environment format' });
+
+        return;
+      }
+
+      updateEnvironment(environment);
+
+      res.send({
+        message: 'Environment updated'
+      });
+    } catch (_error) {
+      res.status(400).send({ message: 'Invalid environment format' });
+    }
+  });
 };

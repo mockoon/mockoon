@@ -271,7 +271,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         purgeLogs: () => {
           this.transactionLogs = [];
         },
-        envVarsPrefix: this.options.envVarsPrefix
+        envVarsPrefix: this.options.envVarsPrefix,
+        updateEnvironment: (environment: Environment) => {
+          this.environment = environment;
+        }
       });
     }
 
@@ -307,6 +310,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   }
 
   /**
+   * Method that can be used to update the server's environment
+   *
+   * @param environment
+   */
+  public updateEnvironment(environment: Environment): void {
+    this.environment = environment;
+  }
+
+  /**
    * ### Middleware ###
    * Emit the SERVER_ENTERING_REQUEST event
    *
@@ -336,8 +348,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     response: Response,
     next: NextFunction
   ) => {
-    this.refreshEnvironment();
-
     setTimeout(
       next,
       getLatency(this.environment.latency, this.options.enableRandomLatency)
@@ -675,8 +685,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     routeFor: Route
   ) {
     return (socket: WebSocket, request: Request) => {
-      // Refresh the environment when a new client is connected.
-      this.refreshEnvironment();
       const route = this.getRefreshedRoute(routeFor);
 
       if (!route) {
@@ -761,8 +769,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           return;
         }
 
-        // Refresh the environment when a new message is recieved.
-        this.refreshEnvironment();
         const routeInMessage = this.getRefreshedRoute(route);
 
         // the route is not found. Skip reacting.
@@ -1101,7 +1107,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       this.generateRequestDatabuckets(route, this.environment, request);
 
       // refresh environment data to get route changes that do not require a restart (headers, body, etc)
-      this.refreshEnvironment();
       const currentRoute = this.getRefreshedRoute(route);
 
       if (!currentRoute) {
@@ -1710,8 +1715,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   private setCors(server: Application) {
     if (this.environment.cors) {
       server.options('/*', (req, res) => {
-        this.refreshEnvironment();
-
         // override default CORS headers with environment's headers
         this.setHeaders(
           [...CORSHeaders, ...this.environment.headers],
@@ -1760,8 +1763,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           ssl: { ...this.tlsOptions, agent: false },
           on: {
             proxyReq: (proxyReq, request) => {
-              this.refreshEnvironment();
-
               request.proxied = true;
 
               this.setHeaders(
@@ -1776,8 +1777,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               }
             },
             proxyRes: (proxyRes, request, response) => {
-              this.refreshEnvironment();
-
               const buffers: Buffer[] = [];
               proxyRes.on('data', (chunk) => {
                 buffers.push(chunk);
@@ -1991,36 +1990,14 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   }
 
   /**
-   * Request an updated environment to allow
-   * modification of some parameters without a restart (latency, headers, etc)
-   */
-  private refreshEnvironment() {
-    if (this.options.refreshEnvironmentFunction && this.environment.uuid) {
-      const updatedEnvironment = this.options.refreshEnvironmentFunction(
-        this.environment.uuid
-      );
-
-      if (updatedEnvironment) {
-        this.environment = updatedEnvironment;
-      }
-    }
-  }
-
-  /**
-   * Request an updated route to allow
-   * modification of some parameters without a restart (latency, headers, etc)
-   * This only makes sense if the refreshEnvironmentFunction has been provided.
+   * Fetch the updated route as some parameters can be applied without a restart (latency, headers, etc)
    *
    * @param routeUUID
    */
   private getRefreshedRoute(currentRoute: Route): Route | undefined {
-    if (this.options.refreshEnvironmentFunction && this.environment.uuid) {
-      return this.environment.routes.find(
-        (route) => route.uuid === currentRoute.uuid
-      );
-    }
-
-    return currentRoute;
+    return this.environment.routes.find(
+      (route) => route.uuid === currentRoute.uuid
+    );
   }
 
   /**

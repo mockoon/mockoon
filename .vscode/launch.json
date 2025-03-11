@@ -8,10 +8,10 @@
       "name": "Desktop: Electron Main process",
       "type": "node",
       "request": "launch",
-      "cwd": "${workspaceFolder}/packages/desktop/",
-      "runtimeExecutable": "${workspaceFolder}/packages/desktop/node_modules/.bin/electron",
+      "cwd": "${workspaceFolder}/packages/app/",
+      "runtimeExecutable": "${workspaceFolder}/packages/app/node_modules/.bin/electron",
       "windows": {
-        "runtimeExecutable": "${workspaceFolder}/packages/desktop/node_modules/.bin/electron.cmd"
+        "runtimeExecutable": "${workspaceFolder}/packages/app/node_modules/.bin/electron.cmd"
       },
       "args": [".", "--remote-debugging-port=8888"],
       "sourceMaps": true
@@ -21,7 +21,7 @@
       "request": "attach",
       "name": "Desktop: Electron Renderer process",
       "port": 8888,
-      "webRoot": "${workspaceFolder}/packages/desktop"
+      "webRoot": "${workspaceFolder}/packages/app"
     },
     {
       "type": "node",
@@ -35,6 +35,14 @@
         "-l",
         "unknownhost"
       ]
+    },
+    {
+      "type": "chrome",
+      "request": "attach",
+      "name": "Web app",
+      "port": 9222,
+      "urlFilter": "http://localhost:3001/*",
+      "webRoot": "${workspaceFolder}/packages/app"
     }
   ],
   "compounds": [
