@@ -120,7 +120,8 @@ input,
 }
 
 // route method colors
-$method-colors: ('crud', lighten($cyan, 15%)), ('all', lighten($teal, 15%)),
+$method-colors:
+  ('crud', lighten($cyan, 15%)), ('all', lighten($teal, 15%)),
   ('get', lighten($blue, 10%)), ('put', lighten($orange, 10%)),
   ('post', lighten($green, 10%)), ('delete', lighten($red, 17%)),
   ('head', lighten($purple, 25%)), ('patch', $yellow),
@@ -137,9 +138,10 @@ $method-colors: ('crud', lighten($cyan, 15%)), ('all', lighten($teal, 15%)),
 }
 
 // status code colors
-$status-code-colors: ('4xx', lighten($orange, 10%)),
-  ('2xx', lighten($green, 10%)), ('5xx', lighten($red, 17%)),
-  ('3xx', lighten($purple, 25%)), ('1xx', lighten($custom-gray, 45%));
+$status-code-colors:
+  ('4xx', lighten($orange, 10%)), ('2xx', lighten($green, 10%)),
+  ('5xx', lighten($red, 17%)), ('3xx', lighten($purple, 25%)),
+  ('1xx', lighten($custom-gray, 45%));
 @each $status-color in $status-code-colors {
   .color-status-#{nth($status-color, 1)} {
     color: #{nth($status-color, 2)};
@@ -223,8 +225,8 @@ $status-code-colors: ('4xx', lighten($orange, 10%)),
 }
 
 .brackets {
-  background-image: linear-gradient($gray-500, $gray-500),
-    linear-gradient($gray-500, $gray-500);
+  background-image:
+    linear-gradient($gray-500, $gray-500), linear-gradient($gray-500, $gray-500);
   background-repeat: no-repeat;
   background-size: 8px 3px;
   background-position:

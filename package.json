@@ -64,20 +64,20 @@
     "documentation:desktop": "lerna run --stream --scope @mockoon/desktop documentation"
   },
   "devDependencies": {
-    "@eslint/js": "9.19.0",
-    "@stylistic/eslint-plugin-js": "2.13.0",
-    "@stylistic/eslint-plugin-ts": "2.13.0",
-    "@types/eslint__js": "8.42.3",
+    "@eslint/js": "9.22.0",
+    "@stylistic/eslint-plugin-js": "4.2.0",
+    "@stylistic/eslint-plugin-ts": "4.2.0",
+    "@types/eslint__js": "9.14.0",
     "concurrently": "9.1.2",
     "dotenv": "16.4.7",
-    "eslint": "9.19.0",
-    "eslint-config-prettier": "10.0.1",
+    "eslint": "9.22.0",
+    "eslint-config-prettier": "10.1.1",
     "eslint-plugin-prettier": "5.2.3",
     "glob": "11.0.1",
     "lerna": "6.6.2",
-    "prettier": "3.4.2",
+    "prettier": "3.5.3",
     "prettier-plugin-organize-imports": "4.1.0",
-    "tsx": "4.19.2",
-    "typescript-eslint": "8.22.0"
+    "tsx": "4.19.3",
+    "typescript-eslint": "8.26.1"
   }
 }

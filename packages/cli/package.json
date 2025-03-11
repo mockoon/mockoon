@@ -45,22 +45,22 @@
   },
   "funding": "https://mockoon.com/sponsor-us/",
   "dependencies": {
-    "@inquirer/confirm": "5.1.4",
+    "@inquirer/confirm": "5.1.7",
     "@mockoon/commons": "9.1.0",
     "@mockoon/commons-server": "9.1.0",
-    "@oclif/core": "4.2.5",
-    "@oclif/plugin-help": "6.2.23",
+    "@oclif/core": "4.2.9",
+    "@oclif/plugin-help": "6.2.26",
     "mkdirp": "3.0.1",
     "mustache": "4.2.0",
     "tslib": "2.8.1"
   },
   "devDependencies": {
     "@types/mustache": "4.2.5",
-    "@types/node": "22.12.0",
-    "eslint-config-oclif": "6.0.0",
+    "@types/node": "22.13.10",
+    "eslint-config-oclif": "6.0.28",
     "eslint-config-oclif-typescript": "3.1.14",
-    "oclif": "4.17.20",
-    "typescript": "5.7.3"
+    "oclif": "4.17.34",
+    "typescript": "5.8.2"
   },
   "engines": {
     "node": ">=18"
