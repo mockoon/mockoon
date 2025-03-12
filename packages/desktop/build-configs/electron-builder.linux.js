@@ -31,10 +31,10 @@ const config = Object.assign({}, commonConfig, {
       Name: 'Mockoon',
       Type: 'Application',
       Categories: 'Development'
-    },
-    snap: {
-      base: 'core22'
     }
+  },
+  snap: {
+    base: 'core22'
   }
 });
 
