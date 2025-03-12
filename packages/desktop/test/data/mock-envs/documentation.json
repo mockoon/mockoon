@@ -204,7 +204,8 @@
     "certPath": "./domain.crt",
     "keyPath": "./domain.key",
     "caPath": "",
-    "passphrase": ""
+    "passphrase": "",
+    "requestCert": false
   },
   "data": [],
   "folders": [],

@@ -187,6 +187,7 @@ describe('Migrations', () => {
       strictEqual(environment.https, undefined);
       deepStrictEqual(environment.tlsOptions, {
         enabled: true,
+        requestCert: false,
         type: 'CERT',
         pfxPath: '',
         certPath: '',

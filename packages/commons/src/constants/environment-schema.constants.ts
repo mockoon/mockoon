@@ -39,6 +39,7 @@ export const EnvironmentDefault: Environment = {
   proxyRemovePrefix: false,
   tlsOptions: {
     enabled: false,
+    requestCert: false,
     type: 'CERT',
     pfxPath: '',
     certPath: '',
@@ -198,6 +199,10 @@ const TLSOptionsSchema = Joi.object<EnvironmentTLSOptions, true>({
   passphrase: Joi.string()
     .allow('')
     .failover(EnvironmentDefault.tlsOptions.passphrase)
+    .required(),
+  requestCert: Joi.boolean()
+    .failover(EnvironmentDefault.tlsOptions.requestCert)
+    .default(false)
     .required()
 })
   .failover(EnvironmentDefault.tlsOptions)

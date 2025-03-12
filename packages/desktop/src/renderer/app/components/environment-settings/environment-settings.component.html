@@ -85,8 +85,21 @@
           id="env-settings-tls-enabled"
           formControlName="enabled"
         />
-        <label class="form-check-label" for="env-settings-tls-enabled"
-          >Enable TLS
+        <label class="form-check-label" for="env-settings-tls-enabled">
+          Enable TLS
+        </label>
+      </div>
+    </div>
+    <div class="input-group align-items-center">
+      <div class="form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="env-settings-request-cert"
+          formControlName="requestCert"
+        />
+        <label class="form-check-label" for="env-settings-request-cert">
+          Enable Client Auth
         </label>
       </div>
     </div>
