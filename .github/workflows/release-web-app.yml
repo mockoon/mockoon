@@ -1,0 +1,29 @@
+name: Release web app (Firebase)
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      FIREBASE_TOKEN: ${{secrets.FIREBASE_TOKEN}}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - uses: actions/cache@v3
+        id: cache-modules
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Build application
+        run: |
+          npm run bootstrap
+          npm run build:libs
+          npm run build:web:prod
+      - name: deploy
+        run: |
+          npm run deploy:web
