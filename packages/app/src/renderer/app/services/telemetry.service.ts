@@ -39,7 +39,8 @@ export class TelemetryService {
     endTime: null,
     os: null,
     version: Config.appVersion,
-    environmentsCount: null
+    environmentsCount: null,
+    app: Config.isWeb ? 'web' : 'desktop'
   };
   private event$ = new Subject<void>();
   private closeSession$ = new BehaviorSubject<boolean>(false);

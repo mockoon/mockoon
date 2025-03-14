@@ -6,4 +6,5 @@ export type TelemetrySession = {
   version: string;
   os: string;
   environmentsCount: number;
+  app: 'web' | 'desktop';
 };
