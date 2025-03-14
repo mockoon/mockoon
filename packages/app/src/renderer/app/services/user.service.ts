@@ -30,11 +30,10 @@ import {
 } from 'src/renderer/app/stores/actions';
 import { Store, storeDefaultState } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
-import { environment as env } from 'src/renderer/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private isWeb = env.web;
+  private isWeb = Config.isWeb;
   private auth: Auth = inject(Auth);
   private idToken$ = idToken(this.auth);
 
@@ -116,7 +115,7 @@ export class UserService {
    * Open the auth modal and send the APP_AUTH event to the main process
    */
   public startLoginFlow() {
-    if (env.web) {
+    if (Config.isWeb) {
       this.uiService.openModal('authIframe');
     } else {
       this.uiService.openModal('auth');

@@ -42,7 +42,7 @@ import {
   updateSettingsEnvironmentDescriptorAction
 } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
-import { environment as env } from 'src/renderer/environments/environment';
+import { Config } from 'src/renderer/config';
 
 @Injectable({ providedIn: 'root' })
 export class SyncPayloadsService {
@@ -376,7 +376,7 @@ export class SyncPayloadsService {
     switch (syncAction.type) {
       case SyncActionTypes.REMOVE_CLOUD_ENVIRONMENT:
         // when using the web app, converting to a local environment doesn't make sense
-        if (env.web) {
+        if (Config.isWeb) {
           reducerAction = removeEnvironmentAction(syncAction.environmentUuid);
           this.mainApiService.invoke(
             'APP_DELETE_ENVIRONMENT_DATA',

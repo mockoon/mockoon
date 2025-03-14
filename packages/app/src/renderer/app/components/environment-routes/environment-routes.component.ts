@@ -97,7 +97,7 @@ import { EnvironmentsService } from 'src/renderer/app/services/environments.serv
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
-import { environment as env } from 'src/renderer/environments/environment';
+import { Config } from 'src/renderer/config';
 
 type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
 
@@ -434,7 +434,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       map(([activeEnvironment, activeRoute]) => {
         let activeInstance: DeployInstance;
 
-        if (env.web) {
+        if (Config.isWeb) {
           activeInstance = this.store
             .get('deployInstances')
             .find(

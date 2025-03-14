@@ -10,11 +10,10 @@ import {
 } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
-import { environment as env } from 'src/renderer/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class TourService {
-  public isWeb = env.web;
+  public isWeb = Config.isWeb;
   public steps$ = new Subject<{
     data: TourStep;
     current: number;

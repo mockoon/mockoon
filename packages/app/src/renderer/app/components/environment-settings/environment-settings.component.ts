@@ -25,7 +25,7 @@ import { ToggleItems } from 'src/renderer/app/models/common.model';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { Store } from 'src/renderer/app/stores/store';
-import { environment as env } from 'src/renderer/environments/environment';
+import { Config } from 'src/renderer/config';
 
 @Component({
   selector: 'app-environment-settings',
@@ -61,7 +61,7 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
       label: 'PFX'
     }
   ];
-  public isWeb = env.web;
+  public isWeb = Config.isWeb;
   private destroy$ = new Subject<void>();
 
   constructor(

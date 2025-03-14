@@ -139,7 +139,6 @@ import {
 import { ReducerDirectionType } from 'src/renderer/app/stores/reducer';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
-import { environment as env } from 'src/renderer/environments/environment';
 import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 
 @Injectable({
@@ -154,6 +153,7 @@ export class EnvironmentsService {
       name: string;
     }[]
   >([]);
+  private isWeb = Config.isWeb;
 
   constructor(
     private dataService: DataService,
@@ -183,7 +183,7 @@ export class EnvironmentsService {
     ]).pipe(
       switchMap(([settings, demoFilePath]) => {
         if (!settings.environments.length && !settings.welcomeShown) {
-          if (env.web) {
+          if (this.isWeb) {
             return of({
               settings,
               environmentsData: []
@@ -882,11 +882,11 @@ export class EnvironmentsService {
 
     return this.uiService
       .showConfirmDialog({
-        title: env.web ? 'Delete' : 'Delete from the cloud',
-        text: env.web
+        title: this.isWeb ? 'Delete' : 'Delete from the cloud',
+        text: this.isWeb
           ? 'This will permanently delete the environment. Are you sure? This action cannot be undone.'
           : 'This will permanently delete the environment from the cloud and convert it to a local environment on all other clients. Are you sure?',
-        sub: env.web
+        sub: this.isWeb
           ? 'Any running instance of this environment will continue to run until stopped.'
           : `<span class="text-break-all">Your local copy located in <strong>${environmentDescriptor.path}</strong> will not be deleted.</span>`,
         subIcon: 'info',
@@ -897,7 +897,7 @@ export class EnvironmentsService {
         switchMap((confirmed) => {
           if (confirmed) {
             // in web version, completely delete the environment an do not convert to local
-            if (env.web) {
+            if (this.isWeb) {
               this.store.update(removeEnvironmentAction(environmentUuid));
               this.mainApiService.invoke(
                 'APP_DELETE_ENVIRONMENT_DATA',
@@ -946,7 +946,7 @@ export class EnvironmentsService {
         deletedCloudEnvironment.uuid
       );
 
-      if (env.web) {
+      if (this.isWeb) {
         // permanently delete from the web app
         this.store.update(
           removeEnvironmentAction(deletedCloudEnvironment.uuid)

@@ -40,7 +40,7 @@ import {
 import { CommandPaletteService } from 'src/renderer/app/services/command-palette.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
-import { environment as env } from 'src/renderer/environments/environment';
+import { Config } from 'src/renderer/config';
 
 @Component({
   selector: 'app-command-palette-modal',
@@ -65,7 +65,7 @@ export class CommandPaletteModalComponent implements OnInit, OnDestroy {
   public commands$: Observable<Commands>;
   public searchControl = new UntypedFormControl('');
   public focusedItemIndex$ = new BehaviorSubject<number>(0);
-  public isWeb = env.web;
+  public isWeb = Config.isWeb;
   private destroy$ = new Subject<void>();
   private commands: Commands = [];
 

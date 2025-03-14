@@ -3,7 +3,7 @@ import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { TourService } from 'src/renderer/app/services/tour.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
-import { environment as env } from 'src/renderer/environments/environment';
+import { Config } from 'src/renderer/config';
 
 @Component({
   selector: 'app-welcome-modal',
@@ -11,7 +11,7 @@ import { environment as env } from 'src/renderer/environments/environment';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WelcomeModalComponent {
-  public isWeb = env.web;
+  public isWeb = Config.isWeb;
 
   constructor(
     private settingsService: SettingsService,

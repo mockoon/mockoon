@@ -70,7 +70,6 @@ import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
-import { environment as env } from 'src/renderer/environments/environment';
 import { Settings } from 'src/shared/models/settings.model';
 
 type FullFolder = {
@@ -136,7 +135,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   public menuSize = Config.defaultSecondaryMenuSize;
   public draggedFolderCollapsed: boolean;
   public ResponseMode = ResponseMode;
-  public isWeb = env.web;
+  public isWeb = Config.isWeb;
   public routeDropdownMenuItems: DropdownMenuItem[] = [
     {
       label: 'Duplicate',
@@ -159,7 +158,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
         );
       }
     },
-    ...(env.web
+    ...(this.isWeb
       ? []
       : [
           {
@@ -181,7 +180,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
 
         let activeInstance: DeployInstance;
 
-        if (env.web) {
+        if (this.isWeb) {
           activeInstance = this.store
             .get('deployInstances')
             .find(

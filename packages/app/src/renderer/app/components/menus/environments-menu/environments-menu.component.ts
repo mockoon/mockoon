@@ -57,7 +57,6 @@ import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
-import { environment as env } from 'src/renderer/environments/environment';
 import {
   EnvironmentsCategories,
   RecentLocalEnvironment,
@@ -113,7 +112,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public syncAlert$: Observable<string>;
   public clearRecentLocalEnvironmentsConfirm$ = new TimedBoolean();
   public offlineWarningLink = Config.docs.cloudSyncOffline;
-  public isWeb = env.web;
+  public isWeb = Config.isWeb;
   public deployInstances$ = this.store.select('deployInstances');
   public alertLabels = {
     VERSION_TOO_OLD_WARNING:
@@ -127,8 +126,8 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   };
   public commonDropdownMenuItems: DropdownMenuItem[] = [
     {
-      label: env.web ? 'Duplicate' : 'Duplicate to the cloud',
-      icon: env.web ? 'content_copy' : 'cloud',
+      label: this.isWeb ? 'Duplicate' : 'Duplicate to the cloud',
+      icon: this.isWeb ? 'content_copy' : 'cloud',
       twoSteps: false,
       disabled$: () =>
         this.store.select('sync').pipe(map((sync) => !sync.status)),
@@ -136,7 +135,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
         this.environmentsService.duplicateToCloud(environmentUuid).subscribe();
       }
     },
-    ...(env.web
+    ...(this.isWeb
       ? []
       : [
           {
@@ -151,7 +150,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
           }
         ]),
     {
-      label: env.web ? 'Manage deployment' : 'Deploy to the cloud',
+      label: this.isWeb ? 'Manage deployment' : 'Deploy to the cloud',
       icon: 'backup',
       twoSteps: false,
       disabled$: () =>
@@ -162,7 +161,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
         this.uiService.openModal('deploy', environmentUuid);
       }
     },
-    ...(env.web
+    ...(this.isWeb
       ? []
       : [
           {
@@ -208,7 +207,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   ];
   public cloudEnvironmentDropdownMenuItems: DropdownMenuItem[] = [
     ...this.commonDropdownMenuItems,
-    ...(env.web
+    ...(this.isWeb
       ? []
       : [
           {
@@ -235,8 +234,8 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
           }
         ]),
     {
-      label: env.web ? 'Delete' : 'Delete from cloud and close',
-      icon: env.web ? 'delete' : 'cloud_remove',
+      label: this.isWeb ? 'Delete' : 'Delete from cloud and close',
+      icon: this.isWeb ? 'delete' : 'cloud_remove',
       twoSteps: false,
       disabled$: () =>
         this.store.select('sync').pipe(map((sync) => !sync.status)),

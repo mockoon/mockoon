@@ -9,7 +9,7 @@ import { TourService } from 'src/renderer/app/services/tour.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
-import { environment as env } from 'src/renderer/environments/environment';
+import { Config } from 'src/renderer/config';
 import { FileWatcherOptions } from 'src/shared/models/settings.model';
 
 @Injectable({ providedIn: 'root' })
@@ -27,7 +27,7 @@ export class MainApiListenerService {
   ) {}
 
   public init() {
-    if (!env.web) {
+    if (!Config.isWeb) {
       this.mainApiService.receive('APP_UPDATE_AVAILABLE', (version) => {
         this.zone.run(() => {
           this.eventsService.updateAvailable$.next(version);

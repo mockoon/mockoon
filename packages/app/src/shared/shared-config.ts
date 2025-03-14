@@ -12,10 +12,12 @@ const appVersion: string = require('../../package.json').version;
 export const SharedConfig = (options: {
   websiteURL: string;
   apiURL: string;
+  isWeb?: boolean;
 }) => {
   const docsURL = `${options.websiteURL}docs/latest/`;
 
   return {
+    isWeb: options.isWeb,
     appVersion,
     telemetry: {
       sessionDuration: 3_600_000 // 1h

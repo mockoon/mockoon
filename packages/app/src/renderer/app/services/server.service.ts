@@ -30,6 +30,7 @@ import {
   updateProcessedDatabucketsAction
 } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
+import { Config } from 'src/renderer/config';
 import { environment as env } from 'src/renderer/environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -55,7 +56,7 @@ export class ServerService {
       }
     );
 
-    if (env.web) {
+    if (Config.isWeb) {
       return combineLatest([
         this.store
           .select('activeEnvironmentUUID')
@@ -145,7 +146,7 @@ export class ServerService {
     activeEnvironmentUuid: string,
     databucketUuid: string
   ) {
-    if (env.web) {
+    if (Config.isWeb) {
       const activeEnvironmentInstance = this.store
         .get('deployInstances')
         .find((instance) => instance.environmentUuid === activeEnvironmentUuid);

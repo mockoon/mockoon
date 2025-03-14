@@ -76,7 +76,7 @@ export class HeaderComponent implements OnInit {
     ENV_PROXY: 'tour-environment-proxy'
   };
   public isDev = !env.production;
-  public isWeb = env.web;
+  public isWeb = Config.isWeb;
   public accountUrl = Config.accountUrl;
 
   constructor(
