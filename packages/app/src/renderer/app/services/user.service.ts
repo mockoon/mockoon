@@ -10,6 +10,7 @@ import {
 import { User } from '@mockoon/cloud';
 import {
   catchError,
+  combineLatest,
   EMPTY,
   filter,
   from,
@@ -116,7 +117,7 @@ export class UserService {
    */
   public startLoginFlow() {
     if (env.web) {
-      this.redirectToLogin();
+      this.uiService.openModal('authIframe');
     } else {
       this.uiService.openModal('auth');
       this.mainApiService.send('APP_AUTH');
@@ -150,36 +151,43 @@ export class UserService {
   }
 
   /**
-   * Process the token query param and authenticate the user.
-   * If no token is present, check if a redirect to the login page is needed.
+   * Process the auth callback token and display a toast
+   * Used in the web app (shouldn't be used in the desktop app)
+   *
+   * @param token
+   * @returns
+   */
+  public webAuthCallbackHandler(token: string) {
+    return this.authWithToken(token).pipe(
+      tap(() => {
+        this.loggerService.logMessage('info', 'LOGIN_SUCCESS');
+      }),
+      catchError(() => {
+        this.loggerService.logMessage('error', 'LOGIN_ERROR');
+
+        return EMPTY;
+      })
+    );
+  }
+
+  /**
+   * Handle the web app auth flow: open the auth iframe modal if not authenticated
+   * Do nothing if the welcome modal has already been shown,
+   * it will open the auth iframe modal after the user closes it
    *
    * Used in the web app (shouldn't be used in the desktop app)
    *
    * @returns
    */
-  public authQueryParamHandler(): any {
-    const token = new URLSearchParams(window.location.search).get('token');
-
-    if (token) {
-      return this.authWithToken(token).pipe(
-        tap(() => {
-          this.loggerService.logMessage('info', 'LOGIN_SUCCESS');
-          this.cleanBrowserUrl();
-        }),
-        catchError(() => {
-          this.loggerService.logMessage('error', 'LOGIN_ERROR');
-          this.cleanBrowserUrl();
-
-          return EMPTY;
-        })
-      );
-    }
-
-    return authState(this.auth).pipe(
+  public webAuthHandler() {
+    return combineLatest([
+      authState(this.auth),
+      this.store.select('settings')
+    ]).pipe(
       take(1),
-      tap((user) => {
-        if (!user) {
-          window.location.href = `${Config.appAuthURL}?webapp=true`;
+      tap(([user, settings]) => {
+        if (!user && settings.welcomeShown) {
+          this.uiService.openModal('authIframe');
         }
       })
     );
@@ -198,27 +206,5 @@ export class UserService {
         }
       })
     );
-  }
-
-  /**
-   * Remove the path and query params from the browser URL
-   *
-   * Used to remove the token query param after a successful login
-   */
-  private cleanBrowserUrl() {
-    window.history.replaceState(
-      null,
-      '',
-      window.location.pathname.replace('/auth', '')
-    );
-  }
-
-  /**
-   * Redirect to the login page on the website
-   *
-   * Used for the web app when the user is not authenticated
-   */
-  private redirectToLogin() {
-    window.location.href = `${Config.appAuthURL}?webapp=true`;
   }
 }

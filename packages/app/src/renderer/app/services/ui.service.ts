@@ -5,6 +5,7 @@ import {
   NgbModalRef
 } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
+import { AuthIframeModalComponent } from 'src/renderer/app/components/modals/auth-iframe-modal/auth-iframe-modal.component';
 import { AuthModalComponent } from 'src/renderer/app/components/modals/auth-modal/auth-modal.component';
 import { ChangelogModalComponent } from 'src/renderer/app/components/modals/changelog-modal/changelog-modal.component';
 import { CommandPaletteModalComponent } from 'src/renderer/app/components/modals/command-palette-modal/command-palette-modal.component';
@@ -50,6 +51,7 @@ type ModalNames =
   | 'duplicate_to_environment'
   | 'welcome'
   | 'auth'
+  | 'authIframe'
   | 'confirm'
   | 'deploy'
   | 'editor'
@@ -113,6 +115,14 @@ export class UIService {
       component: AuthModalComponent,
       options: commonConfigs.medium
     },
+    authIframe: {
+      component: AuthIframeModalComponent,
+      options: {
+        ...commonConfigs.medium,
+        keyboard: false,
+        modalDialogClass: 'modal-dialog-rounded'
+      }
+    },
     confirm: {
       component: ConfirmModalComponent,
       options: commonConfigs.medium
@@ -138,6 +148,7 @@ export class UIService {
     duplicate_to_environment: null,
     welcome: null,
     auth: null,
+    authIframe: null,
     confirm: null,
     deploy: null,
     editor: null,

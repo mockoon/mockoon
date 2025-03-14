@@ -111,7 +111,7 @@ export class AppComponent implements OnInit {
     this.serverService.init().subscribe();
 
     if (environment.web) {
-      this.userService.authQueryParamHandler().subscribe();
+      this.userService.webAuthHandler().subscribe();
     }
   }
 
