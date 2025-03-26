@@ -17,6 +17,7 @@ import {
   from,
   map,
   Observable,
+  retry,
   switchMap,
   tap
 } from 'rxjs';
@@ -92,6 +93,7 @@ export class ServerService {
               eventSource.close();
             };
           }).pipe(
+            retry({ delay: 5000 }),
             tap((message: string) => {
               const payload: {
                 event: keyof ServerEvents;
