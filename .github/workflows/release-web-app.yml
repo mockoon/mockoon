@@ -19,6 +19,8 @@ jobs:
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install firebase
+        run: npm install -g firebase-tools
       - name: Build application
         run: |
           npm run bootstrap
