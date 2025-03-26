@@ -1,4 +1,4 @@
-@let currentInstance = currentInstance$ | async;
+@let instanceUrl = instanceUrl$ | async;
 
 <div
   *ngIf="activeEnvironment$ | async as activeEnvironment"
@@ -21,7 +21,7 @@
     [heading]="isWeb ? 'API prefix' : 'API URL'"
     icon="power"
     subheading="API available on {{
-      buildApiUrl(activeEnvironment, currentInstance) +
+      instanceUrl +
         (activeEnvironment.endpointPrefix
           ? '/' + activeEnvironment.endpointPrefix
           : '')

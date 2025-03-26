@@ -95,13 +95,13 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;
   public environments$: Observable<Environments>;
   public cloudEnvironments$: Observable<Environments>;
+  public instanceUrls$: Observable<Record<string, string[]>>;
   public environmentsStatus$: Observable<EnvironmentsStatuses>;
   public settings$: Observable<Settings>;
   public menuSize = Config.defaultMainMenuSize;
   public editingName = false;
   public activeEnvironmentForm: UntypedFormGroup;
   public dragEnabled = true;
-  public buildApiUrl = buildApiUrl;
   public logsRecording$ = this.eventsService.logsRecording$;
   public user$ = this.store.select('user');
   public sync$ = this.store.select('sync');
@@ -379,7 +379,9 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
         ];
       })
     );
-    this.activeEnvironment$ = this.store.selectActiveEnvironment();
+    this.activeEnvironment$ = this.store
+      .selectActiveEnvironment()
+      .pipe(filter((environment) => !!environment));
     this.environments$ = combineLatest([
       this.store.select('environments'),
       this.settings$
@@ -466,6 +468,24 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
         collapsed: false
       });
     }
+
+    this.instanceUrls$ = combineLatest([
+      this.store.select('environments'),
+      this.store.select('deployInstances')
+    ]).pipe(
+      map(([environments, deployInstances]) => {
+        return environments.reduce((instanceUrls, environment) => {
+          const instance = deployInstances.find(
+            (deployInstance) =>
+              deployInstance.environmentUuid === environment.uuid
+          );
+
+          instanceUrls[environment.uuid] = buildApiUrl(environment, instance);
+
+          return instanceUrls;
+        }, {});
+      })
+    );
 
     this.initForms();
     this.initFormValues();

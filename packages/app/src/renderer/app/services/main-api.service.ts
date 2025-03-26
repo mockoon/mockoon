@@ -98,6 +98,12 @@ export class MainApiService implements MainAPIModel {
           }
           break;
 
+        case 'APP_LOGS':
+          if (data[0].type === 'error') {
+            // eslint-disable-next-line no-console
+            console.error(data[0].message);
+          }
+          break;
         default:
           result = undefined;
           break;

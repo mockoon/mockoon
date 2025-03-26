@@ -12,6 +12,7 @@
 @let user = user$ | async;
 @let localDropdownMenuItems = localDropdownMenuItems$ | async;
 @let deployInstances = deployInstances$ | async;
+@let instanceUrls = instanceUrls$ | async;
 
 <div
   class="environments-menu d-flex flex-column h-100"
@@ -291,12 +292,12 @@
                   ></app-svg>
                 }
                 <!-- display url on desktop or on web when instance is running -->
-                @if (!isWeb || instances[environment.uuid] !== undefined) {
+                @if (!isWeb || instanceUrls[environment.uuid]) {
                   <span class="text-truncate pe-1">
                     {{
-                      buildApiUrl(environment, instances[environment.uuid]) +
-                        (activeEnvironment.endpointPrefix
-                          ? '/' + activeEnvironment.endpointPrefix
+                      instanceUrls[environment.uuid] +
+                        (activeEnvironment?.endpointPrefix
+                          ? '/' + activeEnvironment?.endpointPrefix
                           : '')
                     }}
                   </span>

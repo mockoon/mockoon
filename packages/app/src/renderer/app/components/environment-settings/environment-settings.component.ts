@@ -13,7 +13,7 @@ import {
 } from '@angular/forms';
 import { Environment, EnvironmentDefault } from '@mockoon/commons';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subject, merge } from 'rxjs';
+import { Observable, Subject, combineLatest, merge } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TitleSeparatorComponent } from 'src/renderer/app/components/title-separator/title-separator.component';
@@ -46,10 +46,9 @@ import { Config } from 'src/renderer/config';
 })
 export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;
+  public instanceUrl$: Observable<string>;
   public activeEnvironmentForm: UntypedFormGroup;
-  public currentInstance$ = this.store.selectActiveEnvironmentInstance();
   public tlsOptionsFormGroup: UntypedFormGroup;
-  public buildApiUrl = buildApiUrl;
   public Infinity = Infinity;
   public certTypes: ToggleItems = [
     {
@@ -73,7 +72,19 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
+    this.instanceUrl$ = combineLatest([
+      this.activeEnvironment$,
+      this.store.select('deployInstances')
+    ]).pipe(
+      map(([environment, deployInstances]) => {
+        const instance = deployInstances.find(
+          (deployInstance) =>
+            deployInstance.environmentUuid === environment.uuid
+        );
 
+        return buildApiUrl(environment, instance);
+      })
+    );
     this.initForms();
     this.initFormValues();
   }
