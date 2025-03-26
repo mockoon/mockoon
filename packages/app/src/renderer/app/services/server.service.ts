@@ -121,6 +121,10 @@ export class ServerService {
    * @returns
    */
   public updateServerEnvironment(environments: Environment[]) {
+    if (environments.length === 0) {
+      return;
+    }
+
     const instance = this.store
       .get('deployInstances')
       .find(

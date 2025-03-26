@@ -534,11 +534,15 @@ export const environmentReducer = (
         environments,
         environmentsStatus: {
           ...state.environmentsStatus,
-          [newEnvironment.uuid]: {
-            running: false,
-            needRestart: false,
-            redeploying: false
-          }
+          // use existing status if available, otherwise create a new one (status may come from the cloud instances)
+          [newEnvironment.uuid]:
+            state.environmentsStatus[newEnvironment.uuid] !== undefined
+              ? state.environmentsStatus[newEnvironment.uuid]
+              : {
+                  running: false,
+                  needRestart: false,
+                  redeploying: false
+                }
         },
         environmentsLogs: {
           ...state.environmentsLogs,
