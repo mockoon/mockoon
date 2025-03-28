@@ -38,6 +38,7 @@ import {
   switchMap,
   tap
 } from 'rxjs';
+import { major } from 'semver';
 import { Socket, io } from 'socket.io-client';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { LoggerService } from 'src/renderer/app/services/logger-service';
@@ -58,6 +59,7 @@ export class SyncService {
   private socket: Socket;
   private timeDifference: number;
   private serverMigrationDone = false;
+  private migrationApproval: boolean;
 
   constructor(
     private userService: UserService,
@@ -99,15 +101,38 @@ export class SyncService {
         merge(
           this.initListeners(),
           combineLatest([
-            this.store.select('user'),
+            this.store.select('user').pipe(filter((user) => !!user)),
             this.userService.idTokenChanges().pipe(distinctUntilChanged())
           ]).pipe(
             // wait a bit before reacting to user changes, to avoid emitting sync status changes too soon and hit a race condition
             delay(500),
-            tap(([user, token]) => {
+            switchMap(([user, token]) => {
+              /**
+               * On desktop if a newer version is detected by the sync backend during connection will automatically migrate the environments.
+               * Because it means a newer version of the app was manualle installed. We can trust this positive action from the user.
+               *
+               * On web, it's always the latest version. So, the migration is not a positive action from the user and it's better to ask for confirmation.
+               * The migration will be done by the sync backend like before but only if the user confirms the action.
+               */
+              if (
+                Config.isWeb &&
+                user.cloudSyncHighestMajorVersion != null &&
+                user.cloudSyncHighestMajorVersion < major(Config.appVersion)
+              ) {
+                return this.confirmMigration().pipe(
+                  map((allow) => ({ user, token, allow }))
+                );
+              }
+
+              return of({ user, token, allow: true });
+            }),
+            tap(({ user, token, allow }) => {
               if (user && user.plan !== Plans.FREE && token) {
                 this.socket.auth = { ...this.socket.auth, token };
-                this.socket.connect();
+
+                if (allow) {
+                  this.socket.connect();
+                }
 
                 return;
               }
@@ -132,8 +157,14 @@ export class SyncService {
    * Reconnect the socket
    */
   public reconnect() {
-    this.store.update(updateSyncAction({ offlineReason: null }));
-    this.socket?.connect();
+    (this.migrationApproval ? of(true) : this.confirmMigration()).subscribe(
+      (confirmed) => {
+        if (confirmed) {
+          this.store.update(updateSyncAction({ offlineReason: null }));
+          this.socket?.connect();
+        }
+      }
+    );
   }
 
   private initListeners() {
@@ -142,6 +173,33 @@ export class SyncService {
       this.onDisconnect(this.socket),
       this.onMessage(this.socket)
     );
+  }
+
+  /**
+   * Open the confirm dialog to ask the user if they want to migrate the environments
+   * Only useful if the user is on a web platform and the cloud space is on an older version
+   *
+   */
+  private confirmMigration() {
+    return this.uiService
+      .showConfirmDialog({
+        title: 'Confirm migration to the latest version',
+        text: 'Mockoon Cloud web application is running on a newer version (latest) than your cloud space. Do you want to migrate your cloud space to the latest version?',
+        sub: 'This action is irreversible. If you or your team are using the desktop application, you will need to update it to the latest version to be able to access your cloud space.',
+        subIcon: 'warning',
+        subIconClass: 'text-warning',
+        confirmButtonText: 'Migrate',
+        cancelButtonText: 'Quit'
+      })
+      .pipe(
+        tap((confirmed) => {
+          if (!confirmed) {
+            window.location.href = Config.websiteURL;
+          }
+
+          this.migrationApproval = confirmed;
+        })
+      );
   }
 
   private onConnectError(socket: Socket) {

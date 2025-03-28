@@ -7,7 +7,12 @@ export class Sse {
   private replayableMessageQueue: any[] = [];
   private activeListenerCount = 0;
 
-  constructor() {
+  constructor(
+    private options: { keepAlive?: boolean; keepAliveDelay?: number } = {
+      keepAlive: true,
+      keepAliveDelay: 60000
+    }
+  ) {
     this.eventEmitter.setMaxListeners(30);
   }
 
@@ -26,6 +31,7 @@ export class Sse {
 
     const listener = (data: any) => {
       response.write(`data: ${JSON.stringify(data)}\n\n`);
+      response.flushHeaders();
     };
 
     this.eventEmitter.on('message', listener);
@@ -42,8 +48,18 @@ export class Sse {
       this.eventEmitter.emit('message', message);
     });
 
+    // keep alive
+    if (this.options.keepAlive) {
+      const keepAliveInterval = setInterval(() => {
+        response.write(':\n\n');
+      }, this.options.keepAliveDelay);
+
+      response.once('close', () => {
+        clearInterval(keepAliveInterval);
+      });
+    }
+
     response.once('close', () => {
-      response.write(`data: closing\n\n`);
       response.end();
       this.eventEmitter.off('message', listener);
       this.activeListenerCount--;

@@ -82,6 +82,11 @@ export class ServerService {
             );
 
             eventSource.onmessage = (event) => {
+              // do not process empty messages (pings)
+              if (!event.data) {
+                return;
+              }
+
               observer.next(event.data);
             };
 
@@ -102,6 +107,9 @@ export class ServerService {
               } = JSON.parse(message);
 
               this.processEvent(environmentUuid, payload.event, payload);
+            }),
+            catchError(() => {
+              return EMPTY;
             })
           )
         ),

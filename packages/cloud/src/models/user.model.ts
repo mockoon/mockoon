@@ -16,6 +16,7 @@ export type User = {
   cloudSyncItemsQuota: number;
   cloudSyncItemsQuotaUsed: number;
   cloudSyncSizeQuota: number;
+  cloudSyncHighestMajorVersion: number | null;
   templatesQuota: number;
   templatesQuotaUsed: number;
   nextQuotaResetOn: number;
