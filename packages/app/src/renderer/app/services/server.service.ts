@@ -57,60 +57,56 @@ export class ServerService {
     );
 
     if (Config.isWeb) {
-      return combineLatest([
-        this.store
-          .select('activeEnvironmentUUID')
-          .pipe(filter((uuid) => !!uuid)),
-        this.store
-          .select('deployInstances')
-          .pipe(filter((instances) => !!instances && instances.length > 0))
-      ]).pipe(
-        map(([environmentUuid, instances]) => ({
-          instance: instances.find(
-            (instance) => instance.environmentUuid === environmentUuid
-          ),
-          environmentUuid
-        })),
-        filter(({ instance }) => !!instance),
-        switchMap(({ instance, environmentUuid }) =>
-          new Observable((observer) => {
-            const eventSource = new EventSource(
-              `${this.buildRemoteInstanceUrl(instance)}/events`,
-              {
-                headers: { Authorization: `Bearer ${instance.apiKey}` }
-              }
-            );
+      return this.store.select('deployInstances').pipe(
+        filter((instances) => !!instances && instances.length > 0),
+        switchMap((instances) =>
+          combineLatest(
+            instances.map((instance) =>
+              new Observable((observer) => {
+                const eventSource = new EventSource(
+                  `${this.buildRemoteInstanceUrl(instance)}/events`,
+                  {
+                    headers: { Authorization: `Bearer ${instance.apiKey}` },
+                    disableRetry: true
+                  }
+                );
 
-            eventSource.onmessage = (event) => {
-              // do not process empty messages (pings)
-              if (!event.data) {
-                return;
-              }
+                eventSource.onmessage = (event) => {
+                  // do not process empty messages (pings)
+                  if (!event.data) {
+                    return;
+                  }
 
-              observer.next(event.data);
-            };
+                  observer.next(event.data);
+                };
 
-            eventSource.onerror = (error) => {
-              observer.error(error);
-            };
+                eventSource.onerror = (error) => {
+                  observer.error(error);
+                };
 
-            return () => {
-              eventSource.close();
-            };
-          }).pipe(
-            retry({ delay: 5000 }),
-            tap((message: string) => {
-              const payload: {
-                event: keyof ServerEvents;
-                transaction?: Transaction;
-                dataBuckets?: ProcessedDatabucketWithoutValue[];
-              } = JSON.parse(message);
+                return () => {
+                  eventSource.close();
+                };
+              }).pipe(
+                retry({ delay: 5000 }),
+                tap((message) => {
+                  const payload: {
+                    event: keyof ServerEvents;
+                    transaction?: Transaction;
+                    dataBuckets?: ProcessedDatabucketWithoutValue[];
+                  } = JSON.parse(message as string);
 
-              this.processEvent(environmentUuid, payload.event, payload);
-            }),
-            catchError(() => {
-              return EMPTY;
-            })
+                  this.processEvent(
+                    instance.environmentUuid,
+                    payload.event,
+                    payload
+                  );
+                }),
+                catchError(() => {
+                  return EMPTY;
+                })
+              )
+            )
           )
         ),
         catchError(() => {

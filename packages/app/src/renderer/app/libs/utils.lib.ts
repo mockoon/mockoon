@@ -138,7 +138,7 @@ export const buildFullPath = (
 
   let routeUrl = `${protocol}${buildApiUrl(environment, instance)}/`;
 
-  if (environment.endpointPrefix) {
+  if (environment?.endpointPrefix) {
     routeUrl += environment.endpointPrefix + '/';
   }
 
