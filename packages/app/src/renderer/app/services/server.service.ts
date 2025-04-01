@@ -67,7 +67,8 @@ export class ServerService {
                   `${this.buildRemoteInstanceUrl(instance)}/events`,
                   {
                     headers: { Authorization: `Bearer ${instance.apiKey}` },
-                    disableRetry: true
+                    disableRetry: true,
+                    disableLogger: true
                   }
                 );
 
