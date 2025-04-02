@@ -1,11 +1,11 @@
 <div class="modal-header">
-  <h4 class="modal-title">Welcome to Mockoon!</h4>
+  <h4 class="modal-title">Welcome to Mockoon{{ isWeb ? ' web' : '' }}!</h4>
 </div>
 <div class="modal-body">
   <p>
-    Thank you for {{ isWeb ? 'using' : 'installing' }} Mockoon. We hope you will
-    enjoy using it as much as we enjoyed building it. If you have any questions,
-    please refer to the
+    Thank you for {{ isWeb ? 'using' : 'installing' }} Mockoon
+    {{ isWeb ? ' web' : '' }}. We hope you will enjoy using it as much as we
+    enjoyed building it. If you have any questions, please refer to the
     <a href="https://mockoon.com/docs/latest/about/" target="_blank"
       >documentation</a
     >
@@ -13,14 +13,20 @@
   </p>
   @if (isWeb) {
     <p>
-      💡 This web version is currently in early access and available exclusively
-      to our cloud customers. Read our
-      <a
-        href="https://mockoon.com/blog/introducing-mockoon-cloud-web-app/"
-        target="_blank"
-        >announcement</a
-      >
-      for more information.
+      <small>
+        <app-svg icon="science" class="me-2 text-warning"></app-svg>This web
+        version is currently in early access and available exclusively to our
+        Cloud customers. You can
+        <a href="https://mockoon.com/pricing/" target="_blank">
+          test it for free for 7 days</a
+        >. Read our
+        <a
+          href="https://mockoon.com/blog/introducing-mockoon-cloud-web-app/"
+          target="_blank"
+          >announcement</a
+        >
+        for more information.
+      </small>
     </p>
   } @else {
     <p>
@@ -38,7 +44,7 @@
       class="btn btn-primary modal-close"
       (click)="close(false)"
     >
-      Start using Mockoon
+      Start using Mockoon {{ isWeb ? ' web' : '' }}
     </button>
   } @else {
     <button

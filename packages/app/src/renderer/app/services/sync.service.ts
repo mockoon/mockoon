@@ -157,14 +157,22 @@ export class SyncService {
    * Reconnect the socket
    */
   public reconnect() {
-    (this.migrationApproval ? of(true) : this.confirmMigration()).subscribe(
-      (confirmed) => {
+    const user = this.store.get('user');
+
+    if (user) {
+      (Config.isWeb &&
+      !this.migrationApproval &&
+      user.cloudSyncHighestMajorVersion != null &&
+      user.cloudSyncHighestMajorVersion < major(Config.appVersion)
+        ? this.confirmMigration()
+        : of(true)
+      ).subscribe((confirmed) => {
         if (confirmed) {
           this.store.update(updateSyncAction({ offlineReason: null }));
           this.socket?.connect();
         }
-      }
-    );
+      });
+    }
   }
 
   private initListeners() {

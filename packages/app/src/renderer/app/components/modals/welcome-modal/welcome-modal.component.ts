@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { TourService } from 'src/renderer/app/services/tour.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -8,7 +9,8 @@ import { Config } from 'src/renderer/config';
 @Component({
   selector: 'app-welcome-modal',
   templateUrl: './welcome-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [SvgComponent]
 })
 export class WelcomeModalComponent {
   public isWeb = Config.isWeb;

@@ -22,7 +22,8 @@ export const helpersAutocompletions = [
   { caption: 'dataRaw', value: "{{dataRaw 'nameOrId' 'path'}}", meta: '' },
   {
     caption: 'setData',
-    value: "{{setData 'nameOrId' 'path' 'newValue' 'operator'}}",
+    value:
+      "{{setData 'operator' 'bucketNameOrId' 'path.to.property' 'newValue' }}",
     meta: ''
   },
   { caption: 'faker', value: "{{faker 'namespace.method'}}", meta: '' },

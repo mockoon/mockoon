@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Plans } from '@mockoon/cloud';
 import { Route, RouteType } from '@mockoon/commons';
 import { Observable, from, map } from 'rxjs';
 import { CharCode } from 'src/renderer/app/enums/charcode.enum';
@@ -300,6 +301,8 @@ export class CommandPaletteService {
     const hasActiveCallback = !!activeCallback;
     const activeCallbackUuid = activeCallback?.uuid;
     const environmentDescriptors = this.store.get('settings').environments;
+    const isUserConnectedAndPaid = this.store.get('user')?.plan !== Plans.FREE;
+    const isSyncConnected = this.store.get('sync')?.status;
 
     const commonCommands: Commands = [
       {
@@ -309,7 +312,7 @@ export class CommandPaletteService {
           this.environmentsService.addCloudEnvironment(null, true).subscribe();
         },
         score: 1,
-        enabled: true
+        enabled: isUserConnectedAndPaid && isSyncConnected
       },
       {
         id: 'VIEW_SELECT_PREVIOUS_ENVIRONMENT',
