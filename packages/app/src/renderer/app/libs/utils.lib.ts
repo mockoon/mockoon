@@ -101,11 +101,20 @@ export const buildApiUrl = (
   activeEnvironment: Environment,
   instance?: DeployInstance
 ) => {
-  const subdomain = instance?.subdomain ? instance.subdomain : '{subdomain}';
+  let webUrl = instance?.url
+    ? instance.url
+    : `{subdomain}.mockoon.app${env.production ? '' : 'dev:5003'}`;
+
+  // we do not display the protocol in the UI
+  if (!env.production) {
+    webUrl = webUrl.replace('http://', '');
+  } else {
+    webUrl = webUrl.replace('https://', '');
+  }
 
   return `${
     Config.isWeb
-      ? `${subdomain}.mockoon.app${env.production ? '' : 'dev:5003'}`
+      ? webUrl
       : activeEnvironment?.hostname || `localhost:${activeEnvironment?.port}`
   }`;
 };
