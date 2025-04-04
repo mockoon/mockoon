@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, NgZone } from '@angular/core';
+import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { DeployInstance } from '@mockoon/cloud';
 import {
   Environment,
@@ -8,16 +9,14 @@ import {
   ServerEvents,
   Transaction
 } from '@mockoon/commons';
-import { EventSource } from 'extended-eventsource';
 import {
   catchError,
-  combineLatest,
   EMPTY,
   filter,
   from,
   map,
-  Observable,
-  retry,
+  merge,
+  Subject,
   switchMap,
   tap
 } from 'rxjs';
@@ -35,6 +34,8 @@ import { Config } from 'src/renderer/config';
 
 @Injectable({ providedIn: 'root' })
 export class ServerService {
+  private activeSSEConnections = new Map<string, Subject<string>>();
+
   constructor(
     private store: Store,
     private zone: NgZone,
@@ -58,58 +59,58 @@ export class ServerService {
 
     if (Config.isWeb) {
       return this.store.select('deployInstances').pipe(
-        filter((instances) => !!instances && instances.length > 0),
-        switchMap((instances) =>
-          combineLatest(
-            instances.map((instance) =>
-              new Observable((observer) => {
-                const eventSource = new EventSource(
-                  `${this.buildRemoteInstanceUrl(instance)}/events`,
-                  {
-                    headers: { Authorization: `Bearer ${instance.apiKey}` },
-                    disableRetry: true,
-                    disableLogger: true
-                  }
-                );
+        filter((instances) => !!instances),
+        tap((instances) => {
+          const currentInstanceIds = instances.map(
+            (instance) => instance.environmentUuid
+          );
 
-                eventSource.onmessage = (event) => {
-                  // do not process empty messages (pings)
-                  if (!event.data) {
-                    return;
-                  }
+          // Stop and remove SSE connections for instances that no longer exist
+          this.activeSSEConnections.forEach((subject, instanceId) => {
+            if (!currentInstanceIds.includes(instanceId)) {
+              subject.complete(); // Complete the subject to stop the SSE
+              this.activeSSEConnections.delete(instanceId);
+            }
+          });
 
-                  observer.next(event.data);
-                };
+          // Start or renew SSE for instances
+          instances.forEach((instance) => {
+            const existingSubject = this.activeSSEConnections.get(
+              instance.environmentUuid
+            );
 
-                eventSource.onerror = (error) => {
-                  observer.error(error);
-                };
+            if (existingSubject) {
+              // Close the existing connection and replace it with a new one (re-deploy)
+              existingSubject.complete();
+              this.activeSSEConnections.delete(instance.environmentUuid);
+            }
 
-                return () => {
-                  eventSource.close();
-                };
-              }).pipe(
-                retry({ delay: 5000 }),
-                tap((message) => {
-                  const payload: {
-                    event: keyof ServerEvents;
-                    transaction?: Transaction;
-                    dataBuckets?: ProcessedDatabucketWithoutValue[];
-                  } = JSON.parse(message as string);
+            const sseSubject = new Subject<string>();
+            this.activeSSEConnections.set(instance.environmentUuid, sseSubject);
 
-                  this.processEvent(
-                    instance.environmentUuid,
-                    payload.event,
-                    payload
-                  );
-                }),
-                catchError(() => {
-                  return EMPTY;
-                })
-              )
+            this.listenInstanceEvents(instance, sseSubject);
+          });
+        }),
+        switchMap(() => {
+          // Combine all active SSE subjects into a single observable
+          return merge(
+            Array.from(this.activeSSEConnections.entries()).map(
+              ([environmentUuid, subject]) =>
+                subject.pipe(map((message) => ({ environmentUuid, message })))
             )
-          )
-        ),
+          );
+        }),
+        tap((messages) => {
+          messages.forEach(({ environmentUuid, message }) => {
+            const payload: {
+              event: keyof ServerEvents;
+              transaction?: Transaction;
+              dataBuckets?: ProcessedDatabucketWithoutValue[];
+            } = JSON.parse(message as string);
+
+            this.processEvent(environmentUuid, payload.event, payload);
+          });
+        }),
         catchError(() => {
           return EMPTY;
         })
@@ -215,6 +216,35 @@ export class ServerService {
         )
       );
     }
+  }
+
+  /**
+   * Start listening to SSE events from the remote instance
+   *
+   * @param instance
+   * @param sseSubject
+   */
+  private listenInstanceEvents(
+    instance: DeployInstance,
+    sseSubject: Subject<string>
+  ) {
+    fetchEventSource(`${this.buildRemoteInstanceUrl(instance)}/events`, {
+      headers: { Authorization: `Bearer ${instance.apiKey}` },
+      openWhenHidden: true,
+      onmessage(message) {
+        // do not process empty messages (pings)
+        if (!message.data) {
+          return;
+        }
+        sseSubject.next(message.data);
+      },
+      onerror(err) {
+        sseSubject.error(err);
+      },
+      onclose() {
+        sseSubject.complete();
+      }
+    });
   }
 
   private processEvent(environmentUuid: string, eventName: string, data: any) {
