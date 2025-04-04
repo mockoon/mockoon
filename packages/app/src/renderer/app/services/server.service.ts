@@ -104,6 +104,9 @@ export class ServerService {
                   );
                 }),
                 catchError(() => {
+                  // eslint-disable-next-line no-console
+                  console.log('Error in SSE stream, closing connection');
+
                   return EMPTY;
                 })
               )
