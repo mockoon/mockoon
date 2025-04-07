@@ -11,6 +11,7 @@ import {
 } from '@mockoon/commons';
 import {
   catchError,
+  delay,
   EMPTY,
   filter,
   from,
@@ -34,7 +35,10 @@ import { Config } from 'src/renderer/config';
 
 @Injectable({ providedIn: 'root' })
 export class ServerService {
-  private activeSSEConnections = new Map<string, Subject<string>>();
+  private activeSseConnections = new Map<
+    string,
+    { subject: Subject<string>; abortController: AbortController }
+  >();
 
   constructor(
     private store: Store,
@@ -66,37 +70,36 @@ export class ServerService {
           );
 
           // Stop and remove SSE connections for instances that no longer exist
-          this.activeSSEConnections.forEach((subject, instanceId) => {
+          this.activeSseConnections.forEach((connection, instanceId) => {
             if (!currentInstanceIds.includes(instanceId)) {
-              subject.complete(); // Complete the subject to stop the SSE
-              this.activeSSEConnections.delete(instanceId);
+              this.removeInstanceEventsListener(instanceId);
             }
           });
-
+        }),
+        filter((instances) => instances.length > 0),
+        delay(3000), // Delay to ensure all instances are up before listening
+        tap((instances) => {
           // Start or renew SSE for instances
           instances.forEach((instance) => {
-            const existingSubject = this.activeSSEConnections.get(
+            const existingConnection = this.activeSseConnections.get(
               instance.environmentUuid
             );
 
-            if (existingSubject) {
+            if (existingConnection) {
               // Close the existing connection and replace it with a new one (re-deploy)
-              existingSubject.complete();
-              this.activeSSEConnections.delete(instance.environmentUuid);
+              this.removeInstanceEventsListener(instance.environmentUuid);
             }
 
-            const sseSubject = new Subject<string>();
-            this.activeSSEConnections.set(instance.environmentUuid, sseSubject);
-
-            this.listenInstanceEvents(instance, sseSubject);
+            this.listenInstanceEvents(instance);
           });
         }),
         switchMap(() => {
-          // Combine all active SSE subjects into a single observable
           return merge(
-            Array.from(this.activeSSEConnections.entries()).map(
-              ([environmentUuid, subject]) =>
-                subject.pipe(map((message) => ({ environmentUuid, message })))
+            Array.from(this.activeSseConnections.entries()).map(
+              ([environmentUuid, activeSseConnection]) =>
+                activeSseConnection.subject.pipe(
+                  map((message) => ({ environmentUuid, message }))
+                )
             )
           );
         }),
@@ -224,27 +227,53 @@ export class ServerService {
    * @param instance
    * @param sseSubject
    */
-  private listenInstanceEvents(
-    instance: DeployInstance,
-    sseSubject: Subject<string>
-  ) {
-    fetchEventSource(`${this.buildRemoteInstanceUrl(instance)}/events`, {
-      headers: { Authorization: `Bearer ${instance.apiKey}` },
-      openWhenHidden: true,
-      onmessage(message) {
-        // do not process empty messages (pings)
-        if (!message.data) {
-          return;
-        }
-        sseSubject.next(message.data);
-      },
-      onerror(err) {
-        sseSubject.error(err);
-      },
-      onclose() {
-        sseSubject.complete();
-      }
+  private listenInstanceEvents(instance: DeployInstance) {
+    const abortController = new AbortController();
+
+    this.activeSseConnections.set(instance.environmentUuid, {
+      subject: new Subject<string>(),
+      abortController
     });
+
+    const sseSubject = this.activeSseConnections.get(
+      instance.environmentUuid
+    )?.subject;
+
+    try {
+      fetchEventSource(`${this.buildRemoteInstanceUrl(instance)}/events`, {
+        headers: { Authorization: `Bearer ${instance.apiKey}` },
+        signal: abortController.signal,
+        openWhenHidden: true,
+        async onopen(response) {
+          if (
+            response.status >= 400 &&
+            response.status < 500 &&
+            response.status !== 429
+          ) {
+            abortController.abort();
+            sseSubject.complete();
+          }
+        },
+        onmessage(message) {
+          // Do not process empty messages (pings)
+          if (!message.data) {
+            return;
+          }
+
+          sseSubject.next(message.data);
+        }
+      });
+    } catch (_error) {}
+  }
+
+  private removeInstanceEventsListener(environmentUuid: string) {
+    const connection = this.activeSseConnections.get(environmentUuid);
+
+    if (connection) {
+      connection.abortController.abort();
+      connection.subject.complete();
+      this.activeSseConnections.delete(environmentUuid); // Remove from the map
+    }
   }
 
   private processEvent(environmentUuid: string, eventName: string, data: any) {
