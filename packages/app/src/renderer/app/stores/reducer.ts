@@ -115,6 +115,64 @@ export const environmentReducer = (
       break;
     }
 
+    case ActionTypes.ADD_DEPLOY_INSTANCE: {
+      newState = {
+        ...state,
+        deployInstances: [action.instance, ...state.deployInstances],
+        environmentsStatus: {
+          ...state.environmentsStatus,
+          [action.instance.environmentUuid]: {
+            running: true,
+            needRestart: false,
+            redeploying: false
+          }
+        }
+      };
+      break;
+    }
+
+    case ActionTypes.UPDATE_DEPLOY_INSTANCE: {
+      const newDeployInstances = state.deployInstances.map((instance) => {
+        if (instance.environmentUuid === action.environmentUuid) {
+          return { ...instance, ...action.properties };
+        }
+
+        return instance;
+      });
+
+      newState = {
+        ...state,
+        deployInstances: newDeployInstances,
+        environmentsStatus: {
+          ...state.environmentsStatus,
+          [action.environmentUuid]: {
+            running: true,
+            needRestart: false,
+            redeploying: false
+          }
+        }
+      };
+      break;
+    }
+
+    case ActionTypes.REMOVE_DEPLOY_INSTANCE: {
+      newState = {
+        ...state,
+        deployInstances: state.deployInstances.filter(
+          (instance) => instance.environmentUuid !== action.environmentUuid
+        ),
+        environmentsStatus: {
+          ...state.environmentsStatus,
+          [action.environmentUuid]: {
+            running: false,
+            needRestart: false,
+            redeploying: false
+          }
+        }
+      };
+      break;
+    }
+
     case ActionTypes.SET_ACTIVE_TAB: {
       newState = {
         ...state,

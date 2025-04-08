@@ -16,6 +16,9 @@ import {
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import {
+  addDeployInstanceAction,
+  removeDeployInstanceAction,
+  updateDeployInstanceAction,
   updateDeployInstancesAction,
   updateEnvironmentStatusAction,
   updateUserAction
@@ -66,7 +69,7 @@ export class DeployService {
         return of([]);
       }),
       tap((instances: DeployInstance[]) => {
-        this.store.update(updateDeployInstancesAction([...instances]));
+        this.store.update(updateDeployInstancesAction(instances));
       }),
       catchError(() => EMPTY)
     );
@@ -161,33 +164,10 @@ export class DeployService {
       tap((instance) => {
         if (redeploy) {
           this.store.update(
-            updateDeployInstancesAction([
-              ...this.store.get('deployInstances').map((oldInstance) => {
-                if (oldInstance.environmentUuid === environmentUuid) {
-                  return { ...oldInstance, ...instance };
-                }
-
-                return oldInstance;
-              })
-            ])
+            updateDeployInstanceAction(instance.environmentUuid, instance)
           );
         } else {
-          this.store.update(
-            updateDeployInstancesAction([
-              instance,
-              ...this.store.get('deployInstances')
-            ])
-          );
-
-          this.store.update(
-            updateEnvironmentStatusAction(
-              {
-                needRestart: false,
-                redeploying: false
-              },
-              environmentUuid
-            )
-          );
+          this.store.update(addDeployInstanceAction(instance));
 
           this.store.update(
             updateUserAction({
@@ -253,22 +233,7 @@ export class DeployService {
         );
       }),
       tap(() => {
-        this.store.update(
-          updateDeployInstancesAction([
-            ...this.store
-              .get('deployInstances')
-              .filter(
-                (instance) => instance.environmentUuid !== environmentUuid
-              )
-          ])
-        );
-
-        this.store.update(
-          updateEnvironmentStatusAction(
-            { running: false, needRestart: false, redeploying: false },
-            environmentUuid
-          )
-        );
+        this.store.update(removeDeployInstanceAction(environmentUuid));
 
         this.store.update(
           updateUserAction({

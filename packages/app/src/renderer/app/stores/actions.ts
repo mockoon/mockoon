@@ -37,6 +37,9 @@ export const enum ActionTypes {
   UPDATE_USER = 'UPDATE_USER',
   UPDATE_SYNC = 'UPDATE_SYNC',
   UPDATE_DEPLOY_INSTANCES = 'UPDATE_DEPLOY_INSTANCES',
+  ADD_DEPLOY_INSTANCE = 'ADD_DEPLOY_INSTANCE',
+  REMOVE_DEPLOY_INSTANCE = 'REMOVE_DEPLOY_INSTANCE',
+  UPDATE_DEPLOY_INSTANCE = 'UPDATE_DEPLOY_INSTANCE',
   SET_ACTIVE_TAB = 'SET_ACTIVE_TAB',
   SET_ACTIVE_TAB_IN_CALLBACK = 'SET_ACTIVE_TAB_IN_CALLBACK',
   SET_ACTIVE_VIEW = 'SET_ACTIVE_VIEW',
@@ -136,6 +139,47 @@ export const updateDeployInstancesAction = (instances: DeployInstance[]) =>
   ({
     type: ActionTypes.UPDATE_DEPLOY_INSTANCES,
     instances
+  }) as const;
+
+/**
+ * Add a deployed instance to the store.
+ * ⚠️ Do not use this action to update an existing instance.
+ *
+ * @param instance
+ * @returns
+ */
+export const addDeployInstanceAction = (instance: DeployInstance) =>
+  ({
+    type: ActionTypes.ADD_DEPLOY_INSTANCE,
+    instance
+  }) as const;
+
+/**
+ * Remove a deployed instance from the store
+ *
+ * @param environmentUuid
+ * @returns
+ */
+export const removeDeployInstanceAction = (environmentUuid: string) =>
+  ({
+    type: ActionTypes.REMOVE_DEPLOY_INSTANCE,
+    environmentUuid
+  }) as const;
+
+/**
+ * Update a deployed instance in the store
+ * @param environmentUuid - UUID of the environment
+ * @param properties - properties to update
+ * @returns - action object
+ */
+export const updateDeployInstanceAction = (
+  environmentUuid: string,
+  properties: Partial<DeployInstance>
+) =>
+  ({
+    type: ActionTypes.UPDATE_DEPLOY_INSTANCE,
+    environmentUuid,
+    properties
   }) as const;
 
 /**
@@ -955,6 +999,9 @@ export type Actions =
   | ReturnType<typeof updateUserAction>
   | ReturnType<typeof updateSyncAction>
   | ReturnType<typeof updateDeployInstancesAction>
+  | ReturnType<typeof addDeployInstanceAction>
+  | ReturnType<typeof removeDeployInstanceAction>
+  | ReturnType<typeof updateDeployInstanceAction>
   | ReturnType<typeof setActiveTabAction>
   | ReturnType<typeof setActiveTabInCallbackViewAction>
   | ReturnType<typeof setActiveViewAction>

@@ -87,7 +87,7 @@ export class ManageInstancesModalComponent implements OnInit {
       icon: 'stop',
       twoSteps: true,
       confirmIcon: 'error',
-      confirmLabel: 'Confirm deletion',
+      confirmLabel: 'Confirm',
       action: ({ environmentUuid }: dropdownMenuPayload) => {
         this.taskInProgress$.next(true);
 
