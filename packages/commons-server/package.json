@@ -43,7 +43,7 @@
     "date-fns": "4.1.0",
     "express": "4.21.2",
     "handlebars": "4.7.8",
-    "http-proxy-middleware": "3.0.3",
+    "http-proxy-middleware": "3.0.5",
     "jsonpath-plus": "10.3.0",
     "killable": "1.0.1",
     "mime-types": "2.1.35",
