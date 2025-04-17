@@ -72,7 +72,7 @@
   },
   "devDependencies": {
     "@angular/animations": "19.2.1",
-    "@angular/build": "^19.2.5",
+    "@angular/build": "^19.2.8",
     "@angular/cli": "19.2.1",
     "@angular/common": "19.2.1",
     "@angular/compiler": "19.2.1",
