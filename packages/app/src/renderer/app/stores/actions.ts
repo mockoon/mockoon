@@ -93,7 +93,8 @@ export const enum ActionTypes {
   DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT',
   DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT',
   FULL_REORDER_ENTITIES = 'FULL_REORDER_ENTITIES',
-  UPDATE_PROCESSED_DATABUCKETS = 'UPDATE_PROCESSED_DATABUCKETS'
+  UPDATE_PROCESSED_DATABUCKETS = 'UPDATE_PROCESSED_DATABUCKETS',
+  UPDATE_FEEDBACK = 'UPDATE_FEEDBACK'
 }
 
 /**
@@ -994,6 +995,18 @@ export const updateProcessedDatabucketsAction = (
     processedDatabuckets
   }) as const;
 
+/**
+ * Update the user feedback
+ *
+ * @param feedback
+ * @returns
+ */
+export const upateFeedbackAction = (feedback: string) =>
+  ({
+    type: ActionTypes.UPDATE_FEEDBACK,
+    feedback
+  }) as const;
+
 export type Actions =
   | ReturnType<typeof convertEnvironmentToLocalAction>
   | ReturnType<typeof updateUserAction>
@@ -1054,4 +1067,5 @@ export type Actions =
   | ReturnType<typeof duplicateRouteToAnotherEnvironmentAction>
   | ReturnType<typeof duplicateDatabucketToAnotherEnvironmentAction>
   | ReturnType<typeof duplicateCallbackToAnotherEnvironmentAction>
-  | ReturnType<typeof updateProcessedDatabucketsAction>;
+  | ReturnType<typeof updateProcessedDatabucketsAction>
+  | ReturnType<typeof upateFeedbackAction>;

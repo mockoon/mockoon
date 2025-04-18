@@ -33,6 +33,7 @@ export class SvgComponent {
   public size = '16';
   @Input()
   public icon:
+    | 'help_outline'
     | 'science'
     | 'spinner'
     | 'login'

@@ -5,7 +5,6 @@ import {
   OnInit
 } from '@angular/core';
 import {
-  FormsModule,
   ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup
@@ -32,7 +31,6 @@ import { FileWatcherOptions, Settings } from 'src/shared/models/settings.model';
   styleUrls: ['settings-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    FormsModule,
     ReactiveFormsModule,
     TitleSeparatorComponent,
     SvgComponent,

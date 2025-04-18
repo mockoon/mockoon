@@ -10,14 +10,6 @@
     font-size: $font-size-sm;
     transition: all ease-in-out 200ms;
 
-    &.with-border-left {
-      border-left: 1px solid lighten($gray-900, 8%);
-    }
-
-    &.with-border-right {
-      border-right: 1px solid lighten($gray-900, 8%);
-    }
-
     &:first-of-type {
       border-left: none;
     }

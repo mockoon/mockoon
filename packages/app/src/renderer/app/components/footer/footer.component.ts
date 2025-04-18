@@ -1,11 +1,13 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   Input,
   OnInit
 } from '@angular/core';
-import { BehaviorSubject, Observable, from } from 'rxjs';
+import { Plans } from '@mockoon/cloud';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import { BehaviorSubject, Observable, from, map } from 'rxjs';
 import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import {
@@ -25,7 +27,7 @@ import { Config } from 'src/renderer/config';
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, SvgComponent, AsyncPipe, SpinnerComponent]
+  imports: [NgbTooltip, SvgComponent, AsyncPipe, SpinnerComponent]
 })
 export class FooterComponent implements OnInit {
   @Input() public isTemplateModalOpen: boolean;
@@ -36,6 +38,9 @@ export class FooterComponent implements OnInit {
   public generatingTemplate$ = this.templateService.generatingTemplate$;
   public generatingEndpoint$ = this.templateService.generatingEndpoint$;
   public releaseUrl = Config.releasePublicURL;
+  public showFeedback$ = this.store
+    .select('user')
+    .pipe(map((user) => !!user && user.plan !== Plans.FREE));
 
   constructor(
     private store: Store,
@@ -60,5 +65,9 @@ export class FooterComponent implements OnInit {
   public openTemplateModal(tab: TemplatesTabsName) {
     this.store.update(setActiveTemplatesTabAction(tab));
     this.uiService.openModal('templates');
+  }
+
+  public openFeedbackModal() {
+    this.uiService.openModal('feedback');
   }
 }

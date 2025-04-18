@@ -111,4 +111,5 @@ export type StoreType = {
     string,
     Record<string, ProcessedDatabucketWithoutValue>
   >;
+  feedback: string;
 };

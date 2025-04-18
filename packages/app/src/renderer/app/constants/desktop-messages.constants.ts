@@ -349,5 +349,18 @@ export const DesktopMessages: Record<
     log: true,
     toastType: 'error',
     showToast: true
+  }),
+  FEEDBACK_SEND_SUCCESS: () => ({
+    message:
+      'Feedback has been successfully sent, we will get back to you soon!',
+    log: false,
+    showToast: true,
+    toastType: 'success'
+  }),
+  FEEDBACK_SEND_ERROR: () => ({
+    message: `Error while sending feedback. Please send us an email.`,
+    log: false,
+    showToast: true,
+    toastType: 'error'
   })
 };

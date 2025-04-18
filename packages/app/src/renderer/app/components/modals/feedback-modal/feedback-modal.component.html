@@ -1,0 +1,58 @@
+@let userEmail = userEmail$ | async;
+@let userPlan = userPlan$ | async;
+
+<div class="modal-header">
+  <h4 class="modal-title">Get support</h4>
+</div>
+
+<div class="modal-body">
+  <p>
+    As a Mockoon Cloud customer, you benefit from our priority support. If you
+    have any feedback, suggestions, or issues, please let us know!
+  </p>
+
+  <div class="mb-3">
+    <textarea
+      id="feedback"
+      class="form-control"
+      rows="5"
+      [formControl]="feedbackControl"
+      required
+      maxLength="10000"
+    ></textarea>
+  </div>
+
+  <div class="px-3 pb-2">
+    <small>
+      <app-svg icon="info" class="me-2"></app-svg>
+
+      <span>
+        Your message will be sent to our support team and processed as soon as
+        possible. We will answer you by email at
+        <strong class="user-select-all">{{ userEmail }}</strong
+        >.<br />
+        Alternatively, you can also send us an email at
+        <strong class="user-select-all">{{
+          userPlan === 'ENTERPRISE'
+            ? 'priority-support@mockoon.com'
+            : 'email-support@mockoon.com'
+        }}</strong
+        >.
+      </span>
+    </small>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-primary"
+    (click)="send()"
+    [disabled]="!feedbackControl.valid"
+  >
+    Send
+  </button>
+  <button type="button" class="btn btn-secondary" (click)="close()">
+    Cancel
+  </button>
+</div>
