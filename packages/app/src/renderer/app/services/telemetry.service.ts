@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Plans } from '@mockoon/cloud';
 import { generateUUID } from '@mockoon/commons';
 import { differenceInMilliseconds, endOfDay } from 'date-fns';
 import {
@@ -12,7 +12,6 @@ import {
   timer
 } from 'rxjs';
 import {
-  catchError,
   distinctUntilChanged,
   filter,
   first,
@@ -40,7 +39,9 @@ export class TelemetryService {
     os: null,
     version: Config.appVersion,
     environmentsCount: null,
-    app: Config.isWeb ? 'web' : 'desktop'
+    app: Config.isWeb ? 'web' : 'desktop',
+    auth: false,
+    paid: false
   };
   private event$ = new Subject<void>();
   private closeSession$ = new BehaviorSubject<boolean>(false);
@@ -50,7 +51,6 @@ export class TelemetryService {
     private remoteConfigService: RemoteConfigService,
     private localStorageService: LocalStorageService,
     private store: Store,
-    private httpClient: HttpClient,
     private mainApiService: MainApiService
   ) {}
 
@@ -101,17 +101,20 @@ export class TelemetryService {
           this.closeSession$.pipe(filter((closeSession) => closeSession))
         );
       }),
-      switchMap(() => {
-        const environments = this.store.get('environments');
-
-        return this.httpClient
-          .post(`${Config.apiURL}events/telemetry`, {
-            ...this.session,
-            environmentsCount: environments.length
-          })
-          .pipe(catchError(() => of(true)));
-      }),
       tap(() => {
+        const environments = this.store.get('environments');
+        const user = this.store.get('user');
+
+        navigator.sendBeacon(
+          `${Config.apiURL}events/telemetry`,
+          JSON.stringify({
+            ...this.session,
+            environmentsCount: environments.length,
+            auth: !!user,
+            paid: !!user && user.plan !== Plans.FREE
+          } as TelemetrySession)
+        );
+
         this.sessionInProgress$.next(false);
 
         // reset session start time after it has been sent

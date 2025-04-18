@@ -7,4 +7,6 @@ export type TelemetrySession = {
   os: string;
   environmentsCount: number;
   app: 'web' | 'desktop';
+  auth: boolean;
+  paid: boolean;
 };
