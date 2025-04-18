@@ -1,15 +1,14 @@
-<ng-container
-  *ngIf="{
-    generatingTemplate: generatingTemplate$ | async,
-    generatingEndpoint: generatingEndpoint$ | async
-  } as data"
->
-  <div class="footer d-flex">
-    <div class="d-flex me-auto">
-      <div
-        class="footer-item with-border-end d-flex align-items-center px-2"
-        *ngIf="updateAvailable$ | async as updateVersion"
-      >
+@let generatingTemplate = generatingTemplate$ | async;
+@let generatingEndpoint = generatingEndpoint$ | async;
+@let updateVersion = updateAvailable$ | async;
+@let platform = platform$ | async;
+@let uiState = uiState$ | async;
+@let showFeedback = showFeedback$ | async;
+
+<div class="footer d-flex">
+  <div class="d-flex me-auto">
+    @if (updateVersion) {
+      <div class="footer-item d-flex align-items-center px-2">
         <p class="mb-0">
           <app-svg icon="update"></app-svg> Update available
           <a href="{{ releaseUrl + updateVersion + '/' }}" target="_blank"
@@ -20,66 +19,81 @@
           class="btn btn-custom btn-xs ms-2 text-success"
           (click)="applyUpdate()"
         >
-          {{ (platform$ | async) === 'win32' ? 'Install' : 'Download' }}
+          {{ platform === 'win32' ? 'Install' : 'Download' }}
         </button>
       </div>
-    </div>
-
-    <ng-container *ngIf="uiState$ | async as uiState">
-      <div
-        *ngIf="uiState.closing || uiState.saving"
-        class="footer-item with-border-start d-flex align-items-center px-2"
-      >
-        <div class="footer-save animation-flash">
-          <app-svg icon="save" class="me-1"></app-svg>
-          <ng-container *ngIf="uiState.closing">Shutting down...</ng-container>
-          <ng-container *ngIf="uiState.saving">Saving...</ng-container>
-        </div>
-      </div>
-    </ng-container>
-
-    <div
-      *ngIf="data.generatingTemplate !== 'NONE'"
-      class="footer-item with-border-start d-flex align-items-center px-2"
-    >
-      <button
-        *ngIf="data.generatingTemplate === 'DONE'"
-        class="btn btn-custom btn-xs text-success"
-        (click)="openTemplateModal('GENERATE_TEMPLATE')"
-      >
-        <app-svg icon="magic" size="12" class="me-1"></app-svg>
-        Template generated
-      </button>
-      <button
-        *ngIf="data.generatingTemplate === 'INPROGRESS'"
-        class="btn btn-custom btn-xs text-warning"
-        (click)="openTemplateModal('GENERATE_TEMPLATE')"
-      >
-        <app-spinner size="12" class="me-1"></app-spinner>
-        Generating template
-      </button>
-    </div>
-
-    <div
-      *ngIf="data.generatingEndpoint !== 'NONE'"
-      class="footer-item with-border-start d-flex align-items-center px-2"
-    >
-      <button
-        *ngIf="data.generatingEndpoint === 'DONE'"
-        class="btn btn-custom btn-xs text-success"
-        (click)="openTemplateModal('GENERATE_ENDPOINT')"
-      >
-        <app-svg icon="magic" size="12" class="me-1"></app-svg>
-        Endpoint generated
-      </button>
-      <button
-        *ngIf="data.generatingEndpoint === 'INPROGRESS'"
-        class="btn btn-custom btn-xs text-warning"
-        (click)="openTemplateModal('GENERATE_ENDPOINT')"
-      >
-        <app-spinner size="12" class="me-1"></app-spinner>
-        Generating endpoint
-      </button>
-    </div>
+    }
   </div>
-</ng-container>
+
+  @if (uiState.closing || uiState.saving) {
+    <div class="footer-item d-flex align-items-center px-2">
+      <div class="footer-save animation-flash">
+        <app-svg icon="save" class="me-1"></app-svg>
+        @if (uiState.closing) {
+          Shutting down...
+        }
+        @if (uiState.saving) {
+          Saving...
+        }
+      </div>
+    </div>
+  }
+
+  @if (generatingTemplate !== 'NONE') {
+    <div class="footer-item d-flex align-items-center px-2">
+      @if (generatingTemplate === 'DONE') {
+        <button
+          class="btn btn-custom btn-xs text-success"
+          (click)="openTemplateModal('GENERATE_TEMPLATE')"
+        >
+          <app-svg icon="magic" size="12" class="me-1"></app-svg>
+          Template generated
+        </button>
+      }
+      @if (generatingTemplate === 'INPROGRESS') {
+        <button
+          class="btn btn-custom btn-xs text-warning"
+          (click)="openTemplateModal('GENERATE_TEMPLATE')"
+        >
+          <app-spinner size="12" class="me-1"></app-spinner>
+          Generating template
+        </button>
+      }
+    </div>
+  }
+
+  @if (generatingEndpoint !== 'NONE') {
+    <div class="footer-item d-flex align-items-center px-2">
+      @if (generatingEndpoint === 'DONE') {
+        <button
+          class="btn btn-custom btn-xs text-success"
+          (click)="openTemplateModal('GENERATE_ENDPOINT')"
+        >
+          <app-svg icon="magic" size="12" class="me-1"></app-svg>
+          Endpoint generated
+        </button>
+      }
+      @if (generatingEndpoint === 'INPROGRESS') {
+        <button
+          class="btn btn-custom btn-xs text-warning"
+          (click)="openTemplateModal('GENERATE_ENDPOINT')"
+        >
+          <app-spinner size="12" class="me-1"></app-spinner>
+          Generating endpoint
+        </button>
+      }
+    </div>
+  }
+
+  @if (showFeedback) {
+    <div class="footer-item d-flex align-items-center px-2">
+      <button
+        class="btn btn-link btn-icon btn-xs"
+        (click)="openFeedbackModal()"
+        ngbTooltip="Get support"
+      >
+        <app-svg icon="help_outline" size="12"></app-svg>
+      </button>
+    </div>
+  }
+</div>

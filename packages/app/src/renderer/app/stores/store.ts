@@ -76,7 +76,8 @@ export const storeDefaultState: StoreType = {
     alert: null
   },
   deployInstances: [],
-  processedDatabuckets: {}
+  processedDatabuckets: {},
+  feedback: ''
 };
 
 @Injectable({ providedIn: 'root' })

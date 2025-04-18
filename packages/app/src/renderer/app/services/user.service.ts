@@ -25,6 +25,7 @@ import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import {
+  upateFeedbackAction,
   updateDeployInstancesAction,
   updateUserAction
 } from 'src/renderer/app/stores/actions';
@@ -203,6 +204,30 @@ export class UserService {
         if (this.isWeb) {
           window.location.href = Config.websiteURL;
         }
+      })
+    );
+  }
+
+  public sendFeedback(message: string) {
+    return from(this.auth.currentUser.getIdToken()).pipe(
+      switchMap((token) =>
+        this.httpClient.post(
+          `${Config.apiURL}user/feedback`,
+          { message },
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        )
+      ),
+      tap(() => {
+        this.store.update(upateFeedbackAction(''));
+
+        this.loggerService.logMessage('info', 'FEEDBACK_SEND_SUCCESS');
+      }),
+      catchError(() => {
+        this.loggerService.logMessage('error', 'FEEDBACK_SEND_ERROR');
+
+        return EMPTY;
       })
     );
   }

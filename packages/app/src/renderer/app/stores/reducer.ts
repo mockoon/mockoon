@@ -1635,6 +1635,14 @@ export const environmentReducer = (
       break;
     }
 
+    case ActionTypes.UPDATE_FEEDBACK: {
+      newState = {
+        ...state,
+        feedback: action.feedback
+      };
+      break;
+    }
+
     default:
       newState = state;
       break;
