@@ -11,7 +11,12 @@ import {
   provideHttpClient,
   withInterceptorsFromDi
 } from '@angular/common/http';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import {
+  initializeAppCheck,
+  provideAppCheck,
+  ReCaptchaV3Provider
+} from '@angular/fire/app-check';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import {
   connectFunctionsEmulator,
@@ -101,6 +106,16 @@ bootstrapApplication(AppComponent, {
     provideNgxMask(),
     provideHttpClient(withInterceptorsFromDi()),
     provideFirebaseApp(() => initializeApp(Config.firebaseConfig)),
+    provideAppCheck(() => {
+      if (environment.useFirebaseEmulator) {
+        window['FIREBASE_APPCHECK_DEBUG_TOKEN'] = true;
+      }
+
+      return initializeAppCheck(getApp(), {
+        provider: new ReCaptchaV3Provider(Config.recaptchaSiteKey),
+        isTokenAutoRefreshEnabled: true
+      });
+    }),
     provideAuth(() => {
       const auth = getAuth();
       auth.setPersistence(browserLocalPersistence);

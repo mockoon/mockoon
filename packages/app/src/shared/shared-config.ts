@@ -63,6 +63,7 @@ export const SharedConfig = (options: {
       storageBucket: 'mockoon-ba3e2.appspot.com',
       messagingSenderId: '902702764744',
       appId: '1:902702764744:web:599e8dc8d6a1ef6542cbfd'
-    }
+    },
+    recaptchaSiteKey: '6LfhRCErAAAAACwFRV5bcqMtNylLhp764ZWXJB90'
   };
 };
