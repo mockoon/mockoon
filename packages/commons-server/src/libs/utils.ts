@@ -461,8 +461,8 @@ export const isSafeJSONPath = (path: string): boolean => {
       // Keys with spaces are allowed
       "(@{0,1}\\.{0,1}[_a-zA-Z0-9\\-\\[\\]\\.]*|@{0,1}\\['[_a-zA-Z0-9\\s]*'\\]|@[a-zA-Z0-9_\\s'\\-\\[\\]\\.]*.match\\(.*\\))" +
       '\\s*' + // ignore any whitespaces before the operator
-      // Group 2 (optional): Supported operators ===, !==, <, >, <=, >=
-      '(===|!==|<|<=|>|>=)?' +
+      // Group 2 (optional): Supported operators ==, !=, ===, !==, <, >, <=, >=
+      '(==|!=|===|!==|<|<=|>|>=)?' +
       '\\s*' + // ignore any whitespaces after the operator
       // Group 3 (optional): Supported r.h.s - single/double quoted strings, numbers, boolean, undefined,
       // reference to other properties like @. or $.
