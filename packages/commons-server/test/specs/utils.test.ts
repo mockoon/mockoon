@@ -263,6 +263,16 @@ describe('Utils', () => {
       strictEqual(isSafeJSONPath(path), true);
     });
 
+    it('should return true if path has not equating filter expressions (simple equality)', () => {
+      const path = '$..book[?(@property != 0)]';
+      strictEqual(isSafeJSONPath(path), true);
+    });
+
+    it('should return true if path has multiple filter expressions (simple equality)', () => {
+      const path = "$..*[?(@property == 'price']";
+      strictEqual(isSafeJSONPath(path), true);
+    });
+
     it('should return true if path has not equating filter expressions', () => {
       const path = '$..book[?(@property !== 0)]';
       strictEqual(isSafeJSONPath(path), true);
