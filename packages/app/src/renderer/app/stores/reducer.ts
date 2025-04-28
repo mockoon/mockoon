@@ -1068,11 +1068,7 @@ export const environmentReducer = (
 
           return environment;
         }),
-        environmentsStatus: markEnvStatusRestart(
-          state,
-          action.environmentUuid,
-          true
-        )
+        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid)
       };
       break;
     }
@@ -1135,8 +1131,7 @@ export const environmentReducer = (
           }
 
           return environment;
-        }),
-        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid)
+        })
       };
       break;
     }
@@ -1158,8 +1153,7 @@ export const environmentReducer = (
 
       newState = {
         ...state,
-        environments: newEnvironments,
-        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid)
+        environments: newEnvironments
       };
 
       if (state.activeCallbackUUID === action.callbackUuid) {
@@ -1220,11 +1214,7 @@ export const environmentReducer = (
 
           return environment;
         }),
-        environmentsStatus: markEnvStatusRestart(
-          state,
-          action.environmentUuid,
-          true
-        )
+        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid)
       };
       break;
     }
@@ -1507,8 +1497,7 @@ export const environmentReducer = (
         activeView: 'ENV_ROUTES',
         environmentsStatus: markEnvStatusRestart(
           state,
-          action.targetEnvironmentUUID,
-          true
+          action.targetEnvironmentUUID
         ),
         filters: {
           ...state.filters,
@@ -1563,11 +1552,9 @@ export const environmentReducer = (
         activeDatabucketUUID: action.databucket.uuid,
         activeEnvironmentUUID: action.targetEnvironmentUUID,
         activeView: 'ENV_DATABUCKETS',
-
         environmentsStatus: markEnvStatusRestart(
           state,
-          action.targetEnvironmentUUID,
-          true
+          action.targetEnvironmentUUID
         ),
         filters: {
           ...state.filters,
@@ -1600,12 +1587,6 @@ export const environmentReducer = (
         activeCallbackUUID: action.callback.uuid,
         activeEnvironmentUUID: action.targetEnvironmentUUID,
         activeView: 'ENV_CALLBACKS',
-
-        environmentsStatus: markEnvStatusRestart(
-          state,
-          action.targetEnvironmentUUID,
-          true
-        ),
         filters: {
           ...state.filters,
           callbacks: ''
