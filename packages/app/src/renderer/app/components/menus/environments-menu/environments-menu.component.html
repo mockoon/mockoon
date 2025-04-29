@@ -296,8 +296,8 @@
                   <span class="text-truncate pe-1">
                     {{
                       instanceUrls[environment.uuid] +
-                        (activeEnvironment?.endpointPrefix
-                          ? '/' + activeEnvironment?.endpointPrefix
+                        (environment?.endpointPrefix
+                          ? '/' + environment?.endpointPrefix
                           : '')
                     }}
                   </span>
