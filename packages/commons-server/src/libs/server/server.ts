@@ -186,11 +186,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     if (webSocketRoutes.length > 0) {
       this.createWSRoutes(webSocketRoutes);
-    } else {
-      this.serverInstance.on('upgrade', (request, socket) => {
-        socket.write(`HTTP/${request.httpVersion} 404\r\n\r\n`);
-        socket.destroy();
-      });
     }
 
     try {
@@ -656,6 +651,19 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     this.serverInstance.on('upgrade', (req, socket, head) => {
       const urlParsed = parseUrl(req.url || '', true);
 
+      // check if the request is a websocket upgrade request
+      if (req.headers.upgrade !== 'websocket') {
+        socket.write(`HTTP/${req.httpVersion} 400 Bad Request\r\n`);
+        socket.write('Content-Type: text/html\r\n');
+        socket.write('Content-length: 72\r\n\r\n');
+        socket.write(
+          'Invalid WebSocket upgrade request: "Upgrade: websocket" header not found'
+        );
+        socket.destroy();
+
+        return;
+      }
+
       for (const wsServer of this.webSocketServers) {
         if (match(wsServer.path)(urlParsed.pathname || '')) {
           wsServer.instance.handleUpgrade(req, socket, head, (client) => {
@@ -667,7 +675,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       }
 
       // if no route is matched (loop didn't return), close the connection
-      socket.write(`HTTP/${req.httpVersion} 404\r\n\r\n`);
+      socket.write(`HTTP/${req.httpVersion} 404 Not Found\r\n`);
+      socket.write('Content-Type: text/html\r\n');
+      socket.write('Content-length: 38\r\n\r\n');
+      socket.write('No WebSocket route found for this path');
       socket.destroy();
     });
   }
