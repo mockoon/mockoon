@@ -28,6 +28,8 @@ import { Config } from 'src/renderer/config';
 
 @Injectable({ providedIn: 'root' })
 export class DeployService {
+  public isWeb = Config.isWeb;
+
   constructor(
     private userService: UserService,
     private store: Store,
@@ -187,9 +189,12 @@ export class DeployService {
    * @returns
    */
   public quickRedeploy(environmentUuid: string): Observable<DeployInstance> {
-    this.store.update(
-      updateEnvironmentStatusAction({ redeploying: true }, environmentUuid)
-    );
+    if (this.isWeb) {
+      this.store.update(
+        updateEnvironmentStatusAction({ redeploying: true }, environmentUuid)
+      );
+    }
+
     const instances = this.store.get('deployInstances');
     const existingInstance = instances.find(
       (instance) => instance.environmentUuid === environmentUuid

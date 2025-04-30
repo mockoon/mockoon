@@ -12,7 +12,12 @@ import {
   UntypedFormControl,
   UntypedFormGroup
 } from '@angular/forms';
-import { Plans, SyncDisconnectReasons, SyncErrors } from '@mockoon/cloud';
+import {
+  DeployInstance,
+  Plans,
+  SyncDisconnectReasons,
+  SyncErrors
+} from '@mockoon/cloud';
 import {
   Environment,
   Environments,
@@ -95,7 +100,9 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public activeEnvironment$: Observable<Environment>;
   public environments$: Observable<Environments>;
   public cloudEnvironments$: Observable<Environments>;
-  public instanceUrls$: Observable<Record<string, string[]>>;
+  public instanceUrls$: Observable<
+    Record<string, { webUrl: string; localUrl: string }>
+  >;
   public environmentsStatus$: Observable<EnvironmentsStatuses>;
   public settings$: Observable<Settings>;
   public menuSize = Config.defaultMainMenuSize;
@@ -114,6 +121,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public offlineWarningLink = Config.docs.cloudSyncOffline;
   public isWeb = Config.isWeb;
   public deployInstances$ = this.store.select('deployInstances');
+  public buildApiUrl = buildApiUrl;
   public alertLabels = {
     VERSION_TOO_OLD_WARNING:
       'We will soon not support your Mockoon version anymore. Please update.',
@@ -480,7 +488,10 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
               deployInstance.environmentUuid === environment.uuid
           );
 
-          instanceUrls[environment.uuid] = buildApiUrl(environment, instance);
+          instanceUrls[environment.uuid] = buildApiUrl({
+            environment,
+            instance
+          });
 
           return instanceUrls;
         }, {});
@@ -564,6 +575,21 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
 
   public addCloudEnvironment() {
     this.environmentsService.addCloudEnvironment(null, true).subscribe();
+  }
+
+  public copyUrlToClipboard(
+    environment: Environment,
+    instance: DeployInstance,
+    urlName: 'webUrl' | 'localUrl'
+  ) {
+    const urls = buildApiUrl({
+      environment,
+      instance,
+      includeProtocol: true,
+      includePrefix: true
+    });
+
+    navigator.clipboard.writeText(urls[urlName]);
   }
 
   /**

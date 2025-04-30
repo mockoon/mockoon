@@ -82,7 +82,9 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
             deployInstance.environmentUuid === environment.uuid
         );
 
-        return buildApiUrl(environment, instance);
+        const urls = buildApiUrl({ environment, instance });
+
+        return this.isWeb ? urls.webUrl : urls.localUrl;
       })
     );
     this.initForms();

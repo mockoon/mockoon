@@ -42,6 +42,7 @@ import {
   updateDuplicatedRoutes,
   updateEditorAutocomplete
 } from 'src/renderer/app/stores/reducer-utils';
+import { Config } from 'src/renderer/config';
 import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 
 export type ReducerDirectionType = 'next' | 'previous';
@@ -96,21 +97,24 @@ export const environmentReducer = (
       newState = {
         ...state,
         deployInstances: [...action.instances],
-        environmentsStatus: {
-          ...state.environmentsStatus,
-          ...action.instances.reduce<EnvironmentsStatuses>(
-            (instances, instance) => {
-              instances[instance.environmentUuid] = {
-                running: true,
-                needRestart: false,
-                redeploying: false
-              };
+        // only update the env status on desktop
+        environmentsStatus: Config.isWeb
+          ? {
+              ...state.environmentsStatus,
+              ...action.instances.reduce<EnvironmentsStatuses>(
+                (instances, instance) => {
+                  instances[instance.environmentUuid] = {
+                    running: true,
+                    needRestart: false,
+                    redeploying: false
+                  };
 
-              return instances;
-            },
-            {}
-          )
-        }
+                  return instances;
+                },
+                {}
+              )
+            }
+          : state.environmentsStatus
       };
       break;
     }
@@ -119,14 +123,17 @@ export const environmentReducer = (
       newState = {
         ...state,
         deployInstances: [action.instance, ...state.deployInstances],
-        environmentsStatus: {
-          ...state.environmentsStatus,
-          [action.instance.environmentUuid]: {
-            running: true,
-            needRestart: false,
-            redeploying: false
-          }
-        }
+        // only update the env status on desktop
+        environmentsStatus: Config.isWeb
+          ? {
+              ...state.environmentsStatus,
+              [action.instance.environmentUuid]: {
+                running: true,
+                needRestart: false,
+                redeploying: false
+              }
+            }
+          : state.environmentsStatus
       };
       break;
     }
@@ -143,14 +150,17 @@ export const environmentReducer = (
       newState = {
         ...state,
         deployInstances: newDeployInstances,
-        environmentsStatus: {
-          ...state.environmentsStatus,
-          [action.environmentUuid]: {
-            running: true,
-            needRestart: false,
-            redeploying: false
-          }
-        }
+        // only update the env status on desktop
+        environmentsStatus: Config.isWeb
+          ? {
+              ...state.environmentsStatus,
+              [action.environmentUuid]: {
+                running: true,
+                needRestart: false,
+                redeploying: false
+              }
+            }
+          : state.environmentsStatus
       };
       break;
     }
@@ -161,14 +171,17 @@ export const environmentReducer = (
         deployInstances: state.deployInstances.filter(
           (instance) => instance.environmentUuid !== action.environmentUuid
         ),
-        environmentsStatus: {
-          ...state.environmentsStatus,
-          [action.environmentUuid]: {
-            running: false,
-            needRestart: false,
-            redeploying: false
-          }
-        }
+        // only update the env status on desktop
+        environmentsStatus: Config.isWeb
+          ? {
+              ...state.environmentsStatus,
+              [action.environmentUuid]: {
+                running: false,
+                needRestart: false,
+                redeploying: false
+              }
+            }
+          : state.environmentsStatus
       };
       break;
     }

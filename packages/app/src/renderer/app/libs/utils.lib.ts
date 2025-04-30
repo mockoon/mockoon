@@ -97,26 +97,45 @@ export const HumanizeText = (text: string): string => {
  * @param instance
  * @returns
  */
-export const buildApiUrl = (
-  activeEnvironment: Environment,
-  instance?: DeployInstance
-) => {
-  let webUrl = instance?.url
-    ? instance.url
+export const buildApiUrl = (options: {
+  environment: Environment;
+  instance?: DeployInstance;
+  includeProtocol?: boolean;
+  includePrefix?: boolean;
+}) => {
+  let webUrl = options.instance?.url
+    ? options.instance.url
     : `{subdomain}.mockoon.app${env.production ? '' : 'dev:5003'}`;
 
-  // we do not display the protocol in the UI
-  if (!env.production) {
-    webUrl = webUrl.replace('http://', '');
-  } else {
-    webUrl = webUrl.replace('https://', '');
+  if (!options.includeProtocol) {
+    if (!env.production) {
+      webUrl = webUrl.replace('http://', '');
+    } else {
+      webUrl = webUrl.replace('https://', '');
+    }
+  }
+  let localUrl = null;
+
+  if (!Config.isWeb) {
+    localUrl =
+      (options.includeProtocol
+        ? options.environment.tlsOptions.enabled
+          ? 'https://'
+          : 'http://'
+        : '') +
+      (options.environment?.hostname ||
+        `localhost:${options.environment?.port}`);
   }
 
-  return `${
-    Config.isWeb
-      ? webUrl
-      : activeEnvironment?.hostname || `localhost:${activeEnvironment?.port}`
-  }`;
+  if (options.includePrefix && options.environment?.endpointPrefix) {
+    webUrl += `/${options.environment.endpointPrefix}`;
+    localUrl += `/${options.environment.endpointPrefix}`;
+  }
+
+  return {
+    webUrl,
+    localUrl
+  };
 };
 
 /**
@@ -148,8 +167,8 @@ export const buildFullPath = (
       protocol = 'https://';
     }
   }
-
-  let routeUrl = `${protocol}${buildApiUrl(environment, instance)}/`;
+  const urls = buildApiUrl({ environment, instance });
+  let routeUrl = `${protocol}${Config.isWeb ? urls.webUrl : urls.localUrl}/`;
 
   if (environment?.endpointPrefix) {
     routeUrl += environment.endpointPrefix + '/';

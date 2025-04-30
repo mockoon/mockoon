@@ -217,11 +217,7 @@
           <a
             class="nav-link d-flex pe-0 hover-parent"
             [ngClass]="{
-              active: activeEnvironment?.uuid === environment.uuid,
-              running:
-                environmentsStatus[environment.uuid]?.running &&
-                !environmentsStatus[environment.uuid]?.needRestart,
-              'need-restart': environmentsStatus[environment.uuid]?.needRestart
+              active: activeEnvironment?.uuid === environment.uuid
             }"
             appScrollWhenActive
             (click)="selectEnvironment(environment.uuid)"
@@ -245,64 +241,179 @@
                 ></app-editable-element>
               </div>
 
-              <div
-                class="nav-link-subtitle mt-1 d-flex align-items-center svg-text-align"
-              >
-                @if (!isWeb && instances[environment.uuid]) {
+              @if (isWeb) {
+                <div
+                  class="nav-link-subtitle mt-1 d-flex align-items-center svg-text-align"
+                >
                   <app-svg
                     class="me-2"
                     [ngClass]="{
                       'text-success':
                         instances[environment.uuid]?.status === 'RUNNING',
-                      'text-danger':
-                        instances[environment.uuid]?.status === 'STOPPED'
+                      'text-muted':
+                        instances[environment.uuid]?.status !== 'RUNNING'
                     }"
-                    icon="record"
+                    icon="cloud"
                     size="12"
                     [ngbTooltip]="
                       instances[environment.uuid]?.status === 'RUNNING'
-                        ? 'Instance running'
-                        : 'Instance stopped'
+                        ? 'Cloud instance running'
+                        : 'Cloud instance stopped'
                     "
                   ></app-svg>
-                }
-                <!-- No need to display TLS indicator on web -->
-                @if (environment.tlsOptions.enabled && !isWeb) {
-                  <app-svg
-                    class="text-warning me-2"
-                    icon="lock"
-                    size="12"
-                    ngbTooltip="TLS enabled"
-                  ></app-svg>
-                }
-                @if (environment.proxyMode) {
-                  <app-svg
-                    class="text-primary me-2"
-                    icon="security"
-                    size="12"
-                    ngbTooltip="Proxy mode enabled"
-                  ></app-svg>
-                }
-                @if ((logsRecording$ | async)[environment.uuid] === true) {
-                  <app-svg
-                    class="text-danger animation-flash me-2"
-                    icon="record"
-                    size="12"
-                    ngbTooltip="Recording in progress"
-                  ></app-svg>
-                }
-                <!-- display url on desktop or on web when instance is running -->
-                @if (!isWeb || instanceUrls[environment.uuid]) {
-                  <span class="text-truncate pe-1">
-                    {{
-                      instanceUrls[environment.uuid] +
-                        (environment?.endpointPrefix
-                          ? '/' + environment?.endpointPrefix
-                          : '')
-                    }}
+                  @if (environment.proxyMode) {
+                    <app-svg
+                      class="text-primary me-2"
+                      icon="security"
+                      size="12"
+                      ngbTooltip="Proxy mode enabled"
+                    ></app-svg>
+                  }
+                  @if ((logsRecording$ | async)[environment.uuid] === true) {
+                    <app-svg
+                      class="text-danger animation-flash me-2"
+                      icon="record"
+                      size="12"
+                      ngbTooltip="Recording in progress"
+                    ></app-svg>
+                  }
+                  @let webUrl =
+                    instanceUrls[environment.uuid].webUrl +
+                    (environment?.endpointPrefix
+                      ? '/' + environment?.endpointPrefix
+                      : '');
+                  <span
+                    class="text-truncate pe-1"
+                    (click)="
+                      copyUrlToClipboard(
+                        environment,
+                        instances[environment.uuid],
+                        'webUrl'
+                      )
+                    "
+                    ngbTooltip="Click to copy"
+                  >
+                    {{ webUrl }}
                   </span>
+                </div>
+              } @else {
+                <div
+                  class="nav-link-subtitle mt-1 d-flex align-items-center svg-text-align"
+                >
+                  <!-- Display local server URL and status on desktop -->
+                  @if (environmentsStatus[environment.uuid]) {
+                    <app-svg
+                      class="me-2"
+                      [ngClass]="{
+                        'text-success':
+                          environmentsStatus[environment.uuid]?.running &&
+                          !environmentsStatus[environment.uuid]?.needRestart,
+                        'text-muted':
+                          !environmentsStatus[environment.uuid]?.running,
+                        'text-orange':
+                          environmentsStatus[environment.uuid]?.needRestart
+                      }"
+                      icon="computer"
+                      size="12"
+                      [ngbTooltip]="
+                        environmentsStatus[environment.uuid]?.running &&
+                        !environmentsStatus[environment.uuid]?.needRestart
+                          ? 'Local server running'
+                          : !environmentsStatus[environment.uuid]?.running
+                            ? 'Local server stopped'
+                            : environmentsStatus[environment.uuid]?.needRestart
+                              ? 'Local server needs restart'
+                              : ''
+                      "
+                    ></app-svg>
+                  }
+                  @if (environment.tlsOptions.enabled) {
+                    <app-svg
+                      class="text-warning me-2"
+                      icon="lock"
+                      size="12"
+                      ngbTooltip="TLS enabled"
+                    ></app-svg>
+                  }
+                  @if (environment.proxyMode) {
+                    <app-svg
+                      class="text-primary me-2"
+                      icon="security"
+                      size="12"
+                      ngbTooltip="Proxy mode enabled"
+                    ></app-svg>
+                  }
+                  @if ((logsRecording$ | async)[environment.uuid] === true) {
+                    <app-svg
+                      class="text-danger animation-flash me-2"
+                      icon="record"
+                      size="12"
+                      ngbTooltip="Recording in progress"
+                    ></app-svg>
+                  }
+                  @let localUrl =
+                    instanceUrls[environment.uuid].localUrl +
+                    (environment?.endpointPrefix
+                      ? '/' + environment?.endpointPrefix
+                      : '');
+                  <span
+                    class="text-truncate pe-1"
+                    (click)="
+                      copyUrlToClipboard(
+                        environment,
+                        instances[environment.uuid],
+                        'localUrl'
+                      )
+                    "
+                    ngbTooltip="Click to copy"
+                  >
+                    {{ localUrl }}
+                  </span>
+                </div>
+
+                <!-- Display remote instance URL and status on desktop -->
+                @if (instances[environment.uuid]) {
+                  <div
+                    class="nav-link-subtitle mt-1 d-flex align-items-center svg-text-align"
+                  >
+                    <app-svg
+                      class="me-2"
+                      [ngClass]="{
+                        'text-success':
+                          instances[environment.uuid]?.status === 'RUNNING',
+                        'text-muted':
+                          instances[environment.uuid]?.status !== 'RUNNING'
+                      }"
+                      icon="cloud"
+                      size="12"
+                      [ngbTooltip]="
+                        instances[environment.uuid]?.status === 'RUNNING'
+                          ? 'Cloud instance running'
+                          : 'Cloud instance stopped'
+                      "
+                    ></app-svg>
+
+                    @let webUrl =
+                      instanceUrls[environment.uuid].webUrl +
+                      (environment?.endpointPrefix
+                        ? '/' + environment?.endpointPrefix
+                        : '');
+                    <span
+                      class="text-truncate pe-1"
+                      (click)="
+                        copyUrlToClipboard(
+                          environment,
+                          instances[environment.uuid],
+                          'webUrl'
+                        )
+                      "
+                      ngbTooltip="Click to copy"
+                    >
+                      {{ webUrl }}
+                    </span>
+                  </div>
                 }
-              </div>
+              }
             </div>
             <div
               class="ms-auto d-flex flex-column align-items-center justify-content-between"

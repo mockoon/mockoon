@@ -62,6 +62,7 @@ export class DeployInstanceModalComponent implements OnInit {
   public instanceExists$: Observable<boolean>;
   public user$: Observable<User>;
   public accountUrl = Config.accountUrl;
+  public isWeb = Config.isWeb;
   public optionsForm = this.formBuilder.group({
     subdomain: this.formBuilder.control<string>(null, {
       validators: [
@@ -209,9 +210,16 @@ export class DeployInstanceModalComponent implements OnInit {
           this.taskInProgress$.next(false);
 
           if (newInstance) {
-            this.store.update(
-              updateEnvironmentStatusAction({ running: true }, environmentUuid)
-            );
+            // only update the main running state if on the web app
+            if (this.isWeb) {
+              this.store.update(
+                updateEnvironmentStatusAction(
+                  { running: true },
+                  environmentUuid
+                )
+              );
+            }
+
             this.uiService.closeModal('deploy', false);
             this.uiService.openModal('manageInstances', {
               environmentUuid,

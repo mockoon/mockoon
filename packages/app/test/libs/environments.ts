@@ -28,7 +28,7 @@ class Environments {
 
   private get runningEnvironmentMenuEntry() {
     return $(
-      '.environments-menu .menu-list .nav-item .nav-link.active.running'
+      '.environments-menu .menu-list .nav-item .nav-link.active .nav-link-subtitle app-svg[icon="computer"].text-success'
     );
   }
 
@@ -172,14 +172,12 @@ class Environments {
 
   public async assertNeedsRestart() {
     await $(
-      '.environments-menu .menu-list .nav-item .nav-link.active.need-restart'
+      '.environments-menu .menu-list .nav-item .nav-link.active .nav-link-subtitle app-svg[icon="computer"].text-orange'
     ).waitForExist();
   }
 
   public async assertStarted() {
-    await $(
-      '.environments-menu .menu-list .nav-item .nav-link.active.running'
-    ).waitForExist();
+    await this.runningEnvironmentMenuEntry.waitForExist();
   }
 }
 
