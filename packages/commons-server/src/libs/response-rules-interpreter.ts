@@ -157,7 +157,9 @@ export class ResponseRulesInterpreter {
     } else if (rule.target === 'method') {
       targetValue = this.targets.method;
     } else if (rule.target === 'header') {
-      targetValue = this.request.header(parsedRuleModifier);
+      targetValue = !parsedRuleModifier
+        ? ''
+        : this.request.header(parsedRuleModifier);
     } else if (rule.target === 'templating') {
       targetValue = parsedRuleModifier;
     } else {
