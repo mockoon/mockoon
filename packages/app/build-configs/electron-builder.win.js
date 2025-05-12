@@ -15,7 +15,9 @@ const config = Object.assign({}, commonConfig, {
       endpoint: 'https://eus.codesigning.azure.net',
       // respect casing
       certificateProfileName: 'Mockoon',
-      codeSigningAccountName: 'mockoon'
+      codeSigningAccountName: 'mockoon',
+      TimestampRfc3161: 'http://timestamp.acs.microsoft.com',
+      TimestampDigest: 'SHA256'
     }
   },
   nsis: {
