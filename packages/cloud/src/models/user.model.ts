@@ -13,12 +13,14 @@ export type User = {
   teamRole: TeamRoles;
   deployInstancesQuota: number;
   deployInstancesQuotaUsed: number;
+  deployInstancesMonthlyRequestsQuota: number;
   cloudSyncItemsQuota: number;
   cloudSyncItemsQuotaUsed: number;
   cloudSyncSizeQuota: number;
   cloudSyncHighestMajorVersion: number | null;
   templatesQuota: number;
   templatesQuotaUsed: number;
+  mfa: { enabled: boolean; uid: string };
   nextQuotaResetOn: number;
   subscription: {
     trial?: boolean;
