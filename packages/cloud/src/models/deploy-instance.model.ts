@@ -1,3 +1,12 @@
+export enum DeployRegions {
+  US = 'us',
+  CA = 'ca',
+  EU = 'eu',
+  ASIA = 'asia',
+  AU = 'au',
+  SA = 'sa'
+}
+
 export enum DeployInstanceStatus {
   RUNNING = 'RUNNING',
   STOPPED = 'STOPPED'
@@ -16,4 +25,5 @@ export type DeployInstance = {
   status: DeployInstanceStatus;
   name: string;
   apiKey: string;
+  region: DeployRegions;
 };

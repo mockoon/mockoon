@@ -1,3 +1,4 @@
+import { DeployRegions } from '@mockoon/cloud';
 import { FakerAvailableLocales } from '@mockoon/commons';
 
 export type EnvironmentDescriptor = {
@@ -47,4 +48,5 @@ export type Settings = {
   enableRandomLatency: boolean;
   recentLocalEnvironments: RecentLocalEnvironment[];
   displayLogsIsoTimestamp: boolean;
+  deployPreferredRegion: DeployRegions;
 };

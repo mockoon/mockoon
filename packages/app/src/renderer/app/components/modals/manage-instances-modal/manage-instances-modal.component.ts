@@ -39,6 +39,17 @@ export class ManageInstancesModalComponent implements OnInit {
   public payload$ = this.uiService.getModalPayload$('manageInstances');
   public taskInProgress$ = new BehaviorSubject<boolean>(false);
   public instances$ = this.store.select('deployInstances');
+  public availableRegionsLabels$ = this.store
+    .selectRemoteConfig('regions')
+    .pipe(
+      map((regions) =>
+        regions.reduce((regionLabels, region) => {
+          regionLabels[region.value] = region.label;
+
+          return regionLabels;
+        }, {})
+      )
+    );
   public environmentList$: Observable<Record<string, true>>;
   public user$ = this.store.select('user');
   public accountUrl = Config.accountUrl;
