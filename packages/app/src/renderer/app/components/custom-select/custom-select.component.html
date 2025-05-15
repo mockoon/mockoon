@@ -18,6 +18,7 @@
         class="btn btn-custom dropdown-toggle"
         role="button"
         ngbDropdownToggle
+        [disabled]="customValue.disabled"
       >
         <div
           *ngIf="data.selectedItem?.value !== null"

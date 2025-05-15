@@ -122,15 +122,20 @@ export class Store {
    */
   public selectRemoteConfig<T extends keyof RemoteConfigData>(
     path: T
-  ): Observable<RemoteConfigData[T]> {
+  ): Observable<RemoteConfigData[T]>;
+  public selectRemoteConfig(): Observable<RemoteConfigData>;
+  public selectRemoteConfig<T extends keyof RemoteConfigData>(
+    path?: T
+  ): Observable<RemoteConfigData[T] | RemoteConfigData> {
     return this.select('remoteConfig').pipe(
       filter((remoteConfig) => !!remoteConfig),
-      map(
-        (remoteConfig) =>
-          remoteConfig?.[path] ??
-          (path in Config.remoteConfigDefaults
-            ? (Config.remoteConfigDefaults as RemoteConfigData)[path]
-            : null)
+      map((remoteConfig) =>
+        path
+          ? (remoteConfig?.[path] ??
+            (path in Config.remoteConfigDefaults
+              ? (Config.remoteConfigDefaults as RemoteConfigData)[path]
+              : null))
+          : remoteConfig
       ),
       distinctUntilChanged()
     );

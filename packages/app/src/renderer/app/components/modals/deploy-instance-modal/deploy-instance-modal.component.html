@@ -1,113 +1,130 @@
-<ng-container
-  *ngIf="{
-    user: user$ | async,
-    deployInProgress: deployInProgress$ | async,
-    subdomainCheckInProgress: subdomainCheckInProgress$ | async,
-    environment: environment$ | async,
-    instanceExists: instanceExists$ | async
-  } as data"
->
-  <div class="modal-header">
-    <h3 class="modal-title">
-      @if (data.instanceExists) {
-        Manage {{ data.environment?.name }} deployment<br />
-        <small class="text-muted h6">
-          Modify your cloud instance configuration:
-        </small>
-      } @else {
-        Deploy {{ data.environment?.name }}<br />
-        <small class="text-muted h6">Configure your cloud instance:</small>
-      }
-    </h3>
-  </div>
+@let user = user$ | async;
+@let deployInProgress = deployInProgress$ | async;
+@let subdomainCheckInProgress = subdomainCheckInProgress$ | async;
+@let environment = environment$ | async;
+@let instanceExists = instanceExists$ | async;
+@let remoteConfig = remoteConfig$ | async;
 
-  <div class="modal-body">
-    <div [formGroup]="optionsForm">
-      <div class="mb-3">
-        <div class="input-group align-items-center">
-          <label class="col-form-label pe-2" for="subdomain">Subdomain</label>
-          <div class="col-4">
-            <input
-              type="text"
-              id="subdomain"
-              class="form-control"
-              formControlName="subdomain"
-              placeholder="Optional custom subdomain"
-              [maxLength]="50"
-              [minLength]="5"
-            />
-          </div>
-          <div class="input-group-text">
-            <app-svg
-              icon="info"
-              ngbTooltip="Customize the subdomain of your instance (e.g. {subdomain}.mockoon.app). Leave empty to use a random subdomain. Only letters, numbers, and dashes are allowed."
-            ></app-svg>
-          </div>
-          <div class="input-group-text text-warning">
-            <small>
-              @if (
-                optionsForm.get('subdomain').errors?.minlength ||
-                optionsForm.get('subdomain').errors?.maxlength ||
-                optionsForm.get('subdomain').errors?.pattern
-              ) {
-                5 to 50 characters, a-z, 0-9 and - (not at the beginning or end)
-              } @else if (optionsForm.get('subdomain').errors?.subdomainTaken) {
-                This subdomain is not available
-              } @else if (
-                optionsForm.get('subdomain').value &&
-                !optionsForm.get('subdomain').errors &&
-                !data.subdomainCheckInProgress
-              ) {
-                <app-svg icon="check" size="12" class="text-success"></app-svg>
-              }
-            </small>
-          </div>
+<div class="modal-header">
+  <h3 class="modal-title">
+    @if (instanceExists) {
+      Manage {{ environment?.name }} deployment<br />
+      <small class="text-muted h6">
+        Modify your cloud instance configuration:
+      </small>
+    } @else {
+      Deploy {{ environment?.name }}<br />
+      <small class="text-muted h6">Configure your cloud instance:</small>
+    }
+  </h3>
+</div>
+
+<div class="modal-body">
+  <div [formGroup]="optionsForm">
+    <div class="mb-3">
+      <div class="input-group align-items-center">
+        <label class="col-form-label pe-2" for="subdomain">Subdomain</label>
+        <div class="col-4">
+          <input
+            type="text"
+            id="subdomain"
+            class="form-control"
+            formControlName="subdomain"
+            placeholder="Optional custom subdomain"
+            [maxLength]="50"
+            [minLength]="5"
+          />
         </div>
-      </div>
-
-      <div class="mb-3">
-        <div class="input-group align-items-center">
-          <label class="col-form-label pe-2">Instance visibility</label>
-          <app-toggle
-            prefix="instance-visibility"
-            formControlName="visibility"
-            [items]="visibilityToggle"
-            [uncheckable]="false"
-          ></app-toggle>
-          <div class="input-group-text">
-            <app-svg
-              icon="info"
-              ngbTooltip="Public instances are accessible by anyone with the URL. Private instances are only accessible using a token. The instance's admin API is always protected by a token."
-            ></app-svg>
-          </div>
+        <div class="input-group-text">
+          <app-svg
+            icon="info"
+            ngbTooltip="Customize the subdomain of your instance (e.g. {subdomain}.mockoon.app). Leave empty to use a random subdomain. Only letters, numbers, and dashes are allowed."
+          ></app-svg>
+        </div>
+        <div class="input-group-text text-warning">
+          <small>
+            @if (
+              optionsForm.get('subdomain').errors?.minlength ||
+              optionsForm.get('subdomain').errors?.maxlength ||
+              optionsForm.get('subdomain').errors?.pattern
+            ) {
+              5 to 50 characters, a-z, 0-9 and - (not at the beginning or end)
+            } @else if (optionsForm.get('subdomain').errors?.subdomainTaken) {
+              This subdomain is not available
+            } @else if (
+              optionsForm.get('subdomain').value &&
+              !optionsForm.get('subdomain').errors &&
+              !subdomainCheckInProgress
+            ) {
+              <app-svg icon="check" size="12" class="text-success"></app-svg>
+            }
+          </small>
         </div>
       </div>
     </div>
-    @if (stopInstanceRequested()) {
+
+    <div class="mb-3">
+      <div class="input-group align-items-center">
+        <label class="col-form-label pe-2">Instance visibility</label>
+        <app-toggle
+          prefix="instance-visibility"
+          formControlName="visibility"
+          [items]="visibilityToggle"
+          [uncheckable]="false"
+        ></app-toggle>
+        <div class="input-group-text">
+          <app-svg
+            icon="info"
+            ngbTooltip="Public instances are accessible by anyone with the URL. Private instances are only accessible using a token. The instance's admin API is always protected by a token."
+          ></app-svg>
+        </div>
+      </div>
+    </div>
+
+    @if (remoteConfig?.regions?.length > 0) {
       <div>
-        <p class="mb-0">
-          <app-svg icon="warning" class="text-warning me-2"></app-svg>After
-          stopping an instance, restarting it may assign a different server and
-          URL.
-        </p>
+        <div class="input-group">
+          <label class="col-form-label pe-2">Region</label>
+          <app-custom-select
+            class="col-2"
+            formControlName="region"
+            [enableCustomInput]="false"
+            [items]="remoteConfig?.regions"
+            dropdownId="deploy-region"
+          ></app-custom-select>
+
+          <div class="input-group-text">
+            <app-svg
+              icon="info"
+              ngbTooltip="The region where your instance will be deployed. After the deployment, the region cannot be changed unless you stop the instance and deploy it again."
+            ></app-svg>
+          </div>
+        </div>
       </div>
     }
   </div>
-  <div class="modal-footer justify-content-space-between">
-    <div
-      *ngIf="data.user && data.user.plan !== 'FREE'"
-      class="col-6 d-flex align-items-center"
-    >
+  @if (stopInstanceRequested()) {
+    <div>
+      <p class="mb-0">
+        <app-svg icon="warning" class="text-warning me-2"></app-svg>After
+        stopping an instance, restarting it may assign a different server and
+        URL.
+      </p>
+    </div>
+  }
+</div>
+<div class="modal-footer justify-content-space-between">
+  @if (user?.plan !== 'FREE') {
+    <div class="col-6 d-flex align-items-center">
       <p
         class="mb-0"
         [ngClass]="{
           'text-warning':
-            data.user?.deployInstancesQuotaUsed >=
-            data.user?.deployInstancesQuota
+            user?.deployInstancesQuotaUsed >= user?.deployInstancesQuota
         }"
       >
-        Quota used ({{ data.user?.deployInstancesQuotaUsed }}/{{
-          data.user?.deployInstancesQuota
+        Quota used ({{ user?.deployInstancesQuotaUsed }}/{{
+          user?.deployInstancesQuota
         }})
       </p>
       <a
@@ -119,48 +136,46 @@
         <app-svg icon="open_in_new" class="ps-1" size="12"></app-svg>
       </a>
     </div>
-    <div class="ms-auto d-flex align-items-center">
-      @if (data.deployInProgress || data.subdomainCheckInProgress) {
-        <div class="d-inline-block me-2">
-          <app-spinner></app-spinner>
-        </div>
-      }
+  }
+  <div class="ms-auto d-flex align-items-center">
+    @if (deployInProgress || subdomainCheckInProgress) {
+      <div class="d-inline-block me-2">
+        <app-spinner></app-spinner>
+      </div>
+    }
 
+    <button
+      type="button"
+      class="btn btn-primary me-2"
+      (click)="deploy(user, environment.uuid)"
+      [disabled]="
+        deployInProgress || subdomainCheckInProgress || optionsForm.invalid
+      "
+    >
+      {{ instanceExists ? 'Re-deploy' : 'Deploy' }}
+    </button>
+
+    @if (instanceExists) {
       <button
         type="button"
-        class="btn btn-primary me-2"
-        (click)="deploy(data.user, data.environment.uuid)"
-        [disabled]="
-          data.deployInProgress ||
-          data.subdomainCheckInProgress ||
-          optionsForm.invalid
-        "
+        class="btn btn-danger me-2"
+        (click)="deleteInstance(environment.uuid)"
+        [disabled]="deployInProgress || subdomainCheckInProgress"
       >
-        {{ data.instanceExists ? 'Re-deploy' : 'Deploy' }}
+        @if (stopInstanceRequested()) {
+          <app-svg icon="warning" class="text-warning"></app-svg> Confirm
+        } @else {
+          Stop
+        }
       </button>
+    }
 
-      @if (data.instanceExists) {
-        <button
-          type="button"
-          class="btn btn-danger me-2"
-          (click)="deleteInstance(data.environment.uuid)"
-          [disabled]="data.deployInProgress || data.subdomainCheckInProgress"
-        >
-          @if (stopInstanceRequested()) {
-            <app-svg icon="warning" class="text-warning"></app-svg> Confirm
-          } @else {
-            Stop
-          }
-        </button>
-      }
-
-      <button
-        type="button"
-        class="btn btn-secondary modal-close"
-        (click)="close()"
-      >
-        Cancel
-      </button>
-    </div>
+    <button
+      type="button"
+      class="btn btn-secondary modal-close"
+      (click)="close()"
+    >
+      Cancel
+    </button>
   </div>
-</ng-container>
+</div>

@@ -1,3 +1,4 @@
+import { DeployRegions } from '@mockoon/cloud';
 import { defaultEnvironmentVariablesPrefix } from '@mockoon/commons';
 import * as Joi from 'joi';
 import { Config } from 'src/renderer/config';
@@ -35,7 +36,8 @@ export const SettingsDefault: Settings = {
   activeEnvironmentUuid: null,
   enableRandomLatency: false,
   recentLocalEnvironments: [],
-  displayLogsIsoTimestamp: false
+  displayLogsIsoTimestamp: false,
+  deployPreferredRegion: null
 };
 
 export const SettingsSchema = Joi.object<Settings, true>({
@@ -149,6 +151,17 @@ export const SettingsSchema = Joi.object<Settings, true>({
     .required(),
   displayLogsIsoTimestamp: Joi.boolean()
     .failover(SettingsDefault.displayLogsIsoTimestamp)
+    .required(),
+  deployPreferredRegion: Joi.string()
+    .valid(
+      DeployRegions.US,
+      DeployRegions.CA,
+      DeployRegions.EU,
+      DeployRegions.ASIA,
+      DeployRegions.AU,
+      DeployRegions.SA
+    )
+    .failover(SettingsDefault.deployPreferredRegion)
     .required()
 })
   .failover(SettingsDefault)

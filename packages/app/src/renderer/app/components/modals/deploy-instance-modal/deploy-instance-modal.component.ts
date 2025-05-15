@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass, NgIf } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -14,7 +14,12 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { DeployInstance, DeployInstanceVisibility, User } from '@mockoon/cloud';
+import {
+  DeployInstance,
+  DeployInstanceVisibility,
+  DeployRegions,
+  User
+} from '@mockoon/cloud';
 import { Environment } from '@mockoon/commons';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -27,8 +32,10 @@ import {
   map,
   Observable,
   switchMap,
-  tap
+  tap,
+  withLatestFrom
 } from 'rxjs';
+import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
 import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
@@ -36,8 +43,12 @@ import { ToggleItems } from 'src/renderer/app/models/common.model';
 import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
+import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
-import { updateEnvironmentStatusAction } from 'src/renderer/app/stores/actions';
+import {
+  updateEnvironmentStatusAction,
+  updateSettingsAction
+} from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
@@ -46,7 +57,6 @@ import { Config } from 'src/renderer/config';
   templateUrl: './deploy-instance-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     FormsModule,
     ReactiveFormsModule,
     SvgComponent,
@@ -54,7 +64,8 @@ import { Config } from 'src/renderer/config';
     ToggleComponent,
     NgClass,
     AsyncPipe,
-    SpinnerComponent
+    SpinnerComponent,
+    CustomSelectComponent
   ]
 })
 export class DeployInstanceModalComponent implements OnInit {
@@ -77,7 +88,8 @@ export class DeployInstanceModalComponent implements OnInit {
     visibility: this.formBuilder.control<DeployInstanceVisibility>(
       DeployInstanceVisibility.PRIVATE,
       Validators.required
-    )
+    ),
+    region: this.formBuilder.control<DeployRegions>(null)
   });
   public visibilityToggle: ToggleItems = [
     {
@@ -90,6 +102,22 @@ export class DeployInstanceModalComponent implements OnInit {
     }
   ];
   public environment$: Observable<Environment>;
+  public remoteConfig$ = this.store.selectRemoteConfig().pipe(
+    withLatestFrom(
+      this.store.select('settings').pipe(filter((settings) => !!settings))
+    ),
+    tap(([remoteConfig, settings]) => {
+      this.optionsForm
+        .get('region')
+        .setValue(
+          settings.deployPreferredRegion ?? remoteConfig.defaultRegion ?? null
+        );
+    }),
+    map(([remoteConfig]) => ({
+      regions: remoteConfig.regions,
+      defaultRegion: remoteConfig.defaultRegion
+    }))
+  );
   private environmentUuid$ = this.uiService.getModalPayload$('deploy');
   private destroyRef = inject(DestroyRef);
 
@@ -99,7 +127,8 @@ export class DeployInstanceModalComponent implements OnInit {
     private deployService: DeployService,
     private formBuilder: FormBuilder,
     private mainApiService: MainApiService,
-    private loggerService: LoggerService
+    private loggerService: LoggerService,
+    private remoteConfigService: RemoteConfigService
   ) {}
 
   ngOnInit() {
@@ -126,6 +155,10 @@ export class DeployInstanceModalComponent implements OnInit {
             subdomain: existingInstance.subdomain,
             visibility: existingInstance.visibility
           });
+
+          this.optionsForm.get('region').disable();
+        } else {
+          this.optionsForm.get('region').enable();
         }
 
         return !!existingInstance;
@@ -169,6 +202,23 @@ export class DeployInstanceModalComponent implements OnInit {
               })
             )
         ),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe();
+
+    // Save last region used
+    this.optionsForm
+      .get('region')
+      .valueChanges.pipe(
+        // filter initial null value
+        filter((region) => !!region),
+        tap((region) => {
+          this.store.update(
+            updateSettingsAction({
+              deployPreferredRegion: region
+            })
+          );
+        }),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();

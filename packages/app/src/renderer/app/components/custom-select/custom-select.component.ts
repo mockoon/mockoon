@@ -290,6 +290,19 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+  /**
+   * Set the disabled state of the custom input
+   *
+   * @param isDisabled
+   */
+  public setDisabledState(isDisabled: boolean): void {
+    if (isDisabled) {
+      this.customValue.disable();
+    } else {
+      this.customValue.enable();
+    }
+  }
+
   private findItem(value: number | string): DropdownItem {
     let searchedItem = this.items$.value.find((item) => item.value === value);
 

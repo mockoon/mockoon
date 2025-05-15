@@ -6,7 +6,8 @@
     taskInProgress: taskInProgress$ | async,
     payload: payload$ | async,
     isCloudEnabled: isCloudEnabled$ | async,
-    deployEnvList: deployEnvList$ | async
+    deployEnvList: deployEnvList$ | async,
+    availableRegionsLabels: availableRegionsLabels$ | async
   } as data"
 >
   <div class="modal-header align-items-center">
@@ -27,7 +28,8 @@
         <tr>
           <!-- align padding with modal body -->
           <th scope="col" class="ps-3">Status</th>
-          <th scope="col">Environment name</th>
+          <th scope="col">Name</th>
+          <th scope="col">Region</th>
           <th scope="col">URL</th>
           <th scope="col">Visibility</th>
           <th scope="col">API key</th>
@@ -72,6 +74,11 @@
                 } @else {
                   <span class="text-muted">{{ instance.name }}</span>
                 }
+              </td>
+              <td>
+                <span class="text-muted">{{
+                  data.availableRegionsLabels[instance.region]
+                }}</span>
               </td>
               <td>
                 <div class="d-flex align-items-center">
