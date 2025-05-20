@@ -478,8 +478,7 @@ export const isSafeJSONPath = (path: string): boolean => {
    * Returns individual filter expression groups (value without ())
    */
   const GROUP_RE = new RegExp(
-    '([^&\\|]+)' + // Match everything which is not & or |
-      '(?= && | \\|\\| |$)', // Non capturing group matching ' && ' or ' || ' or EOL
+    '\\s*&&\\s*|\\s*\\|\\|\\s*', // Non capturing group matching ' && ' or ' || ' or EOL
     'g'
   );
 
@@ -493,7 +492,7 @@ export const isSafeJSONPath = (path: string): boolean => {
     return true;
   }
 
-  const filters = hasFilter.match(GROUP_RE);
+  const filters = hasFilter.split(GROUP_RE);
 
   if (!filters) {
     return true;

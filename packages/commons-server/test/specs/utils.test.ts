@@ -288,6 +288,11 @@ describe('Utils', () => {
       strictEqual(isSafeJSONPath(path), true);
     });
 
+    it('should return true if path has multiple filter expressions enclosed in parentheses, without white space', () => {
+      const path = "$..*[?((@property === 'price')&&(@ !== 8.95))]";
+      strictEqual(isSafeJSONPath(path), true);
+    });
+
     it('should return true if path has multiple complex filter expressions', () => {
       const path =
         '$..book[?(@parent.bicycle && @parent.bicycle.color === "red")].category';
@@ -318,6 +323,12 @@ describe('Utils', () => {
 
     it('should return true if path has child property filter expression', () => {
       const path = '$[?(@.name.match(/lex/))]';
+      strictEqual(isSafeJSONPath(path), true);
+    });
+
+    it('should return true if path has property containing match with OR operator', () => {
+      const path =
+        '$.[?(@property.match(/property1/))][?(@property.match(/property2|property3/))]._text';
       strictEqual(isSafeJSONPath(path), true);
     });
 
