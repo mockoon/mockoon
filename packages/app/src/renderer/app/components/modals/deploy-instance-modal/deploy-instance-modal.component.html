@@ -1,7 +1,8 @@
 <ng-container
   *ngIf="{
     user: user$ | async,
-    taskInProgress: taskInProgress$ | async,
+    deployInProgress: deployInProgress$ | async,
+    subdomainCheckInProgress: subdomainCheckInProgress$ | async,
     environment: environment$ | async,
     instanceExists: instanceExists$ | async
   } as data"
@@ -51,7 +52,7 @@
               } @else if (
                 optionsForm.get('subdomain').value &&
                 !optionsForm.get('subdomain').errors &&
-                !data.taskInProgress
+                !data.subdomainCheckInProgress
               ) {
                 <app-svg icon="check" size="12" class="text-success"></app-svg>
               }
@@ -106,7 +107,7 @@
       </a>
     </div>
     <div class="ms-auto d-flex align-items-center">
-      @if (data.taskInProgress) {
+      @if (data.deployInProgress || data.subdomainCheckInProgress) {
         <div class="d-inline-block me-2">
           <app-spinner></app-spinner>
         </div>
@@ -116,7 +117,11 @@
         type="button"
         class="btn btn-primary me-2"
         (click)="deploy(data.user, data.environment.uuid)"
-        [disabled]="data.taskInProgress || optionsForm.invalid"
+        [disabled]="
+          data.deployInProgress ||
+          data.subdomainCheckInProgress ||
+          optionsForm.invalid
+        "
       >
         {{ data.instanceExists ? 'Re-deploy' : 'Deploy' }}
       </button>
@@ -126,7 +131,7 @@
           type="button"
           class="btn btn-danger me-2"
           (click)="deleteInstance(data.environment.uuid)"
-          [disabled]="data.taskInProgress"
+          [disabled]="data.deployInProgress || data.subdomainCheckInProgress"
         >
           Stop
         </button>

@@ -57,7 +57,8 @@ import { Config } from 'src/renderer/config';
   ]
 })
 export class DeployInstanceModalComponent implements OnInit {
-  public taskInProgress$ = new BehaviorSubject<boolean>(false);
+  public deployInProgress$ = new BehaviorSubject<boolean>(false);
+  public subdomainCheckInProgress$ = new BehaviorSubject<boolean>(false);
   public existingInstance$: Observable<DeployInstance>;
   public instanceExists$: Observable<boolean>;
   public user$: Observable<User>;
@@ -144,7 +145,7 @@ export class DeployInstanceModalComponent implements OnInit {
         tap(() => {
           this.optionsForm.get('subdomain').setErrors(null);
 
-          this.taskInProgress$.next(true);
+          this.subdomainCheckInProgress$.next(true);
         }),
         debounceTime(1000),
         switchMap(([subdomain, existingInstance]) =>
@@ -155,7 +156,7 @@ export class DeployInstanceModalComponent implements OnInit {
             )
             .pipe(
               tap(() => {
-                this.taskInProgress$.next(false);
+                this.subdomainCheckInProgress$.next(false);
               }),
               map((isAvailable) => {
                 if (!isAvailable) {
@@ -176,7 +177,11 @@ export class DeployInstanceModalComponent implements OnInit {
   }
 
   public deploy(user: User, environmentUuid: string) {
-    if (this.optionsForm.invalid) {
+    if (
+      this.optionsForm.invalid ||
+      this.deployInProgress$.value ||
+      this.subdomainCheckInProgress$.value
+    ) {
       return;
     }
 
@@ -197,7 +202,7 @@ export class DeployInstanceModalComponent implements OnInit {
       return;
     }
 
-    this.taskInProgress$.next(true);
+    this.deployInProgress$.next(true);
 
     this.deployService
       .deploy(
@@ -207,7 +212,7 @@ export class DeployInstanceModalComponent implements OnInit {
       )
       .pipe(
         tap((newInstance) => {
-          this.taskInProgress$.next(false);
+          this.deployInProgress$.next(false);
 
           if (newInstance) {
             // only update the main running state if on the web app
@@ -242,7 +247,7 @@ export class DeployInstanceModalComponent implements OnInit {
             this.loggerService.logMessage('error', 'CLOUD_DEPLOY_START_ERROR');
           }
 
-          this.taskInProgress$.next(false);
+          this.deployInProgress$.next(false);
 
           return EMPTY;
         })
@@ -255,18 +260,18 @@ export class DeployInstanceModalComponent implements OnInit {
   }
 
   public deleteInstance(environmentUuid: string) {
-    this.taskInProgress$.next(true);
+    this.deployInProgress$.next(true);
 
     this.deployService
       .stop(environmentUuid)
       .pipe(
         tap(() => {
-          this.taskInProgress$.next(false);
+          this.deployInProgress$.next(false);
         }),
         catchError(() => {
           this.loggerService.logMessage('error', 'CLOUD_DEPLOY_STOP_ERROR');
 
-          this.taskInProgress$.next(false);
+          this.deployInProgress$.next(false);
 
           return EMPTY;
         })
