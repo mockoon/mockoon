@@ -2518,7 +2518,7 @@ export class EnvironmentsService {
       );
     }
 
-    MainAPI.send('APP_WRITE_CLIPBOARD', command.join(' '));
+    this.mainApiService.send('APP_WRITE_CLIPBOARD', command.join(' '));
   }
 
   /**
