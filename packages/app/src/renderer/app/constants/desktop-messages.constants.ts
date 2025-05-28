@@ -344,6 +344,13 @@ export const DesktopMessages: Record<
     toastType: 'error',
     showToast: true
   }),
+  CLOUD_DEPLOY_ALREADY_IN_PROGRESS: () => ({
+    message:
+      'Error while starting the instance. A deployment for this environment is already in progress.',
+    log: true,
+    toastType: 'error',
+    showToast: true
+  }),
   CLOUD_DEPLOY_STOP_ERROR: () => ({
     message: 'Error while stopping the instance. Please try again later.',
     log: true,

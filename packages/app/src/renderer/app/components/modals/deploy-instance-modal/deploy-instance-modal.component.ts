@@ -243,6 +243,11 @@ export class DeployInstanceModalComponent implements OnInit {
               'error',
               'CLOUD_DEPLOY_START_SUBDOMAIN_TAKEN'
             );
+          } else if (error.status === 422) {
+            this.loggerService.logMessage(
+              'error',
+              'CLOUD_DEPLOY_ALREADY_IN_PROGRESS'
+            );
           } else {
             this.loggerService.logMessage('error', 'CLOUD_DEPLOY_START_ERROR');
           }
