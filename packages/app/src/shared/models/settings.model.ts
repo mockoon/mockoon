@@ -46,4 +46,5 @@ export type Settings = {
   activeEnvironmentUuid: string | null;
   enableRandomLatency: boolean;
   recentLocalEnvironments: RecentLocalEnvironment[];
+  displayLogsIsoTimestamp: boolean;
 };

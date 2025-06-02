@@ -83,9 +83,9 @@
               id="settings-log-transactions"
               formControlName="logTransactions"
             />
-            <label class="form-check-label" for="settings-log-transactions"
-              >Log the full transactions</label
-            >
+            <label class="form-check-label" for="settings-log-transactions">
+              Log the full transactions
+            </label>
           </div>
           <div class="input-group-text">
             <app-svg
@@ -119,6 +119,21 @@
           [appInputNumber]="{ min: 1, max: Infinity, canBeEmpty: false }"
           formControlName="maxLogsPerEnvironment"
         />
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <div class="form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="settings-log-iso-timestamp"
+          formControlName="displayLogsIsoTimestamp"
+        />
+        <label class="form-check-label" for="settings-log-iso-timestamp">
+          Use ISO timestamp format in logs instead of human-readable format
+          (e.g. "1 minute ago")
+        </label>
       </div>
     </div>
   </div>

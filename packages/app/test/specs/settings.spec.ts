@@ -175,7 +175,22 @@ describe('Settings', () => {
   });
 
   describe('Enable starts environments on application load', () => {
-    it('Should save setting to enable starts environments on load', async () => {
+    it('should save setting to enable logs iso timestamps', async () => {
+      await settings.open();
+      await settings.toggleSetting('settings-log-iso-timestamp');
+      await modals.close();
+
+      await utils.waitForAutosave();
+      await file.verifyObjectPropertyInFile(
+        './tmp/storage/settings.json',
+        'displayLogsIsoTimestamp',
+        true
+      );
+    });
+  });
+
+  describe('Enable logs iso timestamp', () => {
+    it('should save setting to enable starts environments on load', async () => {
       await settings.open();
       await settings.toggleSetting('settings-start-environments-on-load');
       await modals.close();
@@ -190,7 +205,7 @@ describe('Settings', () => {
   });
 
   describe('Enable random latency', () => {
-    it('Should save setting to enable random latency', async () => {
+    it('should save setting to enable random latency', async () => {
       await settings.open();
       await settings.toggleSetting('settings-enable-random-latency');
       await modals.close();

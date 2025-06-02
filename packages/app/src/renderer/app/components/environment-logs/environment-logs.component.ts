@@ -157,8 +157,13 @@ export class EnvironmentLogsComponent implements OnInit {
       map((logs) =>
         logs.map((log) => ({
           ...log,
-          timeHuman$: timer(0, 60_000).pipe(
-            map(() => formatDistanceToNow(log.timestampMs, { addSuffix: true }))
+          timeHuman$: timer(0, 10_000).pipe(
+            map(() =>
+              formatDistanceToNow(log.timestampMs, {
+                addSuffix: true,
+                includeSeconds: true
+              })
+            )
           )
         }))
       )
