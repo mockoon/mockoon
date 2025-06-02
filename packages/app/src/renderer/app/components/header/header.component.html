@@ -9,63 +9,77 @@
   <div appTourStep="tour-environment-start">
     <!-- Web interface is focused on deploying to the cloud and managing the instance -->
     @if (isWeb) {
-      @if (
-        activeEnvironmentState?.running &&
-        activeEnvironmentState?.needRestart &&
-        activeEnvironmentState?.redeploying
-      ) {
-        <button
-          class="btn btn-link btn-icon text-gray"
-          type="button"
-          ngbTooltip="Re-deploy in progress"
-        >
-          <app-svg icon="spinner" size="20"></app-svg>
-        </button>
-      } @else if (
-        activeEnvironmentState?.running &&
-        activeEnvironmentState?.needRestart &&
-        !activeEnvironmentState?.redeploying
-      ) {
-        <button
-          id="header-btn-server-restart"
-          class="btn btn-link text-warning"
-          type="button"
-          ngbTooltip="Quick re-deploy to apply changes"
-          (click)="
-            toggleEnvironment(activeEnvironment.uuid, activeEnvironmentState)
-          "
-          [disabled]="!activeEnvironment"
-        >
-          <app-svg icon="refresh" size="20"></app-svg>
-        </button>
-      } @else if (
-        activeEnvironmentState?.running && !activeEnvironmentState?.needRestart
-      ) {
-        <button
-          id="header-btn-server-stop"
-          class="btn btn-link text-success"
-          type="button"
-          ngbTooltip="Manage deployment"
-          (click)="
-            toggleEnvironment(activeEnvironment.uuid, activeEnvironmentState)
-          "
-          [disabled]="!activeEnvironment"
-        >
-          <app-svg icon="server_settings" size="20"></app-svg>
-        </button>
-      } @else if (!activeEnvironmentState?.running) {
-        <button
-          id="header-btn-server-start"
-          class="btn btn-link text-success"
-          type="button"
-          ngbTooltip="Deploy API"
-          (click)="
-            toggleEnvironment(activeEnvironment.uuid, activeEnvironmentState)
-          "
-          [disabled]="!activeEnvironment"
-        >
-          <app-svg icon="play_arrow" size="20"></app-svg>
-        </button>
+      @if (user) {
+        @if (
+          activeEnvironmentState?.running &&
+          activeEnvironmentState?.needRestart &&
+          activeEnvironmentState?.redeploying
+        ) {
+          <button
+            class="btn btn-link btn-icon text-gray"
+            type="button"
+            ngbTooltip="Re-deploy in progress"
+          >
+            <app-svg icon="spinner" size="20"></app-svg>
+          </button>
+        } @else if (
+          activeEnvironmentState?.running &&
+          activeEnvironmentState?.needRestart &&
+          !activeEnvironmentState?.redeploying
+        ) {
+          <button
+            id="header-btn-server-restart"
+            class="btn btn-link text-warning"
+            type="button"
+            ngbTooltip="Quick re-deploy to apply changes"
+            (click)="
+              toggleEnvironment(activeEnvironment.uuid, activeEnvironmentState)
+            "
+            [disabled]="!activeEnvironment"
+          >
+            <app-svg icon="refresh" size="20"></app-svg>
+          </button>
+        } @else if (
+          activeEnvironmentState?.running &&
+          !activeEnvironmentState?.needRestart
+        ) {
+          <button
+            id="header-btn-server-stop"
+            class="btn btn-link text-success"
+            type="button"
+            ngbTooltip="Manage deployment"
+            (click)="
+              toggleEnvironment(activeEnvironment.uuid, activeEnvironmentState)
+            "
+            [disabled]="!activeEnvironment"
+          >
+            <app-svg icon="server_settings" size="20"></app-svg>
+          </button>
+        } @else if (!activeEnvironmentState?.running) {
+          <button
+            id="header-btn-server-start"
+            class="btn btn-link text-success"
+            type="button"
+            ngbTooltip="Deploy API"
+            (click)="
+              toggleEnvironment(activeEnvironment.uuid, activeEnvironmentState)
+            "
+            [disabled]="!activeEnvironment"
+          >
+            <app-svg icon="play_arrow" size="20"></app-svg>
+          </button>
+        }
+      } @else {
+        <!-- On web, if user not logged in, we are not connected and shouldn't be able to do anything -->
+        <div ngbTooltip="Sign in to manage your environments">
+          <button
+            class="btn btn-link btn-icon text-gray"
+            type="button"
+            disabled
+          >
+            <app-svg icon="play_arrow" size="20"></app-svg>
+          </button>
+        </div>
       }
     } @else {
       <!--  Desktop interface is focused on running the mock locally -->
