@@ -117,12 +117,18 @@
                   size="12"
                   ngbTooltip="Request proxied"
                 ></app-svg>
-                <span
-                  class="text-truncate"
-                  [ngbTooltip]="log.timestampMs | date: dateFormat"
-                >
-                  {{ log.timeHuman$ | async }}
-                </span>
+                @if (data.settings?.displayLogsIsoTimestamp) {
+                  <span class="text-truncate pe-1">
+                    {{ log.timestampMs | date: dateFormat }}
+                  </span>
+                } @else {
+                  <span
+                    class="text-truncate pe-1"
+                    [ngbTooltip]="log.timestampMs | date: dateFormat"
+                  >
+                    {{ log.timeHuman$ | async }}
+                  </span>
+                }
               </div>
             </div>
             <div class="ms-auto ps-2 d-flex align-items-start">
