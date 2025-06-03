@@ -3553,7 +3553,7 @@ describe('Response rules interpreter', () => {
       strictEqual(routeResponse?.body, 'body19');
     });
 
-    it('should return response if JSON body property value is null nad rule value is null too', () => {
+    it('should return response if JSON body property value is null and rule value is null too', () => {
       const request: Request = {
         header: function (headerName: string) {
           const headers = {

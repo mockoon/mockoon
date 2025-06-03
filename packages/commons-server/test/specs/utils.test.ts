@@ -1,12 +1,13 @@
 import { Response } from 'express';
 import fs from 'fs';
 import { SafeString } from 'handlebars';
-import { strictEqual } from 'node:assert';
+import { deepStrictEqual, strictEqual } from 'node:assert';
 import { afterEach, describe, it } from 'node:test';
 import {
   DecompressBody,
   fromSafeString,
   fullTextSearch,
+  getValueFromPath,
   isSafeJSONPath,
   ToBase64
 } from '../../src/libs/utils';
@@ -336,6 +337,162 @@ describe('Utils', () => {
       const path =
         '$..book[0][((this.constructor.constructor(\'return this.process\')()).mainModule.require("child_process").exec("calc").toString())]';
       strictEqual(isSafeJSONPath(path), false);
+    });
+  });
+
+  describe('getValueFromPath', () => {
+    /**
+     * This method is also tested elsewhere, when testing the various helpers (data, body, etc) and also in the desktop app tests. The goal here is to test:
+     * - using JMESPath by default
+     * - retrocompatibility with the old object-path syntax (covered by JMESPath)
+     * - triggering of JSONPath when the path starts with "$"
+     *
+     */
+    const complexObject = {
+      'property.with.dots': 'value',
+      deep: {
+        'property.with.dots': 'deepValue'
+      },
+      user: {
+        name: 'John',
+        age: 30,
+        address: {
+          city: 'New York',
+          zip: '10001'
+        },
+        hobbies: [{ name: 'reading' }, { name: 'swimming' }]
+      },
+      deepArray: [
+        [{ id: 1, name: 'Item 1' }],
+        [{ id: 2, name: 'Item 2' }],
+        [{ id: 3, name: 'Item 3', items: [['a', 'b', 'c']] }]
+      ],
+      active: true,
+      tags: ['tag1', 'tag2'],
+      metadata: {
+        createdAt: '2023-01-01',
+        updatedAt: '2023-01-02'
+      }
+    };
+    const simpleArray = [
+      { id: 1, name: 'Item 1' },
+      { id: 2, name: 'Item 2' },
+      { id: 3, name: 'Item 3' }
+    ];
+    const deepArray = [
+      [{ id: 1, name: 'Item 1' }],
+      [{ id: 2, name: 'Item 2' }],
+      [{ id: 3, name: 'Item 3', items: [['a', 'b', 'c']] }]
+    ];
+
+    it('should return the data as-is if not an array or object, or if the path is empty', () => {
+      const result1 = getValueFromPath('simpleString', 'property', null);
+      const result2 = getValueFromPath(42, 'property', null);
+      const result3 = getValueFromPath(true, 'property', null);
+      const result4 = getValueFromPath(null, 'property', null);
+      const result5 = getValueFromPath(undefined, 'property', null);
+      const result6 = getValueFromPath('simpleString', '', null);
+
+      strictEqual(result1, 'simpleString');
+      strictEqual(result2, 42);
+      strictEqual(result3, true);
+      strictEqual(result4, null);
+      strictEqual(result5, undefined);
+      strictEqual(result6, 'simpleString');
+    });
+
+    it('should be retrocompatible with the object-path syntax (covered by JMESPath)', () => {
+      const result1 = getValueFromPath(complexObject, 'user.name', null);
+      const result2 = getValueFromPath(
+        complexObject,
+        'user.address.city',
+        null
+      );
+      const result3 = getValueFromPath(complexObject, 'tags.0', null);
+      const result4 = getValueFromPath(
+        complexObject,
+        'metadata.createdAt',
+        null
+      );
+      const result5 = getValueFromPath(
+        complexObject,
+        'user.hobbies.1.name',
+        null
+      );
+      const result6 = getValueFromPath(
+        complexObject,
+        'property\\.with\\.dots',
+        null
+      );
+      const result7 = getValueFromPath(
+        complexObject,
+        'deep.property\\.with\\.dots',
+        null
+      );
+      const result8 = getValueFromPath(simpleArray, '1.name', null);
+      const result9 = getValueFromPath(simpleArray, '2', null);
+      const result10 = getValueFromPath(deepArray, '1.0.name', null);
+      const result11 = getValueFromPath(
+        complexObject,
+        'deepArray.1.0.name',
+        null
+      );
+      const result12 = getValueFromPath(
+        complexObject,
+        'deepArray.2.0.items.0.1',
+        null
+      );
+
+      strictEqual(result1, 'John');
+      strictEqual(result2, 'New York');
+      strictEqual(result3, 'tag1');
+      strictEqual(result4, '2023-01-01');
+      strictEqual(result5, 'swimming');
+      strictEqual(result6, 'value');
+      strictEqual(result7, 'deepValue');
+      strictEqual(result8, 'Item 2');
+      deepStrictEqual(result9, { id: 3, name: 'Item 3' });
+      strictEqual(result10, 'Item 2');
+      strictEqual(result11, 'Item 2');
+      strictEqual(result12, 'b');
+    });
+
+    it('should use JSONPath if the path is starting with "$"', () => {
+      const result1 = getValueFromPath(complexObject, '$.user.name', null);
+      const result2 = getValueFromPath(
+        complexObject,
+        '$.user.address.city',
+        null
+      );
+      const result3 = getValueFromPath(complexObject, '$.tags[0]', null);
+      const result4 = getValueFromPath(
+        complexObject,
+        '$.metadata.createdAt',
+        null
+      );
+      const result5 = getValueFromPath(
+        complexObject,
+        '$.user.hobbies[1].name',
+        null
+      );
+      const result6 = getValueFromPath(
+        complexObject,
+        '$["property.with.dots"]',
+        null
+      );
+      const result7 = getValueFromPath(
+        complexObject,
+        '$.deep.["property.with.dots"]',
+        null
+      );
+
+      strictEqual(result1, 'John');
+      strictEqual(result2, 'New York');
+      strictEqual(result3, 'tag1');
+      strictEqual(result4, '2023-01-01');
+      strictEqual(result5, 'swimming');
+      strictEqual(result6, 'value');
+      strictEqual(result7, 'deepValue');
     });
   });
 });

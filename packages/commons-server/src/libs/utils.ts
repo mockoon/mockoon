@@ -1,3 +1,4 @@
+import { search } from '@jmespath-community/jmespath';
 import {
   Callback,
   Folder,
@@ -320,15 +321,38 @@ export const resolvePathFromEnvironment = (
  * ```
  * @param str
  */
-export const convertPathToArray = (str: string): string | string[] => {
-  if (str.includes('\\.')) {
-    return str
-      .replace(/\\\./g, '%#%')
-      .split('.')
-      .map((s) => s.replace(/%#%/g, '.'));
+export const convertPathToArray = (str: string): string[] => {
+  if (!str) {
+    return [];
   }
 
-  return str;
+  return str
+    .replace(/\\\./g, '%#%')
+    .split('.')
+    .map((s) => s.replace(/%#%/g, '.'));
+};
+
+/**
+ * Convert an object path (for the object-path lib) to a JMESPath string.
+ *
+ * 0.1.property.1.property.2 -> [0][1].property[1].property[2]
+ *
+ * @param path
+ * @returns
+ */
+export const objectPathToJMESPath = (path: string): string => {
+  const arrayPath = convertPathToArray(path);
+
+  return arrayPath.reduce((newPath, elem, index) => {
+    // wrap the element in quotes if it contains a dot or a space
+    if (elem.includes('.') || elem.match(/\s/g)) {
+      return `${newPath}${index !== 0 ? '.' : ''}"${elem}"`;
+    } else if (!isNaN(parseInt(elem, 10))) {
+      return `${newPath}[${elem}]`;
+    } else {
+      return `${newPath}${index !== 0 ? '.' : ''}${elem}`;
+    }
+  }, '');
 };
 
 /**
@@ -517,6 +541,14 @@ export const isSafeJSONPath = (path: string): boolean => {
  * If no path is provided, return the full data.
  * If the value is not found, return the default value.
  *
+ * In the past, this function was using either JSONPath (if the path started with $)
+ * or object-path (if the path did not start with $).
+ * Now, JMESPath is used if the path does not start with $. The path is
+ * converted to a JMESPath compatible format to ensure compatibility with object-path.
+ *
+ * Thus, the only JMESPath syntax not supported is the one using the $ prefix
+ * (but is seems rarely used in practice).
+ *
  * @param data
  * @param path
  * @param defaultValue
@@ -540,8 +572,91 @@ export const getValueFromPath = (
         foundValue = JSONPath({ json: data, path: path, wrap: false });
       }
     } else {
-      foundValue = objectGet(data, convertPathToArray(path));
+      try {
+        // JMESPath returns null if the value is not found (unlike JSONPath which returns undefined)
+        foundValue = search(data, objectPathToJMESPath(path)) ?? undefined;
+      } catch (_error) {
+        // silently fail if the path is invalid (same as JSONPath)
+      }
     }
+
+    return foundValue !== undefined ? foundValue : defaultValue;
+  }
+
+  return data;
+};
+
+/**
+ * Look for a value in an object or array using JMESPath.
+ *
+ * @param data
+ * @param path
+ * @param defaultValue
+ * @returns
+ */
+getValueFromPath.jmesPath = (data: any, path: string, defaultValue: any) => {
+  if (
+    (Array.isArray(data) || typeof data === 'object') &&
+    typeof path === 'string' &&
+    path !== ''
+  ) {
+    let foundValue: any;
+
+    try {
+      // JMESPath returns null if the value is not found (unlike JSONPath which returns undefined)
+      foundValue = search(data, objectPathToJMESPath(path)) ?? undefined;
+    } catch (_error) {
+      // silently fail if the path is invalid (same as JSONPath)
+    }
+
+    return foundValue !== undefined ? foundValue : defaultValue;
+  }
+
+  return data;
+};
+
+/**
+ * Look for a value in an object or array using JSONPath.
+ *
+ * @param data
+ * @param path
+ * @param defaultValue
+ * @returns
+ */
+getValueFromPath.jsonPath = (data: any, path: string, defaultValue: any) => {
+  if (
+    (Array.isArray(data) || typeof data === 'object') &&
+    typeof path === 'string' &&
+    path !== ''
+  ) {
+    let foundValue: any;
+
+    // Added wrap = false (Check https://github.com/mockoon/mockoon/issues/1297)
+    if (isSafeJSONPath(path)) {
+      foundValue = JSONPath({ json: data, path: path, wrap: false });
+    }
+
+    return foundValue !== undefined ? foundValue : defaultValue;
+  }
+
+  return data;
+};
+
+/**
+ * Get a value from an object or array using object-path.
+ *
+ * @param data
+ * @param path
+ * @param defaultValue
+ * @returns
+ */
+getValueFromPath.objectPath = (data: any, path: string, defaultValue: any) => {
+  if (
+    (Array.isArray(data) || typeof data === 'object') &&
+    typeof path === 'string' &&
+    path !== ''
+  ) {
+    const foundValue = objectGet(data, convertPathToArray(path));
 
     return foundValue !== undefined ? foundValue : defaultValue;
   }

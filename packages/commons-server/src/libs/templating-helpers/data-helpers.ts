@@ -111,9 +111,12 @@ export const DataHelpers = function (
         return;
       }
 
-      const path = convertPathToArray(
+      let path: string[] | null = convertPathToArray(
         String(fromSafeString(parameters[2]) ?? '')
       );
+
+      path = path.length > 0 ? path : null;
+
       // new value can be of any type
       const newValue = fromSafeString(parameters[3]);
 
