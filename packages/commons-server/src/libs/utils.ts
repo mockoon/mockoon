@@ -1,3 +1,4 @@
+import { search } from '@jmespath-community/jmespath';
 import {
   Callback,
   Folder,
@@ -542,6 +543,84 @@ export const getValueFromPath = (
     } else {
       foundValue = objectGet(data, convertPathToArray(path));
     }
+
+    return foundValue !== undefined ? foundValue : defaultValue;
+  }
+
+  return data;
+};
+
+/**
+ * Look for a value in an object or array using JMESPath.
+ *
+ * @param data
+ * @param path
+ * @param defaultValue
+ * @returns
+ */
+getValueFromPath.jmesPath = (data: any, path: string, defaultValue: any) => {
+  if (
+    (Array.isArray(data) || typeof data === 'object') &&
+    typeof path === 'string' &&
+    path !== ''
+  ) {
+    let foundValue: any;
+
+    try {
+      foundValue = search(data, path);
+    } catch (_error) {
+      // silently fail if the path is invalid (same as JSONPath)
+    }
+
+    // JMESPath returns null if the value is not found (unlike JSONPath which returns undefined)
+    return foundValue ?? defaultValue;
+  }
+
+  return data;
+};
+
+/**
+ * Look for a value in an object or array using JSONPath.
+ *
+ * @param data
+ * @param path
+ * @param defaultValue
+ * @returns
+ */
+getValueFromPath.jsonPath = (data: any, path: string, defaultValue: any) => {
+  if (
+    (Array.isArray(data) || typeof data === 'object') &&
+    typeof path === 'string' &&
+    path !== ''
+  ) {
+    let foundValue: any;
+
+    if (isSafeJSONPath(path)) {
+      // Added wrap = false (Check https://github.com/mockoon/mockoon/issues/1297)
+      foundValue = JSONPath({ json: data, path: path, wrap: false });
+    }
+
+    return foundValue !== undefined ? foundValue : defaultValue;
+  }
+
+  return data;
+};
+
+/**
+ * Get a value from an object or array using object-path.
+ *
+ * @param data
+ * @param path
+ * @param defaultValue
+ * @returns
+ */
+getValueFromPath.objectPath = (data: any, path: string, defaultValue: any) => {
+  if (
+    (Array.isArray(data) || typeof data === 'object') &&
+    typeof path === 'string' &&
+    path !== ''
+  ) {
+    const foundValue = objectGet(data, convertPathToArray(path));
 
     return foundValue !== undefined ? foundValue : defaultValue;
   }

@@ -34,6 +34,7 @@
   "dependencies": {
     "@apidevtools/swagger-parser": "10.1.1",
     "@faker-js/faker": "9.6.0",
+    "@jmespath-community/jmespath": "1.1.5",
     "@mockoon/commons": "9.2.0",
     "ajv": "8.17.1",
     "ajv-formats": "3.0.1",
