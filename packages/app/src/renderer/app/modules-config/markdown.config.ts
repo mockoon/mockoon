@@ -17,7 +17,7 @@ export const MarkedOptionsFactory = (): MarkedOptions => {
   renderer.image = ({ href, title }) => {
     href = href.replace(/^\/images\//g, `${Config.websiteURL}images/`);
 
-    return `<img src="${href}" class="img-fluid mx-auto d-block" style="filter:drop-shadow(0 0 .75rem rgba(0,0,0,.2));" alt="${title}">`;
+    return `<img src="${href}" class="img-fluid mx-auto d-block my-5" style="filter:drop-shadow(0 0 .75rem rgba(0,0,0,.2));" alt="${title}">`;
   };
 
   renderer.hr = () => '<hr class="my-5">';
