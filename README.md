@@ -62,6 +62,19 @@ You can check the [complete list](https://mockoon.com/features/) on the website.
   </a>
 </div>
 
+### Gold
+
+<div align="center" style="margin-top:20px;margin-bottom:20px;">
+ 
+  <a href="https://www.lambdatest.com/">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/lambdatest.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/lambdatest.png">
+      <img src="https://mockoon.com/images/sponsors/light/lambdatest.png" alt="Lambdatest logo" />
+      </picture>
+  </a>
+</div>
+
 ### Silver
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">  

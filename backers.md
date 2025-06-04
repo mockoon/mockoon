@@ -27,6 +27,19 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
   </a>
 </div>
 
+### Gold
+
+<div align="center" style="margin-top:20px;margin-bottom:20px;">
+ 
+  <a href="https://www.lambdatest.com/">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/lambdatest.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/lambdatest.png">
+      <img src="https://mockoon.com/images/sponsors/light/lambdatest.png" alt="Lambdatest logo" />
+      </picture>
+  </a>
+</div>
+
 ### Silver
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">  
@@ -38,6 +51,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 # One-time and past sponsors
 
 - 0xhexmeow
+- [0xhybrid](https://github.com/0xhybrid)
 - Adam Recvlohe
 - Adialix
 - Andres Saa
@@ -63,10 +77,12 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Jakub Bartkowiak
 - Jakub Ślusarski
 - Jeremy
+- [JJMMGGMM](https://github.com/JJMMGGMM)
 - John
 - [John Michael Luy](https://github.com/jmluy)
 - Jonatan Gonzalez
 - Kelly Farris
+- [Lambdatest](https://www.lambdatest.com/)
 - [Localazy](https://localazy.com/register?ref=a9CiDC61gOac-azO)
 - [mallowigi](https://github.com/mallowigi)
 - [Matus Benko](https://github.com/PrimaMateria)
@@ -83,11 +99,13 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Pedro
 - Rafael Braga Nanes
 - Riaz
+- [Rosario Raulin](https://github.com/rosario-raulin)
 - Roybarberuk
 - [Rustam Khasanshin](https://github.com/Rustery)
 - Samer Samer
 - Samja666
 - Sander
+- [ScottMariano](https://github.com/ScottMariano)
 - Sebastián Díaz
 - Serj
 - [Shinji Nakamatsu](https://github.com/snaka)
@@ -101,4 +119,4 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Xutzin
 - Yuemuc
 
-(List from [GitHub Sponsors](https://github.com/sponsors/mockoon) and [Buy Me A Coffee](https://www.buymeacoffee.com/255kb) page)
+_List from [GitHub Sponsors](https://github.com/sponsors/mockoon) and Buy Me A Coffee page (discontinued)._
