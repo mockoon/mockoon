@@ -39,9 +39,38 @@ Mockoon offers many features:
 
 You can check the [complete list](https://mockoon.com/features/) on the website.
 
----
+## Download the desktop application
 
-## Our sponsors
+You can get Mockoon desktop's [latest release](https://github.com/mockoon/mockoon/releases/latest) directly from this repository or on the official [website](https://mockoon.com/download/). Mockoon desktop is also available through:
+
+MacOS:
+
+- [_Homebrew_](https://formulae.brew.sh/cask/mockoon): `brew install --cask mockoon`.
+
+Windows:
+
+- _winget_: `winget install mockoon`.
+- [_Chocolatey_](https://community.chocolatey.org/packages/mockoon): `choco install mockoon`.
+- [_Windows Store_](https://www.microsoft.com/en-us/p/mockoon/9pk8dmsn00jj)
+
+Linux:
+
+- [_Snap store_](https://snapcraft.io/mockoon): `snap install mockoon`.
+- [_AUR_](https://aur.archlinux.org/packages/mockoon-bin): `yay -S mockoon-bin`.
+
+## Install the CLI
+
+Mockoon CLI is available as an [NPM package](https://www.npmjs.com/package/@mockoon/cli). Please check our [dedicated documentation](https://github.com/mockoon/mockoon/blob/main/packages/cli/README.md) to learn how to install and use it.
+
+## Use in cloud functions and serverless environments
+
+Mockoon's Serverless [NPM package](https://www.npmjs.com/package/@mockoon/serverless) provides an easy way to run Mockoon's mock APIs in cloud functions and serverless environments: AWS Lambda, GCP Functions, Firebase Functions, etc.
+
+Please check our [dedicated documentation](https://github.com/mockoon/mockoon/blob/main/packages/serverless/README.md) to learn how to use it.
+
+## Support us!
+
+Mockoon is proudly **independent** and **open-source**, maintained without external funding. We rely on both **sponsorships** and **Mockoon Cloud subscriptions** to keep improving the project and building new features. A **big thank you** to the companies below for supporting our work and helping us grow (and all the [sponsors](https://github.com/mockoon/mockoon/blob/main/backers.md) who helped this project over time!):
 
 ### Platinum
 
@@ -83,42 +112,11 @@ You can check the [complete list](https://mockoon.com/features/) on the website.
   </a>
 </div>
 
-Mockoon is an open-source project built by volunteer maintainers. If you like our application, please consider sponsoring us and join all the [Sponsors and Backers](https://github.com/mockoon/mockoon/blob/main/backers.md) who helped this project over time!
+If you'd like to **support Mockoon** as well, you can **become a sponsor** or **subscribe to Mockoon Cloud**, every contribution helps keep the project alive and evolving. Thank you!
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
 <a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsor-btn.png?" width="250" alt="sponsor button" /></a>
 </div>
-
----
-
-## Download the desktop application
-
-You can get Mockoon desktop's [latest release](https://github.com/mockoon/mockoon/releases/latest) directly from this repository or on the official [website](https://mockoon.com/download/). Mockoon desktop is also available through:
-
-MacOS:
-
-- [_Homebrew_](https://formulae.brew.sh/cask/mockoon): `brew install --cask mockoon`.
-
-Windows:
-
-- _winget_: `winget install mockoon`.
-- [_Chocolatey_](https://community.chocolatey.org/packages/mockoon): `choco install mockoon`.
-- [_Windows Store_](https://www.microsoft.com/en-us/p/mockoon/9pk8dmsn00jj)
-
-Linux:
-
-- [_Snap store_](https://snapcraft.io/mockoon): `snap install mockoon`.
-- [_AUR_](https://aur.archlinux.org/packages/mockoon-bin): `yay -S mockoon-bin`.
-
-## Install the CLI
-
-Mockoon CLI is available as an [NPM package](https://www.npmjs.com/package/@mockoon/cli). Please check our [dedicated documentation](https://github.com/mockoon/mockoon/blob/main/packages/cli/README.md) to learn how to install and use it.
-
-## Use in cloud functions and serverless environments
-
-Mockoon's Serverless [NPM package](https://www.npmjs.com/package/@mockoon/serverless) provides an easy way to run Mockoon's mock APIs in cloud functions and serverless environments: AWS Lambda, GCP Functions, Firebase Functions, etc.
-
-Please check our [dedicated documentation](https://github.com/mockoon/mockoon/blob/main/packages/serverless/README.md) to learn how to use it.
 
 ## Subscribe to Mockoon Cloud
 

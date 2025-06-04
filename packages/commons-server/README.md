@@ -19,12 +19,54 @@ Mockoon's Commons server library regroups Mockoon's shared code used in the [des
 
 You will find Mockoon's [documentation](https://mockoon.com/docs/latest/about/) on the official website. It covers the most complex features.
 
-## Sponsors
+## Support us!
 
-Mockoon is an open-source project built by volunteer maintainers. If you like our application, please consider sponsoring us and join all the [Sponsors and Backers](https://github.com/mockoon/mockoon/blob/main/backers.md) who helped this project over time!
+Mockoon is proudly **independent** and **open-source**, maintained without external funding. We rely on both **sponsorships** and **Mockoon Cloud subscriptions** to keep improving the project and building new features. A **big thank you** to the companies below for supporting our work and helping us grow (and all the [sponsors](https://github.com/mockoon/mockoon/blob/main/backers.md) who helped this project over time!):
 
-<div align="center">
-<a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsor-btn.png" width="250" alt="sponsor button" /></a>
+### Platinum
+
+<div align="center" style="margin-top:20px;margin-bottom:20px;">
+  <a href="https://github.blog/2023-04-12-github-accelerator-our-first-cohort-and-whats-next/">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/github.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/github.png">
+      <img src="https://mockoon.com/images/sponsors/light/github.png" alt="GitHub logo" />
+      </picture>
+  </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://localazy.com/register?ref=a9CiDC61gOac-azO">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/localazy.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/localazy.png">
+      <img src="https://mockoon.com/images/sponsors/light/localazy.png" alt="Localazy logo" />
+      </picture>
+  </a>
+</div>
+
+### Gold
+
+<div align="center" style="margin-top:20px;margin-bottom:20px;">
+ 
+  <a href="https://www.lambdatest.com/">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/lambdatest.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/lambdatest.png">
+      <img src="https://mockoon.com/images/sponsors/light/lambdatest.png" alt="Lambdatest logo" />
+      </picture>
+  </a>
+</div>
+
+### Silver
+
+<div align="center" style="margin-top:20px;margin-bottom:20px;">  
+  <a href="https://www.emqx.io/">  
+      <img src="https://mockoon.com/images/sponsors/emqx.png" alt="emqx logo" />
+  </a>
+</div>
+
+If you'd like to **support Mockoon** as well, you can **become a sponsor** or **subscribe to Mockoon Cloud**, every contribution helps keep the project alive and evolving. Thank you!
+
+<div align="center" style="margin-top:20px;margin-bottom:20px;">
+<a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsor-btn.png?" width="250" alt="sponsor button" /></a>
 </div>
 
 ## Subscribe to Mockoon Cloud
