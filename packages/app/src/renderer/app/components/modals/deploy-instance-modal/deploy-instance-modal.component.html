@@ -9,11 +9,15 @@
 >
   <div class="modal-header">
     <h3 class="modal-title">
-      {{ data.instanceExists ? 'Re-deploy' : 'Deploy' }} "{{
-        data.environment?.name
-      }}"
-      <br />
-      <small class="text-muted h6">Configure your cloud instance:</small>
+      @if (data.instanceExists) {
+        Manage {{ data.environment?.name }} deployment<br />
+        <small class="text-muted h6">
+          Modify your cloud instance configuration:
+        </small>
+      } @else {
+        Deploy {{ data.environment?.name }}<br />
+        <small class="text-muted h6">Configure your cloud instance:</small>
+      }
     </h3>
   </div>
 
@@ -79,6 +83,15 @@
         </div>
       </div>
     </div>
+    @if (stopInstanceRequested()) {
+      <div>
+        <p class="mb-0">
+          <app-svg icon="warning" class="text-warning me-2"></app-svg>After
+          stopping an instance, restarting it may assign a different server and
+          URL.
+        </p>
+      </div>
+    }
   </div>
   <div class="modal-footer justify-content-space-between">
     <div
@@ -133,7 +146,11 @@
           (click)="deleteInstance(data.environment.uuid)"
           [disabled]="data.deployInProgress || data.subdomainCheckInProgress"
         >
-          Stop
+          @if (stopInstanceRequested()) {
+            <app-svg icon="warning" class="text-warning"></app-svg> Confirm
+          } @else {
+            Stop
+          }
         </button>
       }
 
