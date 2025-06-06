@@ -4,7 +4,8 @@ import {
   Component,
   DestroyRef,
   inject,
-  OnInit
+  OnInit,
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -64,6 +65,7 @@ export class DeployInstanceModalComponent implements OnInit {
   public user$: Observable<User>;
   public accountUrl = Config.accountUrl;
   public isWeb = Config.isWeb;
+  public stopInstanceRequested = signal(false);
   public optionsForm = this.formBuilder.group({
     subdomain: this.formBuilder.control<string>(null, {
       validators: [
@@ -265,22 +267,27 @@ export class DeployInstanceModalComponent implements OnInit {
   }
 
   public deleteInstance(environmentUuid: string) {
-    this.deployInProgress$.next(true);
+    if (this.stopInstanceRequested()) {
+      this.deployInProgress$.next(true);
 
-    this.deployService
-      .stop(environmentUuid)
-      .pipe(
-        tap(() => {
-          this.deployInProgress$.next(false);
-        }),
-        catchError(() => {
-          this.loggerService.logMessage('error', 'CLOUD_DEPLOY_STOP_ERROR');
+      this.deployService
+        .stop(environmentUuid)
+        .pipe(
+          tap(() => {
+            this.deployInProgress$.next(false);
+            this.stopInstanceRequested.set(false);
+          }),
+          catchError(() => {
+            this.loggerService.logMessage('error', 'CLOUD_DEPLOY_STOP_ERROR');
 
-          this.deployInProgress$.next(false);
+            this.deployInProgress$.next(false);
 
-          return EMPTY;
-        })
-      )
-      .subscribe();
+            return EMPTY;
+          })
+        )
+        .subscribe();
+    } else {
+      this.stopInstanceRequested.set(!this.stopInstanceRequested());
+    }
   }
 }
