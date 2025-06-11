@@ -1637,6 +1637,14 @@ export const environmentReducer = (
       break;
     }
 
+    case ActionTypes.UPDATE_REMOTE_CONFIG: {
+      newState = {
+        ...state,
+        remoteConfig: { ...state.remoteConfig, ...action.properties }
+      };
+      break;
+    }
+
     default:
       newState = state;
       break;

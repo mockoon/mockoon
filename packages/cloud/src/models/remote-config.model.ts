@@ -3,4 +3,5 @@ export type RemoteConfigData = {
   geoipEndpoint: string;
   cloudSyncUrl?: string;
   deployUrl?: string;
+  dataRefreshInterval?: number;
 };

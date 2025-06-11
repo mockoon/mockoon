@@ -1,4 +1,4 @@
-import { DeployInstance, User } from '@mockoon/cloud';
+import { DeployInstance, RemoteConfigData, User } from '@mockoon/cloud';
 import {
   Callback,
   DataBucket,
@@ -94,7 +94,8 @@ export const enum ActionTypes {
   DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT',
   FULL_REORDER_ENTITIES = 'FULL_REORDER_ENTITIES',
   UPDATE_PROCESSED_DATABUCKETS = 'UPDATE_PROCESSED_DATABUCKETS',
-  UPDATE_FEEDBACK = 'UPDATE_FEEDBACK'
+  UPDATE_FEEDBACK = 'UPDATE_FEEDBACK',
+  UPDATE_REMOTE_CONFIG = 'UPDATE_REMOTE_CONFIG'
 }
 
 /**
@@ -1007,6 +1008,19 @@ export const upateFeedbackAction = (feedback: string) =>
     feedback
   }) as const;
 
+/**
+ * Update user remote config
+ *
+ * @param properties - properties to update
+ */
+export const updateRemoteConfigAction = (
+  properties: Partial<RemoteConfigData>
+) =>
+  ({
+    type: ActionTypes.UPDATE_REMOTE_CONFIG,
+    properties
+  }) as const;
+
 export type Actions =
   | ReturnType<typeof convertEnvironmentToLocalAction>
   | ReturnType<typeof updateUserAction>
@@ -1068,4 +1082,5 @@ export type Actions =
   | ReturnType<typeof duplicateDatabucketToAnotherEnvironmentAction>
   | ReturnType<typeof duplicateCallbackToAnotherEnvironmentAction>
   | ReturnType<typeof updateProcessedDatabucketsAction>
-  | ReturnType<typeof upateFeedbackAction>;
+  | ReturnType<typeof upateFeedbackAction>
+  | ReturnType<typeof updateRemoteConfigAction>;

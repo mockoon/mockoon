@@ -14,6 +14,7 @@ import { EnvironmentsService } from 'src/renderer/app/services/environments.serv
 import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
+import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
@@ -116,7 +117,8 @@ export class ManageInstancesModalComponent implements OnInit {
     private environmentsService: EnvironmentsService,
     private deployService: DeployService,
     private mainApiService: MainApiService,
-    private loggerService: LoggerService
+    private loggerService: LoggerService,
+    private userService: UserService
   ) {}
 
   ngOnInit() {
@@ -131,7 +133,8 @@ export class ManageInstancesModalComponent implements OnInit {
     );
 
     if (this.payload$.getValue()?.refresh) {
-      this.deployService.getInstances().subscribe();
+      this.deployService.getInstances(true).subscribe();
+      this.userService.getUserInfo(true).subscribe();
     }
   }
 

@@ -201,11 +201,11 @@ export class HeaderComponent implements OnInit {
    */
   public refreshAccount() {
     forkJoin([
-      this.userService.getUserInfo(),
+      this.userService.getUserInfo(true),
       this.remoteConfigService.fetchConfig()
     ])
       .pipe(
-        switchMap(() => this.deployService.getInstances()),
+        switchMap(() => this.deployService.getInstances(true)),
         catchError(() => EMPTY)
       )
       .subscribe(() => {

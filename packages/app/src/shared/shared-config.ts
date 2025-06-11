@@ -22,6 +22,9 @@ export const SharedConfig = (options: {
     telemetry: {
       sessionDuration: 3_600_000 // 1h
     },
+    remoteConfigDefaults: {
+      dataRefreshInterval: 300_000 // 5 minutes
+    },
     websiteURL: options.websiteURL,
     apiURL: options.apiURL,
     githubBinaryURL: 'https://github.com/mockoon/mockoon/releases/download/',
