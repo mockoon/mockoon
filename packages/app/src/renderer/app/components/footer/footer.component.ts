@@ -41,6 +41,7 @@ export class FooterComponent implements OnInit {
   public showFeedback$ = this.store
     .select('user')
     .pipe(map((user) => !!user && user.plan !== Plans.FREE));
+  public version = Config.appVersion;
 
   constructor(
     private store: Store,
@@ -69,5 +70,9 @@ export class FooterComponent implements OnInit {
 
   public openFeedbackModal() {
     this.uiService.openModal('feedback');
+  }
+
+  public openChangelogModal() {
+    this.uiService.openModal('changelog');
   }
 }

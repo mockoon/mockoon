@@ -11,9 +11,9 @@
       <div class="footer-item d-flex align-items-center px-2">
         <p class="mb-0">
           <app-svg icon="update"></app-svg> Update available
-          <a href="{{ releaseUrl + updateVersion + '/' }}" target="_blank"
-            >View changelog</a
-          >
+          <a href="{{ releaseUrl + updateVersion + '/' }}" target="_blank">
+            View changelog
+          </a>
         </p>
         <button
           class="btn btn-custom btn-xs ms-2 text-success"
@@ -28,7 +28,7 @@
   @if (uiState.closing || uiState.saving) {
     <div class="footer-item d-flex align-items-center px-2">
       <div class="footer-save animation-flash">
-        <app-svg icon="save" class="me-1"></app-svg>
+        <app-svg icon="save" class="me-2"></app-svg>
         @if (uiState.closing) {
           Shutting down...
         }
@@ -46,16 +46,16 @@
           class="btn btn-custom btn-xs text-success"
           (click)="openTemplateModal('GENERATE_TEMPLATE')"
         >
-          <app-svg icon="magic" size="12" class="me-1"></app-svg>
+          <app-svg icon="magic" class="me-2"></app-svg>
           Template generated
         </button>
       }
       @if (generatingTemplate === 'INPROGRESS') {
         <button
-          class="btn btn-custom btn-xs text-warning"
+          class="btn btn-custom btn-xs text-warning d-flex align-items-center"
           (click)="openTemplateModal('GENERATE_TEMPLATE')"
         >
-          <app-spinner size="12" class="me-1"></app-spinner>
+          <app-spinner class="me-2"></app-spinner>
           Generating template
         </button>
       }
@@ -69,16 +69,16 @@
           class="btn btn-custom btn-xs text-success"
           (click)="openTemplateModal('GENERATE_ENDPOINT')"
         >
-          <app-svg icon="magic" size="12" class="me-1"></app-svg>
+          <app-svg icon="magic" class="me-2"></app-svg>
           Endpoint generated
         </button>
       }
       @if (generatingEndpoint === 'INPROGRESS') {
         <button
-          class="btn btn-custom btn-xs text-warning"
+          class="btn btn-custom btn-xs text-warning d-flex align-items-center"
           (click)="openTemplateModal('GENERATE_ENDPOINT')"
         >
-          <app-spinner size="12" class="me-1"></app-spinner>
+          <app-spinner class="me-2"></app-spinner>
           Generating endpoint
         </button>
       }
@@ -90,10 +90,20 @@
       <button
         class="btn btn-link btn-icon btn-xs"
         (click)="openFeedbackModal()"
-        ngbTooltip="Get support"
+        ngbTooltip="Get priority support"
       >
-        <app-svg icon="help_outline" size="12"></app-svg>
+        <app-svg icon="help_outline"></app-svg>
       </button>
     </div>
   }
+
+  <div class="footer-item d-flex align-items-center px-2">
+    <button
+      class="btn btn-link btn-icon btn-xs"
+      (click)="openChangelogModal()"
+      ngbTooltip="Open changelog"
+    >
+      {{`v${version}` }}
+    </button>
+  </div>
 </div>
