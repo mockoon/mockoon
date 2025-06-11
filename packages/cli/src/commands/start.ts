@@ -17,7 +17,10 @@ import { Command, Flags } from '@oclif/core';
 import { join, resolve } from 'path';
 import { format } from 'util';
 import { Config } from '../config';
-import { commonFlags } from '../constants/command.constants';
+import {
+  commonFlags,
+  logTransactionFlag
+} from '../constants/command.constants';
 import { parseDataFiles } from '../libs/data';
 import { getDirname, transformEnvironmentName } from '../libs/utils';
 
@@ -35,6 +38,7 @@ export default class Start extends Command {
 
   public static flags = {
     ...commonFlags,
+    ...logTransactionFlag,
     hostname: Flags.string({
       char: 'l',
       description: 'Listening hostname(s)',

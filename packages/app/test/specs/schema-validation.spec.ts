@@ -132,10 +132,15 @@ describe('Schema validation', () => {
         'body'
       );
 
-      // strip invalid array item
-      expect(fileContent.routes[0].responses[0].headers).toHaveLength(1);
-      expect(fileContent.routes[0].responses[0].headers[0].key).toEqual(
+      // rebuild invalid array item
+      expect(fileContent.routes[0].responses[0].headers).toHaveLength(2);
+      expect(fileContent.routes[0].responses[0].headers[0].key).toEqual('');
+      expect(fileContent.routes[0].responses[0].headers[0].value).toEqual('');
+      expect(fileContent.routes[0].responses[0].headers[1].key).toEqual(
         'Content-Type'
+      );
+      expect(fileContent.routes[0].responses[0].headers[1].value).toEqual(
+        'application/json'
       );
 
       await environments.close(1);
