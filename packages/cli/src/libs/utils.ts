@@ -24,3 +24,9 @@ export const getDirname = (path: string): string | null => {
 
   return null;
 };
+
+export const terminalColors = {
+  reset: '\x1b[39m',
+  red: '\x1b[31m',
+  green: '\x1b[32m'
+};
