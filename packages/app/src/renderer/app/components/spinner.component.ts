@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 @Component({
   selector: 'app-spinner',
   template: `<div
-    class="spinner-border"
+    class="spinner-border d-flex"
     style="width: {{ size() }}px; height: {{ size() }}px;"
     role="status"
   >
