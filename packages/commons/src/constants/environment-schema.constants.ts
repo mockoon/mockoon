@@ -147,348 +147,615 @@ export const DataBucketDefault: DataBucket = {
   value: '[\n]'
 };
 
-const UUIDSchema = Joi.string()
-  .uuid()
-  .failover(() => generateUUID())
-  .required();
+const conditionalFailover = (fix: boolean, schema: any, failoverValue: any) => {
+  if (fix) {
+    return schema.failover(failoverValue);
+  }
 
-const HeaderSchema = Joi.object<Header, true>({
-  key: Joi.string().allow('').required(),
-  value: Joi.string().allow('').required()
-});
+  return schema;
+};
 
-const DataSchema = Joi.object<DataBucket, true>({
-  uuid: UUIDSchema,
-  id: Joi.string().allow('').failover(DataBucketDefault.id).required(),
-  name: Joi.string().allow('').failover(DataBucketDefault.name).required(),
-  documentation: Joi.string()
-    .allow('')
-    .failover(DataBucketDefault.documentation)
-    .required(),
-  value: Joi.string().allow('').failover(DataBucketDefault.value).required()
-})
-  .failover(EnvironmentDefault.data)
-  .default(EnvironmentDefault.data)
-  .options({ stripUnknown: true });
+const conditionalStripUnknown = (fix: boolean) => {
+  if (fix) {
+    return [Joi.any().strip()];
+  }
 
-const TLSOptionsSchema = Joi.object<EnvironmentTLSOptions, true>({
-  enabled: Joi.boolean()
-    .failover(EnvironmentDefault.tlsOptions.enabled)
-    .required(),
-  type: Joi.string()
-    .valid('CERT', 'PFX')
-    .failover(EnvironmentDefault.tlsOptions.type)
-    .required(),
-  pfxPath: Joi.string()
-    .allow('')
-    .failover(EnvironmentDefault.tlsOptions.pfxPath)
-    .required(),
-  certPath: Joi.string()
-    .allow('')
-    .failover(EnvironmentDefault.tlsOptions.certPath)
-    .required(),
-  keyPath: Joi.string()
-    .allow('')
-    .failover(EnvironmentDefault.tlsOptions.keyPath)
-    .required(),
-  caPath: Joi.string()
-    .allow('')
-    .failover(EnvironmentDefault.tlsOptions.caPath)
-    .required(),
-  passphrase: Joi.string()
-    .allow('')
-    .failover(EnvironmentDefault.tlsOptions.passphrase)
-    .required()
-})
-  .failover(EnvironmentDefault.tlsOptions)
-  .default(EnvironmentDefault.tlsOptions)
-  .options({ stripUnknown: true });
+  return [];
+};
 
-const RouteResponseRuleSchema = Joi.object<ResponseRule, true>({
-  target: Joi.string()
-    .valid(
-      'body',
-      'query',
-      'header',
-      'cookie',
-      'params',
-      'path',
-      'method',
-      'request_number',
-      'global_var',
-      'data_bucket',
-      'templating'
-    )
-    .failover(ResponseRuleDefault.target)
-    .required(),
-  modifier: Joi.string()
-    .allow('')
-    .failover(ResponseRuleDefault.modifier)
-    .required(),
-  value: Joi.string().allow('').failover(ResponseRuleDefault.value).required(),
-  invert: Joi.boolean().failover(ResponseRuleDefault.invert).required(),
-  operator: Joi.string()
-    .valid(
-      'equals',
-      'regex',
-      'regex_i',
-      'null',
-      'empty_array',
-      'array_includes',
-      'valid_json_schema'
-    )
-    .failover(ResponseRuleDefault.operator)
-    .required()
-});
+const UUIDSchemaBuilder = (fix: boolean) =>
+  conditionalFailover(fix, Joi.string().uuid().required(), () =>
+    generateUUID()
+  );
 
-const CallbackSchema = Joi.object<Callback, true>({
-  uuid: UUIDSchema,
-  id: Joi.string().allow('').failover(CallbackDefault.id).required(),
-  name: Joi.string().default('').failover(CallbackDefault.name).required(),
-  documentation: Joi.string()
-    .allow('')
-    .failover(CallbackDefault.documentation)
-    .required(),
-  method: Joi.string()
-    .valid(
-      Methods.get,
-      Methods.post,
-      Methods.put,
-      Methods.patch,
-      Methods.delete,
-      Methods.head,
-      Methods.options,
-      Methods.propfind,
-      Methods.proppatch,
-      Methods.move,
-      Methods.copy,
-      Methods.mkcol,
-      Methods.lock,
-      Methods.unlock
-    )
-    .required(),
-  uri: Joi.string().allow('').failover(CallbackDefault.uri).required(),
-  headers: Joi.array()
-    .items(HeaderSchema, Joi.any().strip())
-    .failover(CallbackDefault.headers)
-    .required(),
-  body: Joi.string().allow('').failover(CallbackDefault.body).required(),
-  bodyType: Joi.string()
-    .valid(BodyTypes.INLINE, BodyTypes.DATABUCKET, BodyTypes.FILE)
-    .failover(CallbackDefault.bodyType)
-    .required(),
-  filePath: Joi.string()
-    .allow('')
-    .failover(CallbackDefault.filePath)
-    .required(),
-  sendFileAsBody: Joi.boolean()
-    .failover(CallbackDefault.sendFileAsBody)
-    .required(),
-  databucketID: Joi.string()
-    .allow('')
-    .failover(CallbackDefault.databucketID)
-    .required()
-})
-  .failover(EnvironmentDefault.callbacks)
-  .default(EnvironmentDefault.callbacks)
-  .options({ stripUnknown: true });
+const HeaderSchemaBuilder = (fix: boolean) =>
+  conditionalFailover(
+    fix,
+    Joi.object<Header, true>({
+      key: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        HeaderDefault.key
+      ),
+      value: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        HeaderDefault.value
+      )
+    }).options({ stripUnknown: true }),
+    HeaderDefault
+  );
 
-const CallbackInvocationSchema = Joi.object<CallbackInvocation, true>({
-  uuid: UUIDSchema,
-  latency: Joi.number().default(0)
-}).options({ stripUnknown: true });
+const DataSchemaBuilder = (fix: boolean) =>
+  conditionalFailover(
+    fix,
+    Joi.object<DataBucket, true>({
+      uuid: UUIDSchemaBuilder(fix),
+      id: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        DataBucketDefault.id
+      ),
+      name: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        DataBucketDefault.name
+      ),
+      documentation: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        DataBucketDefault.documentation
+      ),
+      value: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        DataBucketDefault.value
+      )
+    })
+      .default(EnvironmentDefault.data)
+      .options({ stripUnknown: true }),
+    EnvironmentDefault.data
+  );
 
-const RouteResponseSchema = Joi.object<RouteResponse, true>({
-  uuid: UUIDSchema,
-  body: Joi.string().allow('').failover(RouteResponseDefault.body).required(),
-  latency: Joi.number()
-    .min(0)
-    .failover(RouteResponseDefault.latency)
-    .required(),
-  statusCode: Joi.number()
-    .min(100)
-    .max(999)
-    .failover(RouteResponseDefault.statusCode)
-    .required(),
-  label: Joi.string().allow('').failover(RouteResponseDefault.label).required(),
-  headers: Joi.array()
-    .items(HeaderSchema, Joi.any().strip())
-    .failover(RouteResponseDefault.headers)
-    .required(),
-  bodyType: Joi.string()
-    .valid(BodyTypes.INLINE, BodyTypes.DATABUCKET, BodyTypes.FILE)
-    .failover(RouteResponseDefault.bodyType)
-    .required(),
-  filePath: Joi.string()
-    .allow('')
-    .failover(RouteResponseDefault.filePath)
-    .required(),
-  databucketID: Joi.string()
-    .allow('')
-    .failover(RouteResponseDefault.databucketID)
-    .required(),
-  sendFileAsBody: Joi.boolean()
-    .failover(RouteResponseDefault.sendFileAsBody)
-    .required(),
-  rules: Joi.array()
-    .items(RouteResponseRuleSchema, Joi.any().strip())
-    .failover(RouteResponseDefault.rules)
-    .required(),
-  rulesOperator: Joi.string()
-    .valid('OR', 'AND')
-    .failover(RouteResponseDefault.rulesOperator)
-    .required(),
-  disableTemplating: Joi.boolean()
-    .failover(RouteResponseDefault.disableTemplating)
-    .required(),
-  fallbackTo404: Joi.boolean()
-    .failover(RouteResponseDefault.fallbackTo404)
-    .required(),
-  default: Joi.boolean().failover(RouteResponseDefault.default).required(),
-  crudKey: Joi.string().failover(RouteResponseDefault.crudKey).required(),
-  callbacks: Joi.array()
-    .items(CallbackInvocationSchema, Joi.any().strip())
-    .failover(RouteResponseDefault.callbacks)
-    .required()
-});
+const TLSOptionsSchemaBuilder = (fix: boolean) =>
+  conditionalFailover(
+    fix,
+    Joi.object<EnvironmentTLSOptions, true>({
+      enabled: conditionalFailover(
+        fix,
+        Joi.boolean().strict().required(),
+        EnvironmentDefault.tlsOptions.enabled
+      ),
+      type: conditionalFailover(
+        fix,
+        Joi.string().valid('CERT', 'PFX').required(),
+        EnvironmentDefault.tlsOptions.type
+      ),
+      pfxPath: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        EnvironmentDefault.tlsOptions.pfxPath
+      ),
+      certPath: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        EnvironmentDefault.tlsOptions.certPath
+      ),
+      keyPath: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        EnvironmentDefault.tlsOptions.keyPath
+      ),
+      caPath: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        EnvironmentDefault.tlsOptions.caPath
+      ),
+      passphrase: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        EnvironmentDefault.tlsOptions.passphrase
+      )
+    })
+      .default(EnvironmentDefault.tlsOptions)
+      .options({ stripUnknown: true }),
+    EnvironmentDefault.tlsOptions
+  );
 
-export const FolderChildSchema = Joi.object<FolderChild, true>({
-  type: Joi.string()
-    .valid('route', 'folder')
-    .required()
-    .options({ stripUnknown: true }),
-  uuid: UUIDSchema
-});
+const RouteResponseRuleSchemaBuilder = (fix: boolean) =>
+  conditionalFailover(
+    fix,
+    Joi.object<ResponseRule, true>({
+      target: conditionalFailover(
+        fix,
+        Joi.string()
+          .valid(
+            'body',
+            'query',
+            'header',
+            'cookie',
+            'params',
+            'path',
+            'method',
+            'request_number',
+            'global_var',
+            'data_bucket',
+            'templating'
+          )
+          .required(),
+        ResponseRuleDefault.target
+      ),
+      modifier: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        ResponseRuleDefault.modifier
+      ),
+      value: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        ResponseRuleDefault.value
+      ),
+      invert: conditionalFailover(
+        fix,
+        Joi.boolean().strict().required(),
+        ResponseRuleDefault.invert
+      ),
+      operator: conditionalFailover(
+        fix,
+        Joi.string()
+          .valid(
+            'equals',
+            'regex',
+            'regex_i',
+            'null',
+            'empty_array',
+            'array_includes',
+            'valid_json_schema'
+          )
+          .required(),
+        ResponseRuleDefault.operator
+      )
+    }).options({
+      stripUnknown: true
+    }),
+    ResponseRuleDefault
+  );
 
-export const FolderSchema = Joi.object<Folder, true>({
-  uuid: UUIDSchema,
-  name: Joi.string().allow('').failover(FolderDefault.name).required(),
-  children: Joi.array()
-    .items(FolderChildSchema, Joi.any().strip())
-    .failover(FolderDefault.children)
-    .required()
-}).options({ stripUnknown: true });
+const CallbackSchemaBuilder = (fix: boolean) =>
+  conditionalFailover(
+    fix,
+    Joi.object<Callback, true>({
+      uuid: UUIDSchemaBuilder(fix),
+      id: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        CallbackDefault.id
+      ),
+      name: conditionalFailover(
+        fix,
+        Joi.string().default('').required(),
+        CallbackDefault.name
+      ),
+      documentation: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        CallbackDefault.documentation
+      ),
+      method: conditionalFailover(
+        fix,
+        Joi.string()
+          .valid(
+            Methods.get,
+            Methods.post,
+            Methods.put,
+            Methods.patch,
+            Methods.delete,
+            Methods.head,
+            Methods.options,
+            Methods.propfind,
+            Methods.proppatch,
+            Methods.move,
+            Methods.copy,
+            Methods.mkcol,
+            Methods.lock,
+            Methods.unlock
+          )
+          .required(),
+        CallbackDefault.method
+      ),
+      uri: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        CallbackDefault.uri
+      ),
+      headers: conditionalFailover(
+        fix,
+        Joi.array()
+          .items(HeaderSchemaBuilder(fix), ...conditionalStripUnknown(fix))
+          .required(),
+        CallbackDefault.headers
+      ),
+      body: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        CallbackDefault.body
+      ),
+      bodyType: conditionalFailover(
+        fix,
+        Joi.string()
+          .valid(BodyTypes.INLINE, BodyTypes.DATABUCKET, BodyTypes.FILE)
+          .required(),
+        CallbackDefault.bodyType
+      ),
+      filePath: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        CallbackDefault.filePath
+      ),
+      sendFileAsBody: conditionalFailover(
+        fix,
+        Joi.boolean().strict().required(),
+        CallbackDefault.sendFileAsBody
+      ),
+      databucketID: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        CallbackDefault.databucketID
+      )
+    })
+      .default(EnvironmentDefault.callbacks)
+      .options({ stripUnknown: true }),
+    EnvironmentDefault.callbacks
+  );
 
-export const RouteSchema = Joi.object<Route, true>({
-  uuid: UUIDSchema,
-  type: Joi.string()
-    .valid(RouteType.HTTP, RouteType.CRUD, RouteType.WS)
-    .failover(RouteDefault.type)
-    .required(),
-  documentation: Joi.string()
-    .allow('')
-    .failover(RouteDefault.documentation)
-    .required(),
-  method: Joi.string()
-    .allow('')
-    .valid(
-      Methods.all,
-      Methods.get,
-      Methods.post,
-      Methods.put,
-      Methods.patch,
-      Methods.delete,
-      Methods.head,
-      Methods.options,
-      Methods.propfind,
-      Methods.proppatch,
-      Methods.move,
-      Methods.copy,
-      Methods.mkcol,
-      Methods.lock,
-      Methods.unlock
-    )
-    .failover(RouteDefault.method)
-    .required(),
-  endpoint: Joi.string().allow('').failover(RouteDefault.endpoint).required(),
-  responses: Joi.array()
-    .items(RouteResponseSchema, Joi.any().strip())
-    .failover(RouteDefault.responses)
-    .required(),
-  responseMode: Joi.string()
-    .allow(null)
-    .valid(
-      ResponseMode.RANDOM,
-      ResponseMode.SEQUENTIAL,
-      ResponseMode.DISABLE_RULES,
-      ResponseMode.FALLBACK
-    )
-    .failover(RouteDefault.responseMode)
-    .required(),
-  streamingMode: Joi.string()
-    .allow(null)
-    .valid(StreamingMode.UNICAST, StreamingMode.BROADCAST)
-    .failover(RouteDefault.streamingMode)
-    .required(),
-  streamingInterval: Joi.number()
-    .min(0)
-    .failover(RouteDefault.streamingInterval)
-    .required()
-});
+const CallbackInvocationSchemaBuilder = (fix: boolean) =>
+  Joi.object<CallbackInvocation, true>({
+    uuid: UUIDSchemaBuilder(fix),
+    latency: Joi.number().default(0)
+  }).options({
+    stripUnknown: true
+  });
 
-export const EnvironmentSchema = Joi.object<Environment, true>({
-  uuid: UUIDSchema,
-  lastMigration: Joi.number()
-    .failover(EnvironmentDefault.lastMigration)
-    .required(),
-  name: Joi.string().allow('').failover(EnvironmentDefault.name).required(),
-  endpointPrefix: Joi.string()
-    .allow('')
-    .failover(EnvironmentDefault.endpointPrefix)
-    .required(),
-  latency: Joi.number().min(0).failover(EnvironmentDefault.latency).required(),
-  port: Joi.number()
-    .min(0)
-    .max(65535)
-    .failover(EnvironmentDefault.port)
-    .required(),
-  hostname: Joi.string()
-    .allow('')
-    .failover(EnvironmentDefault.hostname)
-    .required(),
-  rootChildren: Joi.array()
-    .items(FolderChildSchema, Joi.any().strip())
-    .failover(EnvironmentDefault.rootChildren)
-    .required(),
-  folders: Joi.array()
-    .items(FolderSchema, Joi.any().strip())
-    .failover(EnvironmentDefault.folders)
-    .required(),
-  routes: Joi.array()
-    .items(RouteSchema, Joi.any().strip())
-    .failover(EnvironmentDefault.routes)
-    .required(),
-  proxyMode: Joi.boolean().failover(EnvironmentDefault.proxyMode).required(),
-  proxyHost: Joi.string()
-    .allow('')
-    .failover(EnvironmentDefault.proxyHost)
-    .required(),
-  proxyRemovePrefix: Joi.boolean()
-    .failover(EnvironmentDefault.proxyRemovePrefix)
-    .required(),
-  tlsOptions: TLSOptionsSchema,
-  cors: Joi.boolean().failover(EnvironmentDefault.cors).required(),
-  headers: Joi.array()
-    .items(HeaderSchema, Joi.any().strip())
-    .failover(EnvironmentDefault.headers)
-    .required(),
-  proxyReqHeaders: Joi.array()
-    .items(HeaderSchema, Joi.any().strip())
-    .failover(EnvironmentDefault.proxyReqHeaders)
-    .required(),
-  proxyResHeaders: Joi.array()
-    .items(HeaderSchema, Joi.any().strip())
-    .failover(EnvironmentDefault.proxyResHeaders)
-    .required(),
-  data: Joi.array()
-    .items(DataSchema, Joi.any().strip())
-    .failover(EnvironmentDefault.data)
-    .required(),
-  callbacks: Joi.array()
-    .items(CallbackSchema, Joi.any().strip())
-    .failover(EnvironmentDefault.callbacks)
-    .required()
-})
-  .failover(EnvironmentDefault)
-  .default(EnvironmentDefault)
-  .options({ stripUnknown: true });
+const RouteResponseSchemaBuilder = (fix: boolean) =>
+  conditionalFailover(
+    fix,
+    Joi.object<RouteResponse, true>({
+      uuid: UUIDSchemaBuilder(fix),
+      body: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        RouteResponseDefault.body
+      ),
+      latency: conditionalFailover(
+        fix,
+        Joi.number().min(0).required(),
+        RouteResponseDefault.latency
+      ),
+      statusCode: conditionalFailover(
+        fix,
+        Joi.number().min(100).max(999).required(),
+        RouteResponseDefault.statusCode
+      ),
+      label: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        RouteResponseDefault.label
+      ),
+      headers: conditionalFailover(
+        fix,
+        Joi.array()
+          .items(HeaderSchemaBuilder(fix), ...conditionalStripUnknown(fix))
+          .required(),
+        RouteResponseDefault.headers
+      ),
+      bodyType: conditionalFailover(
+        fix,
+        Joi.string()
+          .valid(BodyTypes.INLINE, BodyTypes.DATABUCKET, BodyTypes.FILE)
+          .required(),
+        RouteResponseDefault.bodyType
+      ),
+      filePath: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        RouteResponseDefault.filePath
+      ),
+      databucketID: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        RouteResponseDefault.databucketID
+      ),
+      sendFileAsBody: conditionalFailover(
+        fix,
+        Joi.boolean().strict().required(),
+        RouteResponseDefault.sendFileAsBody
+      ),
+      rules: conditionalFailover(
+        fix,
+        Joi.array()
+          .items(
+            RouteResponseRuleSchemaBuilder(fix),
+            ...conditionalStripUnknown(fix)
+          )
+          .required(),
+        RouteResponseDefault.rules
+      ),
+      rulesOperator: conditionalFailover(
+        fix,
+        Joi.string().valid('OR', 'AND').required(),
+        RouteResponseDefault.rulesOperator
+      ),
+      disableTemplating: conditionalFailover(
+        fix,
+        Joi.boolean().strict().required(),
+        RouteResponseDefault.disableTemplating
+      ),
+      fallbackTo404: conditionalFailover(
+        fix,
+        Joi.boolean().strict().required(),
+        RouteResponseDefault.fallbackTo404
+      ),
+      default: conditionalFailover(
+        fix,
+        Joi.boolean().strict().required(),
+        RouteResponseDefault.default
+      ),
+      crudKey: conditionalFailover(
+        fix,
+        Joi.string().required(),
+        RouteResponseDefault.crudKey
+      ),
+      callbacks: conditionalFailover(
+        fix,
+        Joi.array()
+          .items(
+            CallbackInvocationSchemaBuilder(fix),
+            ...conditionalStripUnknown(fix)
+          )
+          .required(),
+        RouteResponseDefault.callbacks
+      )
+    }).options({
+      stripUnknown: true
+    }),
+    RouteResponseDefault
+  );
+
+const FolderChildSchemaBuilder = (fix: boolean) =>
+  Joi.object<FolderChild, true>({
+    uuid: UUIDSchemaBuilder(fix),
+    type: Joi.string().valid('route', 'folder').required()
+  });
+
+const FolderSchemaBuilder = (fix: boolean) =>
+  conditionalFailover(
+    fix,
+    Joi.object<Folder, true>({
+      uuid: UUIDSchemaBuilder(fix),
+      name: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        FolderDefault.name
+      ),
+      children: conditionalFailover(
+        fix,
+        Joi.array()
+          .items(FolderChildSchemaBuilder(fix), ...conditionalStripUnknown(fix))
+          .required(),
+        FolderDefault.children
+      )
+    }).options({ stripUnknown: true }),
+    FolderDefault
+  );
+
+const RouteSchemaBuilder = (fix: boolean) =>
+  conditionalFailover(
+    fix,
+    Joi.object<Route, true>({
+      uuid: UUIDSchemaBuilder(fix),
+      type: conditionalFailover(
+        fix,
+        Joi.string()
+          .valid(RouteType.HTTP, RouteType.CRUD, RouteType.WS)
+          .required(),
+        RouteDefault.type
+      ),
+      documentation: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        RouteDefault.documentation
+      ),
+      method: conditionalFailover(
+        fix,
+        Joi.string()
+          .allow('')
+          .valid(
+            Methods.all,
+            Methods.get,
+            Methods.post,
+            Methods.put,
+            Methods.patch,
+            Methods.delete,
+            Methods.head,
+            Methods.options,
+            Methods.propfind,
+            Methods.proppatch,
+            Methods.move,
+            Methods.copy,
+            Methods.mkcol,
+            Methods.lock,
+            Methods.unlock
+          )
+          .required(),
+        RouteDefault.method
+      ),
+      endpoint: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        RouteDefault.endpoint
+      ),
+      responses: conditionalFailover(
+        fix,
+        Joi.array()
+          .items(
+            RouteResponseSchemaBuilder(fix),
+            ...conditionalStripUnknown(fix)
+          )
+          .required(),
+        RouteDefault.responses
+      ),
+      responseMode: conditionalFailover(
+        fix,
+        Joi.string()
+          .allow(null)
+          .valid(
+            ResponseMode.RANDOM,
+            ResponseMode.SEQUENTIAL,
+            ResponseMode.DISABLE_RULES,
+            ResponseMode.FALLBACK
+          )
+          .required(),
+        RouteDefault.responseMode
+      ),
+      streamingMode: conditionalFailover(
+        fix,
+        Joi.string()
+          .allow(null)
+          .valid(StreamingMode.UNICAST, StreamingMode.BROADCAST)
+          .required(),
+        RouteDefault.streamingMode
+      ),
+      streamingInterval: conditionalFailover(
+        fix,
+        Joi.number().min(0).required(),
+        RouteDefault.streamingInterval
+      )
+    }).options({
+      stripUnknown: true
+    }),
+    RouteDefault
+  );
+
+const EnvironmentSchemaBuilder = (fix: boolean) =>
+  conditionalFailover(
+    fix,
+    Joi.object<Environment, true>({
+      uuid: UUIDSchemaBuilder(fix),
+      lastMigration: conditionalFailover(
+        fix,
+        Joi.number().required(),
+        EnvironmentDefault.lastMigration
+      ),
+      name: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        EnvironmentDefault.name
+      ),
+      endpointPrefix: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        EnvironmentDefault.endpointPrefix
+      ),
+      latency: conditionalFailover(
+        fix,
+        Joi.number().min(0).required(),
+        EnvironmentDefault.latency
+      ),
+      port: conditionalFailover(
+        fix,
+        Joi.number().min(0).max(65535).required(),
+        EnvironmentDefault.port
+      ),
+      hostname: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        EnvironmentDefault.hostname
+      ),
+      rootChildren: conditionalFailover(
+        fix,
+        Joi.array()
+          .items(FolderChildSchemaBuilder(fix), ...conditionalStripUnknown(fix))
+          .required(),
+        EnvironmentDefault.rootChildren
+      ),
+      folders: conditionalFailover(
+        fix,
+        Joi.array()
+          .items(FolderSchemaBuilder(fix), ...conditionalStripUnknown(fix))
+          .required(),
+        EnvironmentDefault.folders
+      ),
+      routes: conditionalFailover(
+        fix,
+        Joi.array()
+          .items(RouteSchemaBuilder(fix), ...conditionalStripUnknown(fix))
+          .required(),
+        EnvironmentDefault.routes
+      ),
+      proxyMode: conditionalFailover(
+        fix,
+        Joi.boolean().strict().required(),
+        EnvironmentDefault.proxyMode
+      ),
+      proxyHost: conditionalFailover(
+        fix,
+        Joi.string().allow('').required(),
+        EnvironmentDefault.proxyHost
+      ),
+      proxyRemovePrefix: conditionalFailover(
+        fix,
+        Joi.boolean().strict().required(),
+        EnvironmentDefault.proxyRemovePrefix
+      ),
+      tlsOptions: TLSOptionsSchemaBuilder(fix),
+      cors: conditionalFailover(
+        fix,
+        Joi.boolean().strict().required(),
+        EnvironmentDefault.cors
+      ),
+      headers: conditionalFailover(
+        fix,
+        Joi.array()
+          .items(HeaderSchemaBuilder(fix), ...conditionalStripUnknown(fix))
+          .required(),
+        EnvironmentDefault.headers
+      ),
+      proxyReqHeaders: conditionalFailover(
+        fix,
+        Joi.array()
+          .items(HeaderSchemaBuilder(fix), ...conditionalStripUnknown(fix))
+          .required(),
+        EnvironmentDefault.proxyReqHeaders
+      ),
+      proxyResHeaders: conditionalFailover(
+        fix,
+        Joi.array()
+          .items(HeaderSchemaBuilder(fix), ...conditionalStripUnknown(fix))
+          .required(),
+        EnvironmentDefault.proxyResHeaders
+      ),
+      data: conditionalFailover(
+        fix,
+        Joi.array()
+          .items(DataSchemaBuilder(fix), ...conditionalStripUnknown(fix))
+          .required(),
+        EnvironmentDefault.data
+      ),
+      callbacks: conditionalFailover(
+        fix,
+        Joi.array()
+          .items(CallbackSchemaBuilder(fix), ...conditionalStripUnknown(fix))
+          .required(),
+        EnvironmentDefault.callbacks
+      )
+    })
+      .default(EnvironmentDefault)
+      .options({
+        stripUnknown: true
+      }),
+    EnvironmentDefault
+  );
+
+export const RouteSchema = RouteSchemaBuilder(true);
+export const EnvironmentSchema = EnvironmentSchemaBuilder(true);
+export const EnvironmentSchemaNoFix = EnvironmentSchemaBuilder(false);
