@@ -37,6 +37,7 @@ export class UserService {
   private isWeb = Config.isWeb;
   private auth: Auth = inject(Auth);
   private idToken$ = idToken(this.auth);
+  private lastUserRefresh = 0;
 
   constructor(
     private httpClient: HttpClient,
@@ -52,7 +53,7 @@ export class UserService {
   public init() {
     return this.idToken$.pipe(
       filter((token) => !!token),
-      mergeMap(() => this.getUserInfo())
+      mergeMap(() => this.getUserInfo(true))
     );
   }
 
@@ -77,11 +78,26 @@ export class UserService {
   }
 
   /**
-   * Get user info from the server and update the store
+   * Get the user info.
+   * Only refreshes the list if the last refresh
+   * was more than `dataRefreshInterval` ago or if
+   * `force` is true.
    *
+   * @param force - Force a refresh of the instances
    * @returns
    */
-  public getUserInfo() {
+  public getUserInfo(force = false) {
+    const dataRefreshInterval = this.store.getRemoteConfig(
+      'dataRefreshInterval'
+    );
+    const now = Date.now();
+
+    if (now - this.lastUserRefresh < dataRefreshInterval && !force) {
+      return EMPTY;
+    }
+
+    this.lastUserRefresh = now;
+
     return from(this.auth.currentUser.getIdToken()).pipe(
       switchMap((token) =>
         this.httpClient.get(`${Config.apiURL}user`, {

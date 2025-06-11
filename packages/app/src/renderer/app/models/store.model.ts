@@ -1,4 +1,9 @@
-import { DeployInstance, SyncPresence, User } from '@mockoon/cloud';
+import {
+  DeployInstance,
+  RemoteConfigData,
+  SyncPresence,
+  User
+} from '@mockoon/cloud';
 import {
   Environments,
   ProcessedDatabucketWithoutValue
@@ -112,4 +117,5 @@ export type StoreType = {
     Record<string, ProcessedDatabucketWithoutValue>
   >;
   feedback: string;
+  remoteConfig: RemoteConfigData;
 };

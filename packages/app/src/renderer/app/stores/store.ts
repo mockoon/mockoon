@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DeployInstance } from '@mockoon/cloud';
+import { DeployInstance, RemoteConfigData } from '@mockoon/cloud';
 import {
   Callback,
   DataBucket,
@@ -32,6 +32,7 @@ import {
 } from 'src/renderer/app/models/store.model';
 import { ActionTypes, Actions } from 'src/renderer/app/stores/actions';
 import { environmentReducer } from 'src/renderer/app/stores/reducer';
+import { Config } from 'src/renderer/config';
 
 export const storeDefaultState: StoreType = {
   activeView: 'ENV_ROUTES',
@@ -77,7 +78,8 @@ export const storeDefaultState: StoreType = {
   },
   deployInstances: [],
   processedDatabuckets: {},
-  feedback: ''
+  feedback: '',
+  remoteConfig: null
 };
 
 @Injectable({ providedIn: 'root' })
@@ -109,6 +111,45 @@ export class Store {
    */
   public get<T extends keyof StoreType>(path: T): StoreType[T] {
     return this.store$.value[path];
+  }
+
+  /**
+   * Select a remote config specific property.
+   * If a default value is defined in the config, it will
+   * be returned if the property is not set in the store.
+   *
+   * @param path
+   */
+  public selectRemoteConfig<T extends keyof RemoteConfigData>(
+    path: T
+  ): Observable<RemoteConfigData[T]> {
+    return this.select('remoteConfig').pipe(
+      filter((remoteConfig) => !!remoteConfig),
+      map(
+        (remoteConfig) =>
+          remoteConfig?.[path] ??
+          (path in Config.remoteConfigDefaults
+            ? (Config.remoteConfigDefaults as RemoteConfigData)[path]
+            : null)
+      ),
+      distinctUntilChanged()
+    );
+  }
+
+  /**
+   * Get a remote config specific property.   *
+   * If a default value is defined in the config, it will
+   * be returned if the property is not set in the store.
+   */
+  public getRemoteConfig<T extends keyof RemoteConfigData>(
+    path: T
+  ): RemoteConfigData[T] {
+    return (
+      this.get('remoteConfig')?.[path] ??
+      (path in Config.remoteConfigDefaults
+        ? (Config.remoteConfigDefaults as RemoteConfigData)[path]
+        : null)
+    );
   }
 
   /**

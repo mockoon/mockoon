@@ -13,7 +13,6 @@ import {
   switchMap,
   tap
 } from 'rxjs';
-import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import {
   addDeployInstanceAction,
@@ -29,26 +28,41 @@ import { Config } from 'src/renderer/config';
 @Injectable({ providedIn: 'root' })
 export class DeployService {
   public isWeb = Config.isWeb;
+  private lastInstancesRefresh = 0;
 
   constructor(
     private userService: UserService,
     private store: Store,
-    private remoteConfig: RemoteConfigService,
     private httpClient: HttpClient
   ) {}
 
   public init() {
     return this.userService
       .idTokenChanges()
-      .pipe(switchMap(() => this.getInstances()));
+      .pipe(switchMap(() => this.getInstances(true)));
   }
 
   /**
-   * Get the list of deploy instances
+   * Get the list of deploy instances.
+   * Only refreshes the list if the last refresh
+   * was more than `dataRefreshInterval` ago or if
+   * `force` is true.
    *
+   * @param force - Force a refresh of the instances
    * @returns
    */
-  public getInstances() {
+  public getInstances(force = false) {
+    const dataRefreshInterval = this.store.getRemoteConfig(
+      'dataRefreshInterval'
+    );
+    const now = Date.now();
+
+    if (now - this.lastInstancesRefresh < dataRefreshInterval && !force) {
+      return EMPTY;
+    }
+
+    this.lastInstancesRefresh = now;
+
     return forkJoin([
       this.store.select('user').pipe(
         filter((user) => !!user),
@@ -88,7 +102,7 @@ export class DeployService {
   ) {
     return forkJoin([
       this.userService.getIdToken(),
-      this.remoteConfig.get('deployUrl').pipe(
+      this.store.selectRemoteConfig('deployUrl').pipe(
         filter((deployUrl) => !!deployUrl),
         first()
       )
@@ -129,7 +143,7 @@ export class DeployService {
 
     return forkJoin([
       this.userService.getIdToken(),
-      this.remoteConfig.get('deployUrl').pipe(
+      this.store.selectRemoteConfig('deployUrl').pipe(
         filter((deployUrl) => !!deployUrl),
         first()
       )
@@ -222,7 +236,7 @@ export class DeployService {
   public stop(environmentUuid: string) {
     return forkJoin([
       this.userService.getIdToken(),
-      this.remoteConfig.get('deployUrl').pipe(
+      this.store.selectRemoteConfig('deployUrl').pipe(
         filter((deployUrl) => !!deployUrl),
         first()
       )

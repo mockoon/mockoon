@@ -42,7 +42,6 @@ import { major } from 'semver';
 import { Socket, io } from 'socket.io-client';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { LoggerService } from 'src/renderer/app/services/logger-service';
-import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { SyncPayloadsService } from 'src/renderer/app/services/sync-payloads.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
@@ -66,7 +65,6 @@ export class SyncService {
     private store: Store,
     private syncPayloadsService: SyncPayloadsService,
     private environmentsService: EnvironmentsService,
-    private remoteConfig: RemoteConfigService,
     private uiService: UIService,
     private loggerService: LoggerService
   ) {}
@@ -80,7 +78,7 @@ export class SyncService {
   public init() {
     this.setDeviceId();
 
-    return this.remoteConfig.get('cloudSyncUrl').pipe(
+    return this.store.selectRemoteConfig('cloudSyncUrl').pipe(
       filter((cloudSyncUrl) => !!cloudSyncUrl),
       tap((cloudSyncUrl) => {
         if (!this.socket) {

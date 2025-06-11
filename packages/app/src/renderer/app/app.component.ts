@@ -115,6 +115,23 @@ export class AppComponent implements OnInit {
     }
   }
 
+  /**
+   * Refresh the deploy instances and the user information
+   * when the page becomes visible
+   */
+  @HostListener('document:visibilitychange')
+  public documentVisibilityChange() {
+    const user = this.store.get('user');
+
+    if (document.visibilityState === 'visible' && user) {
+      this.userService.getUserInfo().subscribe();
+
+      if (user.plan !== 'FREE' && user.plan !== 'SOLO') {
+        this.deployService.getInstances().subscribe();
+      }
+    }
+  }
+
   @HostListener('document:click')
   public documentClick() {
     this.telemetryService.sendEvent();

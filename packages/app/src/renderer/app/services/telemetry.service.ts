@@ -23,7 +23,6 @@ import {
 import { TelemetrySession } from 'src/renderer/app/models/telemetry.model';
 import { LocalStorageService } from 'src/renderer/app/services/local-storage.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
-import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
@@ -48,7 +47,6 @@ export class TelemetryService {
   private sessionInProgress$ = new BehaviorSubject<boolean>(true);
 
   constructor(
-    private remoteConfigService: RemoteConfigService,
     private localStorageService: LocalStorageService,
     private store: Store,
     private mainApiService: MainApiService
@@ -62,11 +60,11 @@ export class TelemetryService {
   public init() {
     // only emit if telemetry is globally and locally enabled
     return combineLatest([
-      this.remoteConfigService
-        .get('enableTelemetry')
-        .pipe(filter((enableTelemetry) => enableTelemetry)),
+      this.store
+        .selectRemoteConfig('enableTelemetry')
+        .pipe(filter((enableTelemetry) => !!enableTelemetry)),
       this.store.select('settings').pipe(
-        filter((settings) => settings?.enableTelemetry),
+        filter((settings) => !!settings?.enableTelemetry),
         first()
       )
     ]).pipe(
