@@ -13,7 +13,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20.x"
+          node-version: "22.x"
       - uses: actions/cache@v4
         id: cache-modules
         with:
@@ -43,7 +43,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20.x"
+          node-version: "22.x"
       - uses: actions/cache@v4
         id: cache-modules
         with:
@@ -73,7 +73,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20.x"
+          node-version: "22.x"
       - uses: actions/cache@v4
         id: cache-modules
         with:
@@ -139,7 +139,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20.x"
+          node-version: "22.x"
       - uses: actions/cache@v4
         id: cache-modules
         with:
@@ -176,7 +176,7 @@ jobs:
   #     - name: Install Node.js
   #       uses: actions/setup-node@v4
   #       with:
-  #         node-version: "20.x"
+  #         node-version: "22.x"
   #     - uses: actions/cache@v4
   #       id: cache-modules
   #       with:
@@ -215,7 +215,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20.x"
+          node-version: "22.x"
       - uses: actions/cache@v4
         id: cache-modules
         with:
