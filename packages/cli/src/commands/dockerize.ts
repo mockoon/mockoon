@@ -5,7 +5,10 @@ import { render as mustacheRender } from 'mustache';
 import { ParsedPath, parse as pathParse, resolve as pathResolve } from 'path';
 import { Config } from '../config';
 import { CLIMessages } from '../constants/cli-messages.constants';
-import { commonFlags } from '../constants/command.constants';
+import {
+  commonFlags,
+  logTransactionFlag
+} from '../constants/command.constants';
 import { DOCKER_TEMPLATE } from '../constants/docker.constants';
 
 export default class Dockerize extends Command {
@@ -20,6 +23,7 @@ export default class Dockerize extends Command {
 
   public static flags = {
     ...commonFlags,
+    ...logTransactionFlag,
     port: Flags.integer({
       char: 'p',
       description:
