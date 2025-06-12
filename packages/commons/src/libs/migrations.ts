@@ -148,9 +148,7 @@ export const Migrations: {
         }
 
         // add missing documentation
-        if (route.documentation === undefined) {
-          route.documentation = '';
-        }
+        route.documentation ??= '';
 
         // rename customHeaders to headers
         if (route['customHeaders']) {
@@ -276,9 +274,7 @@ export const Migrations: {
     migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
         route.responses.forEach((routeResponse) => {
-          if (routeResponse.disableTemplating === undefined) {
-            routeResponse.disableTemplating = false;
-          }
+          routeResponse.disableTemplating ??= false;
 
           routeResponse.statusCode = parseInt(
             routeResponse.statusCode as unknown as string,
@@ -297,9 +293,7 @@ export const Migrations: {
     migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
         route.responses.forEach((routeResponse) => {
-          if (routeResponse.rulesOperator === undefined) {
-            routeResponse.rulesOperator = 'OR';
-          }
+          routeResponse.rulesOperator ??= 'OR';
         });
       });
     }
@@ -312,9 +306,7 @@ export const Migrations: {
     id: 13,
     migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route) => {
-        if ((route as RouteWithResponseModes).randomResponse === undefined) {
-          (route as RouteWithResponseModes).randomResponse = false;
-        }
+        (route as RouteWithResponseModes).randomResponse ??= false;
       });
     }
   },
@@ -326,11 +318,7 @@ export const Migrations: {
     id: 14,
     migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
-        if (
-          (route as RouteWithResponseModes).sequentialResponse === undefined
-        ) {
-          (route as RouteWithResponseModes).sequentialResponse = false;
-        }
+        (route as RouteWithResponseModes).sequentialResponse ??= false;
       });
     }
   },
@@ -341,9 +329,7 @@ export const Migrations: {
   {
     id: 15,
     migrationFunction: (environment: Environment): void => {
-      if (environment.proxyRemovePrefix === undefined) {
-        environment.proxyRemovePrefix = false;
-      }
+      environment.proxyRemovePrefix ??= false;
     }
   },
 
@@ -366,9 +352,7 @@ export const Migrations: {
     migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
         route.responses.forEach((routeResponse) => {
-          if (routeResponse.fallbackTo404 === undefined) {
-            routeResponse.fallbackTo404 = false;
-          }
+          routeResponse.fallbackTo404 ??= false;
         });
       });
     }
@@ -387,9 +371,8 @@ export const Migrations: {
             if (rule.isRegex) {
               rule.operator = 'regex';
             }
-            if (rule.operator === undefined) {
-              rule.operator = ResponseRuleDefault.operator;
-            }
+            rule.operator ??= ResponseRuleDefault.operator;
+
             delete rule.isRegex;
           });
         });
@@ -443,14 +426,12 @@ export const Migrations: {
     id: 21,
     migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
-        if (route.responseMode === undefined) {
-          route.responseMode = (route as RouteWithResponseModes)
-            .sequentialResponse
-            ? ResponseMode.SEQUENTIAL
-            : (route as RouteWithResponseModes).randomResponse
-              ? ResponseMode.RANDOM
-              : null;
-        }
+        route.responseMode ??= (route as RouteWithResponseModes)
+          .sequentialResponse
+          ? ResponseMode.SEQUENTIAL
+          : (route as RouteWithResponseModes).randomResponse
+            ? ResponseMode.RANDOM
+            : null;
 
         delete route['sequentialResponse'];
         delete route['randomResponse'];
@@ -466,9 +447,7 @@ export const Migrations: {
       environment.routes.forEach((route: Route) => {
         route.responses.forEach((routeResponse) => {
           routeResponse.rules.forEach((rule) => {
-            if (rule.invert === undefined) {
-              rule.invert = ResponseRuleDefault.invert;
-            }
+            rule.invert ??= ResponseRuleDefault.invert;
           });
         });
       });
@@ -480,9 +459,7 @@ export const Migrations: {
   {
     id: 23,
     migrationFunction: (environment: Environment): void => {
-      if (environment.data === undefined) {
-        environment.data = EnvironmentDefault.data;
-      }
+      environment.data ??= EnvironmentDefault.data;
     }
   },
   /**
@@ -493,9 +470,8 @@ export const Migrations: {
     migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
         route.responses.forEach((routeResponse) => {
-          if (routeResponse.databucketID === undefined) {
-            routeResponse.databucketID = RouteResponseDefault.databucketID;
-          }
+          routeResponse.databucketID ??= RouteResponseDefault.databucketID;
+          //
 
           if (routeResponse.bodyType === undefined) {
             if (routeResponse.filePath) {
@@ -514,16 +490,12 @@ export const Migrations: {
   {
     id: 25,
     migrationFunction: (environment: Environment): void => {
-      if (environment.folders === undefined) {
-        environment.folders = EnvironmentDefault.folders;
-      }
+      environment.folders ??= EnvironmentDefault.folders;
 
-      if (environment.rootChildren === undefined) {
-        environment.rootChildren = environment.routes.map((route) => ({
-          type: 'route',
-          uuid: route.uuid
-        }));
-      }
+      environment.rootChildren ??= environment.routes.map((route) => ({
+        type: 'route',
+        uuid: route.uuid
+      }));
     }
   },
   /**
@@ -533,9 +505,7 @@ export const Migrations: {
     id: 26,
     migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
-        if (route.type === undefined) {
-          route.type = RouteDefault.type;
-        }
+        route.type ??= RouteDefault.type;
       });
     }
   },
@@ -558,9 +528,7 @@ export const Migrations: {
     migrationFunction: (environment: Environment): void => {
       environment.routes.forEach((route: Route) => {
         route.responses.forEach((routeResponse) => {
-          if (routeResponse.crudKey === undefined) {
-            routeResponse.crudKey = RouteResponseDefault.crudKey;
-          }
+          routeResponse.crudKey ??= RouteResponseDefault.crudKey;
         });
       });
     }
