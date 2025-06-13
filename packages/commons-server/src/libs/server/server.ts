@@ -863,9 +863,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   ): string | undefined {
     let content: any = enabledRouteResponse.body;
     let finalRequest = connectedRequest;
-    if (!finalRequest) {
-      finalRequest = request ? fromWsRequest(request, route, data) : undefined;
-    }
+
+    finalRequest ??= request ? fromWsRequest(request, route, data) : undefined;
 
     if (
       enabledRouteResponse.bodyType === BodyTypes.DATABUCKET &&

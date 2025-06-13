@@ -104,7 +104,8 @@ export const configs = [
       '@typescript-eslint/prefer-nullish-coalescing': [
         'error',
         {
-          ignorePrimitives: true
+          ignorePrimitives: true,
+          ignoreIfStatements: true
         }
       ],
       '@typescript-eslint/prefer-regexp-exec': 'off',

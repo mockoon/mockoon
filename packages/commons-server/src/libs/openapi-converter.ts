@@ -94,9 +94,7 @@ export class OpenAPIConverter {
           endpoint = '/' + route.endpoint.replace(/:([a-zA-Z0-9_]+)/g, '{$1}');
         }
 
-        if (!paths[endpoint]) {
-          paths[endpoint] = {};
-        }
+        paths[endpoint] ??= {};
 
         (paths[endpoint] as OpenAPIV3.OperationObject)[route.method] = {
           description: route.documentation,

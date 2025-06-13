@@ -127,17 +127,17 @@ After the packages are build, you can run the tests necessary to your changes:
 
 To run the desktop application tests, first you need to package the application for your platform. Run one of the following commands:
 
-- `package:desktop:test:win`
-- `package:desktop:test:mac`
-- `package:desktop:test:linux`
+- `npm run package:desktop:test:win`
+- `npm run package:desktop:test:mac`
+- `npm run package:desktop:test:linux`
 
 This will create a packaged version of the desktop application (without installer) in the `./packages/app/packages/{win-unpacked|mac|linux-unpacked}` folder.
 
 You can then run the tests with one of the following commands:
 
-- `test:desktop:win`
-- `test:desktop:mac`
-- `test:desktop:linux`
+- `npm run test:desktop:win`
+- `npm run test:desktop:mac`
+- `npm run test:desktop:linux`
 
 You can also run a single test file with the following commands (from the monorepo root level):
 

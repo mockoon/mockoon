@@ -28,9 +28,11 @@ const config = Object.assign({}, commonConfig, {
     icon: 'build-res',
     artifactName: 'mockoon-${version}.${arch}.${ext}',
     desktop: {
-      Name: 'Mockoon',
-      Type: 'Application',
-      Categories: 'Development'
+      entry: {
+        Name: 'Mockoon',
+        Type: 'Application',
+        Categories: 'Development'
+      }
     }
   },
   snap: {
