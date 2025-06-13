@@ -99,9 +99,7 @@ export class ResponseRulesInterpreter {
         return null;
       }
 
-      if (response === undefined) {
-        response = defaultResponse;
-      }
+      response ??= defaultResponse;
 
       return response;
     }

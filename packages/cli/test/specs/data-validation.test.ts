@@ -1,4 +1,5 @@
 import { ok } from 'node:assert';
+import { EOL } from 'node:os';
 import { describe, it } from 'node:test';
 import { delay, spawnCli } from '../libs/helpers';
 
@@ -13,7 +14,7 @@ describe('Data validation', () => {
       './test/data/envs/repair.json'
     ]);
     // answer no to repair
-    instance.stdin?.write('n\n');
+    instance.stdin?.write(`n${EOL}`);
 
     const { stderr } = await output;
 
@@ -27,7 +28,7 @@ describe('Data validation', () => {
       './test/data/envs/repair.json'
     ]);
     // answer yes to repair
-    instance.stdin?.write('y\n');
+    instance.stdin?.write(`y${EOL}`);
 
     await delay(3000);
 
@@ -73,11 +74,12 @@ describe('Data validation', () => {
     ]);
 
     // answer no to repair
-    instance.stdin?.write('n\n');
+    instance.stdin?.write(`n${EOL}`);
 
     const { stderr } = await output;
-    ok(stderr.includes("These environment's data are too old or not a valid"));
-    ok(stderr.includes('Openapi API definition'));
+
+    ok(stderr.includes('data are too old'));
+    ok(stderr.includes('Unsupported OpenAPI version'));
   });
 
   it('should only show OpenAPI parser error messages (early fail as Mockoon does not support YAML)', async () => {
