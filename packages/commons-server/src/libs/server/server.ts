@@ -1588,9 +1588,11 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       }
 
       if (!routeResponse.sendFileAsBody) {
+        const encodedFilePath = encodeURIComponent(basename(filePath));
+
         response.set(
           'Content-Disposition',
-          `attachment; filename="${basename(filePath)}"`
+          `attachment; filename="${encodedFilePath}"; filename*=UTF-8''${encodedFilePath}`
         );
       }
 
