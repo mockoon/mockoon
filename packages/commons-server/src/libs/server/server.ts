@@ -85,7 +85,21 @@ import {
 /**
  * Create a server instance from an Environment object.
  *
- * Extends EventEmitter.
+ * Extends an EventEmitter.
+ *
+ * ⚠️ The function listenServerEvents must be used to listen to server events
+ * and avoid the EventEmitter to throw errors due to the lack of listeners.
+ *
+ * Example:
+ *
+ * ```
+ * const server = new MockoonServer(environment);
+ * const logger = createLoggerInstance();
+ * listenServerEvents(server, environment, logger, false);
+ *
+ * // or ate least listen to the error event
+ * server.on('error', (errorCode, originalError) => {});
+ * ```
  */
 export class MockoonServer extends (EventEmitter as new () => TypedEmitter<ServerEvents>) {
   private serverInstance: httpServer | httpsServer;
@@ -1590,7 +1604,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       if (!routeResponse.sendFileAsBody) {
         response.set(
           'Content-Disposition',
-          `attachment; filename="${basename(filePath)}"`
+          `attachment; filename="${encodeURIComponent(basename(filePath))}"`
         );
       }
 
