@@ -62,6 +62,33 @@ const migrateAndValidateEnvironment = async (
 };
 
 /**
+ * Load a file from the filesystem or a URL.
+ * If the file is a JSON file, it will be parsed.
+ *
+ * @param filePath
+ * @returns
+ */
+export const loadFile = async (filePath: string): Promise<string> => {
+  try {
+    let data: any;
+
+    if (filePath.startsWith('http')) {
+      data = await (await fetch(filePath)).text();
+    } else {
+      data = await fs.readFile(filePath, { encoding: 'utf-8' });
+    }
+
+    if (typeof data === 'string') {
+      data = JSON.parse(data);
+    }
+
+    return data;
+  } catch (error: unknown) {
+    throw new Error((error as Error).message);
+  }
+};
+
+/**
  * Load and parse one or more JSON data file(s).
  *
  * @param filePaths
@@ -95,17 +122,7 @@ export const parseDataFiles = async (
       }
 
       try {
-        let data: any;
-
-        if (filePath.startsWith('http')) {
-          data = await (await fetch(filePath)).text();
-        } else {
-          data = await fs.readFile(filePath, { encoding: 'utf-8' });
-        }
-
-        if (typeof data === 'string') {
-          data = JSON.parse(data);
-        }
+        const data = await loadFile(filePath);
 
         if (typeof data === 'object') {
           environment = await migrateAndValidateEnvironment(data, repair);
