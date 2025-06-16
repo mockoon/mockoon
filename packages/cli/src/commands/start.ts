@@ -14,7 +14,7 @@ import {
   listenServerEvents
 } from '@mockoon/commons-server';
 import { Command, Flags } from '@oclif/core';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import { format } from 'util';
 import { Config } from '../config';
 import { commonFlags } from '../constants/command.constants';
@@ -133,9 +133,11 @@ export default class Start extends Command {
       );
 
       for (const environmentInfo of parsedEnvironments) {
+        // resolve the environment path to an absolute path to avoid false positives when detecting path traversal
         this.createServer({
           environment: environmentInfo.environment,
-          environmentDirectory: getDirname(environmentInfo.originalPath) ?? '',
+          environmentDirectory:
+            getDirname(resolve(environmentInfo.originalPath)) ?? '',
           logTransaction: userFlags['log-transaction'],
           fileTransportOptions: userFlags['disable-log-to-file']
             ? null

@@ -87,6 +87,7 @@ export type Transaction = {
 export type ServerOptions = {
   /**
    * Directory where to find the environment file.
+   * Provide an absolute path to the environment file to avoid false positives when detecting path traversal.
    */
   environmentDirectory: string;
 
