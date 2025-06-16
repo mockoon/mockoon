@@ -94,26 +94,26 @@ export const environmentReducer = (
     }
 
     case ActionTypes.UPDATE_DEPLOY_INSTANCES: {
+      const activeInstanceUuids = new Set(
+        action.instances.map((instance) => instance.environmentUuid)
+      );
+
       newState = {
         ...state,
         deployInstances: [...action.instances],
-        // only update the env status on desktop
+        // only update the env status on web
         environmentsStatus: Config.isWeb
-          ? {
-              ...state.environmentsStatus,
-              ...action.instances.reduce<EnvironmentsStatuses>(
-                (instances, instance) => {
-                  instances[instance.environmentUuid] = {
-                    running: true,
-                    needRestart: false,
-                    redeploying: false
-                  };
+          ? Object.keys(state.environmentsStatus).reduce(
+              (environmentStatuses, environmentUuid) => {
+                environmentStatuses[environmentUuid] = {
+                  ...state.environmentsStatus[environmentUuid],
+                  running: activeInstanceUuids.has(environmentUuid)
+                };
 
-                  return instances;
-                },
-                {}
-              )
-            }
+                return environmentStatuses;
+              },
+              {}
+            )
           : state.environmentsStatus
       };
       break;
