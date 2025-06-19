@@ -50,6 +50,7 @@
     "@mockoon/commons-server": "9.2.0",
     "@oclif/core": "4.3.3",
     "@oclif/plugin-help": "6.2.28",
+    "chokidar": "4.0.3",
     "mkdirp": "3.0.1",
     "mustache": "4.2.0",
     "tslib": "2.8.1"
