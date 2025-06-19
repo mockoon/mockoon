@@ -14,6 +14,7 @@ import {
   listenServerEvents
 } from '@mockoon/commons-server';
 import { Command, Flags } from '@oclif/core';
+import { watch } from 'chokidar';
 import { join, resolve } from 'path';
 import { format } from 'util';
 import { Config } from '../config';
@@ -21,7 +22,7 @@ import {
   commonFlags,
   logTransactionFlag
 } from '../constants/command.constants';
-import { parseDataFiles } from '../libs/data';
+import { parseDataFile } from '../libs/data';
 import { getDirname, transformEnvironmentName } from '../libs/utils';
 
 export default class Start extends Command {
@@ -29,6 +30,7 @@ export default class Start extends Command {
 
   public static examples = [
     '$ mockoon-cli start --data ~/data.json',
+    '$ mockoon-cli start --data ~/data.json --watch',
     '$ mockoon-cli start --data ~/data1.json ~/data2.json --port 3000 3001 --hostname 127.0.0.1 192.168.1.1',
     '$ mockoon-cli start --data https://file-server/data.json',
     '$ mockoon-cli start --data ~/data.json --log-transaction',
@@ -108,6 +110,16 @@ export default class Start extends Command {
     proxy: Flags.string({
       description: "Override the environment's proxy settings",
       options: ['enabled', 'disabled'] as const
+    }),
+    watch: Flags.boolean({
+      char: 'w',
+      description:
+        'Watch local data file(s) for changes and restart the server when a change is detected',
+      default: false
+    }),
+    'polling-interval': Flags.integer({
+      description: 'Local files watch polling interval in milliseconds',
+      default: 2000
     })
   };
 
@@ -126,22 +138,21 @@ export default class Start extends Command {
     }
 
     try {
-      const parsedEnvironments = await parseDataFiles(
-        userFlags.data,
-        {
-          ports: userFlags.port,
-          hostnames: userFlags.hostname,
-          proxy: userFlags.proxy as 'enabled' | 'disabled'
-        },
-        userFlags.repair
-      );
-
-      for (const environmentInfo of parsedEnvironments) {
-        // resolve the environment path to an absolute path to avoid false positives when detecting path traversal
-        this.createServer({
-          environment: environmentInfo.environment,
+      for (const [index, dataFilePath] of userFlags.data.entries()) {
+        const parsedEnvironment = await parseDataFile(
+          dataFilePath,
+          {
+            port: userFlags.port[index],
+            hostname: userFlags.hostname[index],
+            proxy: userFlags.proxy as 'enabled' | 'disabled'
+          },
+          userFlags.repair
+        );
+        const server = this.createServer({
+          environment: parsedEnvironment.environment,
+          // resolve the environment path to an absolute path to avoid false positives when detecting path traversal
           environmentDirectory:
-            getDirname(resolve(environmentInfo.originalPath)) ?? '',
+            getDirname(resolve(parsedEnvironment.originalPath)) ?? '',
           logTransaction: userFlags['log-transaction'],
           fileTransportOptions: userFlags['disable-log-to-file']
             ? null
@@ -149,7 +160,7 @@ export default class Start extends Command {
                 filename: join(
                   Config.logsPath,
                   `${transformEnvironmentName(
-                    environmentInfo.environment.name
+                    parsedEnvironment.environment.name
                   )}.log`
                 )
               },
@@ -164,6 +175,40 @@ export default class Start extends Command {
           maxTransactionLogs: userFlags['max-transaction-logs'],
           enableRandomLatency: userFlags['enable-random-latency']
         });
+
+        if (!dataFilePath.startsWith('http') && userFlags.watch) {
+          const watcher = watch(dataFilePath, {
+            ignoreInitial: true,
+            persistent: false,
+            usePolling: true,
+            interval: userFlags['polling-interval']
+          });
+
+          watcher.on('change', async (changedFilePath) => {
+            try {
+              const parsedNewEnvironment = await parseDataFile(
+                changedFilePath,
+                {
+                  port: userFlags.port[index],
+                  hostname: userFlags.hostname[index],
+                  proxy: userFlags.proxy as 'enabled' | 'disabled'
+                },
+                userFlags.repair
+              );
+
+              server.stop();
+
+              server.updateEnvironment(parsedNewEnvironment.environment);
+              server.start();
+            } catch (error) {
+              if (error instanceof Error) {
+                this.error(
+                  `Error while processing file change for ${changedFilePath}: ${error.message}`
+                );
+              }
+            }
+          });
+        }
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -249,5 +294,7 @@ export default class Start extends Command {
     });
 
     server.start();
+
+    return server;
   };
 }

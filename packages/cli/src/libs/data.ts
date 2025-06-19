@@ -89,73 +89,68 @@ export const loadFile = async (filePath: string): Promise<string> => {
 };
 
 /**
- * Load and parse one or more JSON data file(s).
+ * Load and parse a JSON data file.
  *
  * @param filePaths
  */
-export const parseDataFiles = async (
-  filePaths: string[],
+export const parseDataFile = async (
+  filePath: string,
   userOptions: {
-    ports: number[];
-    hostnames: string[];
+    port?: number;
+    hostname?: string;
     proxy?: 'enabled' | 'disabled';
-  } = { ports: [], hostnames: [] },
+  } = { port: undefined, hostname: undefined },
   repair = false
-): Promise<{ originalPath: string; environment: Environment }[]> => {
+): Promise<{ originalPath: string; environment: Environment }> => {
   const openAPIConverter = new OpenAPIConverter();
-  const environments: { originalPath: string; environment: Environment }[] = [];
   let errorMessage = `${CLIMessages.DATA_INVALID}:`;
 
-  for (const [index, filePath] of filePaths.entries()) {
-    let environment: Environment | null = null;
+  let environment: Environment | null = null;
 
-    try {
-      environment = await openAPIConverter.convertFromOpenAPI(filePath);
-    } catch (openAPIError) {
-      if (openAPIError instanceof Error) {
-        errorMessage += `\nOpenAPI parser: ${openAPIError.message}`;
-      }
-
-      // immediately throw if the file is not a JSON file
-      if (filePath.includes('.yml') || filePath.includes('.yaml')) {
-        throw new Error(errorMessage);
-      }
-
-      try {
-        const data = await loadFile(filePath);
-
-        if (typeof data === 'object') {
-          environment = await migrateAndValidateEnvironment(data, repair);
-        }
-      } catch (JSONError) {
-        if (JSONError instanceof Error) {
-          errorMessage += `\nMockoon parser: ${JSONError.message}`;
-        }
-
-        throw new Error(errorMessage);
-      }
+  try {
+    environment = await openAPIConverter.convertFromOpenAPI(filePath);
+  } catch (openAPIError) {
+    if (openAPIError instanceof Error) {
+      errorMessage += `\nOpenAPI parser: ${openAPIError.message}`;
     }
 
-    if (environment) {
-      if (userOptions.ports[index] !== undefined) {
-        environment.port = userOptions.ports[index];
+    // immediately throw if the file is not a JSON file
+    if (filePath.includes('.yml') || filePath.includes('.yaml')) {
+      throw new Error(errorMessage);
+    }
+
+    try {
+      const data = await loadFile(filePath);
+
+      if (typeof data === 'object') {
+        environment = await migrateAndValidateEnvironment(data, repair);
+      }
+    } catch (JSONError) {
+      if (JSONError instanceof Error) {
+        errorMessage += `\nMockoon parser: ${JSONError.message}`;
       }
 
-      if (userOptions.hostnames[index] !== undefined) {
-        environment.hostname = userOptions.hostnames[index];
-      }
-
-      if (userOptions.proxy) {
-        environment.proxyMode = userOptions.proxy === 'enabled';
-      }
-
-      environments.push({ environment, originalPath: filePath });
+      throw new Error(errorMessage);
     }
   }
 
-  if (environments.length === 0) {
+  if (environment) {
+    if (userOptions.port !== undefined) {
+      environment.port = userOptions.port;
+    }
+
+    if (userOptions.hostname !== undefined) {
+      environment.hostname = userOptions.hostname;
+    }
+
+    if (userOptions.proxy) {
+      environment.proxyMode = userOptions.proxy === 'enabled';
+    }
+  }
+
+  if (!environment) {
     throw new Error(CLIMessages.ENVIRONMENT_NOT_AVAILABLE_ERROR);
   }
 
-  return environments;
+  return { originalPath: filePath, environment };
 };
