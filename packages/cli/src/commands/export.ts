@@ -1,7 +1,7 @@
 import { OpenAPIConverter } from '@mockoon/commons-server';
 import { Command, Flags } from '@oclif/core';
 import { promises as fs } from 'fs';
-import { parseDataFiles } from '../libs/data';
+import { parseDataFile } from '../libs/data';
 
 export default class Export extends Command {
   public static description =
@@ -34,11 +34,11 @@ export default class Export extends Command {
     const { flags: userFlags } = await this.parse(Export);
 
     try {
-      const parsedEnvironments = await parseDataFiles([userFlags.input]);
+      const parsedEnvironment = await parseDataFile(userFlags.input);
 
       const openApiConverter = new OpenAPIConverter();
       const data: string = await openApiConverter.convertToOpenAPIV3(
-        parsedEnvironments[0].environment,
+        parsedEnvironment.environment,
         userFlags.prettify
       );
 
