@@ -135,6 +135,8 @@ The mocks will run by default on the ports and hostnames specified in the files.
 |-e, --disable-routes | Disable route(s) by UUID or keyword present in the route's path (do not include a leading slash) or keyword present in a folder name. Use '\*' to disable all routes.|
 |-r, --repair | If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting|
 |-x, --env-vars-prefix | Prefix for environment variables (default: 'MOCKOON\_')|
+|-w, --watch | Watch local data file(s) for changes and restart the server when a change is detected (watch is using polling, see `--polling-interval` flag below)|
+|--polling-interval | Local files watch polling interval in milliseconds (default: 2000)|
 |--disable-admin-api | Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)|
 |--disable-tls | Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/)|
 |--max-transaction-logs | Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100)|
@@ -146,6 +148,7 @@ The mocks will run by default on the ports and hostnames specified in the files.
 
 ```bash
 $ mockoon-cli start --data ~/data.json
+$ mockoon-cli start --data ~/data.json --watch
 $ mockoon-cli start --data ~/data1.json ~/data2.json --port 3000 3001 --hostname 127.0.0.1 192.168.1.1
 $ mockoon-cli start --data https://file-server/data.json
 $ mockoon-cli start --data ~/data.json --log-transaction
