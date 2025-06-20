@@ -18,9 +18,9 @@
     <markdown *ngIf="!changelog.loading && !changelog.error">
       {{ changelog.data }}
     </markdown>
-    <p *ngIf="changelog.loading" class="message">
+    <div *ngIf="changelog.loading" class="my-2 d-flex justify-content-center">
       <app-spinner size="24"></app-spinner>
-    </p>
+    </div>
   </div>
   <div class="modal-footer">
     <button
