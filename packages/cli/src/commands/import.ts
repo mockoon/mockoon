@@ -1,6 +1,6 @@
 import { Command, Flags } from '@oclif/core';
 import { promises as fs } from 'fs';
-import { parseDataFiles } from '../libs/data';
+import { parseDataFile } from '../libs/data';
 
 export default class Import extends Command {
   public static description =
@@ -34,10 +34,10 @@ export default class Import extends Command {
     const { flags: userFlags } = await this.parse(Import);
 
     try {
-      const parsedEnvironments = await parseDataFiles([userFlags.input]);
+      const parsedEnvironment = await parseDataFile(userFlags.input);
 
       const data: string = JSON.stringify(
-        parsedEnvironments[0].environment,
+        parsedEnvironment.environment,
         null,
         userFlags.prettify ? 2 : 0
       );

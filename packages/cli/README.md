@@ -103,13 +103,14 @@ Mockoon's CLI has been tested on Node.js versions 18 and 20.
 
 ## Commands
 
-- [Start command](#start-command)
-- [Dockerize command](#dockerize-command)
-- [Import command](#import-command)
-- [Export command](#export-command)
-- [Help command](#help-command)
+- [`start`](#start-command)
+- [`dockerize`](#dockerize-command)
+- [`import`](#import-command)
+- [`export`](#export-command)
+- [`validate`](#validate-command)
+- [`help`](#help-command)
 
-### Start command
+### `start` command
 
 Starts one (or more) mock API from Mockoon's environment file(s) as a foreground process.
 
@@ -134,6 +135,8 @@ The mocks will run by default on the ports and hostnames specified in the files.
 |-e, --disable-routes | Disable route(s) by UUID or keyword present in the route's path (do not include a leading slash) or keyword present in a folder name. Use '\*' to disable all routes.|
 |-r, --repair | If the data file seems too old, or an invalid Mockoon file, migrate/repair without prompting|
 |-x, --env-vars-prefix | Prefix for environment variables (default: 'MOCKOON\_')|
+|-w, --watch | Watch local data file(s) for changes and restart the server when a change is detected (watch is using polling, see `--polling-interval` flag below)|
+|--polling-interval | Local files watch polling interval in milliseconds (default: 2000)|
 |--disable-admin-api | Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)|
 |--disable-tls | Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/)|
 |--max-transaction-logs | Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100)|
@@ -145,6 +148,7 @@ The mocks will run by default on the ports and hostnames specified in the files.
 
 ```bash
 $ mockoon-cli start --data ~/data.json
+$ mockoon-cli start --data ~/data.json --watch
 $ mockoon-cli start --data ~/data1.json ~/data2.json --port 3000 3001 --hostname 127.0.0.1 192.168.1.1
 $ mockoon-cli start --data https://file-server/data.json
 $ mockoon-cli start --data ~/data.json --log-transaction
@@ -180,7 +184,7 @@ For example, to disable all routes in a folder named `folder1`, and all routes h
 
 To disable all routes, use `--disable-routes=*` or `--disable-routes "*"`.
 
-### Dockerize command
+### `dockerize` command
 
 Generates a Dockerfile used to build a self-contained image of one or more mock API. After building the image, no additional parameters will be needed when running the container.
 This command takes similar flags as the [`start` command](#mockoon-start).
@@ -210,7 +214,7 @@ $ mockoon-cli dockerize --data ~/data1.json ~/data2.json --output ./Dockerfile
 $ mockoon-cli dockerize --data https://file-server/data.json --output ./Dockerfile
 ```
 
-### Import command
+### `import` command
 
 Import a Swagger v2/OpenAPI v3 specification file (YAML or JSON).
 
@@ -237,7 +241,7 @@ $ mockoon-cli import --input ~/input.yaml --output ./output.json
 $ mockoon-cli import --input ~/input.json --output ./output.json --prettify
 ```
 
-### Export command
+### `export` command
 
 Export a mock API to an OpenAPI v3 specification file (JSON).
 
@@ -261,7 +265,39 @@ $ mockoon-cli export --input ~/input.json --output ./output.json
 $ mockoon-cli export --input ~/input.json --output ./output.json --prettify
 ```
 
-### Help command
+### `validate` command
+
+Validate a Mockoon [environment JSON file](https://mockoon.com/docs/latest/mockoon-data-files/data-files-location/#data-files-schema) against the schema:
+
+```sh-session
+$ mockoon-cli validate --data ~/data1.json ~/data2.json
+$ mockoon-cli validate --data https://file-server/data.json
+```
+
+> 💡 The `--data` flag behaves like the `--data` flag in the `start` command, meaning you can provide multiple paths or URLs to validate multiple files at once.
+
+If the files are valid, you will see:
+
+```
+✓ Valid environment: ~/data1.json
+✓ Valid environment: ~/data2.json
+✓ All environments are valid
+```
+
+If one or more files are invalid, you will see validation errors:
+
+```
+Invalid environment: ~/data1.json
+- "name" is required
+- "port" must be a number
+Invalid environment: ~/data2.json
+- "routes" must be an array
+ »   Error: Environments validation failed
+```
+
+> ⚠️ This command does not validate the OpenAPI specification files. OpenAPI files are validated by the [start command](#start-command) when you run it with an OpenAPI file as the `--data` parameter.
+
+### `help` command
 
 Returns information about a command.
 
