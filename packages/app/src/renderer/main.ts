@@ -59,91 +59,94 @@ if (environment.production) {
   enableProdMode();
 }
 
-bootstrapApplication(AppComponent, {
-  providers: [
-    importProvidersFrom(
-      BrowserModule,
-      FormsModule,
-      NgbModule,
-      MarkdownModule.forRoot({
-        sanitize: SecurityContext.NONE,
-        markedOptions: {
-          provide: MARKED_OPTIONS,
-          useFactory: MarkedOptionsFactory
+// delay bootstrap to display the loading screen at least for 1 second and avoid flickering
+setTimeout(() => {
+  bootstrapApplication(AppComponent, {
+    providers: [
+      importProvidersFrom(
+        BrowserModule,
+        FormsModule,
+        NgbModule,
+        MarkdownModule.forRoot({
+          sanitize: SecurityContext.NONE,
+          markedOptions: {
+            provide: MARKED_OPTIONS,
+            useFactory: MarkedOptionsFactory
+          }
+        }),
+        ReactiveFormsModule.withConfig({
+          // enable the legacy disabled state handling (angular v15)
+          callSetDisabledState: 'whenDisabledForLegacyCode'
+        }),
+        NgxMaskDirective
+      ),
+      DatePipe,
+      {
+        provide: ErrorHandler,
+        useClass: GlobalErrorHandler
+      },
+      {
+        provide: NgbConfig,
+        useFactory: NgbConfigFactory
+      },
+      {
+        provide: NgbTypeaheadConfig,
+        useFactory: NgbTypeaheadConfigFactory
+      },
+      {
+        provide: NgbTooltipConfig,
+        useFactory: NgbTooltipConfigFactory
+      },
+      {
+        provide: NgbDropdownConfig,
+        useFactory: NgbDropdownConfigFactory
+      },
+      {
+        provide: NgbModalConfig,
+        useFactory: NgbModalConfigFactory
+      },
+      provideNgxMask(),
+      provideHttpClient(withInterceptorsFromDi()),
+      provideFirebaseApp(() => initializeApp(Config.firebaseConfig)),
+      provideAppCheck(() => {
+        if (environment.useFirebaseEmulator) {
+          window['FIREBASE_APPCHECK_DEBUG_TOKEN'] = true;
         }
-      }),
-      ReactiveFormsModule.withConfig({
-        // enable the legacy disabled state handling (angular v15)
-        callSetDisabledState: 'whenDisabledForLegacyCode'
-      }),
-      NgxMaskDirective
-    ),
-    DatePipe,
-    {
-      provide: ErrorHandler,
-      useClass: GlobalErrorHandler
-    },
-    {
-      provide: NgbConfig,
-      useFactory: NgbConfigFactory
-    },
-    {
-      provide: NgbTypeaheadConfig,
-      useFactory: NgbTypeaheadConfigFactory
-    },
-    {
-      provide: NgbTooltipConfig,
-      useFactory: NgbTooltipConfigFactory
-    },
-    {
-      provide: NgbDropdownConfig,
-      useFactory: NgbDropdownConfigFactory
-    },
-    {
-      provide: NgbModalConfig,
-      useFactory: NgbModalConfigFactory
-    },
-    provideNgxMask(),
-    provideHttpClient(withInterceptorsFromDi()),
-    provideFirebaseApp(() => initializeApp(Config.firebaseConfig)),
-    provideAppCheck(() => {
-      if (environment.useFirebaseEmulator) {
-        window['FIREBASE_APPCHECK_DEBUG_TOKEN'] = true;
-      }
 
-      return initializeAppCheck(getApp(), {
-        provider: new ReCaptchaV3Provider(Config.recaptchaSiteKey),
-        isTokenAutoRefreshEnabled: true
-      });
-    }),
-    provideAuth(() => {
-      const auth = getAuth();
-      auth.setPersistence(browserLocalPersistence);
-
-      if (environment.useFirebaseEmulator) {
-        connectAuthEmulator(auth, 'http://localhost:9099', {
-          disableWarnings: true
+        return initializeAppCheck(getApp(), {
+          provider: new ReCaptchaV3Provider(Config.recaptchaSiteKey),
+          isTokenAutoRefreshEnabled: true
         });
+      }),
+      provideAuth(() => {
+        const auth = getAuth();
+        auth.setPersistence(browserLocalPersistence);
+
+        if (environment.useFirebaseEmulator) {
+          connectAuthEmulator(auth, 'http://localhost:9099', {
+            disableWarnings: true
+          });
+        }
+
+        return auth;
+      }),
+      provideFunctions(() => {
+        const functions = getFunctions();
+
+        if (environment.useFirebaseEmulator) {
+          connectFunctionsEmulator(functions, 'localhost', 5001);
+        }
+
+        return functions;
+      }),
+      provideAnimations(),
+      {
+        /* Either get the main API from window.api (electron's preload script + ipc.ts) or from a service, for the web version */
+        provide: MainApiService,
+        useFactory: () => (environment.web ? new MainApiService() : window.api)
       }
-
-      return auth;
-    }),
-    provideFunctions(() => {
-      const functions = getFunctions();
-
-      if (environment.useFirebaseEmulator) {
-        connectFunctionsEmulator(functions, 'localhost', 5001);
-      }
-
-      return functions;
-    }),
-    provideAnimations(),
-    {
-      /* Either get the main API from window.api (electron's preload script + ipc.ts) or from a service, for the web version */
-      provide: MainApiService,
-      useFactory: () => (environment.web ? new MainApiService() : window.api)
-    }
-  ]
-})
-  // eslint-disable-next-line no-console
-  .catch((err) => console.error(err));
+    ]
+  })
+    // eslint-disable-next-line no-console
+    .catch((err) => console.error(err));
+}, 1000);
