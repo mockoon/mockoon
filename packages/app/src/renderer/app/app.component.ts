@@ -1,3 +1,4 @@
+import { animate, style, transition, trigger } from '@angular/animations';
 import {
   AsyncPipe,
   NgFor,
@@ -68,6 +69,15 @@ import { environment } from 'src/renderer/environments/environment';
     FooterComponent,
     TourComponent,
     AsyncPipe
+  ],
+  animations: [
+    // fade in animation for the main app component
+    trigger('mainFadeIn', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('200ms ease-in', style({ opacity: 1 }))
+      ])
+    ])
   ]
 })
 export class AppComponent implements OnInit {

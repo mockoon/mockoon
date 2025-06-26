@@ -5,10 +5,8 @@ import { argv } from 'process';
 import { parseProtocolArgs } from 'src/main/libs/custom-protocol';
 import { createMenu } from 'src/main/libs/menu';
 import { getRuntimeArg } from 'src/main/libs/runtime-args';
-import { createSplashScreen } from 'src/main/libs/splashscreen';
 import { checkForUpdate } from 'src/main/libs/update';
 
-declare const IS_TESTING: boolean;
 declare const IS_DEV: boolean;
 
 // store URL received in open-url event when app is closed (macos only)
@@ -29,14 +27,8 @@ export const saveOpenUrlArgs = (url: string[]) => {
 
 export const getMainWindow = () => mainWindow;
 
-export const initMainWindow = (showSplash = true) => {
+export const initMainWindow = () => {
   const enableDevTools = IS_DEV || !!getRuntimeArg('enable-dev-tools');
-  let splashScreen: BrowserWindow;
-
-  // only show the splashscreen when not running the tests
-  if (!IS_TESTING && showSplash) {
-    splashScreen = createSplashScreen();
-  }
 
   const mainWindowState = windowState({
     defaultWidth: 1024,
@@ -61,7 +53,6 @@ export const initMainWindow = (showSplash = true) => {
         ? '../build-res/icon.ico'
         : '../build-res/icon_512x512x32.png'
     ),
-    // directly show the main window when running the tests
     show: false,
     webPreferences: {
       nodeIntegration: false,
@@ -82,24 +73,14 @@ export const initMainWindow = (showSplash = true) => {
     mainWindow.webContents.openDevTools();
   }
 
-  // when main app finished loading, hide splashscreen and show the mainWindow
+  // when main page finished loading, show the main window
   mainWindow.webContents.on('dom-ready', () => {
-    setTimeout(() => {
-      if (splashScreen && !splashScreen.isDestroyed()) {
-        splashScreen.close();
-      }
+    showMainWindow(mainWindowState);
 
-      // adding a timeout diff (100ms) between splashscreen close and mainWindow.show to fix a bug: https://github.com/electron/electron/issues/27353
-      setTimeout(() => {
-        showMainWindow(mainWindowState);
-
-        checkForUpdate(mainWindow);
-      }, 100);
-    }, 500);
+    checkForUpdate(mainWindow);
   });
 
-  // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/renderer/index.html`);
+  mainWindow.loadFile(`${__dirname}/renderer/index.html`);
 
   // open all links in external browser
   mainWindow.webContents.setWindowOpenHandler((data) => {

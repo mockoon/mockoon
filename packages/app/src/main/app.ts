@@ -29,8 +29,8 @@ if (IS_DEV) {
   appLock = true;
 }
 
-const initApp = (showSplash = true) => {
-  mainWindow = initMainWindow(showSplash);
+const initApp = () => {
+  mainWindow = initMainWindow();
   initIPCListeners(mainWindow);
 
   if (IS_DEV && !getRuntimeArg('disable-hot-reload')) {
@@ -72,7 +72,7 @@ if (!appLock) {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
       if (BrowserWindow.getAllWindows().length === 0) {
-        initApp(false);
+        initApp();
       }
     });
   });

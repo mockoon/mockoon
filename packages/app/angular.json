@@ -41,14 +41,7 @@
               "brace/mode/text.js",
               "brace/mode/xml.js"
             ],
-            "assets": [
-              "src/renderer/assets",
-              {
-                "glob": "splashscreen.html",
-                "input": "src/renderer",
-                "output": "/"
-              }
-            ],
+            "assets": ["src/renderer/assets"],
             "styles": ["src/renderer/styles/styles.scss"],
             "extractLicenses": false,
             "sourceMap": true,
