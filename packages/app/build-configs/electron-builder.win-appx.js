@@ -6,10 +6,10 @@ const commonConfig = require('./electron-builder.common');
  */
 const config = Object.assign({}, commonConfig, {
   win: {
-    target: [{ target: 'appx' }],
-    publisherName: '1kB SARL-S'
+    target: [{ target: 'appx' }]
   },
   appx: {
+    publisherName: '1kB SARL-S',
     publisher: 'CN=F7BC8E8D-E7FB-4CF2-87B7-66105AC3B61D',
     publisherDisplayName: '1kB SARL-S',
     identityName: '1kB.mockoon',

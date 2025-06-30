@@ -8,10 +8,8 @@ const config = Object.assign({}, commonConfig, {
   forceCodeSigning: true,
   win: {
     target: [{ target: 'nsis' }, { target: 'portable' }],
-    signtoolOptions: {
-      publisherName: '1kB SARL-S'
-    },
     azureSignOptions: {
+      publisherName: '1kB SARL-S',
       endpoint: 'https://eus.codesigning.azure.net',
       // respect casing
       certificateProfileName: 'Mockoon',
