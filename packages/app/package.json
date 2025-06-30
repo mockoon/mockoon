@@ -1,7 +1,7 @@
 {
   "name": "@mockoon/app",
   "description": "Mockoon is the easiest and quickest way to run mock APIs locally. No remote deployment, no account required, open source.",
-  "version": "9.2.0",
+  "version": "9.3.0",
   "author": {
     "name": "Mockoon (1kB SARL-S)",
     "email": "team@mockoon.com",
@@ -57,9 +57,9 @@
   },
   "dependencies": {
     "@microsoft/fetch-event-source": "2.0.1",
-    "@mockoon/cloud": "9.2.0",
-    "@mockoon/commons": "9.2.0",
-    "@mockoon/commons-server": "9.2.0",
+    "@mockoon/cloud": "9.3.0",
+    "@mockoon/commons": "9.3.0",
+    "@mockoon/commons-server": "9.3.0",
     "chokidar": "4.0.3",
     "electron-json-storage": "4.6.0",
     "electron-window-state": "5.0.3",
