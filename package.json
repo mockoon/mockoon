@@ -75,7 +75,6 @@
     "@types/node": "24.0.1",
     "concurrently": "9.1.2",
     "dotenv": "16.5.0",
-    "electron-builder": "26.0.12",
     "eslint": "9.28.0",
     "eslint-config-prettier": "10.1.5",
     "eslint-plugin-prettier": "5.4.1",
