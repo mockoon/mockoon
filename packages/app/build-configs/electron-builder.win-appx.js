@@ -9,7 +9,6 @@ const config = Object.assign({}, commonConfig, {
     target: [{ target: 'appx' }]
   },
   appx: {
-    publisherName: '1kB SARL-S',
     publisher: 'CN=F7BC8E8D-E7FB-4CF2-87B7-66105AC3B61D',
     publisherDisplayName: '1kB SARL-S',
     identityName: '1kB.mockoon',
