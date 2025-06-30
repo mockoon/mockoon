@@ -57,7 +57,7 @@ const clearElements = async () => {
 };
 
 const highlight = async (
-  targetSelector: ChainablePromiseElement<WebdriverIO.Element>,
+  targetSelector: ChainablePromiseElement,
   highlightGaps: HighlightGaps
 ) => {
   const height =
@@ -86,7 +86,7 @@ const highlight = async (
 };
 
 const takeElementScreenshot = async (
-  targetSelector: ChainablePromiseElement<WebdriverIO.Element> | null,
+  targetSelector: ChainablePromiseElement | null,
   screeenshotPosition: ScreenshotPosition,
   screeenshotGaps: ScreeenshotGaps,
   folder: string,
@@ -155,8 +155,8 @@ const documentationTopics: {
     // tasks to be performed after taking the screenshot
     postTasks?: () => Promise<void>;
     // provide screenshot target if different from highlighted element (has priority over highlighted element when taking the screenshot)
-    screenshotTarget?: ChainablePromiseElement<WebdriverIO.Element>;
-    highlightedTarget: ChainablePromiseElement<WebdriverIO.Element>;
+    screenshotTarget?: ChainablePromiseElement;
+    highlightedTarget: ChainablePromiseElement;
     // highlight element with a red rectangle
     highlight: boolean;
     // optional gaps inside the red rectangle (padding) if `highlight` is false
