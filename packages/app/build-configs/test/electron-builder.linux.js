@@ -6,6 +6,7 @@ const commonConfig = require('../electron-builder.common');
  */
 const config = Object.assign({}, commonConfig, {
   linux: {
+    executableName: 'mockoon',
     target: [
       {
         target: 'AppImage'
