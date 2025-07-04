@@ -226,12 +226,12 @@
                   </div>
                 </div>
               </button>
-              
+
               <!-- Flag indicator on the right side of dropdown -->
               <ng-container
                 *ngIf="
                   (data.activeRoute?.type === 'http' ||
-                  data.activeRoute?.type === 'ws') &&
+                    data.activeRoute?.type === 'ws') &&
                   data.activeRoute?.responses.length > 0
                 "
               >
@@ -240,27 +240,29 @@
                   class="ms-2"
                   (click)="setDefaultRouteResponse(null, $event)"
                   [ngClass]="{
-                    'text-primary':
-                      !rulesNotUsingDefaultResponse.includes(
-                        data.activeRoute?.responseMode
-                      ),
+                    'text-primary': !rulesNotUsingDefaultResponse.includes(
+                      data.activeRoute?.responseMode
+                    ),
                     'text-muted': rulesNotUsingDefaultResponse.includes(
                       data.activeRoute?.responseMode
                     )
                   }"
                   [ngbTooltip]="data.defaultResponseTooltip"
-                  style="cursor: pointer;"
+                  style="cursor: pointer"
                 >
                   <app-svg icon="flag"></app-svg>
                 </span>
                 <span
                   *ngIf="!data.activeRouteResponse?.default"
                   (click)="
-                    setDefaultRouteResponse(data.activeRouteResponse?.uuid, $event)
+                    setDefaultRouteResponse(
+                      data.activeRouteResponse?.uuid,
+                      $event
+                    )
                   "
                   class="text-muted ms-2"
                   ngbTooltip="Make route response as default"
-                  style="cursor: pointer;"
+                  style="cursor: pointer"
                 >
                   <app-svg icon="outlined_flag"></app-svg>
                 </span>
