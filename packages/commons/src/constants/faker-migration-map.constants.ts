@@ -87,7 +87,7 @@ export const FAKER_V7_TO_V8_MAPPING = {
   'faker.phone.phoneNumberFormat': '',
   'faker.phone.phoneFormats': '',
   'random.alpha': 'string.alpha',
-  'random.alphaNumberic': 'string.alphanumeric',
+  'random.alphaNumeric': 'string.alphanumeric',
   'random.numeric': 'string.numeric',
   'random.word': 'word.sample',
   'random.words': 'word.words'
