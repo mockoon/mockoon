@@ -281,7 +281,7 @@ export const headerValues = [
   'Basic ',
   'Bearer ',
   'bytes',
-  'Chome=1',
+  'Chrome=1',
   'chunked',
   'close',
   'deny',
