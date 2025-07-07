@@ -23,7 +23,7 @@ describe('Duplicate a route response', () => {
   });
 
   it('should verify duplicated route characteristics', async () => {
-    await routes.assertRouteResponseLabel('Reponse 1 (copy)');
+    await routes.assertRouteResponseLabel('Response 1 (copy)');
     await routes.assertRouteResponseStatusCode('200 - OK');
     await routes.switchTab('HEADERS');
 
