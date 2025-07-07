@@ -550,7 +550,7 @@ export const removeDatabucketMutator = (
     routes: environment.routes.map((route) => {
       let needsUpdate = false;
 
-      const newReponses = route.responses.map((response) => {
+      const newResponses = route.responses.map((response) => {
         if (response.databucketID === deletedBucket?.id) {
           needsUpdate = true;
 
@@ -561,7 +561,7 @@ export const removeDatabucketMutator = (
       });
 
       if (needsUpdate) {
-        return { ...route, responses: newReponses };
+        return { ...route, responses: newResponses };
       }
 
       return route;
@@ -777,7 +777,7 @@ export const removeCallbackMutator = (
   routes: environment.routes.map((route) => {
     let needsUpdate = false;
 
-    const newReponses = route.responses.map((response) => {
+    const newResponses = route.responses.map((response) => {
       if (response.callbacks.length > 0) {
         const filteredCallbacks = response.callbacks.filter(
           (callback) => callback.uuid !== callbackUuid
@@ -793,7 +793,7 @@ export const removeCallbackMutator = (
     });
 
     if (needsUpdate) {
-      return { ...route, responses: newReponses };
+      return { ...route, responses: newResponses };
     }
 
     return route;
