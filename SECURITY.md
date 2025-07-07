@@ -9,7 +9,7 @@ You should receive a response from us within 48 hours.
 
 Please include the requested information listed below to help us better understand the nature and scope of the possible issue:
 
-* The application and/or librarie version where the issue was identified.
+* The application and/or library version where the issue was identified.
 * Any special configuration required to reproduce the issue.
 * Step-by-step instructions to reproduce the issue.
 * Impact of the issue, including how an attacker might exploit the issue.

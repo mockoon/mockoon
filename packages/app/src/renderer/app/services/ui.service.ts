@@ -287,7 +287,7 @@ export class UIService {
 
     /**
      * Complete the Subject using first() as we only need the first value.
-     * Not completing the Subject can cause multiple successives modals to be ignored
+     * Not completing the Subject can cause multiple successive modals to be ignored
      * when used in combination with concat for example.
      */
     return confirmed$.pipe(first());

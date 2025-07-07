@@ -176,7 +176,7 @@ describe('Callback duplication', () => {
   });
 });
 
-describe('Callback duplication to another envionment', () => {
+describe('Callback duplication to another environment', () => {
   it('assert the context menu entry is disabled when there is only one env', async () => {
     await utils.dropdownMenuAssertDisabled(
       '.callbacks-menu .nav-item:nth-child(1) .nav-link',

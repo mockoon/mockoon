@@ -17,7 +17,7 @@
           "body": "{\"response\": \"{{urlParam 'var'}}\"}",
           "latency": 0,
           "statusCode": 200,
-          "label": "Reponse 1",
+          "label": "Response 1",
           "headers": [{ "key": "Content-Type", "value": "application/json" }],
           "filePath": "",
           "sendFileAsBody": false,

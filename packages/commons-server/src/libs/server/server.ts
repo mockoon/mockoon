@@ -698,7 +698,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   }
 
   /**
-   * Creates a handler for a web socket connection recieved, if only any
+   * Creates a handler for a web socket connection received, if only any
    * of route is matched.
    *
    * @param webSocketServer
@@ -760,7 +760,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
       const serverRequest = fromWsRequest(request, route);
 
-      // This is not waiting until a messge from client. But will push messages as a stream.
+      // This is not waiting until a message from client. But will push messages as a stream.
       if (route.streamingMode === StreamingMode.BROADCAST) {
         this.handleBroadcastResponse(
           webSocketServer,
@@ -1343,7 +1343,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
           setTimeout(() => {
             fetch(url, {
-              // uppercase even if most methods will work in lower case, but PACTH has to be uppercase or could be rejected by some servers (Node.js)
+              // uppercase even if most methods will work in lower case, but PATCH has to be uppercase or could be rejected by some servers (Node.js)
               method: cb.method.toUpperCase(),
               headers: sendingHeaders.headers,
               body: isBodySupportingMethod(cb.method) ? content : undefined
@@ -1473,7 +1473,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
           setTimeout(() => {
             fetch(url, {
-              // uppercase even if most methods will work in lower case, but PACTH has to be uppercase or could be rejected by some servers (Node.js)
+              // uppercase even if most methods will work in lower case, but PATCH has to be uppercase or could be rejected by some servers (Node.js)
               method: callback.method.toUpperCase(),
               body: form,
               headers: sendingHeaders.headers
@@ -1521,7 +1521,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
           setTimeout(() => {
             fetch(url, {
-              // uppercase even if most methods will work in lower case, but PACTH has to be uppercase or could be rejected by some servers (Node.js)
+              // uppercase even if most methods will work in lower case, but PATCH has to be uppercase or could be rejected by some servers (Node.js)
               method: callback.method.toUpperCase(),
               headers: sendingHeaders.headers,
               body: fileContent
