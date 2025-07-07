@@ -2014,7 +2014,7 @@ export class EnvironmentsService {
         endpoint = endpoint.slice(prefix.length + 1); // Remove the prefix and the slash
       }
 
-      // escape parantheses with backslashes because they are
+      // escape parenthesis with backslashes because they are
       // otherwise interpreted as regex groups by path-to-regexp
       endpoint = endpoint.replace(/\(/g, '\\(').replace(/\)/g, '\\)');
 
