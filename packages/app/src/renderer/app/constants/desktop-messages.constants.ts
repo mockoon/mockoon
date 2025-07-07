@@ -109,7 +109,7 @@ export const DesktopMessages: Record<
     toastType: 'warning'
   }),
   UNKNOWN_SERVER_ERROR: (messageParams) => ({
-    message: `An unknown server error occured: ${messageParams?.error?.message}`,
+    message: `An unknown server error occurred: ${messageParams?.error?.message}`,
     log: false,
     showToast: true,
     toastType: 'error'
@@ -149,7 +149,7 @@ export const DesktopMessages: Record<
     toastType: 'success'
   }),
   COPY_ENVIRONMENT_CLIPBOARD_ERROR: (messageParams) => ({
-    message: `An error occured while copying the environment to the clipboard: ${messageParams?.error?.message}`,
+    message: `An error occurred while copying the environment to the clipboard: ${messageParams?.error?.message}`,
     showToast: true,
     log: true,
     logPayload: { environmentUUID: messageParams.environmentUUID },
@@ -167,7 +167,7 @@ export const DesktopMessages: Record<
     toastType: 'success'
   }),
   COPY_ROUTE_CLIPBOARD_ERROR: (messageParams) => ({
-    message: `An error occured while copying the route to the clipboard: ${messageParams?.error?.message}`,
+    message: `An error occurred while copying the route to the clipboard: ${messageParams?.error?.message}`,
     log: true,
     logPayload: { routeUUID: messageParams.routeUUID },
     showToast: true,
