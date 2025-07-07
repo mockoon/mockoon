@@ -41,7 +41,7 @@ type ScreenshotPosition = {
   left?: number;
 };
 
-type ScreeenshotGaps = {
+type ScreenshotGaps = {
   top?: number;
   right?: number;
   bottom?: number;
@@ -87,34 +87,34 @@ const highlight = async (
 
 const takeElementScreenshot = async (
   targetSelector: ChainablePromiseElement | null,
-  screeenshotPosition: ScreenshotPosition,
-  screeenshotGaps: ScreeenshotGaps,
+  screenshotPosition: ScreenshotPosition,
+  screenshotGaps: ScreenshotGaps,
   folder: string,
   filePath: string
 ) => {
   await browser.pause(500);
   const position = `element.style.top=(${
-    screeenshotPosition.top !== undefined
-      ? screeenshotPosition.top
-      : 'highlightedTargetPosition.top - ' + screeenshotGaps.top
+    screenshotPosition.top !== undefined
+      ? screenshotPosition.top
+      : 'highlightedTargetPosition.top - ' + screenshotGaps.top
   }) + "px";
   element.style.left=(${
-    screeenshotPosition.left !== undefined
-      ? screeenshotPosition.left
-      : 'highlightedTargetPosition.left - ' + screeenshotGaps.left
+    screenshotPosition.left !== undefined
+      ? screenshotPosition.left
+      : 'highlightedTargetPosition.left - ' + screenshotGaps.left
   }) + "px";
   element.style.right= (${
-    screeenshotPosition.right !== undefined
-      ? screeenshotPosition.right
+    screenshotPosition.right !== undefined
+      ? screenshotPosition.right
       : 'window.innerWidth - (highlightedTargetPosition.right + ' +
-        screeenshotGaps.right +
+        screenshotGaps.right +
         ')'
   }) + "px";
   element.style.bottom= (${
-    screeenshotPosition.bottom !== undefined
-      ? screeenshotPosition.bottom
+    screenshotPosition.bottom !== undefined
+      ? screenshotPosition.bottom
       : 'window.innerHeight - (highlightedTargetPosition.bottom + ' +
-        screeenshotGaps.bottom +
+        screenshotGaps.bottom +
         ')'
   }) + "px";`;
 
@@ -164,7 +164,7 @@ const documentationTopics: {
     // screenshot absolute positioning
     screenshotPosition: ScreenshotPosition;
     // gaps (padding) around the red rectangle
-    screeenshotGaps: ScreeenshotGaps;
+    screenshotGaps: ScreenshotGaps;
     fileName: string;
   }[];
 }[] = [
@@ -180,7 +180,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { left: 0, top: 0 },
-        screeenshotGaps: { right: 50, bottom: 125 },
+        screenshotGaps: { right: 50, bottom: 125 },
         fileName: 'open-environment-settings.png'
       },
       {
@@ -193,7 +193,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 10, right: 10, bottom: 10, left: 10 },
         screenshotPosition: { top: 0, left: 0 },
-        screeenshotGaps: { right: 250, bottom: 125 },
+        screenshotGaps: { right: 250, bottom: 125 },
         fileName: 'environment-custom-port.png'
       },
       {
@@ -204,7 +204,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 10, right: 10, bottom: 10, left: 10 },
         screenshotPosition: { top: 0, left: 0 },
-        screeenshotGaps: { right: 250, bottom: 125 },
+        screenshotGaps: { right: 250, bottom: 125 },
         fileName: 'environment-custom-prefix.png'
       }
     ]
@@ -232,7 +232,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { left: 5, right: 5, bottom: 5, top: 5 },
         screenshotPosition: { top: 0, left: 0 },
-        screeenshotGaps: { right: 50, bottom: 50 },
+        screenshotGaps: { right: 50, bottom: 50 },
         fileName: 'route-menu-disable-route.png'
       },
       {
@@ -245,7 +245,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { left: 0, top: 0 },
-        screeenshotGaps: { right: 50, bottom: 125 },
+        screenshotGaps: { right: 50, bottom: 125 },
         fileName: 'open-environment-settings.png'
       },
       {
@@ -258,7 +258,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 10, right: 10, bottom: 10, left: 10 },
         screenshotPosition: { top: 0, left: 0 },
-        screeenshotGaps: { right: 250, bottom: 125 },
+        screenshotGaps: { right: 250, bottom: 125 },
         fileName: 'environment-prefix.png'
       },
       {
@@ -271,7 +271,7 @@ const documentationTopics: {
         },
         highlight: false,
         screenshotPosition: {},
-        screeenshotGaps: { top: 20, right: 20, bottom: 20, left: 330 },
+        screenshotGaps: { top: 20, right: 20, bottom: 20, left: 330 },
         fileName: 'route-patterns.png'
       },
       {
@@ -284,7 +284,7 @@ const documentationTopics: {
         },
         highlight: false,
         screenshotPosition: {},
-        screeenshotGaps: { top: 20, right: 20, bottom: 20, left: 330 },
+        screenshotGaps: { top: 20, right: 20, bottom: 20, left: 330 },
         fileName: 'route-params.png'
       }
     ]
@@ -304,7 +304,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 10, right: 10, bottom: 10, left: 10 },
         screenshotPosition: { right: 0 },
-        screeenshotGaps: { top: 100, bottom: 50, left: 30 },
+        screenshotGaps: { top: 100, bottom: 50, left: 30 },
         fileName: 'fill-route-header-form.png'
       },
       {
@@ -318,7 +318,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { right: 0 },
-        screeenshotGaps: { top: 150, bottom: 50, left: 20 },
+        screenshotGaps: { top: 150, bottom: 50, left: 20 },
         fileName: 'add-route-header.png'
       },
       {
@@ -329,7 +329,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { top: 0, left: 0 },
-        screeenshotGaps: { right: 300, bottom: 125 },
+        screenshotGaps: { right: 300, bottom: 125 },
         fileName: 'open-environment-headers.png'
       },
       {
@@ -346,7 +346,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { top: 0, right: 0 },
-        screeenshotGaps: { bottom: 20, left: 20 },
+        screenshotGaps: { bottom: 20, left: 20 },
         fileName: 'add-environment-header.png'
       }
     ]
@@ -365,7 +365,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { top: 0, left: 0 },
-        screeenshotGaps: { right: 250, bottom: 125 },
+        screenshotGaps: { right: 250, bottom: 125 },
         fileName: 'open-proxy-options.png'
       },
       {
@@ -383,7 +383,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 10, right: 350, bottom: 60, left: 30 },
         screenshotPosition: { top: 0, left: 0, right: 0 },
-        screeenshotGaps: { bottom: 150 },
+        screenshotGaps: { bottom: 150 },
         fileName: 'enable-proxy.png'
       },
       {
@@ -396,7 +396,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 10, right: 30, bottom: 10, left: 30 },
         screenshotPosition: { top: 0, left: 0 },
-        screeenshotGaps: { bottom: 150, right: 450 },
+        screenshotGaps: { bottom: 150, right: 450 },
         fileName: 'proxy-no-forward.png'
       },
       {
@@ -416,7 +416,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 10, right: 0, fromTop: 150, left: 10 },
         screenshotPosition: { top: 0, left: 0, right: 0 },
-        screeenshotGaps: { bottom: 50 },
+        screenshotGaps: { bottom: 50 },
         fileName: 'proxy-headers.png'
       }
     ]
@@ -435,7 +435,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { top: 0, left: 0 },
-        screeenshotGaps: { right: 250, bottom: 125 },
+        screenshotGaps: { right: 250, bottom: 125 },
         fileName: 'open-logs.png'
       },
       {
@@ -455,7 +455,7 @@ const documentationTopics: {
         },
         highlight: false,
         screenshotPosition: { top: 0, right: 0 },
-        screeenshotGaps: { left: 50, bottom: -300 },
+        screenshotGaps: { left: 50, bottom: -300 },
         fileName: 'logs-request.png'
       },
       {
@@ -467,7 +467,7 @@ const documentationTopics: {
         },
         highlight: false,
         screenshotPosition: { top: 0, right: 0 },
-        screeenshotGaps: { left: 50, bottom: -300 },
+        screenshotGaps: { left: 50, bottom: -300 },
         fileName: 'logs-response.png'
       },
       {
@@ -486,7 +486,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { left: 5, right: 5, bottom: 5, top: 5 },
         screenshotPosition: { top: 0, right: 0 },
-        screeenshotGaps: { left: 50, bottom: -300 },
+        screenshotGaps: { left: 50, bottom: -300 },
         fileName: 'logs-metadata.png'
       }
     ]
@@ -513,7 +513,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { left: 5, right: 5, bottom: 5, top: 5 },
         screenshotPosition: { top: 0, right: 0 },
-        screeenshotGaps: { left: 50, bottom: -300 },
+        screenshotGaps: { left: 50, bottom: -300 },
         fileName: 'logs-auto-mocking.png'
       },
       {
@@ -528,7 +528,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { left: 5, right: 5, bottom: 5, top: 5 },
         screenshotPosition: { top: 0, right: 0 },
-        screeenshotGaps: { left: 50, bottom: -300 },
+        screenshotGaps: { left: 50, bottom: -300 },
         fileName: 'logs-start-recording.png'
       },
       {
@@ -544,7 +544,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { left: 5, right: 5, bottom: 5, top: 5 },
         screenshotPosition: { left: 0, top: 0 },
-        screeenshotGaps: { bottom: -500, right: -300 },
+        screenshotGaps: { bottom: -500, right: -300 },
         fileName: 'logs-recording-in-progress.png'
       }
     ]
@@ -564,7 +564,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { top: 0, left: 0 },
-        screeenshotGaps: { right: 270, bottom: 125 },
+        screenshotGaps: { right: 270, bottom: 125 },
         fileName: 'open-environment-settings.png'
       },
       {
@@ -579,7 +579,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 5, right: 10, bottom: 5, left: 30 },
         screenshotPosition: { top: 0, left: 0 },
-        screeenshotGaps: { right: 600, bottom: 100 },
+        screenshotGaps: { right: 600, bottom: 100 },
         fileName: 'enable-tls.png'
       },
       {
@@ -592,7 +592,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
         screenshotPosition: { top: 0, left: 0, right: 0 },
-        screeenshotGaps: { bottom: 300 },
+        screenshotGaps: { bottom: 300 },
         fileName: 'enable-tls-custom-certificate.png'
       }
     ]
@@ -611,7 +611,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { top: 0, left: 0 },
-        screeenshotGaps: { right: 270, bottom: 125 },
+        screenshotGaps: { right: 270, bottom: 125 },
         fileName: 'open-environment-settings.png'
       },
       {
@@ -624,7 +624,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 5, right: 10, bottom: 5, left: 30 },
         screenshotPosition: { top: 0, left: 0 },
-        screeenshotGaps: { right: 600, bottom: 30 },
+        screenshotGaps: { right: 600, bottom: 30 },
         fileName: 'enable-cors.png'
       },
       {
@@ -637,7 +637,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { top: 0, left: 0, right: 0 },
-        screeenshotGaps: { bottom: 125 },
+        screenshotGaps: { bottom: 125 },
         fileName: 'open-environment-headers.png'
       },
       {
@@ -650,7 +650,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { top: 0, left: 0, right: 0 },
-        screeenshotGaps: { bottom: 20 },
+        screenshotGaps: { bottom: 20 },
         fileName: 'add-cors-headers.png'
       },
       {
@@ -663,7 +663,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 5, right: 5, bottom: 80, left: 5 },
         screenshotPosition: { top: 0, left: 0, right: 0 },
-        screeenshotGaps: { bottom: 40 },
+        screenshotGaps: { bottom: 40 },
         fileName: 'view-cors-headers.png'
       }
     ]
@@ -682,7 +682,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { top: 0, left: 0 },
-        screeenshotGaps: { right: 270, bottom: 125 },
+        screenshotGaps: { right: 270, bottom: 125 },
         fileName: 'open-environment-settings.png'
       },
       {
@@ -696,7 +696,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { top: 0, left: 0, right: 0 },
-        screeenshotGaps: { bottom: 50 },
+        screenshotGaps: { bottom: 50 },
         fileName: 'custom-hostname-setting.png'
       }
     ]
@@ -716,7 +716,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
         screenshotPosition: { left: 0, right: 0, top: 0 },
-        screeenshotGaps: { bottom: 150 },
+        screenshotGaps: { bottom: 150 },
         fileName: 'body-type-toggle.png'
       },
       {
@@ -730,7 +730,7 @@ const documentationTopics: {
         highlight: false,
         // highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
         screenshotPosition: { right: 0, bottom: 0 },
-        screeenshotGaps: { top: 200, left: 600 },
+        screenshotGaps: { top: 200, left: 600 },
         fileName: 'inline-body-editor.png'
       },
       {
@@ -744,7 +744,7 @@ const documentationTopics: {
         highlight: false,
         // highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
         screenshotPosition: { right: 0, bottom: 0 },
-        screeenshotGaps: { top: 200, left: 600 },
+        screenshotGaps: { top: 200, left: 600 },
         fileName: 'body-file-serving.png'
       },
       {
@@ -758,7 +758,7 @@ const documentationTopics: {
         highlight: false,
         // highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
         screenshotPosition: { right: 0, bottom: 0 },
-        screeenshotGaps: { top: 200, left: 600 },
+        screenshotGaps: { top: 200, left: 600 },
         fileName: 'body-data-bucket.png'
       }
     ]
@@ -778,7 +778,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 10, right: 80, bottom: 60, left: 10 },
-        screeenshotGaps: { top: 200, bottom: 50, left: 20 },
+        screenshotGaps: { top: 200, bottom: 50, left: 20 },
         fileName: 'file-path.png'
       },
       {
@@ -799,7 +799,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { top: 0, left: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { right: 150, bottom: 150 },
+        screenshotGaps: { right: 150, bottom: 150 },
         fileName: 'environment-show-in-folder.png'
       },
       {
@@ -814,7 +814,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 5, right: 30, bottom: 5, left: 30 },
-        screeenshotGaps: { top: 100, bottom: 50, left: 100 },
+        screenshotGaps: { top: 100, bottom: 50, left: 100 },
         fileName: 'route-response-disable-templating.png'
       },
       {
@@ -830,7 +830,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 5, right: 30, bottom: 5, left: 30 },
         screenshotPosition: { right: 0 },
-        screeenshotGaps: { top: 150, bottom: 50, left: 100 },
+        screenshotGaps: { top: 150, bottom: 50, left: 100 },
         fileName: 'enable-404-fallback.png'
       }
     ]
@@ -851,7 +851,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 30, bottom: 100, left: 30 },
+        screenshotGaps: { top: 30, bottom: 100, left: 30 },
         fileName: 'add-route-response.png'
       },
       {
@@ -862,7 +862,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 60, bottom: 100, left: 1100 },
+        screenshotGaps: { top: 60, bottom: 100, left: 1100 },
         fileName: 'duplicate-route-response.png'
       },
       {
@@ -875,7 +875,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 50, bottom: 100, left: 50 },
+        screenshotGaps: { top: 50, bottom: 100, left: 50 },
         fileName: 'reorder-responses.png'
       },
       {
@@ -886,7 +886,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 5, right: 10, bottom: 40, left: 10 },
-        screeenshotGaps: { top: 50, bottom: 100, left: 1000 },
+        screenshotGaps: { top: 50, bottom: 100, left: 1000 },
         fileName: 'change-route-responses-default.png'
       },
       {
@@ -899,7 +899,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 20, bottom: 120, left: 1100 },
+        screenshotGaps: { top: 20, bottom: 120, left: 1100 },
         fileName: 'random-route-responses.png'
       },
       {
@@ -912,7 +912,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 20, bottom: 120, left: 1120 },
+        screenshotGaps: { top: 20, bottom: 120, left: 1120 },
         fileName: 'sequential-route-responses.png'
       },
       {
@@ -925,7 +925,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 20, bottom: 120, left: 1160 },
+        screenshotGaps: { top: 20, bottom: 120, left: 1160 },
         fileName: 'fallback-mode-responses.png'
       }
     ]
@@ -946,7 +946,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 10, right: 5, bottom: 40, left: 10 },
-        screeenshotGaps: { top: 200, bottom: 20, left: 20 },
+        screenshotGaps: { top: 200, bottom: 20, left: 20 },
         fileName: 'add-route-response-rule.png'
       },
       {
@@ -965,7 +965,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 5, right: 5, bottom: 50, left: 5 },
-        screeenshotGaps: { top: 200, bottom: 50, left: 1150 },
+        screenshotGaps: { top: 200, bottom: 50, left: 1150 },
         fileName: 'route-response-rule-reorder.png'
       },
       {
@@ -978,7 +978,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 10, bottom: 200, left: 1150 },
+        screenshotGaps: { top: 10, bottom: 200, left: 1150 },
         fileName: 'disable-rules.png'
       },
       {
@@ -991,7 +991,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: -15, right: 5, bottom: -15, left: 5 },
-        screeenshotGaps: { top: 120, bottom: 50, left: 20 },
+        screenshotGaps: { top: 120, bottom: 50, left: 20 },
         fileName: 'route-response-rules-operator.png'
       },
       {
@@ -1007,7 +1007,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 120, bottom: 50, left: 50 },
+        screenshotGaps: { top: 120, bottom: 50, left: 50 },
         fileName: 'route-response-rules-target.png'
       },
       {
@@ -1021,7 +1021,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 120, bottom: 50, left: 50 },
+        screenshotGaps: { top: 120, bottom: 50, left: 50 },
         fileName: 'route-response-rules-property.png'
       },
       {
@@ -1035,7 +1035,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 120, bottom: 50, left: 50 },
+        screenshotGaps: { top: 120, bottom: 50, left: 50 },
         fileName: 'route-response-rules-invert-operator.png'
       },
       {
@@ -1049,7 +1049,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 120, bottom: 50, left: 50 },
+        screenshotGaps: { top: 120, bottom: 50, left: 50 },
         fileName: 'route-response-rules-comparison-operator.png'
       },
       {
@@ -1063,7 +1063,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 120, bottom: 50, left: 50 },
+        screenshotGaps: { top: 120, bottom: 50, left: 50 },
         fileName: 'route-response-rules-value.png'
       }
     ]
@@ -1082,7 +1082,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { top: 0, left: 0 },
-        screeenshotGaps: { right: 400, bottom: 125 },
+        screenshotGaps: { right: 400, bottom: 125 },
         fileName: 'open-data-view.png'
       },
       {
@@ -1096,7 +1096,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { left: 0, top: 0, right: 0 },
-        screeenshotGaps: { bottom: 500 },
+        screenshotGaps: { bottom: 500 },
         fileName: 'add-data-bucket.png'
       }
     ]
@@ -1121,7 +1121,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
         screenshotPosition: { right: 0 },
-        screeenshotGaps: { top: 270, left: 40, bottom: 150 },
+        screenshotGaps: { top: 270, left: 40, bottom: 150 },
         fileName: 'link-data-bucket-response.png'
       }
     ]
@@ -1142,7 +1142,7 @@ const documentationTopics: {
         highlight: false,
         highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
         screenshotPosition: { right: 0 },
-        screeenshotGaps: { top: 55, left: 55, bottom: 0 },
+        screenshotGaps: { top: 55, left: 55, bottom: 0 },
         fileName: 'body-templating.png'
       },
       {
@@ -1158,7 +1158,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { right: 0 },
-        screeenshotGaps: { top: 20, left: 40, bottom: 50 },
+        screenshotGaps: { top: 20, left: 40, bottom: 50 },
         fileName: 'open-route-response-settings.png'
       },
       {
@@ -1173,7 +1173,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 5, right: 30, bottom: 5, left: 30 },
-        screeenshotGaps: { top: 100, bottom: 50, left: 80 },
+        screenshotGaps: { top: 100, bottom: 50, left: 80 },
         fileName: 'disable-route-response-templating.png'
       },
       {
@@ -1191,7 +1191,7 @@ const documentationTopics: {
         highlight: false,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 10, right: 70, bottom: 60, left: 10 },
-        screeenshotGaps: { top: 100, bottom: 50, left: 20 },
+        screenshotGaps: { top: 100, bottom: 50, left: 20 },
         fileName: 'file-path-templating.png'
       },
       {
@@ -1210,7 +1210,7 @@ const documentationTopics: {
         highlight: false,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { right: 0 },
-        screeenshotGaps: { top: 20, left: 40, bottom: 120 },
+        screenshotGaps: { top: 20, left: 40, bottom: 120 },
         fileName: 'headers-templating.png'
       },
       {
@@ -1233,7 +1233,7 @@ const documentationTopics: {
         highlight: false,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { right: 0 },
-        screeenshotGaps: { top: 60, left: 40, bottom: 60 },
+        screenshotGaps: { top: 60, left: 40, bottom: 60 },
         fileName: 'template-helper-response-rule-value.png'
       }
     ]
@@ -1255,7 +1255,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 5, right: 5, bottom: 100, left: 5 },
         screenshotPosition: {},
-        screeenshotGaps: { top: 30, left: 30, bottom: 30, right: 30 },
+        screenshotGaps: { top: 30, left: 30, bottom: 30, right: 30 },
         fileName: 'settings-faker.png'
       }
     ]
@@ -1283,7 +1283,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { top: 0, left: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { right: 150, bottom: 150 },
+        screenshotGaps: { right: 150, bottom: 150 },
         fileName: 'environment-show-in-folder.png'
       },
       {
@@ -1303,7 +1303,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { top: 0, left: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { right: 150, bottom: 150 },
+        screenshotGaps: { right: 150, bottom: 150 },
         fileName: 'environment-move-to-folder.png'
       },
       {
@@ -1324,7 +1324,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
         screenshotPosition: {},
-        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        screenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
         fileName: 'enable-file-watching.png'
       }
     ]
@@ -1345,7 +1345,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { top: 0, left: 0 },
-        screeenshotGaps: { bottom: 200, right: 350 },
+        screenshotGaps: { bottom: 200, right: 350 },
         fileName: 'open-environment.png'
       },
       {
@@ -1366,7 +1366,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 5, right: 10, bottom: 5, left: 30 },
         screenshotPosition: {},
-        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        screenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
         fileName: 'storage-pretty-printing.png'
       },
       {
@@ -1388,7 +1388,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { top: 0, left: 0 },
-        screeenshotGaps: { bottom: 200, right: 350 },
+        screenshotGaps: { bottom: 200, right: 350 },
         fileName: 'export-clipboard-env.png'
       }
     ]
@@ -1446,7 +1446,7 @@ const documentationTopics: {
         highlight: false,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { left: 0, top: 0 },
-        screeenshotGaps: { right: 500, bottom: 400 },
+        screenshotGaps: { right: 500, bottom: 400 },
         fileName: 'routes-nested-folder.png'
       }
     ]
@@ -1471,7 +1471,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { left: 0, top: 0 },
-        screeenshotGaps: { right: 150, bottom: 100 },
+        screenshotGaps: { right: 150, bottom: 100 },
         fileName: 'add-http-route.png'
       },
       {
@@ -1491,7 +1491,7 @@ const documentationTopics: {
         highlight: false,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { left: 0, top: 0 },
-        screeenshotGaps: { right: 100, bottom: 400 },
+        screenshotGaps: { right: 100, bottom: 400 },
         fileName: 'new-http-route.png'
       }
     ]
@@ -1516,7 +1516,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { left: 0, top: 0 },
-        screeenshotGaps: { right: 150, bottom: 100 },
+        screenshotGaps: { right: 150, bottom: 100 },
         fileName: 'add-crud-route.png'
       },
       {
@@ -1533,7 +1533,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { left: 0, top: 0 },
-        screeenshotGaps: { right: 100, bottom: 100 },
+        screenshotGaps: { right: 100, bottom: 100 },
         fileName: 'set-crud-route-path.png'
       },
       {
@@ -1547,7 +1547,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { right: 0, left: 0 },
-        screeenshotGaps: { top: 200, bottom: 100 },
+        screenshotGaps: { top: 200, bottom: 100 },
         fileName: 'link-data-bucket-crud-route.png'
       },
       {
@@ -1561,7 +1561,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { right: 0, left: 0 },
-        screeenshotGaps: { top: 200, bottom: 100 },
+        screenshotGaps: { top: 200, bottom: 100 },
         fileName: 'customize-crud-id-property-key.png'
       }
     ]
@@ -1586,7 +1586,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { left: 0, top: 0 },
-        screeenshotGaps: { right: 150, bottom: 100 },
+        screenshotGaps: { right: 150, bottom: 100 },
         fileName: 'pre-generated-templates-modal.png'
       },
       {
@@ -1603,7 +1603,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: {},
-        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        screenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
         fileName: 'templates-create-get-route.png'
       },
       {
@@ -1619,7 +1619,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: {},
-        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        screenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
         fileName: 'ai-assistant-generate-template-tab.png'
       },
       {
@@ -1633,7 +1633,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 5, right: 5, bottom: 5, left: 5 },
         screenshotPosition: {},
-        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        screenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
         fileName: 'ai-assistant-template-generate-option.png'
       },
       {
@@ -1649,7 +1649,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: {},
-        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        screenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
         fileName: 'ai-assistant-generate-button.png'
       },
       {
@@ -1667,7 +1667,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: {},
-        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        screenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
         fileName: 'templates-generate-get-route.png'
       },
       {
@@ -1683,7 +1683,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: {},
-        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        screenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
         fileName: 'ai-assistant-generate-endpoint-tab.png'
       },
       {
@@ -1699,7 +1699,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: {},
-        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        screenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
         fileName: 'ai-assistant-generate-endpoint-button.png'
       },
       {
@@ -1720,7 +1720,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: {},
-        screeenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
+        screenshotGaps: { bottom: 30, right: 30, left: 30, top: 30 },
         fileName: 'ai-assistant-generate-endpoint-create-button.png'
       }
     ]
@@ -1746,7 +1746,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { left: 0, top: 0 },
-        screeenshotGaps: { right: 300, bottom: 200 },
+        screenshotGaps: { right: 300, bottom: 200 },
         fileName: 'create-wildcard-route.png'
       },
       {
@@ -1759,7 +1759,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 20, bottom: 120, left: 1250 },
+        screenshotGaps: { top: 20, bottom: 120, left: 1250 },
         fileName: 'activate-fallback-mode.png'
       },
       {
@@ -1776,7 +1776,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { top: 40, bottom: 200, left: 100 },
+        screenshotGaps: { top: 40, bottom: 200, left: 100 },
         fileName: 'response-status-code-401.png'
       },
       {
@@ -1796,7 +1796,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { right: 0 },
         highlightGaps: { top: 10, right: 5, bottom: 40, left: 10 },
-        screeenshotGaps: { top: 200, bottom: 20, left: 20 },
+        screenshotGaps: { top: 200, bottom: 20, left: 20 },
         fileName: 'response-rule-header-null.png'
       }
     ]
@@ -1815,7 +1815,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { top: 0, left: 0 },
-        screeenshotGaps: { right: 400, bottom: 125 },
+        screenshotGaps: { right: 400, bottom: 125 },
         fileName: 'open-callbacks-view.png'
       },
       {
@@ -1829,7 +1829,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { left: 0, top: 0, right: 0 },
-        screeenshotGaps: { bottom: 500 },
+        screenshotGaps: { bottom: 500 },
         fileName: 'add-callback.png'
       }
     ]
@@ -1852,7 +1852,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { right: 0 },
-        screeenshotGaps: { top: 20, left: 40, bottom: 50 },
+        screenshotGaps: { top: 20, left: 40, bottom: 50 },
         fileName: 'open-route-response-callbacks.png'
       },
       {
@@ -1866,7 +1866,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { right: 0 },
-        screeenshotGaps: { top: 150, bottom: 50, left: 20 },
+        screenshotGaps: { top: 150, bottom: 50, left: 20 },
         fileName: 'link-callback-response.png'
       }
     ]
@@ -1891,7 +1891,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 5, right: 5, bottom: 70, left: 5 },
         screenshotPosition: {},
-        screeenshotGaps: { top: 30, left: 30, bottom: 30, right: 30 },
+        screenshotGaps: { top: 30, left: 30, bottom: 30, right: 30 },
         fileName: 'settings-environment-variables-prefix.png'
       }
     ]
@@ -1920,7 +1920,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { left: 0, top: 0 },
-        screeenshotGaps: { right: 150, bottom: 100 },
+        screenshotGaps: { right: 150, bottom: 100 },
         fileName: 'add-ws-route.png'
       },
       {
@@ -1937,7 +1937,7 @@ const documentationTopics: {
         highlight: true,
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
         screenshotPosition: { left: 0, top: 0 },
-        screeenshotGaps: { right: 100, bottom: 100 },
+        screenshotGaps: { right: 100, bottom: 100 },
         fileName: 'set-ws-route-path.png'
       },
       {
@@ -1950,7 +1950,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { left: 0, top: 0, right: 600 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { bottom: 80 },
+        screenshotGaps: { bottom: 80 },
         fileName: 'toggle-ws-unicast-streaming.png'
       },
       {
@@ -1963,7 +1963,7 @@ const documentationTopics: {
         highlight: true,
         screenshotPosition: { left: 0, top: 0, right: 600 },
         highlightGaps: { top: 0, right: 0, bottom: 0, left: 0 },
-        screeenshotGaps: { bottom: 80 },
+        screenshotGaps: { bottom: 80 },
         fileName: 'toggle-ws-broadcast-streaming.png'
       }
     ]
@@ -2005,7 +2005,7 @@ describe('Documentation screenshots', () => {
               ? null
               : screenshot.screenshotTarget || screenshot.highlightedTarget,
             screenshot.screenshotPosition,
-            screenshot.screeenshotGaps,
+            screenshot.screenshotGaps,
             documentationTopic.folder,
             screenshot.fileName
           );
