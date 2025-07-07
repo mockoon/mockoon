@@ -10,8 +10,8 @@ export const ServerMessages = {
     'Error while creating route, regex path is invalid: %s',
   ROUTE_SERVING_ERROR: 'Error while serving the content: %s',
   ROUTE_FILE_SERVING_ERROR: 'Error while serving the file content: %s',
-  PROXY_ERROR: 'An error occured while trying to proxy to %s',
-  UNKNOWN_SERVER_ERROR: 'An unknown server error occured: %s',
+  PROXY_ERROR: 'An error occurred while trying to proxy to %s',
+  UNKNOWN_SERVER_ERROR: 'An unknown server error occurred: %s',
   CERT_FILE_NOT_FOUND: 'Certificate file not found',
   ROUTE_NO_LONGER_EXISTS: 'This route no longer exists',
   HEADER_PARSING_ERROR: 'Header parsing error: %s',
@@ -24,6 +24,6 @@ export const ServerMessages = {
   CALLBACK_ERROR: 'Error while executing callback: %s',
 
   WS_UNKNOWN_ROUTE: 'No matching route found for websocket: %s',
-  WS_UNSUPPORTED_CONTENT: 'Unsupported content recieved from websocket: %s',
+  WS_UNSUPPORTED_CONTENT: 'Unsupported content received from websocket: %s',
   WS_SERVING_ERROR: 'Web socket serving error: %s'
 };
