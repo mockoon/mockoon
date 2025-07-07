@@ -67,7 +67,7 @@ export const CloneRouteResponse = (
 });
 
 /**
- * Clone a databucket with a renewd ids
+ * Clone a databucket with a renewed ids
  *
  * @param dataBucket
  * @returns

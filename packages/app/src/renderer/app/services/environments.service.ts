@@ -1122,7 +1122,7 @@ export class EnvironmentsService {
   }
 
   /**
-   * Toogle a folder collapse state and save it in the store
+   * Toggle a folder collapse state and save it in the store
    */
   public toggleFolderCollapse(folderUuid: string) {
     const activeEnvironment = this.store.getActiveEnvironment();

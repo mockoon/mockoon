@@ -443,7 +443,7 @@ export const reloadEnvironmentAction = (
   }) as const;
 
 /**
- * Trigger a save of an environment without modyfing its state
+ * Trigger a save of an environment without modifying its state
  *
  * @param environmentUUID
  */

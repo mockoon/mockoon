@@ -214,12 +214,12 @@ export class ResponseRulesInterpreter {
       return false;
     }
 
-    // value may be explicitely null (JSON), this is considered as an empty string
+    // value may be explicitly null (JSON), this is considered as an empty string
     if (targetValue === null) {
       targetValue = '';
     }
 
-    // rule value may be explicitely null (is shouldn't anymore), this is considered as an empty string too
+    // rule value may be explicitly null (is shouldn't anymore), this is considered as an empty string too
     if (rule.value === null) {
       rule.value = '';
     }

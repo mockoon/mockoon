@@ -92,7 +92,7 @@ export const fromExpressRequest = (req: Request): ServerRequest => ({
  * To pass into helper classes, this common server request is required.
  *
  * @param req websocket connection request
- * @param message message recieved from websocket now
+ * @param message message received from websocket now
  */
 export const fromWsRequest = (
   req: Request,
@@ -138,7 +138,7 @@ export const fromWsRequest = (
  *
  * This method is useful to mimic the behaviour of websockets, because,
  * we need to keep the access of original connection request and then subsequent messages
- * in a full-duplex communication. This will update the body content with the recieved
+ * in a full-duplex communication. This will update the body content with the received
  * message, so that helper classes will use that instead of original body.
  *
  * @param req
