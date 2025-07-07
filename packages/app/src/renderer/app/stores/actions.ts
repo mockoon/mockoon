@@ -1002,7 +1002,7 @@ export const updateProcessedDatabucketsAction = (
  * @param feedback
  * @returns
  */
-export const upateFeedbackAction = (feedback: string) =>
+export const updateFeedbackAction = (feedback: string) =>
   ({
     type: ActionTypes.UPDATE_FEEDBACK,
     feedback
@@ -1082,5 +1082,5 @@ export type Actions =
   | ReturnType<typeof duplicateDatabucketToAnotherEnvironmentAction>
   | ReturnType<typeof duplicateCallbackToAnotherEnvironmentAction>
   | ReturnType<typeof updateProcessedDatabucketsAction>
-  | ReturnType<typeof upateFeedbackAction>
+  | ReturnType<typeof updateFeedbackAction>
   | ReturnType<typeof updateRemoteConfigAction>;

@@ -6,7 +6,7 @@ import { map, tap } from 'rxjs';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
-import { upateFeedbackAction } from 'src/renderer/app/stores/actions';
+import { updateFeedbackAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 
 @Component({
@@ -38,7 +38,7 @@ export class FeedbackModalComponent {
       .pipe(
         takeUntilDestroyed(),
         tap((feedback) => {
-          this.store.update(upateFeedbackAction(feedback));
+          this.store.update(updateFeedbackAction(feedback));
         })
       )
       .subscribe();
