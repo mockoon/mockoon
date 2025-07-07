@@ -17,7 +17,7 @@ class File {
   }
 
   public async editSettingsAndReload(properties: Partial<Settings>) {
-    // wait for eventual settings save before modyfing the settings
+    // wait for eventual settings save before modifying the settings
     await utils.waitForAutosave();
     let settings = JSON.parse(
       (await fs.readFile(this.settingsPath)).toString()

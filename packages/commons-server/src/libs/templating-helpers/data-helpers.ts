@@ -89,7 +89,7 @@ export const DataHelpers = function (
     setData: function (...args: any[]) {
       const parameters = args.slice(0, -1);
 
-      // at least the operator, databucket name/id, path and values can be ommited, especially for del and invert
+      // at least the operator, databucket name/id, path and values can be omitted, especially for del and invert
       if (parameters.length < 2) {
         return;
       }

@@ -4643,7 +4643,7 @@ describe('Response rules interpreter', () => {
 
     it('should return second response if first one has no rule with AND', () => {
       /**
-       * This test is here to prevent a bug that occured when first response had no rule but a AND operator.
+       * This test is here to prevent a bug that occurred when first response had no rule but a AND operator.
        * It intercepted everything and prevented to get the correct response.
        * See https://github.com/mockoon/commons-server/issues/6
        */

@@ -71,7 +71,7 @@ const getDialogDefaultPath = () => {
 };
 
 /**
- * Build a full file path by combining an environment path to which a file is reletively located and a file path
+ * Build a full file path by combining an environment path to which a file is relatively located and a file path
  *
  * @param filePath
  * @param relativeToFile

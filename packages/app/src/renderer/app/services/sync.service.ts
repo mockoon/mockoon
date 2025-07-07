@@ -107,7 +107,7 @@ export class SyncService {
             switchMap(([user, token]) => {
               /**
                * On desktop if a newer version is detected by the sync backend during connection will automatically migrate the environments.
-               * Because it means a newer version of the app was manualle installed. We can trust this positive action from the user.
+               * Because it means a newer version of the app was manually installed. We can trust this positive action from the user.
                *
                * On web, it's always the latest version. So, the migration is not a positive action from the user and it's better to ask for confirmation.
                * The migration will be done by the sync backend like before but only if the user confirms the action.
@@ -776,7 +776,7 @@ export class SyncService {
 
   /**
    * Calculate the time difference between the client and the server.
-   * Send a message and wait for the acknoledgement to calculate the roundtrip time.
+   * Send a message and wait for the acknowledgement to calculate the roundtrip time.
    */
   private calculateTimeDifference() {
     const timeStart = Date.now();

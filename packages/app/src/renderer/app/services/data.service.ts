@@ -368,7 +368,7 @@ export class DataService {
   }
 
   /**
-   * Format query string parameter object, acessible using key `prefix`
+   * Format query string parameter object, accessible using key `prefix`
    * If parameter has nested objects, will call self recursively
    */
   private formatQueryParamsWithPrefix(

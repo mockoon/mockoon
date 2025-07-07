@@ -42,7 +42,7 @@ const listDuplicatedRouteUUIDs = (environment: Environment): Set<string> => {
 
 /**
  * Mark the environment status for restart.
- * A completementary condition can be provided and an optional target environment UUID.
+ * A complementary condition can be provided and an optional target environment UUID.
  *
  * @param state
  * @param condition
@@ -119,7 +119,7 @@ export const updateDuplicatedRoutes = (
 
 /**
  * Move an object value from one key to another, and remove the old one.
- * Usefull when an environment UUID changes.
+ * Useful when an environment UUID changes.
  *
  * @param previousKey
  * @param currentKey

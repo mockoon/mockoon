@@ -314,7 +314,7 @@ export const resolvePathFromEnvironment = (
  * {
  *   get: {
  *     a: {
- *       'propery.with.dots': "value"
+ *       'property.with.dots': "value"
  *     }
  *   }
  * }
@@ -664,7 +664,7 @@ export const parseWebSocketMessage = (
 };
 
 /**
- * Returns appropiate object by parsing it as necessary.
+ * Returns appropriate object by parsing it as necessary.
  * This will check content-type header and will parse messageData based on the type.
  *
  * @param data

@@ -161,7 +161,7 @@ const documentationTopics: {
     highlight: boolean;
     // optional gaps inside the red rectangle (padding) if `highlight` is false
     highlightGaps?: HighlightGaps;
-    // screenshot absolute positionning
+    // screenshot absolute positioning
     screenshotPosition: ScreenshotPosition;
     // gaps (padding) around the red rectangle
     screeenshotGaps: ScreeenshotGaps;
