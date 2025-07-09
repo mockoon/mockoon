@@ -218,55 +218,22 @@
                       </span>
                       {{ data.activeRouteResponse?.label }}
                     </div>
-                    <div
-                      class="d-flex align-items-center badge badge-hollow fw-bold ms-auto"
-                    >
-                      {{ data.activeRoute?.responses.length }}
+                    <div class="d-flex align-items-center ms-auto">
+                      <app-svg 
+                        icon="flag" 
+                        class="me-2"
+                        [ngClass]="{
+                          'text-primary': data.activeRouteResponse?.default,
+                          'text-muted': !data.activeRouteResponse?.default
+                        }"
+                      ></app-svg>
+                      <div class="badge badge-hollow fw-bold ms-2">
+                        {{ data.activeRoute?.responses.length }}
+                      </div>
                     </div>
                   </div>
                 </div>
               </button>
-
-              <!-- Flag indicator on the right side of dropdown -->
-              <ng-container
-                *ngIf="
-                  (data.activeRoute?.type === 'http' ||
-                    data.activeRoute?.type === 'ws') &&
-                  data.activeRoute?.responses.length > 0
-                "
-              >
-                <span
-                  *ngIf="data.activeRouteResponse?.default"
-                  class="ms-2"
-                  (click)="setDefaultRouteResponse(null, $event)"
-                  [ngClass]="{
-                    'text-primary': !rulesNotUsingDefaultResponse.includes(
-                      data.activeRoute?.responseMode
-                    ),
-                    'text-muted': rulesNotUsingDefaultResponse.includes(
-                      data.activeRoute?.responseMode
-                    )
-                  }"
-                  [ngbTooltip]="data.defaultResponseTooltip"
-                  style="cursor: pointer"
-                >
-                  <app-svg icon="flag"></app-svg>
-                </span>
-                <span
-                  *ngIf="!data.activeRouteResponse?.default"
-                  (click)="
-                    setDefaultRouteResponse(
-                      data.activeRouteResponse?.uuid,
-                      $event
-                    )
-                  "
-                  class="text-muted ms-2"
-                  ngbTooltip="Make route response as default"
-                  style="cursor: pointer"
-                >
-                  <app-svg icon="outlined_flag"></app-svg>
-                </span>
-              </ng-container>
 
               <div
                 class="dropdown-menu route-responses-dropdown-menu dropdown-menu-with-fixed-search"
