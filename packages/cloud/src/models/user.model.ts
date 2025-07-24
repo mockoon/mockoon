@@ -1,4 +1,4 @@
-import { Frequency, Plans } from './plans.model';
+import { Plans } from './plans.model';
 import { TeamRoles } from './team.model';
 
 export type UserProfile = {
@@ -22,15 +22,4 @@ export type User = {
   templatesQuotaUsed: number;
   mfa: { enabled: boolean; uid: string };
   nextQuotaResetOn: number;
-  subscription: {
-    trial?: boolean;
-    provider?: 'stripe' | 'paddle' | 'free' | 'manual';
-    frequency?: Frequency;
-    createdOn: number;
-    renewOn: number;
-    portalEnabled?: boolean;
-    cancellationScheduled?: boolean;
-    pastDue?: boolean;
-    subscriptionId: string;
-  };
 } & UserProfile;
