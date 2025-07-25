@@ -6,6 +6,6 @@ export type RemoteConfigData = {
   cloudSyncUrl?: string;
   deployUrl?: string;
   dataRefreshInterval?: number;
-  regions?: { label: string; value: string }[];
+  regions?: { label: string; value: DeployRegions }[];
   defaultRegion?: DeployRegions;
 };
