@@ -82,7 +82,7 @@ const app = new mockoon.MockoonServerless(mockEnv).firebaseApp();
 exports.app = onRequest(app);
 ```
 
-Since Firebase Functions uses GCP Functions underhood, a sighly different approach can be used with the [functions-framework-nodejs](https://github.com/GoogleCloudPlatform/functions-framework-nodejs):
+Since Firebase Functions uses GCP Functions underhood, a sightly different approach can be used with the [functions-framework-nodejs](https://github.com/GoogleCloudPlatform/functions-framework-nodejs):
 
 ```javascript
 const functions = require('@google-cloud/functions-framework');

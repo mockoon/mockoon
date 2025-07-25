@@ -92,7 +92,7 @@ describe('Databucket duplication', () => {
   });
 });
 
-describe('Databucket duplication to another envionment', () => {
+describe('Databucket duplication to another environment', () => {
   it('assert the context menu entry is disabled when there is only one env', async () => {
     await utils.dropdownMenuAssertDisabled(
       '.databuckets-menu .nav-item:nth-child(1) .nav-link',

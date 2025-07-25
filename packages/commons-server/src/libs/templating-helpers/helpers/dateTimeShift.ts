@@ -1,6 +1,6 @@
 import { format as dateFnsFormat } from 'date-fns';
 
-// Shift a date and time by a specified ammount.
+// Shift a date and time by a specified amount.
 import { HelperOptions } from 'handlebars';
 import { fromSafeString, numberFromSafeString } from '../../utils';
 

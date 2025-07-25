@@ -120,7 +120,7 @@ describe('WebSockets', () => {
       ws.assertWebsocketIsOpened();
 
       await browser.pause(1000);
-      // for 1 second, at least 3-4 messages must be recieved
+      // for 1 second, at least 3-4 messages must be received
       ws.assertHasAtLeastNoOfMessages(1);
       const msgs = ws.drainAllMessages();
       const jsonMsgs = msgs.map((m) => JSON.parse(m));

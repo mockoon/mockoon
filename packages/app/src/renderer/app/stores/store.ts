@@ -87,7 +87,7 @@ export class Store {
   private store$ = new BehaviorSubject<StoreType>(storeDefaultState);
   /**
    * Emits latest store action
-   * Most views are updating the store by themselves and only listen for UUID changes to update their view. Sometimes, a view update is needed when the store is updated by another view, or when the store is updated by an external source (liek file monitoring).
+   * Most views are updating the store by themselves and only listen for UUID changes to update their view. Sometimes, a view update is needed when the store is updated by another view, or when the store is updated by an external source (like file monitoring).
    * Some actions are forcing a UI refresh, and it's also possible to force a UI refresh manually by emitting a new action with the force property set to true (e.g. environments menu name edit need to update the settings view when it's opened)
    */
   private storeAction$ = new BehaviorSubject<{

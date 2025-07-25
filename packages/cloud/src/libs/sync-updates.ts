@@ -111,7 +111,7 @@ export function transformSyncAction<T extends SyncActions>(
     }
 
     // if action is older, check if it's an UPDATE or a REORDER
-    // UDPATE - if it's an update, remove commons properties that were in the previous action, and see if there is still something to apply
+    // UPDATE - if it's an update, remove commons properties that were in the previous action, and see if there is still something to apply
     // REORDER - if it's a reorder, do not let it pass
 
     if (

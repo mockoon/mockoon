@@ -252,7 +252,7 @@ describe('Proxy (with TLS and proxy headers)', () => {
     await http.assertCallWithPort(getDoublePrefixedAnswerCall, 3003);
   });
 
-  it('should test the escaping of parantheses in the route path', async () => {
+  it('should test the escaping of parenthesis in the route path', async () => {
     await environments.select(2);
     await navigation.switchView('ENV_LOGS');
     await http.assertCallWithPort(get404CallWithParentheses, 3001);

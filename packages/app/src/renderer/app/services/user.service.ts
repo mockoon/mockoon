@@ -25,7 +25,7 @@ import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import {
-  upateFeedbackAction,
+  updateFeedbackAction,
   updateDeployInstancesAction,
   updateUserAction
 } from 'src/renderer/app/stores/actions';
@@ -236,7 +236,7 @@ export class UserService {
         )
       ),
       tap(() => {
-        this.store.update(upateFeedbackAction(''));
+        this.store.update(updateFeedbackAction(''));
 
         this.loggerService.logMessage('info', 'FEEDBACK_SEND_SUCCESS');
       }),
