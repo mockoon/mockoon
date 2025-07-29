@@ -1,5 +1,4 @@
 @let userEmail = userEmail$ | async;
-@let userPlan = userPlan$ | async;
 
 <div class="modal-header">
   <h4 class="modal-title">Get priority support</h4>
@@ -30,13 +29,6 @@
         Your message will be sent to our support team and processed as soon as
         possible. We will answer you by email at
         <strong class="user-select-all">{{ userEmail }}</strong
-        >.<br />
-        Alternatively, you can also send us an email at
-        <strong class="user-select-all">{{
-          userPlan === 'ENTERPRISE'
-            ? 'priority-support@mockoon.com'
-            : 'email-support@mockoon.com'
-        }}</strong
         >.
       </span>
     </small>

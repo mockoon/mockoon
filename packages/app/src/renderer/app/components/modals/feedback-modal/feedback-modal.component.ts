@@ -25,7 +25,6 @@ export class FeedbackModalComponent {
   public userEmail$ = this.store
     .select('user')
     .pipe(map((user) => user?.email));
-  public userPlan$ = this.store.select('user').pipe(map((user) => user?.plan));
 
   constructor(
     private uiService: UIService,
