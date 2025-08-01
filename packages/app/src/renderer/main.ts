@@ -38,6 +38,7 @@ import { browserLocalPersistence, connectAuthEmulator } from 'firebase/auth';
 import { MarkdownModule, MARKED_OPTIONS } from 'ngx-markdown';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { AppComponent } from 'src/renderer/app/app.component';
+import { checkSingleInstance } from 'src/renderer/app/libs/single-instance-checker.lib';
 import { MarkedOptionsFactory } from 'src/renderer/app/modules-config/markdown.config';
 import { NgbDropdownConfigFactory } from 'src/renderer/app/modules-config/ngb-dropdown.config';
 import { NgbModalConfigFactory } from 'src/renderer/app/modules-config/ngb-modal.config';
@@ -59,8 +60,7 @@ if (environment.production) {
   enableProdMode();
 }
 
-// delay bootstrap to display the loading screen at least for 1 second and avoid flickering
-setTimeout(() => {
+const bootstrap = () => {
   bootstrapApplication(AppComponent, {
     providers: [
       importProvidersFrom(
@@ -149,4 +149,19 @@ setTimeout(() => {
   })
     // eslint-disable-next-line no-console
     .catch((err) => console.error(err));
+};
+
+// delay bootstrap to display the loading screen and wait for single instance check
+setTimeout(() => {
+  if (environment.web) {
+    checkSingleInstance().then((result) => {
+      if (!result) {
+        return;
+      }
+
+      bootstrap();
+    });
+  } else {
+    bootstrap();
+  }
 }, 1000);
