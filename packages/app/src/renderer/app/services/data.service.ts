@@ -85,6 +85,7 @@ export class DataService {
         isInvalidJson: false, // TODO Isuru
         query: request.request.query,
         body: request.request.body,
+        bodyUnformatted: request.request.body,
         headers: request.request.headers,
         params: request.request.params || [],
         queryParams: request.request.queryParams || []
@@ -151,6 +152,7 @@ export class DataService {
         query: transaction.request.query,
         queryParams: this.formatQueryParams(transaction.request.queryParams),
         body: requestBody,
+        bodyUnformatted: transaction.request.body,
         headers: transaction.request.headers,
         isInvalidJson: isReqJsonInvalid
       },
