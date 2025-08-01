@@ -11,6 +11,7 @@ import { User } from '@mockoon/cloud';
 import {
   catchError,
   combineLatest,
+  distinctUntilChanged,
   EMPTY,
   filter,
   from,
@@ -25,8 +26,8 @@ import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import {
-  updateFeedbackAction,
   updateDeployInstancesAction,
+  updateFeedbackAction,
   updateUserAction
 } from 'src/renderer/app/stores/actions';
 import { Store, storeDefaultState } from 'src/renderer/app/stores/store';
@@ -51,10 +52,7 @@ export class UserService {
    * Monitor auth token state and update the store
    */
   public init() {
-    return this.idToken$.pipe(
-      filter((token) => !!token),
-      mergeMap(() => this.getUserInfo(true))
-    );
+    return this.idTokenChanges().pipe(mergeMap(() => this.getUserInfo(true)));
   }
 
   /**
@@ -119,8 +117,16 @@ export class UserService {
     return of(null);
   }
 
+  /**
+   * Avoid reacting to empty tokens (also happens when opening multiple web app tabs)
+   *
+   * @returns
+   */
   public idTokenChanges() {
-    return this.idToken$;
+    return this.idToken$.pipe(
+      filter((token) => !!token),
+      distinctUntilChanged()
+    );
   }
 
   public refreshToken() {
