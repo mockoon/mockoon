@@ -42,7 +42,9 @@
           data.clearEnvironmentLogsRequested?.enabled ? 'text-danger' : ''
         }}"
         [ngbTooltip]="
-          data.clearEnvironmentLogsRequested?.enabled ? 'Confirm' : 'Clear logs'
+          data.clearEnvironmentLogsRequested?.enabled
+            ? 'Confirm'
+            : 'Clear logs view'
         "
         (click)="clearEnvironmentLogs()"
         [disabled]="data.environmentLogsCount === 0"

@@ -1359,6 +1359,15 @@ export const environmentReducer = (
     }
 
     case ActionTypes.LOG_REQUEST: {
+      // do not process if the timestamp is already in the logs
+      if (
+        state.environmentsLogs[action.environmentUUID]?.some(
+          (log) => log.timestampMs === action.logItem.timestampMs
+        )
+      ) {
+        return state;
+      }
+
       const newEnvironmentsLogs = { ...state.environmentsLogs };
 
       newEnvironmentsLogs[action.environmentUUID] = [

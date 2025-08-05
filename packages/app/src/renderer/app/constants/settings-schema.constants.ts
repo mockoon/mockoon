@@ -44,6 +44,7 @@ export const SettingsSchema = Joi.object<Settings, true>({
   welcomeShown: Joi.boolean().failover(SettingsDefault.welcomeShown).required(),
   maxLogsPerEnvironment: Joi.number()
     .min(1)
+    .max(Config.maxLogsPerEnvironmentLimit)
     .failover(SettingsDefault.maxLogsPerEnvironment)
     .required(),
   truncateRouteName: Joi.boolean()

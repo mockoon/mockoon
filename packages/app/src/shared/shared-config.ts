@@ -54,6 +54,7 @@ export const SharedConfig = (options: {
     cloudPlansURL: `${options.websiteURL}cloud/`,
     maxPromptLength: 500,
     defaultMaxLogsPerEnvironment: defaultMaxTransactionLogs,
+    maxLogsPerEnvironmentLimit: 1_000,
     defaultMainMenuSize: 100,
     defaultSecondaryMenuSize: 200,
     storageSaveDelay: 1000, // ms
