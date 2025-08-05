@@ -3,16 +3,26 @@ import { EventEmitter } from 'node:events';
 
 export class Sse {
   private eventEmitter = new EventEmitter();
-  private messageQueue: any[] = [];
-  private replayableMessageQueue: any[] = [];
   private activeListenerCount = 0;
 
   constructor(
-    private options: { keepAlive?: boolean; keepAliveDelay?: number } = {
+    private options: {
+      keepAlive?: boolean;
+      keepAliveDelay?: number;
+      getInitialEvents?: (request: Request) => any[];
+    } = {
       keepAlive: true,
       keepAliveDelay: 60000
     }
   ) {
+    this.options = {
+      ...{
+        keepAlive: true,
+        keepAliveDelay: 60000
+      },
+      ...options
+    };
+
     this.eventEmitter.setMaxListeners(30);
   }
 
@@ -37,18 +47,15 @@ export class Sse {
     this.eventEmitter.on('message', listener);
     this.activeListenerCount++;
 
-    // Send any queued messages
-    while (this.messageQueue.length > 0) {
-      const message = this.messageQueue.shift();
-      this.eventEmitter.emit('message', message);
+    // get and send initial messages
+    if (this.options.getInitialEvents) {
+      const initialMessages = this.options.getInitialEvents(request);
+
+      initialMessages.forEach((data) => {
+        this.eventEmitter.emit('message', data);
+      });
     }
 
-    // Send replayable messages
-    this.replayableMessageQueue.forEach((message) => {
-      this.eventEmitter.emit('message', message);
-    });
-
-    // keep alive
     if (this.options.keepAlive) {
       const keepAliveInterval = setInterval(() => {
         response.write(':\n\n');
@@ -66,21 +73,13 @@ export class Sse {
     });
   };
 
-  public send(data: any, replayable = false) {
-    if (replayable) {
-      this.replayableMessageQueue.push(data);
-    }
-
+  public send(data: any) {
     if (this.activeListenerCount > 0) {
       this.eventEmitter.emit('message', data);
-    } else if (!replayable && this.activeListenerCount === 0) {
-      this.messageQueue.push(data);
     }
   }
 
   public close() {
     this.eventEmitter.removeAllListeners('message');
-    this.messageQueue = [];
-    this.replayableMessageQueue = [];
   }
 }

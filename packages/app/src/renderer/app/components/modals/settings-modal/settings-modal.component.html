@@ -116,7 +116,11 @@
           type="number"
           class="form-control col-1"
           id="settings-log-max-count"
-          [appInputNumber]="{ min: 1, max: Infinity, canBeEmpty: false }"
+          [appInputNumber]="{
+            min: 1,
+            max: maxLogsPerEnvironmentLimit,
+            canBeEmpty: false
+          }"
           formControlName="maxLogsPerEnvironment"
         />
       </div>

@@ -229,6 +229,7 @@ export class ServerService {
    */
   private listenInstanceEvents(instance: DeployInstance) {
     const abortController = new AbortController();
+    const maxLogs = this.store.get('settings').maxLogsPerEnvironment;
 
     this.activeSseConnections.set(instance.environmentUuid, {
       subject: new Subject<string>(),
@@ -240,29 +241,32 @@ export class ServerService {
     )?.subject;
 
     try {
-      fetchEventSource(`${this.buildRemoteInstanceUrl(instance)}/events`, {
-        headers: { Authorization: `Bearer ${instance.apiKey}` },
-        signal: abortController.signal,
-        openWhenHidden: true,
-        async onopen(response) {
-          if (
-            response.status >= 400 &&
-            response.status < 500 &&
-            response.status !== 429
-          ) {
-            abortController.abort();
-            sseSubject.complete();
-          }
-        },
-        onmessage(message) {
-          // Do not process empty messages (pings)
-          if (!message.data) {
-            return;
-          }
+      fetchEventSource(
+        `${this.buildRemoteInstanceUrl(instance)}/events?maxlogs=${maxLogs}`,
+        {
+          headers: { Authorization: `Bearer ${instance.apiKey}` },
+          signal: abortController.signal,
+          openWhenHidden: true,
+          async onopen(response) {
+            if (
+              response.status >= 400 &&
+              response.status < 500 &&
+              response.status !== 429
+            ) {
+              abortController.abort();
+              sseSubject.complete();
+            }
+          },
+          onmessage(message) {
+            // Do not process empty messages (pings)
+            if (!message.data) {
+              return;
+            }
 
-          sseSubject.next(message.data);
+            sseSubject.next(message.data);
+          }
         }
-      });
+      );
     } catch (_error) {}
   }
 

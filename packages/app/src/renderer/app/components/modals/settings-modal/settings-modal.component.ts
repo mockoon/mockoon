@@ -51,6 +51,7 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
   ];
   public settingsForm: UntypedFormGroup;
   public isWeb = Config.isWeb;
+  public maxLogsPerEnvironmentLimit = Config.maxLogsPerEnvironmentLimit;
   private destroy$ = new Subject<void>();
 
   constructor(

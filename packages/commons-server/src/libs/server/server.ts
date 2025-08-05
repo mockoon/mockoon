@@ -551,10 +551,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     next: NextFunction
   ) => {
     response.on('close', () => {
-      this.emit('transaction-complete', CreateTransaction(request, response));
+      const transaction = CreateTransaction(request, response);
+
+      this.emit('transaction-complete', transaction);
 
       // store the transaction logs at beginning of the array
-      this.transactionLogs.unshift(CreateTransaction(request, response));
+      this.transactionLogs.unshift(transaction);
 
       // keep only the last n transactions
       if (this.transactionLogs.length > this.options.maxTransactionLogs) {

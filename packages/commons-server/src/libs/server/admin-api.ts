@@ -36,8 +36,26 @@ export const createAdminEndpoint = (
     updateEnvironment: (environment: Environment) => void;
   }
 ): void => {
+  const replayableEvents: any[] = [];
   const adminApiPrefix = '/mockoon-admin';
-  const events = new Sse();
+  const events = new Sse({
+    getInitialEvents: (request: Request) => {
+      const maxLogs =
+        typeof request.query.maxlogs === 'string'
+          ? parseInt(request.query.maxlogs, 10)
+          : undefined;
+      const logs = getLogs();
+      const limitedLogs = maxLogs ? logs.slice(0, maxLogs) : logs;
+
+      return [
+        ...replayableEvents,
+        ...limitedLogs.map((transaction) => ({
+          event: 'transaction-complete',
+          transaction
+        }))
+      ];
+    }
+  });
 
   app.use(`${adminApiPrefix}*`, (req, res, next) => {
     res.setHeaders(
@@ -65,11 +83,16 @@ export const createAdminEndpoint = (
 
   // listen to server events and send them through the SSE
   serverInstance.on('transaction-complete', (transaction) => {
-    events.send({ event: 'transaction-complete', transaction });
+    const event = { event: 'transaction-complete', transaction };
+
+    events.send(event);
   });
 
   serverInstance.on('data-bucket-processed', (dataBuckets) => {
-    events.send({ event: 'data-bucket-processed', dataBuckets }, true);
+    const event = { event: 'data-bucket-processed', dataBuckets };
+
+    events.send(event);
+    replayableEvents.push(event);
   });
 
   app.get(`${adminApiPrefix}/events`, events.requestListener);
