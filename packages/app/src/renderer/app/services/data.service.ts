@@ -15,7 +15,10 @@ import {
   isContentTypeApplicationJson,
   repairRefs
 } from '@mockoon/commons';
-import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
+import {
+  EnvironmentLog,
+  EnvironmentLogOrigin
+} from 'src/renderer/app/models/environment-logs.model';
 import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { MigrationService } from 'src/renderer/app/services/migration.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
@@ -71,9 +74,11 @@ export class DataService {
    * @param request
    */
   public formatLogFromInFlightRequest(
-    request: InFlightRequest
+    request: InFlightRequest,
+    origin: EnvironmentLogOrigin
   ): EnvironmentLog {
     return {
+      origin,
       UUID: request.requestId,
       routeUUID: request.routeUUID,
       timestampMs: Date.now(),
@@ -107,7 +112,10 @@ export class DataService {
    *
    * @param response
    */
-  public formatLog(transaction: Transaction): EnvironmentLog {
+  public formatLog(
+    transaction: Transaction,
+    origin: EnvironmentLogOrigin
+  ): EnvironmentLog {
     let isResJsonInvalid = false;
     let isReqJsonInvalid = false;
     let responseBody = transaction.response.body;
@@ -138,6 +146,7 @@ export class DataService {
     }
 
     return {
+      origin,
       UUID: generateUUID(),
       routeUUID: transaction.routeUUID,
       routeResponseUUID: transaction.routeResponseUUID,

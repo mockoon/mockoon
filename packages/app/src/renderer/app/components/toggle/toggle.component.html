@@ -29,7 +29,13 @@
           autocomplete="off"
           [checked]="control.value === true"
         />
-        <app-svg *ngIf="item.icon" [icon]="item.icon"></app-svg>{{ item.label }}
+        <app-svg
+          *ngIf="item.icon"
+          [icon]="item.icon"
+          size="{{ item.iconSize ?? 16 }}"
+          [ngClass]="{ 'me-2': !!item.label }"
+        ></app-svg
+        >{{ item.label }}
       </label>
     </ng-container>
 
@@ -60,7 +66,13 @@
           autocomplete="off"
           [checked]="item.value === control.value"
         />
-        <app-svg *ngIf="item.icon" [icon]="item.icon"></app-svg>{{ item.label }}
+        <app-svg
+          *ngIf="item.icon"
+          [icon]="item.icon"
+          size="{{ item.iconSize ?? 16 }}"
+          [ngClass]="{ 'me-2': !!item.label }"
+        ></app-svg
+        >{{ item.label }}
       </label>
     </ng-container>
   </ng-container>

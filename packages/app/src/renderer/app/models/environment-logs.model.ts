@@ -21,7 +21,10 @@ export type EnvironmentLogResponse = {
   isInvalidJson: boolean;
 };
 
+export type EnvironmentLogOrigin = 'local' | 'cloud';
+
 export type EnvironmentLog = {
+  origin: EnvironmentLogOrigin;
   UUID: string;
   routeUUID: string;
   routeResponseUUID?: string;

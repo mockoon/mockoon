@@ -3,12 +3,11 @@ import {
   DatePipe,
   LowerCasePipe,
   NgClass,
-  NgFor,
-  NgIf,
   TitleCasePipe,
   UpperCasePipe
 } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { GetContentType, isContentTypeApplicationJson } from '@mockoon/commons';
 import { NgbCollapse, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { formatDistanceToNow } from 'date-fns';
@@ -17,7 +16,8 @@ import {
   combineLatestWith,
   distinctUntilChanged,
   filter,
-  map
+  map,
+  startWith
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import {
@@ -27,6 +27,7 @@ import {
 import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
 import { FilterComponent } from 'src/renderer/app/components/filter/filter.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
+import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
 import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
@@ -34,7 +35,11 @@ import {
   GetEditorModeFromContentType,
   textFilter
 } from 'src/renderer/app/libs/utils.lib';
-import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
+import { ToggleItems } from 'src/renderer/app/models/common.model';
+import {
+  EnvironmentLog,
+  EnvironmentLogOrigin
+} from 'src/renderer/app/models/environment-logs.model';
 import { EnvironmentLogsTabsNameType } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
@@ -66,11 +71,10 @@ type logsDropdownMenuPayload = { logUuid: string };
   styleUrls: ['environment-logs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     NgbTooltip,
     SvgComponent,
     FilterComponent,
-    NgFor,
+    ReactiveFormsModule,
     NgClass,
     DropdownMenuComponent,
     ResizeColumnDirective,
@@ -80,7 +84,8 @@ type logsDropdownMenuPayload = { logUuid: string };
     UpperCasePipe,
     LowerCasePipe,
     TitleCasePipe,
-    DatePipe
+    DatePipe,
+    ToggleComponent
   ]
 })
 export class EnvironmentLogsComponent implements OnInit {
@@ -92,6 +97,7 @@ export class EnvironmentLogsComponent implements OnInit {
   public activeEnvironmentLog$: Observable<EnvironmentLog>;
   public environmentLogsCount$: Observable<number>;
   public settings$: Observable<Settings>;
+  public logsOrigin = new FormControl<'all' | EnvironmentLogOrigin>('all');
   public collapseStates: CollapseStates = {
     'request.general': false,
     'request.headers': false,
@@ -126,6 +132,26 @@ export class EnvironmentLogsComponent implements OnInit {
       }
     }
   ];
+  public isWeb = Config.isWeb;
+  public logOrigins: ToggleItems = [
+    {
+      value: 'all',
+      label: 'All'
+    },
+    {
+      value: 'local',
+      label: 'Local',
+      icon: 'computer',
+      iconSize: 14
+    },
+    {
+      value: 'cloud',
+      label: 'Cloud',
+      icon: 'cloud',
+      iconSize: 14
+    }
+  ];
+  public isEnvCloud$ = this.store.selectIsActiveEnvCloud();
 
   constructor(
     private store: Store,
@@ -143,17 +169,31 @@ export class EnvironmentLogsComponent implements OnInit {
       .selectActiveEnvironmentLogs()
       .pipe(map((logs) => logs.length));
     this.environmentLogs$ = this.store.selectActiveEnvironmentLogs().pipe(
-      combineLatestWith(this.logsFilter$),
-      map(([environmentLogs, search]) =>
-        !search
-          ? environmentLogs
-          : environmentLogs.filter((log) =>
-              textFilter(
-                `${log.method} ${log.url} ${log.response.status} ${log.response.statusMessage} ${log.request.query} ${this.datePipe.transform(log.timestampMs, this.dateFormat)} ${log.proxied ? 'proxied' : ''}`,
-                search
-              )
-            )
+      combineLatestWith(
+        this.logsFilter$,
+        this.logsOrigin.valueChanges.pipe(
+          startWith(this.logsOrigin.value),
+          distinctUntilChanged()
+        )
       ),
+      map(([environmentLogs, search, logsOrigin]) => {
+        let result: EnvironmentLog[] = environmentLogs;
+
+        if (logsOrigin !== 'all') {
+          result = result.filter((log) => log.origin === logsOrigin);
+        }
+
+        if (search) {
+          result = result.filter((log) =>
+            textFilter(
+              `${log.method} ${log.url} ${log.response.status} ${log.response.statusMessage} ${log.request.query} ${this.datePipe.transform(log.timestampMs, this.dateFormat)} ${log.proxied ? 'proxied' : ''}`,
+              search
+            )
+          );
+        }
+
+        return result;
+      }),
       map((logs) =>
         logs.map((log) => ({
           ...log,
