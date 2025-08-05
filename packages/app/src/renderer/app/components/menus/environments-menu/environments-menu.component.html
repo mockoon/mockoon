@@ -288,7 +288,8 @@
                       copyUrlToClipboard(
                         environment,
                         instances[environment.uuid],
-                        'webUrl'
+                        'webUrl',
+                        $event
                       )
                     "
                     ngbTooltip="Click to copy"
@@ -362,7 +363,8 @@
                       copyUrlToClipboard(
                         environment,
                         instances[environment.uuid],
-                        'localUrl'
+                        'localUrl',
+                        $event
                       )
                     "
                     ngbTooltip="Click to copy"
@@ -404,7 +406,8 @@
                         copyUrlToClipboard(
                           environment,
                           instances[environment.uuid],
-                          'webUrl'
+                          'webUrl',
+                          $event
                         )
                       "
                       ngbTooltip="Click to copy"

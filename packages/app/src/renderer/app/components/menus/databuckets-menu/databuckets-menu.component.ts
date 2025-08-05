@@ -169,7 +169,9 @@ export class DatabucketsMenuComponent implements OnInit {
     this.environmentsService.setActiveDatabucket(databucketUUID);
   }
 
-  public copyToClipboard(databucketId: string) {
+  public copyToClipboard(databucketId: string, event: MouseEvent) {
+    event.stopPropagation();
+
     this.mainApiService.send('APP_WRITE_CLIPBOARD', databucketId);
   }
 }

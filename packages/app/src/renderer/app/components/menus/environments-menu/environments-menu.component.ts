@@ -580,8 +580,11 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   public copyUrlToClipboard(
     environment: Environment,
     instance: DeployInstance,
-    urlName: 'webUrl' | 'localUrl'
+    urlName: 'webUrl' | 'localUrl',
+    event: MouseEvent
   ) {
+    event.stopPropagation();
+
     const urls = buildApiUrl({
       environment,
       instance,
