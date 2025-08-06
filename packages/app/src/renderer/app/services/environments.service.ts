@@ -2232,13 +2232,17 @@ export class EnvironmentsService {
    */
   public listenServerTransactions() {
     return this.eventsService.serverTransaction$.pipe(
-      tap((data) => {
+      tap((serverTransactionPayload) => {
         let formattedLog: EnvironmentLog;
-        if (data.transaction) {
-          formattedLog = this.dataService.formatLog(data.transaction);
-        } else if (data.inflightRequest) {
+        if (serverTransactionPayload.transaction) {
+          formattedLog = this.dataService.formatLog(
+            serverTransactionPayload.transaction,
+            serverTransactionPayload.origin
+          );
+        } else if (serverTransactionPayload.inflightRequest) {
           formattedLog = this.dataService.formatLogFromInFlightRequest(
-            data.inflightRequest
+            serverTransactionPayload.inflightRequest,
+            serverTransactionPayload.origin
           );
         }
 
@@ -2246,12 +2250,22 @@ export class EnvironmentsService {
           return;
         }
 
-        this.store.update(logRequestAction(data.environmentUUID, formattedLog));
+        this.store.update(
+          logRequestAction(
+            serverTransactionPayload.environmentUUID,
+            formattedLog
+          )
+        );
 
         if (
-          this.eventsService.logsRecording$.value[data.environmentUUID] === true
+          this.eventsService.logsRecording$.value[
+            serverTransactionPayload.environmentUUID
+          ] === true
         ) {
-          this.createRouteFromLog(data.environmentUUID, formattedLog.UUID);
+          this.createRouteFromLog(
+            serverTransactionPayload.environmentUUID,
+            formattedLog.UUID
+          );
         }
       })
     );

@@ -16,6 +16,7 @@ export type ToggleItem = {
   value?: number | string | boolean;
   label?: string;
   icon?: string;
+  iconSize?: number;
   tooltip?: string;
   activeClass?: string;
 };

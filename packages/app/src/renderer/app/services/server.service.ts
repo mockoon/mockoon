@@ -21,6 +21,7 @@ import {
   switchMap,
   tap
 } from 'rxjs';
+import { EnvironmentLogOrigin } from 'src/renderer/app/models/environment-logs.model';
 import { MessageParams } from 'src/renderer/app/models/messages.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { LoggerService } from 'src/renderer/app/services/logger-service';
@@ -57,70 +58,67 @@ export class ServerService {
     this.mainApiService.receive(
       'APP_SERVER_EVENT',
       (environmentUuid, eventName, data) => {
-        this.processEvent(environmentUuid, eventName, data);
+        this.processEvent(environmentUuid, eventName, data, 'local');
       }
     );
 
-    if (Config.isWeb) {
-      return this.store.select('deployInstances').pipe(
-        filter((instances) => !!instances),
-        tap((instances) => {
-          const currentInstanceIds = instances.map(
-            (instance) => instance.environmentUuid
+    // listen to deployed instances events, both on desktop and web
+    return this.store.select('deployInstances').pipe(
+      filter((instances) => !!instances),
+      tap((instances) => {
+        const currentInstanceIds = instances.map(
+          (instance) => instance.environmentUuid
+        );
+
+        // Stop and remove SSE connections for instances that no longer exist
+        this.activeSseConnections.forEach((connection, instanceId) => {
+          if (!currentInstanceIds.includes(instanceId)) {
+            this.removeInstanceEventsListener(instanceId);
+          }
+        });
+      }),
+      filter((instances) => instances.length > 0),
+      delay(3000), // Delay to ensure all instances are up before listening
+      tap((instances) => {
+        // Start or renew SSE for instances
+        instances.forEach((instance) => {
+          const existingConnection = this.activeSseConnections.get(
+            instance.environmentUuid
           );
 
-          // Stop and remove SSE connections for instances that no longer exist
-          this.activeSseConnections.forEach((connection, instanceId) => {
-            if (!currentInstanceIds.includes(instanceId)) {
-              this.removeInstanceEventsListener(instanceId);
-            }
-          });
-        }),
-        filter((instances) => instances.length > 0),
-        delay(3000), // Delay to ensure all instances are up before listening
-        tap((instances) => {
-          // Start or renew SSE for instances
-          instances.forEach((instance) => {
-            const existingConnection = this.activeSseConnections.get(
-              instance.environmentUuid
-            );
+          if (existingConnection) {
+            // Close the existing connection and replace it with a new one (re-deploy)
+            this.removeInstanceEventsListener(instance.environmentUuid);
+          }
 
-            if (existingConnection) {
-              // Close the existing connection and replace it with a new one (re-deploy)
-              this.removeInstanceEventsListener(instance.environmentUuid);
-            }
+          this.listenInstanceEvents(instance);
+        });
+      }),
+      switchMap(() => {
+        return merge(
+          Array.from(this.activeSseConnections.entries()).map(
+            ([environmentUuid, activeSseConnection]) =>
+              activeSseConnection.subject.pipe(
+                map((message) => ({ environmentUuid, message }))
+              )
+          )
+        );
+      }),
+      tap((messages) => {
+        messages.forEach(({ environmentUuid, message }) => {
+          const payload: {
+            event: keyof ServerEvents;
+            transaction?: Transaction;
+            dataBuckets?: ProcessedDatabucketWithoutValue[];
+          } = JSON.parse(message as string);
 
-            this.listenInstanceEvents(instance);
-          });
-        }),
-        switchMap(() => {
-          return merge(
-            Array.from(this.activeSseConnections.entries()).map(
-              ([environmentUuid, activeSseConnection]) =>
-                activeSseConnection.subject.pipe(
-                  map((message) => ({ environmentUuid, message }))
-                )
-            )
-          );
-        }),
-        tap((messages) => {
-          messages.forEach(({ environmentUuid, message }) => {
-            const payload: {
-              event: keyof ServerEvents;
-              transaction?: Transaction;
-              dataBuckets?: ProcessedDatabucketWithoutValue[];
-            } = JSON.parse(message as string);
-
-            this.processEvent(environmentUuid, payload.event, payload);
-          });
-        }),
-        catchError(() => {
-          return EMPTY;
-        })
-      );
-    } else {
-      return EMPTY;
-    }
+          this.processEvent(environmentUuid, payload.event, payload, 'cloud');
+        });
+      }),
+      catchError(() => {
+        return EMPTY;
+      })
+    );
   }
 
   /**
@@ -280,7 +278,12 @@ export class ServerService {
     }
   }
 
-  private processEvent(environmentUuid: string, eventName: string, data: any) {
+  private processEvent(
+    environmentUuid: string,
+    eventName: string,
+    data: any,
+    origin: EnvironmentLogOrigin
+  ) {
     const environment = this.store.getEnvironmentByUUID(environmentUuid);
 
     if (!environment) {
@@ -333,7 +336,8 @@ export class ServerService {
           this.zone.run(() => {
             this.eventsService.serverTransaction$.next({
               environmentUUID: environmentUuid,
-              inflightRequest: data.inflightRequest
+              inflightRequest: data.inflightRequest,
+              origin
             });
           });
         }
@@ -344,7 +348,8 @@ export class ServerService {
           this.zone.run(() => {
             this.eventsService.serverTransaction$.next({
               environmentUUID: environmentUuid,
-              transaction: data.transaction
+              transaction: data.transaction,
+              origin
             });
           });
         }
