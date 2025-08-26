@@ -557,6 +557,17 @@ export class Store {
   }
 
   /**
+   * Check if the active environment is a cloud environment
+   *
+   * @returns
+   */
+  public getIsEnvCloud(environmentUuid: string): boolean {
+    return this.get('settings').environments.find(
+      (environment) => environment.uuid === environmentUuid
+    ).cloud;
+  }
+
+  /**
    * Update the store using the reducer
    *
    * @param action

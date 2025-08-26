@@ -43,7 +43,6 @@ import { ToggleItems } from 'src/renderer/app/models/common.model';
 import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
-import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import {
   updateEnvironmentStatusAction,
@@ -127,8 +126,7 @@ export class DeployInstanceModalComponent implements OnInit {
     private deployService: DeployService,
     private formBuilder: FormBuilder,
     private mainApiService: MainApiService,
-    private loggerService: LoggerService,
-    private remoteConfigService: RemoteConfigService
+    private loggerService: LoggerService
   ) {}
 
   ngOnInit() {
@@ -251,6 +249,11 @@ export class DeployInstanceModalComponent implements OnInit {
         quota: user.deployInstancesQuota
       });
 
+      return;
+    }
+
+    // Since v9.4.0 local envs cannot be deployed anymore
+    if (!this.store.getIsEnvCloud(environmentUuid)) {
       return;
     }
 

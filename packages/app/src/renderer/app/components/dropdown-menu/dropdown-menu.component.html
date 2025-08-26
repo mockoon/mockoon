@@ -43,6 +43,8 @@
           <hr class="dropdown-divider" />
         } @else if (isItem(item)) {
           @let disabled = item.disabled$ && item.disabled$(payload()) | async;
+          @let disabledLabel =
+            item.disabledLabel$ && item.disabledLabel$(payload()) | async;
           @let needConfirm = item.twoSteps && confirmRequested.enabled;
 
           <button
@@ -65,7 +67,7 @@
                 needConfirm
                   ? item.confirmLabel
                   : disabled
-                    ? item.disabledLabel || item.label
+                    ? disabledLabel || item.label
                     : item.label
               }}
               @if (item.subLabel) {
