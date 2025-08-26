@@ -60,15 +60,18 @@ export class ManageInstancesModalComponent implements OnInit {
     .select('environments')
     .pipe(
       map((environments) =>
-        environments.map((environment) => ({
-          label: environment.name,
-          icon: null,
-          twoSteps: false,
-          action: () => {
-            this.uiService.closeModal('manageInstances');
-            this.uiService.openModal('deploy', environment.uuid);
-          }
-        }))
+        environments
+          // only allow cloud envs deployments
+          .filter((environment) => this.store.getIsEnvCloud(environment.uuid))
+          .map((environment) => ({
+            label: environment.name,
+            icon: null,
+            twoSteps: false,
+            action: () => {
+              this.uiService.closeModal('manageInstances');
+              this.uiService.openModal('deploy', environment.uuid);
+            }
+          }))
       )
     );
   public cloudPlansURL = Config.cloudPlansURL;
@@ -86,10 +89,25 @@ export class ManageInstancesModalComponent implements OnInit {
               (environments) =>
                 !environments.find(
                   (environment) => environment.uuid === environmentUuid
-                )
+                ) || !this.store.getIsEnvCloud(environmentUuid)
             )
           ),
-      disabledLabel: 'Manage deployment (environment is closed)',
+      disabledLabel$: ({ environmentUuid }: dropdownMenuPayload) =>
+        this.store.select('environments').pipe(
+          map((environments) => {
+            if (
+              !environments.find(
+                (environment) => environment.uuid === environmentUuid
+              )
+            ) {
+              return 'Manage deployment (environment is closed)';
+            } else if (!this.store.getIsEnvCloud(environmentUuid)) {
+              return 'Manage deployment (not available for local environments)';
+            }
+
+            return '';
+          })
+        ),
       action: ({ environmentUuid }: dropdownMenuPayload) => {
         this.uiService.openModal('deploy', environmentUuid);
       }

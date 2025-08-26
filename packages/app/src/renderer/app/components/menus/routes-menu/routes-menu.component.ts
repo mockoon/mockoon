@@ -262,7 +262,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
       confirmLabel: 'Confirm deletion',
       disabled$: ({ folder }: folderDropdownMenuPayload) =>
         of(folder.children.length > 0),
-      disabledLabel: 'Delete folder (not empty)',
+      disabledLabel$: () => of('Delete folder (not empty)'),
       action: ({ folderUuid }: folderDropdownMenuPayload) => {
         this.environmentsService.removeFolder(folderUuid);
       }

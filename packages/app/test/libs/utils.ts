@@ -6,11 +6,10 @@ const Config = SharedConfig({ apiURL: '', websiteURL: '' });
 export enum DropdownMenuEnvironmentActions {
   DUPLICATE_TO_CLOUD = 1,
   DUPLICATE = 2,
-  DEPLOY = 3,
-  COPY_JSON = 4,
-  SHOW_FOLDER = 5,
-  MOVE_FOLDER = 6,
-  CLOSE = 7
+  COPY_JSON = 3,
+  SHOW_FOLDER = 4,
+  MOVE_FOLDER = 5,
+  CLOSE = 6
 }
 
 export enum DropdownMenuDatabucketActions {

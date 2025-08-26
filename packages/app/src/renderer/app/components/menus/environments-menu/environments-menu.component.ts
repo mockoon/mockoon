@@ -156,36 +156,25 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
                 .subscribe();
             }
           }
-        ]),
-    {
-      label: this.isWeb ? 'Manage deployment' : 'Deploy to the cloud',
-      icon: this.isWeb ? 'server_settings' : 'backup',
-      twoSteps: false,
-      disabled$: () =>
-        this.store
-          .select('user')
-          .pipe(map((user) => !user || user?.plan === 'FREE')),
-      action: ({ environmentUuid }: dropdownMenuPayload) => {
-        this.uiService.openModal('deploy', environmentUuid);
-      }
-    },
-    ...(this.isWeb
-      ? []
-      : [
-          {
-            label: 'Copy configuration to clipboard (JSON)',
-            icon: 'assignment',
-            twoSteps: false,
-            action: ({ environmentUuid }: dropdownMenuPayload) => {
-              this.environmentsService.copyEnvironmentToClipboard(
-                environmentUuid
-              );
-            }
-          }
         ])
   ];
+  public copyConfigurationDropdownMenuItems: DropdownMenuItem[] = this.isWeb
+    ? []
+    : [
+        {
+          label: 'Copy configuration to clipboard (JSON)',
+          icon: 'assignment',
+          twoSteps: false,
+          action: ({ environmentUuid }: dropdownMenuPayload) => {
+            this.environmentsService.copyEnvironmentToClipboard(
+              environmentUuid
+            );
+          }
+        }
+      ];
   public localEnvironmentDropdownMenuItems: DropdownMenuItem[] = [
     ...this.commonDropdownMenuItems,
+    ...this.copyConfigurationDropdownMenuItems,
     {
       label: 'Show data file in explorer/finder',
       icon: 'folder',
@@ -215,6 +204,19 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
   ];
   public cloudEnvironmentDropdownMenuItems: DropdownMenuItem[] = [
     ...this.commonDropdownMenuItems,
+    {
+      label: this.isWeb ? 'Manage deployment' : 'Deploy to the cloud',
+      icon: this.isWeb ? 'server_settings' : 'backup',
+      twoSteps: false,
+      disabled$: () =>
+        this.store
+          .select('user')
+          .pipe(map((user) => !user || user?.plan === 'FREE')),
+      action: ({ environmentUuid }: dropdownMenuPayload) => {
+        this.uiService.openModal('deploy', environmentUuid);
+      }
+    },
+    ...this.copyConfigurationDropdownMenuItems,
     ...(this.isWeb
       ? []
       : [

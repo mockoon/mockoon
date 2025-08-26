@@ -23,7 +23,7 @@ export type DropdownMenuItem = {
   // If provided, the item will be disabled when the observable emits true
   disabled$?: (payload: any) => Observable<boolean>;
   // Can be provided to display a custom disabled label
-  disabledLabel?: string;
+  disabledLabel$?: (payload: any) => Observable<string>;
   action?: (payload: any) => void;
 };
 
