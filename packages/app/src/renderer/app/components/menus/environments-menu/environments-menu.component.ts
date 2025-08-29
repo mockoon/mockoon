@@ -263,6 +263,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       }, {})
     )
   );
+
   public cloudDropdownMenuItems: DropdownMenuElement[] = [
     {
       label: 'New cloud environment',
@@ -273,15 +274,34 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       },
       disabled$: () => this.sync$.pipe(map((sync) => !sync?.status))
     },
-    {
-      label: 'New cloud environment from local file',
-      icon: 'folder_open',
-      twoSteps: false,
-      action: () => {
-        this.environmentsService.addCloudEnvironmentFromLocalFile().subscribe();
-      },
-      disabled$: () => this.sync$.pipe(map((sync) => !sync?.status))
-    }
+    ...(!this.isWeb
+      ? [
+          {
+            label: 'New cloud environment from local file',
+            icon: 'folder_open',
+            twoSteps: false,
+            action: () => {
+              this.environmentsService
+                .addCloudEnvironmentFromLocalFile()
+                .subscribe();
+            },
+            disabled$: () => this.sync$.pipe(map((sync) => !sync?.status))
+          }
+        ]
+      : []),
+    ...(this.isWeb
+      ? [
+          {
+            label: 'New cloud environment from OpenAPI/Swagger',
+            icon: 'description',
+            twoSteps: false,
+            action: () => {
+              this.uiService.openModal('openapiImport');
+            },
+            disabled$: () => this.sync$.pipe(map((sync) => !sync?.status))
+          }
+        ]
+      : [])
   ];
   public localDropdownMenuItems$: Observable<DropdownMenuElement[]>;
   public offlineReasonsLabels = {
@@ -573,10 +593,6 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
 
   public openManageInstancesModal() {
     this.uiService.openModal('manageInstances', { refresh: true });
-  }
-
-  public addCloudEnvironment() {
-    this.environmentsService.addCloudEnvironment(null, true).subscribe();
   }
 
   public copyUrlToClipboard(

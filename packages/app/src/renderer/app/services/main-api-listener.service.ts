@@ -100,8 +100,6 @@ export class MainApiListenerService {
             case 'OPEN_CHANGELOG':
               this.uiService.openModal('changelog');
               break;
-            case 'IMPORT_OPENAPI_FILE':
-              this.importExportService.importOpenAPIFile().subscribe();
               break;
             case 'EXPORT_OPENAPI_FILE':
               this.importExportService.exportOpenAPIFile().subscribe();

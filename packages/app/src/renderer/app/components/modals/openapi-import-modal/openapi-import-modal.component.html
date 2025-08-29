@@ -1,0 +1,57 @@
+<div class="modal-header">
+  <h4 class="modal-title">
+    OpenAPI specification import
+    <br />
+    <small class="text-muted h6">
+      Import an OpenAPI v2 or v3 specification from a URL, a file or by pasting
+      its content.<br />URL references will be automatically resolved. File
+      references are not supported. TODO customize wording depending on
+      desktop/web
+    </small>
+  </h4>
+</div>
+<div class="modal-body" [formGroup]="importForm">
+  <div class="d-flex align-items-center mb-3">
+    <div class="col">
+      <input
+        type="text"
+        class="form-control me-2"
+        placeholder="OpenAPI spec URL"
+        formControlName="url"
+      />
+    </div>
+    <div class="col-auto fw-bold mx-2"><label>OR</label></div>
+    <div class="col-auto">
+      <label for="importFile" class="btn btn-custom">
+        <app-svg icon="find_in_page" class="me-2"></app-svg>Browse
+      </label>
+      <input
+        type="file"
+        class="form-control d-none"
+        id="importFile"
+        (change)="onFileSelected($event)"
+      />
+    </div>
+  </div>
+  <div class="editor">
+    <app-editor
+      class="h-100"
+      formControlName="content"
+      [options]="defaultEditorConfig.options"
+      [mode]="defaultEditorConfig.mode"
+    ></app-editor>
+  </div>
+</div>
+<div class="modal-footer">
+  @if (taskInProgress()) {
+    <div class="d-inline-block me-2">
+      <app-spinner></app-spinner>
+    </div>
+  }
+  <button type="button" class="btn btn-primary me-2" (click)="import()">
+    Import
+  </button>
+  <button type="button" class="btn btn-secondary modal-close" (click)="close()">
+    Cancel
+  </button>
+</div>
