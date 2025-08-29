@@ -130,6 +130,17 @@ export class EnvironmentLogsComponent implements OnInit {
           true
         );
       }
+    },
+    {
+      label: 'Copy as cURL',
+      icon: 'content_copy',
+      twoSteps: false,
+      action: ({ logUuid }: logsDropdownMenuPayload) => {
+        this.environmentsService.copyLogAsCurl(
+          this.store.get('activeEnvironmentUUID'),
+          logUuid
+        );
+      }
     }
   ];
   public isWeb = Config.isWeb;
