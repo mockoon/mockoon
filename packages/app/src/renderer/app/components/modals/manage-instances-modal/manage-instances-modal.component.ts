@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass, NgIf } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, EMPTY, Observable, catchError, map, tap } from 'rxjs';
@@ -25,7 +25,6 @@ type dropdownMenuPayload = { environmentUuid: string };
   templateUrl: './manage-instances-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     HideAfterDirective,
     SvgComponent,
     NgClass,
