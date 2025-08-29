@@ -15,6 +15,7 @@ import { DuplicateModalComponent } from 'src/renderer/app/components/modals/dupl
 import { EditorModalComponent } from 'src/renderer/app/components/modals/editor-modal/editor-modal.component';
 import { FeedbackModalComponent } from 'src/renderer/app/components/modals/feedback-modal/feedback-modal.component';
 import { ManageInstancesModalComponent } from 'src/renderer/app/components/modals/manage-instances-modal/manage-instances-modal.component';
+import { OpenapiImportModalComponent } from 'src/renderer/app/components/modals/openapi-import-modal/openapi-import-modal.component';
 import { SettingsModalComponent } from 'src/renderer/app/components/modals/settings-modal/settings-modal.component';
 import { TemplatesModalComponent } from 'src/renderer/app/components/modals/templates-modal/templates-modal.component';
 import { WelcomeModalComponent } from 'src/renderer/app/components/modals/welcome-modal/welcome-modal.component';
@@ -60,7 +61,8 @@ type ModalNames =
   | 'confirm'
   | 'deploy'
   | 'editor'
-  | 'manageInstances';
+  | 'manageInstances'
+  | 'openapiImport';
 type ModalWithPayload = Extract<
   ModalNames,
   'deploy' | 'editor' | 'manageInstances' | 'confirm'
@@ -144,6 +146,10 @@ export class UIService {
       component: EditorModalComponent,
       options: commonConfigs.large
     },
+    openapiImport: {
+      component: OpenapiImportModalComponent,
+      options: commonConfigs.large
+    },
     manageInstances: {
       component: ManageInstancesModalComponent,
       options: commonConfigs.large
@@ -162,6 +168,7 @@ export class UIService {
     confirm: null,
     deploy: null,
     editor: null,
+    openapiImport: null,
     manageInstances: null
   };
 

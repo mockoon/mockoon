@@ -196,13 +196,6 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
     label: 'Import/export',
     submenu: [
       {
-        id: 'MENU_IMPORT_OPENAPI_FILE',
-        label: 'Import Swagger v2/OpenAPI v3 (JSON or YAML)',
-        click: () => {
-          mainWindow.webContents.send('APP_MENU', 'IMPORT_OPENAPI_FILE');
-        }
-      },
-      {
         id: 'MENU_EXPORT_OPENAPI_FILE',
         label: 'Export current environment to OpenAPI v3 (JSON)',
         click: () => {
