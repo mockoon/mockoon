@@ -1,5 +1,3 @@
-# Test: primitives, arrays, objects (with or without type: object), refs, example, default, allOf, oneOf, anyOf
-
 openapi: "3.0.0"
 info:
   title: "Sample v3 schema"
@@ -81,9 +79,68 @@ paths:
               schema:
                 allOf:
                   - $ref: "#/components/schemas/Model"
+  /circular:
+    get:
+      responses:
+        "200":
+          description: "Circular reference example"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CircularSchemaA"
+  /ext-ref:
+    get:
+      responses:
+        "200":
+          description: "Ext ref example"
+          content:
+            application/json:
+              schema:
+                $ref: "https://raw.githubusercontent.com/mockoon/mock-samples/refs/heads/main/samples/sample-openapi-v3-schema.yaml#/ExtSchema"
+  /cache-test:
+    get:
+      responses:
+        "200":
+          description: "Ext ref cache test"
+          content:
+            application/json:
+              schema:
+                $ref: "https://raw.githubusercontent.com/mockoon/mock-samples/refs/heads/main/samples/sample-openapi-v3-schema.yaml#/ExtSchema"
+  /wrong-ext-ref:
+    get:
+      responses:
+        "200":
+          description: "Wrong ext ref example"
+          content:
+            application/json:
+              schema:
+                $ref: "https://raw.githubusercontent.com/mockoon/mock-samples/refs/heads/main/samples/sample-openapi-v3-schema.yaml#/ExtSchemaNotExisting"
+  /ref-path:
+    $ref: "#/components/paths"
 
 components:
+  paths:
+    get:
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/SimpleSchema"
   schemas:
+    SimpleSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      example:
+        id: 1
+        name: Sample name
     SchemaObject:
       properties:
         id:
@@ -149,11 +206,30 @@ components:
               - $ref: "#/components/schemas/Category"
               - $ref: "#/components/schemas/Tag"
 
+    CircularSchemaA:
+      type: object
+      properties:
+        name:
+          type: string
+        sibling:
+          $ref: "#/components/schemas/CircularSchemaB"
+        related:
+          $ref: "#/components/schemas/CircularSchemaB"
+
+    CircularSchemaB:
+      type: object
+      properties:
+        id:
+          type: integer
+        parent:
+          $ref: "#/components/schemas/CircularSchemaA"
+
     Category:
       type: "object"
       properties:
         name:
           type: "string"
+
     Tag:
       type: "string"
 

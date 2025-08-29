@@ -22,15 +22,22 @@ export class DialogsService {
 
   /**
    * Show the save dialog and return the path or null if cancelled
+   *
+   * @param title The dialog title
+   * @param saveWorkingDir Whether to save the directory of the selected path as the last used directory in settings
+   * @param filter The filter to use for the dialog (default: json)
+   * @param defaultPath An optional default path to open the dialog in
+   * @returns An observable that emits the selected file path or null if cancelled
    */
   public showSaveDialog(
     title: string,
     saveWorkingDir = true,
+    filter: keyof typeof this.filters = 'json',
     defaultPath?: string
   ): Observable<string | null> {
     return from(
       this.mainApiService.invoke('APP_SHOW_SAVE_DIALOG', {
-        filters: this.filters.json,
+        filters: this.filters[filter],
         title,
         defaultPath
       })
@@ -52,12 +59,15 @@ export class DialogsService {
             }
           }),
           switchMap(() =>
-            from(
-              this.mainApiService.invoke(
-                'APP_REPLACE_FILEPATH_EXTENSION',
-                dialogResult.filePath
-              )
-            )
+            // force json extension if json filter is used
+            filter === 'json'
+              ? from(
+                  this.mainApiService.invoke(
+                    'APP_REPLACE_FILEPATH_EXTENSION',
+                    dialogResult.filePath
+                  )
+                )
+              : of(dialogResult.filePath)
           )
         );
       })

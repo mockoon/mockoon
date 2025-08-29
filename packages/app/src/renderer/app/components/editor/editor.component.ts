@@ -21,6 +21,7 @@ import 'brace/mode/html.js';
 import 'brace/mode/json.js';
 import 'brace/mode/text.js';
 import 'brace/mode/xml.js';
+import 'brace/mode/yaml.js';
 import '../../../assets/editor-theme.js';
 
 declare const ace: any;

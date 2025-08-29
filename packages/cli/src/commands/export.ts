@@ -1,4 +1,4 @@
-import { OpenAPIConverter } from '@mockoon/commons-server';
+import { OpenApiConverter } from '@mockoon/commons';
 import { Command, Flags } from '@oclif/core';
 import { promises as fs } from 'fs';
 import { parseDataFile } from '../libs/data';
@@ -9,7 +9,7 @@ export default class Export extends Command {
 
   public static examples = [
     '$ mockoon-cli export --input ~/data.json --output ./output.json',
-    '$ mockoon-cli export --input ~/data.json --output ./output.json --prettify'
+    '$ mockoon-cli export --input ~/data.json --output ./output.json --format JSON --prettify'
   ];
 
   public static flags = {
@@ -23,9 +23,16 @@ export default class Export extends Command {
       description: 'Generated OpenApi v3 path and name (e.g. `./output.json`)',
       required: true
     }),
+    format: Flags.string({
+      char: 'f',
+      description: 'Output format, "json" or "yaml" (default: "json")',
+      required: false,
+      options: ['json', 'yaml'] as const,
+      default: 'json'
+    }),
     prettify: Flags.boolean({
       char: 'p',
-      description: 'Prettify output',
+      description: 'Prettify output (JSON only)',
       default: false
     })
   };
@@ -36,9 +43,10 @@ export default class Export extends Command {
     try {
       const parsedEnvironment = await parseDataFile(userFlags.input);
 
-      const openApiConverter = new OpenAPIConverter();
+      const openApiConverter = new OpenApiConverter();
       const data: string = await openApiConverter.convertToOpenAPIV3(
         parsedEnvironment.environment,
+        userFlags.format as 'json' | 'yaml',
         userFlags.prettify
       );
 

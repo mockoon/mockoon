@@ -1,8 +1,6 @@
 import { search } from '@jmespath-community/jmespath';
 import {
   Callback,
-  Folder,
-  FolderChild,
   Header,
   InFlightRequest,
   InvokedCallback,
@@ -10,7 +8,6 @@ import {
   ParsedJSONBodyMimeTypes,
   ParsedXMLBodyMimeTypes,
   Route,
-  RouteType,
   stringIncludesArrayItems,
   Transaction
 } from '@mockoon/commons';
@@ -330,69 +327,6 @@ export const convertPathToArray = (str: string): string | string[] => {
   }
 
   return str;
-};
-
-/**
- * List routes in the order they appear in a folder children array (can be called recursively)
- *
- * If excludeList is provided, it will exclude the routes with the provided UUIDs,
- * or the routes in the provided folders by keyword in the folder name.
- * A wildcard '*' can be used to exclude all routes.
- *
- * If filterByType is provided, it will only return routes of the specified type.
- *
- * @param folderChildren
- * @param allFolders
- * @param allRoutes
- * @param excludeList
- * @param filterByType
- * @returns
- */
-export const routesFromFolder = (
-  folderChildren: FolderChild[],
-  allFolders: Folder[],
-  allRoutes: Route[],
-  excludeList: string[] = [],
-  filterByType?: RouteType[]
-): Route[] => {
-  const routesList: Route[] = [];
-
-  folderChildren.forEach((folderChild) => {
-    if (folderChild.type === 'route') {
-      const foundRoute = allRoutes.find(
-        (route) =>
-          route.uuid === folderChild.uuid &&
-          (!filterByType || filterByType.includes(route.type)) &&
-          !excludeList.includes(route.uuid) &&
-          !excludeList.some((exclude) => route.endpoint.includes(exclude)) &&
-          !excludeList.includes('*')
-      );
-
-      if (foundRoute) {
-        routesList.push(foundRoute);
-      }
-    } else {
-      const subFolder = allFolders.find(
-        (folder) =>
-          folder.uuid === folderChild.uuid &&
-          !excludeList.some((exclude) => folder.name.includes(exclude)) &&
-          !excludeList.includes('*')
-      );
-
-      if (subFolder) {
-        routesList.push(
-          ...routesFromFolder(
-            subFolder.children,
-            allFolders,
-            allRoutes,
-            excludeList
-          )
-        );
-      }
-    }
-  });
-
-  return routesList;
 };
 
 /**

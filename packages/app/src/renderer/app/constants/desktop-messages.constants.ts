@@ -136,8 +136,20 @@ export const DesktopMessages: Record<
     log: false,
     toastType: 'success'
   }),
+  OPENAPI_IMPORT_URL_ERROR: (messageParams) => ({
+    message: `Error while loading file from URL: ${messageParams?.error?.message}`,
+    showToast: true,
+    log: true,
+    toastType: 'error'
+  }),
   OPENAPI_IMPORT_ERROR: (messageParams) => ({
     message: `Error while importing environment from OpenAPI format: ${messageParams?.error?.message}`,
+    showToast: true,
+    log: true,
+    toastType: 'error'
+  }),
+  OPENAPI_IMPORT_READ_ERROR: (messageParams) => ({
+    message: `Error while reading the OpenAPI specification file: ${messageParams?.error?.message}`,
     showToast: true,
     log: true,
     toastType: 'error'

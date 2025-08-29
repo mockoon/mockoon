@@ -369,6 +369,24 @@ export class Store {
   }
 
   /**
+   * Evaluate if user reached their cloud quota
+   *
+   * @returns
+   */
+  public selectIsQuotaReached() {
+    return this.store$.asObservable().pipe(
+      map((store) => {
+        const user = store.user;
+        const cloudEnvironments = store.settings.environments.filter(
+          (environmentDescriptor) => environmentDescriptor.cloud
+        );
+
+        return user && cloudEnvironments.length >= user.cloudSyncItemsQuota;
+      })
+    );
+  }
+
+  /**
    * Get the active selected tab of callback view.
    */
   public getSelectedCallbackTab(): CallbackTabsNameType {

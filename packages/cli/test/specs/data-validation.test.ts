@@ -78,8 +78,10 @@ describe('Data validation', () => {
 
     const { stderr } = await output;
 
+    ok(stderr.includes('This file is not a valid OpenAPI specification'));
+    ok(stderr.includes('Not a valid Swagger/OpenAPI specification'));
     ok(stderr.includes('data are too old'));
-    ok(stderr.includes('Unsupported OpenAPI version'));
+    ok(stderr.includes('verify or migrate'));
   });
 
   it('should only show OpenAPI parser error messages (early fail as Mockoon does not support YAML)', async () => {

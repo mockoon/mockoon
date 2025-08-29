@@ -26,6 +26,7 @@ import {
   Folder,
   Header,
   HighestMigrationId,
+  OpenApiConverter,
   ReorderAction,
   ReorderableContainers,
   Route,
@@ -64,7 +65,8 @@ import {
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import {
   HumanizeText,
-  environmentHasRoute
+  environmentHasRoute,
+  triggerBrowserDownload
 } from 'src/renderer/app/libs/utils.lib';
 import {
   CallbackResponseUsage,
@@ -720,13 +722,8 @@ export class EnvironmentsService {
     storeUpdateOptions = { force: false, emit: true }
   ) {
     const user = this.store.get('user');
-    const cloudEnvironments = this.store
-      .get('settings')
-      .environments.filter(
-        (environmentDescriptor) => environmentDescriptor.cloud
-      );
 
-    if (cloudEnvironments.length >= user.cloudSyncItemsQuota) {
+    if (this.isQuotaReached()) {
       this.loggerService.logMessage('error', 'CLOUD_SYNC_QUOTA_EXCEEDED', {
         quota: user.cloudSyncItemsQuota
       });
@@ -2118,7 +2115,7 @@ export class EnvironmentsService {
 
     // prefill dialog with current environment folder and filename
     return this.dialogsService
-      .showSaveDialog('Choose a folder', true, environmentInfo.path)
+      .showSaveDialog('Choose a folder', true, 'json', environmentInfo.path)
       .pipe(
         switchMap((filePath) => {
           if (!filePath) {
@@ -2328,6 +2325,95 @@ export class EnvironmentsService {
       ),
       // force as it is not a UI update
       true
+    );
+  }
+
+  /**
+   * Evaluate if user reached their cloud quota
+   *
+   * @returns
+   */
+  public isQuotaReached() {
+    const user = this.store.get('user');
+    const cloudEnvironments = this.store
+      .get('settings')
+      .environments.filter(
+        (environmentDescriptor) => environmentDescriptor.cloud
+      );
+
+    return cloudEnvironments.length >= user.cloudSyncItemsQuota;
+  }
+
+  public exportOpenAPIFile(format: 'json' | 'yaml') {
+    const activeEnvironment = this.store.getActiveEnvironment();
+
+    if (!activeEnvironment) {
+      return EMPTY;
+    }
+    const defaultFilename = `${activeEnvironment.name || 'environment'}.${format}`;
+
+    return (
+      // in the web app, use the environment name as filename
+      (
+        this.isWeb
+          ? of(defaultFilename)
+          : this.dialogsService.showSaveDialog(
+              'Export environment to OpenAPI JSON',
+              false,
+              'openapi',
+              defaultFilename
+            )
+      ).pipe(
+        switchMap((filePath) => {
+          if (filePath) {
+            const openApiConverter = new OpenApiConverter();
+
+            return from(
+              openApiConverter.convertToOpenAPIV3(
+                activeEnvironment,
+                format,
+                true
+              )
+            ).pipe(
+              map((data) => ({
+                data,
+                filePath
+              }))
+            );
+          }
+
+          return EMPTY;
+        }),
+        // in the web app, trigger a download, in desktop save the file to disk
+        this.isWeb
+          ? tap(({ data, filePath }) => {
+              triggerBrowserDownload(filePath, data);
+            })
+          : switchMap(({ data, filePath }) =>
+              from(
+                this.mainApiService.invoke('APP_WRITE_FILE', filePath, data)
+              ).pipe(
+                tap(() => {
+                  this.loggerService.logMessage(
+                    'info',
+                    'OPENAPI_EXPORT_SUCCESS',
+                    {
+                      environmentName: activeEnvironment.name
+                    }
+                  );
+                })
+              )
+            ),
+        catchError((error) => {
+          this.loggerService.logMessage('error', 'OPENAPI_EXPORT_ERROR', {
+            error,
+            environmentName: activeEnvironment.name,
+            environmentUUID: activeEnvironment.uuid
+          });
+
+          return EMPTY;
+        })
+      )
     );
   }
 

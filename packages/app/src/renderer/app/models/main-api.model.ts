@@ -60,15 +60,6 @@ export interface MainAPIModel {
   ): Promise<string>;
   invoke(channel: 'APP_WRITE_FILE', path: string, data: string): Promise<void>;
   invoke(
-    channel: 'APP_OPENAPI_CONVERT_FROM',
-    path: string,
-    port?: number
-  ): Promise<Environment | null>;
-  invoke(
-    channel: 'APP_OPENAPI_CONVERT_TO',
-    environment: Environment
-  ): Promise<string>;
-  invoke(
     channel: 'APP_SERVER_GET_PROCESSED_DATABUCKET_VALUE',
     environmentUuid: string,
     databucketUuid: string

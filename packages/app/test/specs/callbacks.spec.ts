@@ -298,7 +298,7 @@ describe('Callback filter', () => {
     await navigation.switchView('ENV_CALLBACKS');
 
     await callbacks.setFilter('Second');
-    await environments.add('dup2-callbacks');
+    await environments.localAdd('dup2-callbacks');
     await navigation.switchView('ENV_CALLBACKS');
 
     await callbacks.assertFilter('');

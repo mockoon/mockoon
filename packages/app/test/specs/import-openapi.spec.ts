@@ -1,9 +1,8 @@
 import { Environment } from '@mockoon/commons';
-import { promises as fs } from 'fs';
+import { readFile } from 'node:fs/promises';
 import { parse as pathParse, resolve } from 'path';
 import dialogs from '../libs/dialogs';
 import environments from '../libs/environments';
-import menu from '../libs/menu';
 import utils from '../libs/utils';
 
 const dataSamplesPath = './test/data/res/import-openapi/samples/';
@@ -137,32 +136,38 @@ describe('Swagger/OpenAPI import', () => {
   testSuites.forEach((testSuite, suiteIndex) => {
     describe(testSuite.name, () => {
       testSuite.tests.forEach((testCase) => {
-        const filename = pathParse(testCase.filePath).name;
-
         it(testCase.desc, async () => {
+          const filename = pathParse(testCase.filePath).name;
+
           if (suiteIndex === 0) {
             await browser.pause(1000);
           }
 
-          await dialogs.open(testCase.filePath);
+          await environments.localAddFromOpenApi();
+
+          await dialogs.open(resolve(testCase.filePath));
+
+          await environments.browseOpenApi();
+
           await dialogs.save(
             resolve(`./tmp/storage/import-result/${filename}.json`)
           );
 
-          await menu.click('MENU_IMPORT_OPENAPI_FILE');
+          await environments.importOpenApi();
 
-          await browser.pause(500);
+          await browser.pause(5000);
 
           await environments.assertActiveMenuEntryText(
             testCase.environmentTitle
           );
+
           await utils.waitForAutosave();
 
-          const environmentFile = await fs.readFile(
-            `./tmp/storage/import-result/${filename}.json`
+          const environmentFile = await readFile(
+            resolve(`./tmp/storage/import-result/${filename}.json`)
           );
-          const referenceEnvironmentFile = await fs.readFile(
-            testCase.referenceFilePath
+          const referenceEnvironmentFile = await readFile(
+            resolve(testCase.referenceFilePath)
           );
 
           const environment: Environment = JSON.parse(

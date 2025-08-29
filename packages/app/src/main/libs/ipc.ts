@@ -1,5 +1,4 @@
 import { Environment, Environments } from '@mockoon/commons';
-import { OpenAPIConverter } from '@mockoon/commons-server';
 import { createHash } from 'crypto';
 import {
   BrowserWindow,
@@ -266,21 +265,6 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
   ipcMain.handle('APP_GET_HASH', (event, str) =>
     createHash('sha1').update(str, 'utf-8').digest('hex')
   );
-
-  ipcMain.handle(
-    'APP_OPENAPI_CONVERT_FROM',
-    async (event, filePath: string, port?: number) => {
-      const openApiConverter = new OpenAPIConverter();
-
-      return await openApiConverter.convertFromOpenAPI(filePath, port);
-    }
-  );
-
-  ipcMain.handle('APP_OPENAPI_CONVERT_TO', async (event, data: Environment) => {
-    const openApiConverter = new OpenAPIConverter();
-
-    return await openApiConverter.convertToOpenAPIV3(data);
-  });
 
   ipcMain.handle(
     'APP_SERVER_GET_PROCESSED_DATABUCKET_VALUE',

@@ -240,3 +240,22 @@ export type DeepPartial<T> = T extends object
       [P in keyof T]?: DeepPartial<T[P]>;
     }
   : T;
+
+/**
+ * Trigger a browser download (used in web app)
+ *
+ * @param filename
+ * @param data
+ */
+export const triggerBrowserDownload = (filename: string, data: string) => {
+  const blobUrl = URL.createObjectURL(new Blob([data], { type: 'text/plain' }));
+
+  const link = document.createElement('a');
+  link.href = blobUrl;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  URL.revokeObjectURL(blobUrl);
+};

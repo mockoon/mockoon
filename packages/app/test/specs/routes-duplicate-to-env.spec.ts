@@ -18,7 +18,7 @@ describe('Duplicate a route to an environment', async () => {
   });
 
   it('should add a new environment and assert that menu entry is enabled', async () => {
-    await environments.add('new-env-test');
+    await environments.localAdd('new-env-test');
     await environments.select(1);
     await utils.dropdownMenuAssertDisabled(
       `.routes-menu .nav-item:nth-child(${3}) .nav-link`,

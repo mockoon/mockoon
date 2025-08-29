@@ -122,26 +122,14 @@
             </span>
           }
           @if (category.id === 'cloud') {
-            @if (isWeb) {
-              <button
-                type="button"
-                class="btn btn-link btn-icon btn-sm"
-                ngbTooltip="Add cloud environment"
-                (click)="addCloudEnvironment()"
-                [disabled]="!sync?.status"
-              >
-                <app-svg icon="cloud_add"></app-svg>
-              </button>
-            } @else {
-              <app-dropdown-menu
-                idPrefix="cloud-environments-add"
-                icon="add_box"
-                [items]="cloudDropdownMenuItems"
-                [iconFaded]="true"
-                [noYPadding]="true"
-              >
-              </app-dropdown-menu>
-            }
+            <app-dropdown-menu
+              idPrefix="cloud-environments-add"
+              icon="add_box"
+              [items]="cloudDropdownMenuItems"
+              [iconFaded]="true"
+              [noYPadding]="true"
+            >
+            </app-dropdown-menu>
           } @else if (category.id === 'local') {
             <app-dropdown-menu
               idPrefix="local-environments-add"

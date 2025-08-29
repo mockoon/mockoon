@@ -216,7 +216,7 @@ describe('Databucket filter', () => {
     await navigation.switchView('ENV_DATABUCKETS');
 
     await databuckets.setFilter('Second');
-    await environments.add('dup2-databuckets');
+    await environments.localAdd('dup2-databuckets');
     await navigation.switchView('ENV_DATABUCKETS');
 
     await databuckets.assertFilter('');

@@ -24,6 +24,7 @@
       <button
         #commandElement
         role="option"
+        id="{{ command.id }}"
         type="button"
         class="list-group-item list-group-item-action py-2 d-flex"
         [ngClass]="{ active: commandIndex === focusedItemIndex }"

@@ -1337,7 +1337,7 @@ const documentationTopics: {
         tasks: async () => {
           await navigation.switchView('ENV_ROUTES');
           await routes.select(1);
-          await environments.openAddMenu();
+          await environments.openLocalAddMenu();
         },
         get highlightedTarget() {
           return environments.getAddMenuEntry(2);

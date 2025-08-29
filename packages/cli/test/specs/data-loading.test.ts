@@ -13,9 +13,7 @@ describe('Data loading', () => {
     instance.kill();
 
     const { stderr } = await output;
-    ok(stderr.includes('This file is not a valid OpenAPI specification'));
-    ok(stderr.includes('OpenAPI parser: Error opening file'));
-    ok(stderr.includes('Mockoon parser: ENOENT: no such file or directory'));
+    ok(stderr.includes('no such file or directory'));
   });
 
   it('should fail when the response is no valid JSON', async () => {
@@ -29,11 +27,7 @@ describe('Data loading', () => {
 
     const { stderr } = await output;
     ok(stderr.includes('This file is not a valid OpenAPI specification'));
-    ok(
-      stderr.includes(
-        'OpenAPI parser: "https://mockoon.com/" is not a valid JSON Schema'
-      )
-    );
+
     // different error message for Node.js < or > 20
     ok(
       stderr.includes(
