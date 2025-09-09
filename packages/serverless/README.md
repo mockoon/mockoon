@@ -336,7 +336,7 @@ You can discuss all things related to Mockoon's CLI, and ask for help, on the [o
 
 If you are interested in contributing to Mockoon, please take a look at the [contributing guidelines](https://github.com/mockoon/mockoon/blob/main/CONTRIBUTING.md).
 
-Please also take a look at our [Code of Conduct](https://github.com/mockoon/mockoon/blob/main/CODE_OF_CONDUCT.md).
+Please also take a look at our [Code of Conduct](https://github.com/mockoon/.github/blob/main/CODE_OF_CONDUCT.md).
 
 ## Roadmap
 
