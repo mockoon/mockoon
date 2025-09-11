@@ -3,8 +3,8 @@
 
 // custom scrollbar
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -222,7 +222,9 @@ $status-code-colors:
   position: absolute;
   width: 4px;
   height: 100%;
-  right: 0;
+  /* Display over both content it separates, ensure it's above everything with z-index */
+  right: -2px;
+  z-index: 1;
   top: 0;
   cursor: col-resize;
 
