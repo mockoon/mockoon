@@ -158,23 +158,18 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
           }
         ])
   ];
-  public copyConfigurationDropdownMenuItems: DropdownMenuItem[] = this.isWeb
-    ? []
-    : [
-        {
-          label: 'Copy configuration to clipboard (JSON)',
-          icon: 'assignment',
-          twoSteps: false,
-          action: ({ environmentUuid }: dropdownMenuPayload) => {
-            this.environmentsService.copyEnvironmentToClipboard(
-              environmentUuid
-            );
-          }
-        }
-      ];
+  public copyConfigurationDropdownMenuItems: DropdownMenuItem = {
+    label: "Copy configuration to clipboard (Mockoon's JSON format)",
+    icon: 'assignment',
+    twoSteps: false,
+    action: ({ environmentUuid }: dropdownMenuPayload) => {
+      this.environmentsService.copyEnvironmentToClipboard(environmentUuid);
+    }
+  };
+
   public localEnvironmentDropdownMenuItems: DropdownMenuItem[] = [
     ...this.commonDropdownMenuItems,
-    ...this.copyConfigurationDropdownMenuItems,
+    this.copyConfigurationDropdownMenuItems,
     {
       label: 'Show data file in explorer/finder',
       icon: 'folder',
@@ -216,7 +211,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
         this.uiService.openModal('deploy', environmentUuid);
       }
     },
-    ...this.copyConfigurationDropdownMenuItems,
+    this.copyConfigurationDropdownMenuItems,
     ...(this.isWeb
       ? []
       : [

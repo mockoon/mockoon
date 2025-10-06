@@ -114,14 +114,20 @@ export const DesktopMessages: Record<
     showToast: true,
     toastType: 'error'
   }),
-  OPENAPI_EXPORT_SUCCESS: (messageParams) => ({
+  EXPORT_SUCCESS: (messageParams) => ({
     message: `Environment ${messageParams.environmentName} has been successfully exported`,
     log: false,
     showToast: true,
     toastType: 'success'
   }),
+  OPENAPI_EXPORT_SUCCESS: (messageParams) => ({
+    message: `Environment ${messageParams.environmentName} has been successfully exported to OpenAPI v3 format`,
+    log: false,
+    showToast: true,
+    toastType: 'success'
+  }),
   OPENAPI_EXPORT_ERROR: (messageParams) => ({
-    message: `Error while exporting environment to OpenAPI format: ${messageParams?.error?.message}`,
+    message: `Error while exporting environment to OpenAPI v3 format: ${messageParams?.error?.message}`,
     log: true,
     logPayload: {
       environmentUUID: messageParams.environmentUUID,

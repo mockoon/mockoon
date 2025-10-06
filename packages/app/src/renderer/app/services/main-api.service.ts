@@ -76,6 +76,10 @@ export class MainApiService implements MainAPIModel {
           break;
         }
 
+        case 'APP_READ_CLIPBOARD':
+          result = navigator.clipboard?.readText() ?? '';
+          break;
+
         default:
           result = undefined;
           break;

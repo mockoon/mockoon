@@ -53,7 +53,7 @@ export class MainApiListenerService {
               break;
             case 'NEW_ENVIRONMENT_CLIPBOARD':
               this.environmentsService
-                .newEnvironmentFromClipboard()
+                .newEnvironmentFromClipboard(false)
                 .subscribe();
               break;
             case 'OPEN_ENVIRONMENT':

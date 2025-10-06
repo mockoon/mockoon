@@ -709,11 +709,46 @@ export class CommandPaletteService {
         },
         score: 1,
         enabled: true
+      },
+      {
+        id: 'COPY_ENVIRONMENT_CLIPBOARD',
+        label:
+          "Copy Current Environment Configuration to Clipboard (Mockoon's JSON format)",
+        action: () => {
+          this.environmentsService.copyEnvironmentToClipboard(
+            activeEnvironmentUuid
+          );
+        },
+        score: 1,
+        enabled: hasActiveEnvironment
+      },
+      {
+        id: 'COPY_ROUTE_CLIPBOARD',
+        label:
+          "Copy Current Route Configuration to Clipboard (Mockoon's JSON format)",
+        action: () => {
+          this.environmentsService.copyRouteToClipboard(activeRouteUuid);
+        },
+        score: 1,
+        enabled: hasActiveEnvironment
+      },
+      {
+        id: 'EXPORT_ENVIRONMENT',
+        label:
+          "Export Current Environment Configuration (Mockoon's JSON format)",
+        action: () => {
+          this.environmentsService
+            .exportEnvironment(activeEnvironmentUuid)
+            .subscribe();
+        },
+        score: 1,
+        enabled: hasActiveEnvironment
       }
     ];
 
     if (!Config.isWeb) {
       commonCommands.push(
+        // zoom cannot be controled in the browser
         {
           id: 'VIEW_ZOOM_IN',
           label: 'Zoom in',
@@ -724,6 +759,7 @@ export class CommandPaletteService {
           score: 1,
           enabled: true
         },
+        // zoom cannot be controled in the browser
         {
           id: 'VIEW_ZOOM_OUT',
           label: 'Zoom out',
@@ -734,6 +770,7 @@ export class CommandPaletteService {
           score: 1,
           enabled: true
         },
+        // zoom cannot be controled in the browser
         {
           id: 'VIEW_ZOOM_RESET',
           label: 'Reset zoom',
@@ -796,9 +833,12 @@ export class CommandPaletteService {
         },
         {
           id: 'NEW_ENVIRONMENT_CLIPBOARD',
-          label: 'Create a New Local Environment From Clipboard',
+          label:
+            "Create a New Local Environment From Clipboard (Mockoon's JSON format)",
           action: () => {
-            this.environmentsService.newEnvironmentFromClipboard().subscribe();
+            this.environmentsService
+              .newEnvironmentFromClipboard(false)
+              .subscribe();
           },
           score: 1,
           enabled: true
@@ -840,17 +880,6 @@ export class CommandPaletteService {
             ) !== undefined
         },
         {
-          id: 'COPY_ENVIRONMENT_CLIPBOARD',
-          label: 'Copy Current Environment Configuration to Clipboard',
-          action: () => {
-            this.environmentsService.copyEnvironmentToClipboard(
-              activeEnvironmentUuid
-            );
-          },
-          score: 1,
-          enabled: hasActiveEnvironment
-        },
-        {
           id: 'SHOW_ENVIRONMENT_FILE_EXPLORER',
           label: 'Show Current Environment Data File in Explorer/Finder',
           action: () => {
@@ -872,15 +901,6 @@ export class CommandPaletteService {
           enabled: hasActiveEnvironment && hasActiveRoute
         },
         {
-          id: 'COPY_ROUTE_CLIPBOARD',
-          label: 'Copy Current Route Configuration to Clipboard',
-          action: () => {
-            this.environmentsService.copyRouteToClipboard(activeRouteUuid);
-          },
-          score: 1,
-          enabled: hasActiveEnvironment
-        },
-        {
           id: 'IMPORT_LOCAL_OPENAPI',
           label: 'New local environment from OpenAPI/Swagger',
           action: () => {
@@ -890,6 +910,19 @@ export class CommandPaletteService {
           enabled: true
         }
       );
+    } else {
+      commonCommands.push({
+        id: 'NEW_CLOUD_ENVIRONMENT_CLIPBOARD',
+        label:
+          "Create a New Cloud Environment From Clipboard (Mockoon's JSON format)",
+        action: () => {
+          this.environmentsService
+            .newEnvironmentFromClipboard(true)
+            .subscribe();
+        },
+        score: 1,
+        enabled: true
+      });
     }
 
     const selectEnvironmentCommands: Commands = this.store
