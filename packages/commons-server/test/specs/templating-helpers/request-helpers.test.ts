@@ -1111,4 +1111,59 @@ describe('Request helpers', () => {
       strictEqual(parseResult, 'defaultvalue');
     });
   });
+
+  describe('Helper: urlParams', () => {
+    it('should return all URL parameters as an object', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{#each (urlParams)}}{{@key}}={{this}}&{{/each}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { params: { id: '123', category: 'books' } } as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'id=123&category=books&');
+    });
+  });
+
+  describe('Helper: queryParams', () => {
+    it('should return all query parameters as an object', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{#each (queryParams)}}{{@key}}={{this}}&{{/each}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
+          query: { tags: ['javascript', 'nodejs'], sort: 'date' }
+        } as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'tags=javascript,nodejs&sort=date&');
+    });
+  });
+
+  describe('Helper: headers', () => {
+    it('should be usable with each helper', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{#each (headers)}}{{@key}}: {{this}}; {{/each}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
+          headers: {
+            'content-type': 'application/json',
+            authorization: 'Bearer token123'
+          }
+        } as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(
+        parseResult,
+        'content-type: application/json; authorization: Bearer token123; '
+      );
+    });
+  });
 });

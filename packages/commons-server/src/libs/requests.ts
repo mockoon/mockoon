@@ -12,6 +12,7 @@ import { parseRequestMessage, parseWebSocketMessage } from './utils';
  */
 export interface ServerRequest {
   cookies: any;
+  headers: Record<string, string | string[] | undefined>;
   header: (name: string) => string | string[] | undefined;
   get: (headerName: string) => string | string[] | undefined;
   params: any;
@@ -75,6 +76,7 @@ export const fromExpressRequest = (req: Request): ServerRequest => ({
   body: req.body,
   cookies: req.cookies,
   header: (name: string) => req.header?.(name),
+  headers: req.headers,
   get: (headerName: string) => req.header?.(headerName),
   hostname: req.hostname,
   ip: req.ip,
@@ -119,6 +121,7 @@ export const fromWsRequest = (
   return {
     body: structuredMessage || req.body,
     cookies: parseCookies(req),
+    headers: req.headers,
     header: (name: string) => req.headers?.[name],
     get: (headerName: string) => req.headers?.[headerName],
     hostname: req.headers?.['host'],
@@ -156,6 +159,7 @@ export const fromServerRequest = (
   return {
     body: structuredMessage || req.body,
     cookies: req.cookies,
+    headers: req.headers,
     header: req.header,
     get: req.get,
     hostname: req.hostname,
