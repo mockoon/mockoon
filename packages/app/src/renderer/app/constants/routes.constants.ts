@@ -274,6 +274,8 @@ export const headerValues = [
   'application/x-www-form-urlencoded',
   'application/xhtml+xml',
   'application/xml',
+  'application/x-yaml',
+  'application/yaml',
   'application/zip',
   'audio/mpeg',
   'audio/vorbis',
@@ -284,6 +286,7 @@ export const headerValues = [
   'Chrome=1',
   'chunked',
   'close',
+  "default-src 'self'",
   'deny',
   'Digest ',
   'feed',
@@ -324,6 +327,8 @@ export const headerValues = [
   'text/markdown',
   'text/plain',
   'text/xml',
+  'text/x-yaml',
+  'text/yaml',
   'trailers, deflate',
   'UA, Platform',
   'US-ASCII',
@@ -331,8 +336,7 @@ export const headerValues = [
   'UTF-16BE',
   'UTF-16LE',
   'UTF-8',
-  'XMLHttpRequest',
-  "default-src 'self'"
+  'XMLHttpRequest'
 ];
 
 export const defaultContentType = 'text/html';
