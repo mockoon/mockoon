@@ -26,6 +26,7 @@ import {
   Folder,
   Header,
   HighestMigrationId,
+  INDENT_SIZE,
   OpenApiConverter,
   ReorderAction,
   ReorderableContainers,
@@ -616,7 +617,7 @@ export class EnvironmentsService {
   /**
    * Add and save a new environment from the clipboard
    */
-  public newEnvironmentFromClipboard(): Observable<any> {
+  public newEnvironmentFromClipboard(cloud: boolean): Observable<any> {
     return from(this.mainApiService.invoke('APP_READ_CLIPBOARD')).pipe(
       map((data: string) => JSON.parse(data)),
       switchMap((environment: Environment) => this.verifyData(environment)),
@@ -626,7 +627,9 @@ export class EnvironmentsService {
 
         return this.addEnvironment({
           environment: migratedEnvironment,
-          setActive: true
+          setActive: true,
+          cloud,
+          promptSave: !cloud
         });
       }),
       catchError((error) => {
@@ -888,7 +891,7 @@ export class EnvironmentsService {
           ? 'This will permanently delete the environment. Are you sure? This action cannot be undone.'
           : 'This will permanently delete the environment from the cloud and convert it to a local environment on all other clients. Are you sure?',
         sub: this.isWeb
-          ? 'Any running instance of this environment will continue to run until stopped.'
+          ? 'Any running instance of this environment will continue to run until stopped.<br/>You can export the environment setup to a file before deleting it (see export option in the command palette).'
           : `<span class="text-break-all">Your local copy located in <strong>${environmentDescriptor.path}</strong> will not be deleted.</span>`,
         subIcon: 'info',
         confirmButtonText: 'Delete',
@@ -2197,6 +2200,45 @@ export class EnvironmentsService {
         }
       );
     }
+  }
+
+  /**
+   * Export an environment JSON (save to file in desktop, download in web app)
+   *
+   * @param environmentUUID
+   */
+  public exportEnvironment(environmentUUID: string) {
+    const environment = this.store.getEnvironmentByUUID(environmentUUID);
+
+    const defaultFilename = `${environment.name || 'environment'}.json`;
+    const data = JSON.stringify(environment, null, INDENT_SIZE);
+
+    return (
+      this.isWeb
+        ? of(defaultFilename)
+        : this.dialogsService.showSaveDialog(
+            'Export environment to JSON Mockoon format',
+            false,
+            'json',
+            defaultFilename
+          )
+    ).pipe(
+      this.isWeb
+        ? tap((filePath) => {
+            triggerBrowserDownload(filePath, data);
+          })
+        : switchMap((filePath) =>
+            from(
+              this.mainApiService.invoke('APP_WRITE_FILE', filePath, data)
+            ).pipe(
+              tap(() => {
+                this.loggerService.logMessage('info', 'EXPORT_SUCCESS', {
+                  environmentName: environment.name
+                });
+              })
+            )
+          )
+    );
   }
 
   /**
