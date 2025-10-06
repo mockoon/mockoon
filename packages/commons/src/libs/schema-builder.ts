@@ -297,7 +297,7 @@ export const BuildDemoEnvironment = (): Environment => {
             ...BuildRouteResponse(),
             label:
               "Creates 10 random users, or the amount specified in the 'total' query param",
-            body: '{\n  "Templating example": "For more information about templating, click the blue \'i\' above this editor",\n  "users": [\n    {{# repeat (queryParam \'total\' \'10\') }}\n      {\n        "userId": "{{ faker \'number.int\' min=10000 max=100000 }}",\n        "firstname": "{{ faker \'person.firstName\' }}",\n        "lastname": "{{ faker \'person.lastName\' }}",\n        "friends": [\n          {{# repeat (faker \'number.int\' 5) }}\n            {\n              "id": "{{ faker \'string.uuid\' }}"\n            }\n          {{/ repeat }}\n        ]\n      },\n    {{/ repeat }}\n  ],\n  "total": "{{queryParam \'total\' \'10\'}}"\n}'
+            body: '{\n  "Templating example": "For more information about templating: https://mockoon.com/docs/latest/templating/overview/",\n  "users": [\n    {{# repeat (queryParam \'total\' \'10\') }}\n      {\n        "userId": "{{ faker \'number.int\' min=10000 max=100000 }}",\n        "firstname": "{{ faker \'person.firstName\' }}",\n        "lastname": "{{ faker \'person.lastName\' }}",\n        "friends": [\n          {{# repeat (faker \'number.int\' 5) }}\n            {\n              "id": "{{ faker \'string.uuid\' }}"\n            }\n          {{/ repeat }}\n        ]\n      },\n    {{/ repeat }}\n  ],\n  "total": "{{queryParam \'total\' \'10\'}}"\n}'
           }
         ]
       },
