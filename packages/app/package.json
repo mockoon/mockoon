@@ -116,6 +116,7 @@
     "webpack-cli": "6.0.1",
     "webpack-node-externals": "3.0.0",
     "ws": "8.18.2",
+    "yaml": "2.8.1",
     "zone.js": "~0.15.0"
   }
 }

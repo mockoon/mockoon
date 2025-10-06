@@ -263,6 +263,11 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       }, {})
     )
   );
+  public isOfflineOrQuotaReached$ = combineLatest([
+    this.sync$.pipe(map((sync) => !sync?.status)),
+    this.store.selectIsQuotaReached()
+  ]).pipe(map(([isOffline, isQuotaReached]) => isOffline || isQuotaReached));
+
   public cloudDropdownMenuItems: DropdownMenuElement[] = [
     {
       label: 'New cloud environment',
@@ -271,16 +276,31 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       action: () => {
         this.environmentsService.addCloudEnvironment(null, true).subscribe();
       },
-      disabled$: () => this.sync$.pipe(map((sync) => !sync?.status))
+      disabled$: () => this.isOfflineOrQuotaReached$
     },
+    ...(!this.isWeb
+      ? [
+          {
+            label: 'New cloud environment from local file',
+            icon: 'folder_open',
+            twoSteps: false,
+            action: () => {
+              this.environmentsService
+                .addCloudEnvironmentFromLocalFile()
+                .subscribe();
+            },
+            disabled$: () => this.isOfflineOrQuotaReached$
+          }
+        ]
+      : []),
     {
-      label: 'New cloud environment from local file',
-      icon: 'folder_open',
+      label: 'New cloud environment from OpenAPI/Swagger',
+      icon: 'description',
       twoSteps: false,
       action: () => {
-        this.environmentsService.addCloudEnvironmentFromLocalFile().subscribe();
+        this.uiService.openModal('openApiImport', { cloud: true });
       },
-      disabled$: () => this.sync$.pipe(map((sync) => !sync?.status))
+      disabled$: () => this.isOfflineOrQuotaReached$
     }
   ];
   public localDropdownMenuItems$: Observable<DropdownMenuElement[]>;
@@ -291,6 +311,7 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
     [SyncDisconnectReasons.ROOM_INCOMPATIBLE_VERSION]:
       'your sync space was updated and is not compatible with your current version of Mockoon, please update.'
   };
+
   private localDropdownMenuStaticItems: DropdownMenuElement[] = [
     {
       label: 'New local environment',
@@ -308,6 +329,14 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       twoSteps: false,
       action: () => {
         this.environmentsService.openEnvironment().subscribe();
+      }
+    },
+    {
+      label: 'New local environment from OpenAPI/Swagger',
+      icon: 'description',
+      twoSteps: false,
+      action: () => {
+        this.uiService.openModal('openApiImport', { cloud: false });
       }
     },
     {
@@ -573,10 +602,6 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
 
   public openManageInstancesModal() {
     this.uiService.openModal('manageInstances', { refresh: true });
-  }
-
-  public addCloudEnvironment() {
-    this.environmentsService.addCloudEnvironment(null, true).subscribe();
   }
 
   public copyUrlToClipboard(

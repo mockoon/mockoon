@@ -1,9 +1,10 @@
 import { strictEqual } from 'node:assert';
 import { mkdir, readFile, rm } from 'node:fs/promises';
 import { after, before, describe, it } from 'node:test';
+import { parse as yamlParse } from 'yaml';
 import { spawnCli } from '../libs/helpers';
 
-describe('Import command', () => {
+describe('Export command', () => {
   before(async () => {
     await mkdir('./tmp', { recursive: true });
   });
@@ -12,7 +13,7 @@ describe('Import command', () => {
     await rm('./tmp', { recursive: true });
   });
 
-  it('should export to file', async () => {
+  it('should export to file in JSON format', async () => {
     await spawnCli([
       'export',
       '--input',
@@ -33,7 +34,7 @@ describe('Import command', () => {
     await rm('./tmp/export-file.json');
   });
 
-  it('should export prettified to file', async () => {
+  it('should export to file in JSON format prettified', async () => {
     await spawnCli([
       'export',
       '--input',
@@ -55,7 +56,31 @@ describe('Import command', () => {
     await rm('./tmp/export-file-prettified.json');
   });
 
-  it('should export prettified to file using aliases', async () => {
+  it('should export to file in YAML format', async () => {
+    await spawnCli([
+      'export',
+      '--input',
+      './test/data/envs/mock-export.json',
+      '--output',
+      './tmp/export-file.yaml',
+      '--format',
+      'yaml'
+    ]);
+
+    const yamlFileContent = await readFile('./tmp/export-file.yaml');
+    const expectedContent = await readFile(
+      './test/data/openapi/mock-exported.yaml'
+    );
+
+    strictEqual(
+      JSON.stringify(yamlParse(yamlFileContent.toString())),
+      JSON.stringify(yamlParse(expectedContent.toString()))
+    );
+
+    await rm('./tmp/export-file.yaml');
+  });
+
+  it('should export to file in JSON format prettified using aliases', async () => {
     await spawnCli([
       'export',
       '-i',

@@ -4,6 +4,7 @@ export * from './constants/faker.constants';
 export * from './enums/errors.enum';
 export * from './libs/environment-mutators';
 export * from './libs/migrations';
+export * from './libs/openapi-converter';
 export * from './libs/schema-builder';
 export * from './models/environment.model';
 export * from './models/events.model';

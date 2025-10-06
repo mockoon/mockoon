@@ -15,6 +15,7 @@ import { DuplicateModalComponent } from 'src/renderer/app/components/modals/dupl
 import { EditorModalComponent } from 'src/renderer/app/components/modals/editor-modal/editor-modal.component';
 import { FeedbackModalComponent } from 'src/renderer/app/components/modals/feedback-modal/feedback-modal.component';
 import { ManageInstancesModalComponent } from 'src/renderer/app/components/modals/manage-instances-modal/manage-instances-modal.component';
+import { OpenapiImportModalComponent } from 'src/renderer/app/components/modals/openapi-import-modal/openapi-import-modal.component';
 import { SettingsModalComponent } from 'src/renderer/app/components/modals/settings-modal/settings-modal.component';
 import { TemplatesModalComponent } from 'src/renderer/app/components/modals/templates-modal/templates-modal.component';
 import { WelcomeModalComponent } from 'src/renderer/app/components/modals/welcome-modal/welcome-modal.component';
@@ -23,7 +24,8 @@ import { UIState } from 'src/renderer/app/models/store.model';
 import {
   ConfirmModalPayload,
   EditorModalPayload,
-  ManageInstancesModalPayload
+  ManageInstancesModalPayload,
+  OpenApiImportModalPayload
 } from 'src/renderer/app/models/ui.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { updateUIStateAction } from 'src/renderer/app/stores/actions';
@@ -60,14 +62,15 @@ type ModalNames =
   | 'confirm'
   | 'deploy'
   | 'editor'
-  | 'manageInstances';
+  | 'manageInstances'
+  | 'openApiImport';
 type ModalWithPayload = Extract<
   ModalNames,
-  'deploy' | 'editor' | 'manageInstances' | 'confirm'
+  'deploy' | 'editor' | 'manageInstances' | 'confirm' | 'openApiImport'
 >;
 type ModalWithoutPayload = Exclude<
   ModalNames,
-  'deploy' | 'editor' | 'manageInstances' | 'confirm'
+  'deploy' | 'editor' | 'manageInstances' | 'confirm' | 'openApiImport'
 >;
 
 @Injectable({ providedIn: 'root' })
@@ -76,7 +79,8 @@ export class UIService {
     deploy: new BehaviorSubject<string>(null),
     editor: new BehaviorSubject<EditorModalPayload>(null),
     manageInstances: new BehaviorSubject<ManageInstancesModalPayload>(null),
-    confirm: new BehaviorSubject<ConfirmModalPayload>(null)
+    confirm: new BehaviorSubject<ConfirmModalPayload>(null),
+    openApiImport: new BehaviorSubject<OpenApiImportModalPayload>(null)
   };
   private modals: Record<
     ModalNames,
@@ -144,6 +148,10 @@ export class UIService {
       component: EditorModalComponent,
       options: commonConfigs.large
     },
+    openApiImport: {
+      component: OpenapiImportModalComponent,
+      options: commonConfigs.large
+    },
     manageInstances: {
       component: ManageInstancesModalComponent,
       options: commonConfigs.large
@@ -162,6 +170,7 @@ export class UIService {
     confirm: null,
     deploy: null,
     editor: null,
+    openApiImport: null,
     manageInstances: null
   };
 
@@ -220,6 +229,10 @@ export class UIService {
     modalName: 'manageInstances',
     payload: ManageInstancesModalPayload
   ): void;
+  public openModal(
+    modalName: 'openApiImport',
+    payload: OpenApiImportModalPayload
+  ): void;
   public openModal(modalName: ModalWithoutPayload): void;
   public openModal(
     modalName: ModalNames,
@@ -228,6 +241,7 @@ export class UIService {
       | ConfirmModalPayload
       | ManageInstancesModalPayload
       | EditorModalPayload
+      | OpenApiImportModalPayload
       | never
   ): void {
     if (this.modalsInstances[modalName]) {

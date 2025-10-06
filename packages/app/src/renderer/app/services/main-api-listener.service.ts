@@ -3,7 +3,6 @@ import { combineLatest } from 'rxjs';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
-import { ImportExportService } from 'src/renderer/app/services/import-export.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { TourService } from 'src/renderer/app/services/tour.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -17,7 +16,6 @@ export class MainApiListenerService {
   constructor(
     private environmentsService: EnvironmentsService,
     private eventsService: EventsService,
-    private importExportService: ImportExportService,
     private store: Store,
     private zone: NgZone,
     private userService: UserService,
@@ -99,12 +97,6 @@ export class MainApiListenerService {
               break;
             case 'OPEN_CHANGELOG':
               this.uiService.openModal('changelog');
-              break;
-            case 'IMPORT_OPENAPI_FILE':
-              this.importExportService.importOpenAPIFile().subscribe();
-              break;
-            case 'EXPORT_OPENAPI_FILE':
-              this.importExportService.exportOpenAPIFile().subscribe();
               break;
           }
         });

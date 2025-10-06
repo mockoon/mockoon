@@ -1,24 +1,26 @@
-import openAPI from '@apidevtools/swagger-parser';
+import { OpenAPIV2, OpenAPIV3 } from 'openapi-types';
+import { parse as yamlParse, stringify as yamlStringify } from 'yaml';
+import { INDENT_SIZE } from '../constants/common.constants';
+import { Environment } from '../models/environment.model';
 import {
   BodyTypes,
-  BuildEnvironment,
-  BuildHeader,
-  BuildHTTPRoute,
-  BuildRouteResponse,
-  Environment,
-  GetRouteResponseContentType,
   Header,
-  INDENT_SIZE,
   Methods,
-  RemoveLeadingSlash,
   Route,
   RouteResponse,
   RouteType
-} from '@mockoon/commons';
-import { OpenAPI, OpenAPIV2, OpenAPIV3 } from 'openapi-types';
-import { routesFromFolder } from './utils';
-
-type SpecificationVersions = 'SWAGGER' | 'OPENAPI_V3';
+} from '../models/route.model';
+import {
+  GetRouteResponseContentType,
+  RemoveLeadingSlash,
+  routesFromFolder
+} from '../utils/utils';
+import {
+  BuildEnvironment,
+  BuildHeader,
+  BuildHTTPRoute,
+  BuildRouteResponse
+} from './schema-builder';
 
 /**
  * Convert to and from Swagger/OpenAPI formats
@@ -27,32 +29,32 @@ type SpecificationVersions = 'SWAGGER' | 'OPENAPI_V3';
  * Swagger specifications: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md
  *
  */
-export class OpenAPIConverter {
+export class OpenApiConverter {
   /**
    * Import Swagger or OpenAPI format
+   * Receives a raw specification string and tries to parse it
+   * Loading of the file or URL should be done by the caller even if scalar/openapi-parser
+   * can also load files and URLs.
+   * $ref URLs will be fetched.
+   * File loading is not done here to keep this library compatible with browser usage.
    *
-   * @param filePath
+   * @param spec - raw specification string
    * @throws {Error}
    */
   public async convertFromOpenAPI(
-    filePath: string,
+    spec: string,
     port?: number
   ): Promise<Environment | null> {
-    // .bind() due to https://github.com/APIDevTools/json-schema-ref-parser/issues/139#issuecomment-940500698
-    const parsedAPI: OpenAPI.Document = await openAPI.dereference.bind(openAPI)(
-      filePath,
-      {
-        dereference: { circular: 'ignore' }
-      }
-    );
+    const parsedSpec = this.parseJsonOrYaml(spec);
+    const schema = await this.dereference(parsedSpec);
 
-    if (this.isSwagger(parsedAPI)) {
-      return this.convertFromSwagger(parsedAPI, port);
-    } else if (this.isOpenAPIV3(parsedAPI)) {
-      return this.convertFromOpenAPIV3(parsedAPI, port);
+    if (this.isSwagger(schema)) {
+      return this.convertFromSwagger(schema, port);
+    } else if (this.isOpenAPIV3(schema)) {
+      return this.convertFromOpenAPIV3(schema, port);
     }
 
-    return null;
+    throw new Error('Not a valid Swagger/OpenAPI specification');
   }
 
   /**
@@ -64,6 +66,7 @@ export class OpenAPIConverter {
    */
   public async convertToOpenAPIV3(
     environment: Environment,
+    format: 'json' | 'yaml',
     prettify = false
   ): Promise<string> {
     const routes = routesFromFolder(
@@ -94,7 +97,9 @@ export class OpenAPIConverter {
           endpoint = '/' + route.endpoint.replace(/:([a-zA-Z0-9_]+)/g, '{$1}');
         }
 
-        paths[endpoint] ??= {};
+        if (!paths[endpoint]) {
+          paths[endpoint] = {};
+        }
 
         (paths[endpoint] as OpenAPIV3.OperationObject)[route.method] = {
           description: route.documentation,
@@ -171,9 +176,172 @@ export class OpenAPIConverter {
       }, {})
     };
 
-    await openAPI.validate(openAPIEnvironment);
+    return format === 'json'
+      ? JSON.stringify(openAPIEnvironment, null, prettify ? 2 : 0)
+      : yamlStringify(openAPIEnvironment);
+  }
 
-    return JSON.stringify(openAPIEnvironment, null, prettify ? 2 : 0);
+  /**
+   * Dereference all $ref in an OpenAPI specification
+   * Handles both internal (#/components/schemas/...) and external (URL) references
+   * Includes circular dependency detection and caching
+   *
+   * @param parsedSpec - The parsed OpenAPI specification
+   * @returns Promise<any> - The dereferenced schema
+   */
+  public async dereference(parsedSpec: any): Promise<any> {
+    const externalCache = new Map<string, any>();
+    const internalCache = new Map<string, any>();
+    const visitedNodes = new Set<any>();
+    const circularRefs = new Set<string>();
+    const rootSchema = JSON.parse(JSON.stringify(parsedSpec));
+
+    /**
+     * Fetch and parse external reference
+     *
+     * @throws {Error} - If fetching or parsing fails
+     */
+    const fetchExternalRef = async (url: string): Promise<any> => {
+      if (externalCache.has(url)) {
+        return externalCache.get(url);
+      }
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch ${url}: ${response.status} ${response.statusText}`
+        );
+      }
+
+      const content = await response.text();
+      const parsed = this.parseJsonOrYaml(content);
+      externalCache.set(url, parsed);
+
+      return parsed;
+    };
+
+    const resolveRef = (schema: any, fragment: string) => {
+      fragment = fragment.replace(/^#/, '');
+
+      const fragmentPath = fragment.startsWith('/')
+        ? fragment.slice(1).split('/')
+        : fragment.split('/');
+      let current = schema;
+
+      for (const segment of fragmentPath) {
+        // invalid fragment path
+        if (!current || typeof current !== 'object') {
+          return null;
+        }
+
+        current = current[segment];
+
+        // fragment not found
+        if (current === undefined) {
+          return null;
+        }
+      }
+
+      return current;
+    };
+
+    const processRef = async (refPath: string) => {
+      if (refPath.startsWith('http://') || refPath.startsWith('https://')) {
+        // External URL reference
+        const [url, fragment] = refPath.split('#');
+        const externalSchema = await fetchExternalRef(url);
+
+        if (!externalSchema) {
+          return null;
+        }
+
+        if (fragment) {
+          return resolveRef(externalSchema, fragment);
+        }
+
+        return externalSchema;
+      } else if (refPath.startsWith('#/')) {
+        // Internal reference
+        if (internalCache.has(refPath)) {
+          return internalCache.get(refPath);
+        }
+
+        const current: any = resolveRef(rootSchema, refPath);
+
+        internalCache.set(refPath, current);
+
+        return current;
+      }
+    };
+
+    /**
+     * Recursively traverse and dereference the schema
+     */
+    const crawl = async (current: any, path = '#'): Promise<any> => {
+      if (current === null || typeof current !== 'object') {
+        return current;
+      }
+
+      // Avoid infinite loops with circular references in object structure
+      if (visitedNodes.has(current)) {
+        return current;
+      }
+
+      if (Array.isArray(current)) {
+        const result: any[] = [];
+        for (let i = 0; i < current.length; i++) {
+          result[i] = await crawl(current[i], `${path}/${i}`);
+        }
+
+        return result;
+      }
+
+      // Handle $ref
+      if (current.$ref && typeof current.$ref === 'string') {
+        const refPath = current.$ref;
+
+        /**
+         * Check for circular reference before processing
+         * Returns an empty object that will be converted in a simple string in generateSchema()
+         */
+        if (circularRefs.has(refPath)) {
+          return {};
+        }
+
+        const resolvedRef = await processRef(refPath);
+
+        if (resolvedRef) {
+          // Add to circular reference tracking before recursing
+          circularRefs.add(refPath);
+          // Recursively dereference the resolved schema
+          const result = await crawl(resolvedRef, refPath);
+          // Remove from circular reference tracking after processing
+          circularRefs.delete(refPath);
+
+          return result;
+        } else {
+          // Return original $ref if resolution failed
+          return current;
+        }
+      }
+
+      visitedNodes.add(current);
+
+      const result: any = {};
+
+      for (const key in current) {
+        if (Object.prototype.hasOwnProperty.call(current, key)) {
+          const res = await crawl(current[key], `${path}/${key}`);
+          result[key] = res;
+        }
+      }
+
+      visitedNodes.delete(current);
+
+      return result;
+    };
+
+    return await crawl(rootSchema);
   }
 
   /**
@@ -276,7 +444,7 @@ export class OpenAPIConverter {
   ): Route[];
   private createRoutes(
     parsedAPI: OpenAPIV2.Document & OpenAPIV3.Document,
-    version: SpecificationVersions
+    version: 'SWAGGER' | 'OPENAPI_V3'
   ): Route[] {
     const routes: Route[] = [];
 
@@ -528,6 +696,14 @@ export class OpenAPIConverter {
   /**
    * Generate a JSON object from a schema
    *
+   * @scalar/openapi-parser handles circular references differently than the previous
+   * library we used (@apidevtools/swagger-parser)
+   * Instead of ignoring them, it reuses the object references and creates
+   * circular structures in the parsed object.
+   *
+   * We need to keep track of the schemas we've already parsed in `parentSchemas`
+   * but delete them when going out of a branch (i.e. when going to the next sibling).
+   *
    */
   private generateSchema(
     schema: OpenAPIV2.SchemaObject | OpenAPIV3.SchemaObject
@@ -593,7 +769,9 @@ export class OpenAPIConverter {
           Object.prototype.hasOwnProperty.call(schema, propertyName) &&
           schema[propertyName].length > 0
         ) {
-          return this.generateSchema(schema[propertyName][0]);
+          const generatedSchema = this.generateSchema(schema[propertyName][0]);
+
+          return generatedSchema;
         }
       }
 
@@ -615,6 +793,30 @@ export class OpenAPIConverter {
 
       return '';
     }
+  }
+
+  /**
+   * Parses a JSON or YAML specification string.
+   *
+   * @param spec - raw specification string
+   * @returns
+   */
+  private parseJsonOrYaml(spec: string) {
+    let parsedSpec: any;
+
+    try {
+      parsedSpec = JSON.parse(spec);
+    } catch (jsonError: unknown) {
+      try {
+        parsedSpec = yamlParse(spec);
+      } catch (yamlError: unknown) {
+        throw new Error(
+          `Invalid JSON or YAML format: ${jsonError ? (jsonError as Error).message : ''} ${yamlError ? (yamlError as Error).message : ''}`
+        );
+      }
+    }
+
+    return parsedSpec;
   }
 
   /**

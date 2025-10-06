@@ -61,7 +61,8 @@
     "eslint-config-oclif": "6.0.68",
     "eslint-config-oclif-typescript": "3.1.14",
     "oclif": "4.18.1",
-    "typescript": "5.8.3"
+    "typescript": "5.8.3",
+    "yaml": "2.8.1"
   },
   "engines": {
     "node": ">=18"

@@ -35,3 +35,7 @@ export type ManageInstancesModalPayload = {
   environmentUuid?: string;
   refresh: boolean;
 };
+
+export type OpenApiImportModalPayload = {
+  cloud: boolean;
+};

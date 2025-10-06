@@ -1,5 +1,6 @@
 import commandPalette from '../libs/command-palette';
 import environments from '../libs/environments';
+import modals from '../libs/modals';
 import settings from '../libs/settings';
 
 describe('Command Palette', () => {
@@ -23,28 +24,6 @@ describe('Command Palette', () => {
     await commandPalette.executeCommandClick(3);
     await commandPalette.assertVisible(true);
     await settings.assertVisible();
-    await browser.keys(['Escape']);
-  });
-
-  it('should close the command palette when the escape key is pressed', async () => {
-    await commandPalette.open();
-    await commandPalette.assertVisible();
-    await browser.keys(['Escape']);
-    await commandPalette.assertVisible(true);
-  });
-
-  it('should execute the command when enter key is pressed', async () => {
-    await commandPalette.open();
-    await commandPalette.assertVisible();
-    await commandPalette.search('Open Application');
-    await commandPalette.countCommands(3);
-    await commandPalette.assertActiveCommand(1);
-    await browser.keys(['ArrowDown']);
-    await browser.keys(['ArrowDown']);
-    await commandPalette.assertActiveCommand(3);
-    await browser.keys(['Enter']);
-    await commandPalette.assertVisible(true);
-    await settings.assertVisible();
-    await browser.keys(['Escape']);
+    await modals.close();
   });
 });

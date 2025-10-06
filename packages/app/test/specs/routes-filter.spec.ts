@@ -89,7 +89,7 @@ describe('Routes filter', () => {
 
   it('should reset routes filter when adding a new environment', async () => {
     await routes.setFilter('/dolphins');
-    await environments.add('new-env1-test');
+    await environments.localAdd('new-env1-test');
     await routes.assertFilter('');
   });
 

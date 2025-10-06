@@ -1,5 +1,3 @@
-import { Key } from 'webdriverio';
-
 class CommandPalette {
   public get commandPaletteModal() {
     return $('.command-palette-modal');
@@ -13,7 +11,7 @@ class CommandPalette {
   }
 
   public async open() {
-    await browser.keys([Key.Ctrl, 'P']);
+    await $('#openCommandPalette').click();
   }
 
   public async assertVisible(reverse = false) {
@@ -44,6 +42,16 @@ class CommandPalette {
   public async executeCommandClick(index: number) {
     const commandList = await this.commandsList;
     const command = await commandList.$(`.list-group-item:nth-child(${index})`);
+    await command.click();
+  }
+
+  /**
+   *
+   * @param id - command palette command ID from command-palette.service.ts
+   */
+  public async executeCommandClickById(id: string) {
+    const commandList = await this.commandsList;
+    const command = await commandList.$(`#${id}`);
     await command.click();
   }
 

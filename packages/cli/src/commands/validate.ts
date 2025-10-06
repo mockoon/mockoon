@@ -27,7 +27,7 @@ export default class Validate extends Command {
       for (const [_index, filePath] of flags.data.entries()) {
         parsedEnvironments.push({
           originalPath: filePath,
-          environment: await loadFile(filePath)
+          environment: await loadFile(filePath, true)
         });
       }
 

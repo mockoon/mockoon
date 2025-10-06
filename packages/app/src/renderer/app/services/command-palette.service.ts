@@ -682,6 +682,33 @@ export class CommandPaletteService {
         },
         score: 1,
         enabled: hasAtLeastOneEnvironment
+      },
+      {
+        id: 'IMPORT_CLOUD_OPENAPI',
+        label: 'New cloud environment from OpenAPI/Swagger',
+        action: () => {
+          this.uiService.openModal('openApiImport', { cloud: true });
+        },
+        score: 1,
+        enabled: isSyncConnected
+      },
+      {
+        id: 'EXPORT_ENVIRONMENT_OPENAPI_JSON',
+        label: 'Export Current Environment to OpenAPI v3 (JSON)',
+        action: () => {
+          this.environmentsService.exportOpenAPIFile('json').subscribe();
+        },
+        score: 1,
+        enabled: true
+      },
+      {
+        id: 'EXPORT_ENVIRONMENT_OPENAPI_YAML',
+        label: 'Export Current Environment to OpenAPI v3 (YAML)',
+        action: () => {
+          this.environmentsService.exportOpenAPIFile('yaml').subscribe();
+        },
+        score: 1,
+        enabled: true
       }
     ];
 
@@ -852,6 +879,15 @@ export class CommandPaletteService {
           },
           score: 1,
           enabled: hasActiveEnvironment
+        },
+        {
+          id: 'IMPORT_LOCAL_OPENAPI',
+          label: 'New local environment from OpenAPI/Swagger',
+          action: () => {
+            this.uiService.openModal('openApiImport', { cloud: false });
+          },
+          score: 1,
+          enabled: true
         }
       );
     }

@@ -10,7 +10,7 @@ class Environments {
     return $(`${this.activeMenuEntrySelector} app-svg[icon="record"]`);
   }
 
-  public get addBtn() {
+  public get localAddBtn() {
     return $('#local-environments-add-dropdown .dropdown-toggle');
   }
 
@@ -24,6 +24,14 @@ class Environments {
 
   private get restartBtn() {
     return $('#header-btn-server-restart');
+  }
+
+  private get browseOpenApiBtn() {
+    return $('#browseOpenApi');
+  }
+
+  private get importOpenApiBtn() {
+    return $('#importOpenApi');
   }
 
   private get runningEnvironmentMenuEntry() {
@@ -42,18 +50,32 @@ class Environments {
     );
   }
 
-  public async add(environmentName: string) {
+  public async localAdd(environmentName: string) {
     await dialogs.save(resolve(`./tmp/storage/${environmentName}.json`));
-    await this.addBtn.click();
+    await this.localAddBtn.click();
     await this.getAddMenuEntry(1).click();
     await utils.closeTooltip();
+  }
+
+  public async localAddFromOpenApi() {
+    await this.localAddBtn.click();
+    await this.getAddMenuEntry(3).click();
+    await utils.closeTooltip();
+  }
+
+  public async browseOpenApi() {
+    await this.browseOpenApiBtn.click();
+  }
+
+  public async importOpenApi() {
+    await this.importOpenApiBtn.click();
   }
 
   /**
    * Open the environment add menu
    */
-  public async openAddMenu(): Promise<void> {
-    await this.addBtn.click();
+  public async openLocalAddMenu(): Promise<void> {
+    await this.localAddBtn.click();
   }
 
   /**
@@ -65,7 +87,7 @@ class Environments {
   ): Promise<void> {
     await dialogs.open(resolve(`./tmp/storage/${environmentName}.json`));
 
-    await this.addBtn.click();
+    await this.localAddBtn.click();
     await this.getAddMenuEntry(2).click();
 
     await utils.closeTooltip();

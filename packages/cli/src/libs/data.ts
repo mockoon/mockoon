@@ -4,9 +4,9 @@ import {
   EnvironmentSchema,
   HighestMigrationId,
   Migrations,
+  OpenApiConverter,
   repairRefs
 } from '@mockoon/commons';
-import { OpenAPIConverter } from '@mockoon/commons-server';
 import { promises as fs } from 'fs';
 import { CLIMessages } from '../constants/cli-messages.constants';
 
@@ -63,12 +63,16 @@ const migrateAndValidateEnvironment = async (
 
 /**
  * Load a file from the filesystem or a URL.
- * If the file is a JSON file, it will be parsed.
+ * If parse is true, it will also parse the file content as JSON.
  *
- * @param filePath
+ * @param filePath - path or URL to the file
+ * @param parse - set to false to return raw file content
  * @returns
  */
-export const loadFile = async (filePath: string): Promise<string> => {
+export const loadFile = async <T extends boolean>(
+  filePath: string,
+  parse: T
+): Promise<T extends true ? any : string> => {
   try {
     let data: any;
 
@@ -78,7 +82,7 @@ export const loadFile = async (filePath: string): Promise<string> => {
       data = await fs.readFile(filePath, { encoding: 'utf-8' });
     }
 
-    if (typeof data === 'string') {
+    if (parse && typeof data === 'string') {
       data = JSON.parse(data);
     }
 
@@ -102,28 +106,30 @@ export const parseDataFile = async (
   } = { port: undefined, hostname: undefined },
   repair = false
 ): Promise<{ originalPath: string; environment: Environment }> => {
-  const openAPIConverter = new OpenAPIConverter();
+  const openAPIConverter = new OpenApiConverter();
+  const data = await loadFile(filePath, false);
   let errorMessage = `${CLIMessages.DATA_INVALID}:`;
-
   let environment: Environment | null = null;
 
   try {
-    environment = await openAPIConverter.convertFromOpenAPI(filePath);
+    environment = await openAPIConverter.convertFromOpenAPI(data);
   } catch (openAPIError) {
     if (openAPIError instanceof Error) {
       errorMessage += `\nOpenAPI parser: ${openAPIError.message}`;
     }
 
-    // immediately throw if the file is not a JSON file
+    // immediately throw if the file is not a JSON file (mockoon only supports JSON files)
     if (filePath.includes('.yml') || filePath.includes('.yaml')) {
       throw new Error(errorMessage);
     }
 
     try {
-      const data = await loadFile(filePath);
+      if (typeof data === 'string') {
+        environment = JSON.parse(data);
+      }
 
-      if (typeof data === 'object') {
-        environment = await migrateAndValidateEnvironment(data, repair);
+      if (environment) {
+        environment = await migrateAndValidateEnvironment(environment, repair);
       }
     } catch (JSONError) {
       if (JSONError instanceof Error) {

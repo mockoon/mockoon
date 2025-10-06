@@ -193,26 +193,6 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
   });
 
   menu.push({
-    label: 'Import/export',
-    submenu: [
-      {
-        id: 'MENU_IMPORT_OPENAPI_FILE',
-        label: 'Import Swagger v2/OpenAPI v3 (JSON or YAML)',
-        click: () => {
-          mainWindow.webContents.send('APP_MENU', 'IMPORT_OPENAPI_FILE');
-        }
-      },
-      {
-        id: 'MENU_EXPORT_OPENAPI_FILE',
-        label: 'Export current environment to OpenAPI v3 (JSON)',
-        click: () => {
-          mainWindow.webContents.send('APP_MENU', 'EXPORT_OPENAPI_FILE');
-        }
-      }
-    ]
-  });
-
-  menu.push({
     label: 'View',
     submenu: [
       {
@@ -371,8 +351,7 @@ const requireEnvironmentsMenuItems = [
   'MENU_PREVIOUS_ENVIRONMENT',
   'MENU_NEXT_ENVIRONMENT',
   'MENU_PREVIOUS_ROUTE',
-  'MENU_NEXT_ROUTE',
-  'MENU_EXPORT_OPENAPI_FILE'
+  'MENU_NEXT_ROUTE'
 ];
 
 // menu items requiring cloud to be active

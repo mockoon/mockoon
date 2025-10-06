@@ -1,0 +1,89 @@
+@let modalPayload = modalPayload$ | async;
+@let bodyEditorMode = bodyEditorMode$ | async;
+
+<div class="modal-header">
+  <h4 class="modal-title">
+    OpenAPI specification import
+    <br />
+    <small class="text-muted h6">
+      Import an OpenAPI v2 or v3 specification from a URL, a file or by pasting
+      its content.
+    </small>
+  </h4>
+</div>
+<div class="modal-body" [formGroup]="importForm">
+  <div class="d-flex align-items-center mb-3">
+    <div class="col">
+      <div class="input-group align-items-center">
+        <label for="importUrl" class="col-form-label pe-2">URL</label>
+        <div class="col">
+          <input
+            type="text"
+            id="importUrl"
+            class="form-control me-2"
+            placeholder="Paste the OpenAPI spec URL"
+            formControlName="url"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="col-auto fw-bold mx-2"><label>OR</label></div>
+    <div class="col-auto">
+      @if (isWeb) {
+        <label id="browseOpenApi" for="importFile" class="btn btn-custom">
+          <app-svg icon="find_in_page" class="me-2"></app-svg>Browse
+          <input
+            type="file"
+            class="form-control visually-hidden"
+            id="importFile"
+            (change)="onFileSelected($event)"
+          />
+        </label>
+      } @else {
+        <button
+          id="browseOpenApi"
+          type="button"
+          class="btn btn-custom"
+          (click)="readFile()"
+          [disabled]="taskInProgress()"
+        >
+          <app-svg icon="find_in_page" class="me-2"></app-svg>Browse
+        </button>
+      }
+    </div>
+  </div>
+  <label for="importUrl" class="form-label mb-3">
+    Or paste the OpenAPI specification content below:
+  </label>
+  <div class="editor">
+    <app-editor
+      class="h-100"
+      formControlName="content"
+      [options]="defaultEditorConfig.options"
+      [mode]="bodyEditorMode"
+    ></app-editor>
+  </div>
+  <p class="px-2 pt-2 mb-0 text-muted fst-italic">
+    Note: URL references (<code>$ref</code>) will be automatically resolved.
+    File references are not supported.
+  </p>
+</div>
+<div class="modal-footer">
+  @if (taskInProgress()) {
+    <div class="d-inline-block me-2">
+      <app-spinner></app-spinner>
+    </div>
+  }
+  <button
+    type="button"
+    id="importOpenApi"
+    class="btn btn-primary me-2"
+    (click)="import(modalPayload.cloud)"
+    [disabled]="taskInProgress() || importForm.get('content').invalid"
+  >
+    Import
+  </button>
+  <button type="button" class="btn btn-secondary modal-close" (click)="close()">
+    Cancel
+  </button>
+</div>

@@ -2,7 +2,6 @@ import { resolve } from 'path';
 import dialogs from '../libs/dialogs';
 import environments from '../libs/environments';
 import http from '../libs/http';
-import menu from '../libs/menu';
 import { HttpCall } from '../libs/models';
 import routes from '../libs/routes';
 import utils from '../libs/utils';
@@ -108,11 +107,13 @@ describe('Default route response', () => {
   });
 
   it('should set first route response as default when importing an open api spec', async () => {
+    await environments.localAddFromOpenApi();
     await dialogs.open(
       './test/data/res/import-openapi/samples/petstore-v3.yaml'
     );
+    await environments.browseOpenApi();
     await dialogs.save(resolve('./tmp/storage/petstore-v3.json'));
-    await menu.click('MENU_IMPORT_OPENAPI_FILE');
+    await environments.importOpenApi();
     await browser.pause(500);
     await environments.assertActiveMenuEntryText('Swagger Petstore v3');
     await routes.openRouteResponseMenu();

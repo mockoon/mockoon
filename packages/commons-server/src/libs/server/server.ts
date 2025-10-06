@@ -26,6 +26,7 @@ import {
   defaultMaxTransactionLogs,
   generateUUID,
   getLatency,
+  routesFromFolder,
   stringIncludesArrayItems
 } from '@mockoon/commons';
 import appendField from 'append-field';
@@ -68,8 +69,7 @@ import {
   dedupSlashes,
   isBodySupportingMethod,
   preparePath,
-  resolvePathFromEnvironment,
-  routesFromFolder
+  resolvePathFromEnvironment
 } from '../utils';
 import { createAdminEndpoint } from './admin-api';
 import { CrudRouteIds, crudRoutesBuilder, databucketActions } from './crud';
