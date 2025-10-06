@@ -99,9 +99,29 @@ export class MainApiService implements MainAPIModel {
           break;
 
         case 'APP_LOGS':
-          if (data[0].type === 'error') {
-            // eslint-disable-next-line no-console
-            console.error(data[0].message);
+          {
+            // log similarly to main process (which uses winston)
+            const log = data[0] as {
+              type: 'info' | 'error';
+              message: string;
+              payload?: any;
+            };
+
+            const consoleMessage = {
+              timestamp: new Date().toISOString(),
+              level: log.type,
+              app: 'mockoon-web',
+              message: log.message,
+              ...log.payload
+            };
+
+            if (log.type === 'error') {
+              // eslint-disable-next-line no-console
+              console.error(consoleMessage);
+            } else if (log.type === 'info') {
+              // eslint-disable-next-line no-console
+              console.log(consoleMessage);
+            }
           }
           break;
         default:
