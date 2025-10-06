@@ -96,5 +96,61 @@ describe('Response helpers', () => {
       });
       strictEqual(responseMock.locals.statusCode, undefined);
     });
+
+    it('should not set status code if value is below 100', () => {
+      TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{status 99}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: undefined,
+        response: responseMock,
+        envVarsPrefix: ''
+      });
+      strictEqual(responseMock.locals.statusCode, undefined);
+    });
+
+    it('should not set status code if value is above 999', () => {
+      TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{status 1000}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: undefined,
+        response: responseMock,
+        envVarsPrefix: ''
+      });
+      strictEqual(responseMock.locals.statusCode, undefined);
+    });
+
+    it('should not set status code if value is 0', () => {
+      TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{status 0}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: undefined,
+        response: responseMock,
+        envVarsPrefix: ''
+      });
+      strictEqual(responseMock.locals.statusCode, undefined);
+    });
+
+    it('should not set status code if value is negative', () => {
+      TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{status -404}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: undefined,
+        response: responseMock,
+        envVarsPrefix: ''
+      });
+      strictEqual(responseMock.locals.statusCode, undefined);
+    });
   });
 });

@@ -612,3 +612,13 @@ export const parseRequestMessage = (
 
   return parseByContentType(data, contentType);
 };
+
+/**
+ * Validate status code (100-999)
+ *
+ * @param statusCode - The status code to validate
+ * @returns boolean
+ */
+export const isValidStatusCode = (statusCode: number): boolean => {
+  return Number.isInteger(statusCode) && statusCode >= 100 && statusCode <= 999;
+};

@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import { isValidStatusCode } from '../utils';
 
 export const responseHelperNames: (keyof ReturnType<typeof ResponseHelpers>)[] =
   ['status'];
@@ -14,9 +15,10 @@ export const ResponseHelpers = function (response: Response) {
       if (parameters.length >= 1) {
         code = parseInt(parameters[0], 10);
 
-        if (!isNaN(code)) {
+        if (isValidStatusCode(code)) {
           response.locals.statusCode = code;
         }
+        // Invalid status codes are silently ignored, letting the route's default status code be used
       }
 
       return '';
