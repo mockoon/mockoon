@@ -11,9 +11,12 @@ export const helpersAutocompletions = [
     value: "{{queryParamRaw 'path'}}",
     meta: ''
   },
+  { caption: 'queryParams', value: '{{queryParams}}', meta: '' },
   { caption: 'urlParam', value: "{{urlParam 'paramName'}}", meta: '' },
+  { caption: 'urlParams', value: '{{urlParams}}', meta: '' },
   { caption: 'cookie', value: "{{cookie 'cookie_name'}}", meta: '' },
   { caption: 'header', value: "{{header 'Header-Name'}}", meta: '' },
+  { caption: 'headers', value: '{{headers}}', meta: '' },
   { caption: 'hostname', value: '{{hostname}}', meta: '' },
   { caption: 'ip', value: '{{ip}}', meta: '' },
   { caption: 'method', value: '{{method}}', meta: '' },

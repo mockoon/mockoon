@@ -9,9 +9,12 @@ export const requestHelperNames: (keyof ReturnType<typeof RequestHelpers>)[] = [
   'method',
   'ip',
   'urlParam',
+  'urlParams',
   'queryParam',
   'queryParamRaw',
+  'queryParams',
   'header',
+  'headers',
   'cookie',
   'baseUrl',
   'hostname'
@@ -68,6 +71,10 @@ export const RequestHelpers = function (
     urlParam: function (paramName: string) {
       return request.params[paramName];
     },
+    // get all url parameters as an object
+    urlParams: function () {
+      return request.params ?? {};
+    },
     // use params from query string ?param1=xxx&param2=yyy
     queryParam: function (...args: any[]) {
       const parameters = args.slice(0, -1); // remove last item (handlebars options argument)
@@ -103,6 +110,10 @@ export const RequestHelpers = function (
 
       return getValueFromPath(request.query, path, defaultValue);
     },
+    // get all query parameters as an object
+    queryParams: function () {
+      return request.query ?? {};
+    },
     // use content from request header
     header: function (headerName: string, defaultValue: string) {
       if (typeof defaultValue === 'object') {
@@ -114,6 +125,10 @@ export const RequestHelpers = function (
       }
 
       return request.get(headerName) || defaultValue;
+    },
+    // get all headers as an object
+    headers: function () {
+      return request.headers ?? {};
     },
     // use value of cookie
     cookie: function (key: string, defaultValue: string) {
