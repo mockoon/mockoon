@@ -68,6 +68,7 @@ import {
   CreateTransaction,
   dedupSlashes,
   isBodySupportingMethod,
+  isValidStatusCode,
   preparePath,
   resolvePathFromEnvironment
 } from '../utils';
@@ -2402,7 +2403,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * @param response
    */
   private applyResponseLocals(response: Response) {
-    if (response.locals.statusCode !== undefined) {
+    if (
+      response.locals.statusCode !== undefined &&
+      isValidStatusCode(response.locals.statusCode)
+    ) {
       response.status(response.locals.statusCode);
     }
   }
