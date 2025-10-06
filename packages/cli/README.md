@@ -243,9 +243,9 @@ $ mockoon-cli import --input ~/input.json --output ./output.json --prettify
 
 ### `export` command
 
-Export a mock API to an OpenAPI v3 specification file (JSON).
+Export a mock API to an OpenAPI v3 specification file (JSON or YAML).
 
-The output file will not be prettified by default. You can prettify it using the `--prettify` flag described below.
+The output file will not be prettified by default for JSON. You can prettify it using the `--prettify` flag described below.
 
 **Usage**:
 `$ mockoon-cli export`
@@ -255,7 +255,8 @@ The output file will not be prettified by default. You can prettify it using the
 |-|-|
 |-i, --input [required] |Path or URL to your Mockoon data file|
 |-o, --output [required] |Generated OpenApi v3 path and name (e.g. `./output.json`)|
-|-p, --prettify |Prettify output|
+|-f, --format |Output format, "json" or "yaml" (default: "json")|
+|-p, --prettify |Prettify output (JSON only)|
 |-h, --help |Show CLI help|
 
 **Examples**:
@@ -263,6 +264,7 @@ The output file will not be prettified by default. You can prettify it using the
 ```bash
 $ mockoon-cli export --input ~/input.json --output ./output.json
 $ mockoon-cli export --input ~/input.json --output ./output.json --prettify
+$ mockoon-cli export --input ~/input.json --output ./output.yaml --format yaml
 ```
 
 ### `validate` command
