@@ -1,6 +1,7 @@
 ---
 name: Bug report
 about: Create a bug report to help us improve Mockoon
+labels: 'status:need-triage'
 ---
 
 <!-- ⚠️ Please search existing issues to avoid creating duplicates. ⚠️ -->
@@ -21,4 +22,4 @@ about: Create a bug report to help us improve Mockoon
 
 **OS / OS version:**
 
-<!-- Windows 10, Mac OS, Linux Ubuntu 18.xx, etc  -->
+<!-- Windows 10, Mac OS, Linux Ubuntu 18.xx, etc -->
