@@ -27,7 +27,7 @@ about: Checklist for releases (maintainers use only)
 
 - [ ] Create a **pre-release** (!important) on GitHub with correct version (`v*.*.*`) and publish, for the desktop app
 - [ ] Wait for desktop binaries build (automated after pre-release publication)
-- [ ] Add desktop binaries to the GitHub release
+- [ ] Add desktop binaries (+ app and libs SBOMs) to the GitHub release
 - [ ] Set the release to final (non pre-release)
 
 **Website (publish changelogs):**
