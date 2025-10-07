@@ -38,10 +38,32 @@ jobs:
           npm run build:libs
           npm run build:serverless
           npm run build:cli
+      - name: Extract libs version from tag
+        id: libs-version
+        run: |
+          LIBS_VERSION=${GITHUB_REF#refs/tags/libs-v}
+          echo "LIBS_VERSION=$LIBS_VERSION" >> $GITHUB_OUTPUT
       - name: Add NPM token
         run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
           git update-index --assume-unchanged .npmrc
+      - name: Generate SPDX SBOM files
+        run: |
+          cd packages/commons && npm sbom --sbom-type library --sbom-format spdx --omit dev > mockoon-commons-v${{steps.libs-version.outputs.LIBS_VERSION}}-sbom.spdx.json
+          cd ../commons-server && npm sbom --sbom-type library --sbom-format spdx --omit dev > mockoon-commons-server-v${{steps.libs-version.outputs.LIBS_VERSION}}-sbom.spdx.json
+          cd ../cloud && npm sbom --sbom-type library --sbom-format spdx --omit dev > mockoon-cloud-v${{steps.libs-version.outputs.LIBS_VERSION}}-sbom.spdx.json
+          cd ../serverless && npm sbom --sbom-type library --sbom-format spdx --omit dev > mockoon-serverless-v${{steps.libs-version.outputs.LIBS_VERSION}}-sbom.spdx.json
+          cd ../cli && npm sbom --sbom-type library --sbom-format spdx --omit dev > mockoon-cli-v${{steps.libs-version.outputs.LIBS_VERSION}}-sbom.spdx.json
+      - name: Upload SBOM artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: libs-sbom-files-v${{steps.libs-version.outputs.LIBS_VERSION}}
+          path: |
+            packages/commons/mockoon-commons-v${{steps.libs-version.outputs.LIBS_VERSION}}-sbom.spdx.json
+            packages/commons-server/mockoon-commons-server-v${{steps.libs-version.outputs.LIBS_VERSION}}-sbom.spdx.json
+            packages/cloud/mockoon-cloud-v${{steps.libs-version.outputs.LIBS_VERSION}}-sbom.spdx.json
+            packages/serverless/mockoon-serverless-v${{steps.libs-version.outputs.LIBS_VERSION}}-sbom.spdx.json
+            packages/cli/mockoon-cli-v${{steps.libs-version.outputs.LIBS_VERSION}}-sbom.spdx.json
       - name: NPM publish
         run: |
           npm run publish

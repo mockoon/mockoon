@@ -1,0 +1,67 @@
+name: Test SBOM Generation
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-sbom-generation:
+    name: Test SPDX SBOM generation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+      - uses: actions/cache@v4
+        id: cache-modules
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: |
+          npm run bootstrap
+      - name: Link packages
+        run: |
+          npm run link
+      - name: Build
+        run: |
+          npm run build:libs
+          npm run build:serverless
+          npm run build:cli
+      - name: Extract test version
+        id: test-version
+        run: |
+          # For testing, use the version from package.json with a test suffix
+          TEST_VERSION=$(node -p -e "require('./packages/commons/package.json').version")-test
+          echo "TEST_VERSION=$TEST_VERSION" >> $GITHUB_OUTPUT
+      - name: Generate SPDX SBOM files (test)
+        run: |
+          cd packages/commons && npm sbom --sbom-type library --sbom-format spdx --omit dev > mockoon-commons-v${{steps.test-version.outputs.TEST_VERSION}}-sbom.spdx.json
+          cd ../commons-server && npm sbom --sbom-type library --sbom-format spdx --omit dev > mockoon-commons-server-v${{steps.test-version.outputs.TEST_VERSION}}-sbom.spdx.json
+          cd ../cloud && npm sbom --sbom-type library --sbom-format spdx --omit dev > mockoon-cloud-v${{steps.test-version.outputs.TEST_VERSION}}-sbom.spdx.json
+          cd ../serverless && npm sbom --sbom-type library --sbom-format spdx --omit dev > mockoon-serverless-v${{steps.test-version.outputs.TEST_VERSION}}-sbom.spdx.json
+          cd ../cli && npm sbom --sbom-type library --sbom-format spdx --omit dev > mockoon-cli-v${{steps.test-version.outputs.TEST_VERSION}}-sbom.spdx.json
+      - name: Verify SBOM files were created
+        run: |
+          echo "Checking if SBOM files were created..."
+          ls -la packages/commons/mockoon-commons-v${{steps.test-version.outputs.TEST_VERSION}}-sbom.spdx.json
+          ls -la packages/commons-server/mockoon-commons-server-v${{steps.test-version.outputs.TEST_VERSION}}-sbom.spdx.json
+          ls -la packages/cloud/mockoon-cloud-v${{steps.test-version.outputs.TEST_VERSION}}-sbom.spdx.json
+          ls -la packages/serverless/mockoon-serverless-v${{steps.test-version.outputs.TEST_VERSION}}-sbom.spdx.json
+          ls -la packages/cli/mockoon-cli-v${{steps.test-version.outputs.TEST_VERSION}}-sbom.spdx.json
+          echo "All SBOM files created successfully!"
+      - name: Upload test SBOM artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-libs-sbom-files-v${{steps.test-version.outputs.TEST_VERSION}}
+          path: |
+            packages/commons/mockoon-commons-v${{steps.test-version.outputs.TEST_VERSION}}-sbom.spdx.json
+            packages/commons-server/mockoon-commons-server-v${{steps.test-version.outputs.TEST_VERSION}}-sbom.spdx.json
+            packages/cloud/mockoon-cloud-v${{steps.test-version.outputs.TEST_VERSION}}-sbom.spdx.json
+            packages/serverless/mockoon-serverless-v${{steps.test-version.outputs.TEST_VERSION}}-sbom.spdx.json
+            packages/cli/mockoon-cli-v${{steps.test-version.outputs.TEST_VERSION}}-sbom.spdx.json
