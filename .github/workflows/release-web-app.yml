@@ -1,4 +1,8 @@
 name: Release web app (Firebase)
+
+permissions:
+  contents: read
+
 on:
   workflow_dispatch:
 

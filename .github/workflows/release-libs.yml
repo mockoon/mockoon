@@ -1,5 +1,8 @@
 name: Release libs (NPM)
 
+permissions:
+  contents: read
+
 on:
   push:
     tags:

@@ -1,5 +1,8 @@
 name: New discussion auto reply
 
+# Disable all permissions by default
+permissions: {}
+
 on:
   discussion:
     types: [created]
@@ -15,6 +18,7 @@ jobs:
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_SECRET }}
+          permissions: discussions:write
       - name: Extract discussion create event JSON
         id: read-event
         run: |

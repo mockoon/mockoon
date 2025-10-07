@@ -1,5 +1,8 @@
 name: Release desktop
 
+permissions:
+  contents: read
+
 on:
   workflow_dispatch:
   push:
