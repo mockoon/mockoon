@@ -7,6 +7,44 @@ on:
       - v*
 
 jobs:
+  generate-sbom:
+    name: Generate SPDX SBOM
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+      - uses: actions/cache@v4
+        id: cache-modules
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: |
+          npm run bootstrap
+      - name: Link packages
+        run: |
+          npm run link
+      - name: Extract app version from tag
+        id: app-version
+        run: |
+          APP_VERSION=${GITHUB_REF#refs/tags/v}
+          echo "APP_VERSION=$APP_VERSION" >> $GITHUB_OUTPUT
+      - name: Generate SPDX SBOM file
+        run: |
+          mkdir -p sbom-files
+          cd packages/app && npm sbom --sbom-type application --sbom-format spdx --omit dev > ../../sbom-files/mockoon-app-v${{steps.app-version.outputs.APP_VERSION}}-sbom.spdx.json
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-sbom-file-v${{steps.app-version.outputs.APP_VERSION}}
+          path: sbom-files/
+
   build-macos:
     name: Build macOS binaries
     runs-on: macos-latest
@@ -27,9 +65,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22.x"
-      - name: Build and package application
+      - uses: actions/cache@v4
+        id: cache-modules
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
           npm run bootstrap
+      - name: Link packages
+        run: |
+          npm run link
+      - name: Build and package application
+        run: |
           npm run build:libs
           npm run build:desktop:prod
           npm run package:desktop:mac
@@ -61,9 +110,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22.x"
-      - name: Build and package application
+      - uses: actions/cache@v4
+        id: cache-modules
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
           npm run bootstrap
+      - name: Link packages
+        run: |
+          npm run link
+      - name: Build and package application
+        run: |
           npm run build:libs
           npm run build:desktop:prod
           npm run package:desktop:linux
@@ -104,9 +164,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22.x"
-      - name: Build and package application
+      - uses: actions/cache@v4
+        id: cache-modules
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
           npm run bootstrap
+      - name: Link packages
+        run: |
+          npm run link
+      - name: Build and package application
+        run: |
           npm run build:libs
           npm run build:desktop:prod
           npm run package:desktop:win
@@ -134,9 +205,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22.x"
-      - name: Build and package application
+      - uses: actions/cache@v4
+        id: cache-modules
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
         run: |
           npm run bootstrap
+      - name: Link packages
+        run: |
+          npm run link
+      - name: Build and package application
+        run: |
           npm run build:libs
           npm run build:desktop:prod
           npm run package:desktop:win:appx
