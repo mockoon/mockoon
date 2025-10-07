@@ -2,6 +2,7 @@ name: Release desktop
 
 permissions:
   contents: read
+  actions: write
 
 on:
   workflow_dispatch:
@@ -16,12 +17,13 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Install Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version: "22.x"
-      - uses: actions/cache@v4
+          package-manager-cache: false
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         id: cache-modules
         with:
           path: "**/node_modules"
@@ -43,7 +45,7 @@ jobs:
           mkdir -p sbom-files
           cd packages/app && npm sbom --sbom-type application --sbom-format spdx --omit dev > ../../sbom-files/mockoon-app-v${{steps.app-version.outputs.APP_VERSION}}-sbom.spdx.json
       - name: Upload SBOM artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: app-sbom-file-v${{steps.app-version.outputs.APP_VERSION}}
           path: sbom-files/
@@ -64,11 +66,12 @@ jobs:
       USE_HARD_LINKS: false
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version: "22.x"
-      - uses: actions/cache@v4
+          package-manager-cache: false
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         id: cache-modules
         with:
           path: "**/node_modules"
@@ -95,7 +98,7 @@ jobs:
           shasum -a 256 ./packages/app/packages/mockoon.setup.*.arm64.dmg
           shasum -a 256 ./packages/app/packages/mockoon.setup.*.x64.dmg
       - name: Upload macOS dmg
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: dmg
           path: ./packages/app/packages/mockoon.setup*.dmg
@@ -109,11 +112,12 @@ jobs:
       USE_HARD_LINKS: false
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version: "22.x"
-      - uses: actions/cache@v4
+          package-manager-cache: false
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         id: cache-modules
         with:
           path: "**/node_modules"
@@ -131,22 +135,22 @@ jobs:
           npm run build:desktop:prod
           npm run package:desktop:linux
       - name: Upload Linux AppImage
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: appimage
           path: ./packages/app/packages/mockoon-*.AppImage
       - name: Upload Linux deb
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: deb
           path: ./packages/app/packages/mockoon-*.deb
       - name: Upload Linux rpm
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: rpm
           path: ./packages/app/packages/mockoon-*.rpm
       - name: Upload Linux snap
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: snap
           path: ./packages/app/packages/mockoon-*.snap
@@ -163,11 +167,12 @@ jobs:
       AZURE_CLIENT_SECRET: ${{secrets.AZURE_CLIENT_SECRET}}
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version: "22.x"
-      - uses: actions/cache@v4
+          package-manager-cache: false
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         id: cache-modules
         with:
           path: "**/node_modules"
@@ -186,12 +191,12 @@ jobs:
           npm run package:desktop:win
         shell: pwsh
       - name: Upload Windows setup exe
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: exe
           path: ./packages/app/packages/mockoon.setup.*.exe
       - name: Upload Windows portable exe
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: exe-portable
           path: ./packages/app/packages/mockoon.portable.*.exe
@@ -204,11 +209,12 @@ jobs:
     timeout-minutes: 60
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version: "22.x"
-      - uses: actions/cache@v4
+          package-manager-cache: false
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         id: cache-modules
         with:
           path: "**/node_modules"
@@ -227,7 +233,7 @@ jobs:
           npm run package:desktop:win:appx
         shell: pwsh
       - name: Upload Windows appx
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: appx
           path: ./packages/app/packages/mockoon.*.appx

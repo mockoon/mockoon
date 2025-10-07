@@ -19,12 +19,13 @@ jobs:
       NPM_TOKEN: ${{secrets.NPM_TOKEN}}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Install Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version: "22.x"
-      - uses: actions/cache@v4
+          package-manager-cache: false
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         id: cache-modules
         with:
           path: "**/node_modules"
@@ -59,7 +60,7 @@ jobs:
             cd - > /dev/null
           done
       - name: Upload SBOM artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: libs-sbom-files-v${{steps.libs-version.outputs.LIBS_VERSION}}
           path: sbom-files/
@@ -76,7 +77,7 @@ jobs:
     needs: npm-publish
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Extract app version
         id: app-version
         run: |
@@ -85,18 +86,18 @@ jobs:
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
           echo "PACKAGE_MAJOR_VERSION=$PACKAGE_MAJOR_VERSION" >> $GITHUB_OUTPUT
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v2.2.0
         with:
           platforms: "arm64,arm,x86_64"
-      - uses: docker/setup-buildx-action@v2
+      - uses: docker/setup-buildx-action@d70bba72b1f3fd22344832f00baa16ece964efeb # v2.10.0
       - name: Login to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # v2.2.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push
         id: docker_build
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@15560696de535e4014efeff63c48f16952e52dd1 # v6.2.0
         with:
           platforms: linux/amd64,linux/arm64
           push: true
