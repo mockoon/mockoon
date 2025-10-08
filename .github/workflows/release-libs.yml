@@ -89,7 +89,7 @@ jobs:
         uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v2.2.0
         with:
           platforms: "arm64,arm,x86_64"
-      - uses: docker/setup-buildx-action@d70bba72b1f3fd22344832f00baa16ece964efeb # v2.10.0
+      - uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
       - name: Login to DockerHub
         uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # v2.2.0
         with:
