@@ -1,0 +1,22 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directories:
+      - "/"
+      - "/packages/app"
+      - "/packages/cli"
+      - "/packages/cloud"
+      - "/packages/commons"
+      - "/packages/commons-server"
+      - "/packages/serverless"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "express"
+        # Ignore new versions for 5.x
+        versions: ["5.x"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
