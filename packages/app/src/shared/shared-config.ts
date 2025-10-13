@@ -14,7 +14,8 @@ export const SharedConfig = (options: {
   apiURL: string;
   isWeb?: boolean;
 }) => {
-  const docsURL = `${options.websiteURL}docs/latest/`;
+  const docsUrl = `${options.websiteURL}docs/latest/`;
+  const cloudDocsUrl = `${options.websiteURL}cloud/docs/`;
 
   return {
     isWeb: options.isWeb,
@@ -32,20 +33,19 @@ export const SharedConfig = (options: {
     changelogMarkdownURL: `${options.websiteURL}desktop-changelogs-markdown/`,
     releasePublicURL: `${options.websiteURL}releases/`,
     docs: {
-      templating: docsURL + 'templating/overview/',
-      proxy: docsURL + 'server-configuration/proxy-mode/',
-      cors: docsURL + 'server-configuration/cors/',
-      https: docsURL + 'server-configuration/serving-over-tls/',
-      headers: docsURL + 'response-configuration/response-headers/',
-      rules: docsURL + 'route-responses/multiple-responses/',
-      hostname: docsURL + 'server-configuration/listening-hostname/',
+      templating: docsUrl + 'templating/overview/',
+      proxy: docsUrl + 'server-configuration/proxy-mode/',
+      cors: docsUrl + 'server-configuration/cors/',
+      https: docsUrl + 'server-configuration/serving-over-tls/',
+      headers: docsUrl + 'response-configuration/response-headers/',
+      rules: docsUrl + 'route-responses/multiple-responses/',
+      hostname: docsUrl + 'server-configuration/listening-hostname/',
       faq: options.websiteURL + 'faq/',
-      cloudOverview: docsURL + 'mockoon-cloud/overview/',
-      cloudSync:
-        docsURL + 'mockoon-cloud/data-synchronization-team-collaboration/',
+      cloudOverview: cloudDocsUrl + 'about/',
+      cloudSync: cloudDocsUrl + 'data-synchronization-team-collaboration/',
       cloudSyncOffline:
-        docsURL +
-        'mockoon-cloud/data-synchronization-team-collaboration/#offline-editing'
+        cloudDocsUrl +
+        'data-synchronization-team-collaboration/#offline-editing'
     },
     // URLs should not be used directly in desktop app (but there is a redirection for the web app in user service). Instead use the flow methods in the user service
     appAuthURL: `${options.websiteURL}app-auth/`,
