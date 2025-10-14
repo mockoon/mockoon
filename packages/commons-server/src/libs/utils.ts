@@ -77,6 +77,8 @@ export const IsEmpty = (obj: any) =>
 /**
  * Decompress body based on content-encoding
  *
+ * Zstd support requires Node.js 22 or higher, thus it is conditionally applied
+ *
  * @param response
  */
 export const DecompressBody = (response: Response) => {
@@ -86,6 +88,7 @@ export const DecompressBody = (response: Response) => {
 
   const contentEncoding = response.getHeader('content-encoding');
   let body = response.body;
+
   switch (contentEncoding) {
     case 'gzip':
       body = unzipSync(body);
@@ -95,6 +98,16 @@ export const DecompressBody = (response: Response) => {
       break;
     case 'deflate':
       body = inflateSync(body);
+      break;
+    case 'zstd':
+      {
+        // eslint-disable-next-line
+        const zlib = require('zlib');
+
+        if (zlib.zstdDecompressSync) {
+          body = zlib.zstdDecompressSync(body);
+        }
+      }
       break;
     default:
       break;

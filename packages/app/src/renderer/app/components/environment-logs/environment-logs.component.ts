@@ -221,9 +221,10 @@ export class EnvironmentLogsComponent implements OnInit {
             if (
               contentEncoding === 'gzip' ||
               contentEncoding === 'br' ||
-              contentEncoding === 'deflate'
+              contentEncoding === 'deflate' ||
+              contentEncoding === 'zstd'
             ) {
-              environmentLog.response.unzipped = true;
+              environmentLog.response.decompressed = true;
             }
           }
         }

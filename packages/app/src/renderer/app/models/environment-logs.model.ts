@@ -17,7 +17,7 @@ export type EnvironmentLogResponse = {
   headers: Header[];
   body: string;
   binaryBody: boolean;
-  unzipped?: boolean;
+  decompressed?: boolean;
   isInvalidJson: boolean;
 };
 

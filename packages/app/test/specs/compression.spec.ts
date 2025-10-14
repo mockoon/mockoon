@@ -1,5 +1,5 @@
 import { createServer, Server } from 'http';
-import { brotliCompress, deflate, gzip } from 'zlib';
+import { brotliCompress, deflate, gzip, zstdCompress } from 'zlib';
 import environments from '../libs/environments';
 import environmentsLogs from '../libs/environments-logs';
 import headersUtils from '../libs/headers-utils';
@@ -8,7 +8,12 @@ import { HttpCall } from '../libs/models';
 import navigation from '../libs/navigation';
 import routes from '../libs/routes';
 
-const compressionLibs = { gzip, deflate, br: brotliCompress };
+const compressionLibs = {
+  gzip,
+  deflate,
+  br: brotliCompress,
+  zstd: zstdCompress
+};
 
 const fakeServer = () =>
   new Promise<Server>((resolve) => {
@@ -54,7 +59,7 @@ const testCases: { assertTitle: string; assertBody: string; call: HttpCall }[] =
       }
     },
     {
-      assertTitle: 'Body (unzipped)',
+      assertTitle: 'Body (decompressed)',
       assertBody: 'gziptest',
       call: {
         description:
@@ -69,7 +74,7 @@ const testCases: { assertTitle: string; assertBody: string; call: HttpCall }[] =
       }
     },
     {
-      assertTitle: 'Body (unzipped)',
+      assertTitle: 'Body (decompressed)',
       assertBody: 'deflatetest',
       call: {
         description:
@@ -84,13 +89,28 @@ const testCases: { assertTitle: string; assertBody: string; call: HttpCall }[] =
       }
     },
     {
-      assertTitle: 'Body (unzipped)',
+      assertTitle: 'Body (decompressed)',
       assertBody: 'brtest',
       call: {
         description:
           'should call GET /test and verify logs body is decoded (br)',
         protocol: 'http',
         headers: { 'Accept-Encoding': 'br' },
+        path: '/test',
+        method: 'GET',
+        testedResponse: {
+          status: 200
+        }
+      }
+    },
+    {
+      assertTitle: 'Body (decompressed)',
+      assertBody: 'zstdtest',
+      call: {
+        description:
+          'should call GET /test and verify logs body is decoded (zstd)',
+        protocol: 'http',
+        headers: { 'Accept-Encoding': 'zstd' },
         path: '/test',
         method: 'GET',
         testedResponse: {
@@ -129,7 +149,7 @@ describe('Proxy to server with zipped content', () => {
 
   it('should auto mock one call and verify the body and headers', async () => {
     await environmentsLogs.clickMockButton(1);
-    await routes.assertBody('brtest');
+    await routes.assertBody('zstdtest');
     await routes.switchTab('HEADERS');
     await headersUtils.assertHeadersValues('route-response-headers', {
       'content-encoding': undefined,
