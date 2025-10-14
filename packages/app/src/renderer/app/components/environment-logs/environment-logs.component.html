@@ -501,7 +501,7 @@
                 ></app-svg>
 
                 Body
-                {{ selectedLog.response?.unzipped ? '(unzipped)' : '' }}
+                {{ selectedLog.response?.decompressed ? '(decompressed)' : '' }}
               </div>
               <div [ngbCollapse]="collapseStates['response.body']">
                 @if (selectedLog && !selectedLog.response?.binaryBody) {

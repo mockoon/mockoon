@@ -1,8 +1,9 @@
 import { Response } from 'express';
 import fs from 'fs';
 import { SafeString } from 'handlebars';
-import { deepStrictEqual, strictEqual } from 'node:assert';
+import { deepStrictEqual, equal, strictEqual } from 'node:assert';
 import { afterEach, describe, it } from 'node:test';
+import { major } from 'semver';
 import {
   DecompressBody,
   fromSafeString,
@@ -59,6 +60,24 @@ describe('Utils', () => {
       };
 
       strictEqual(DecompressBody(response as Response), 'deflateTest');
+    });
+
+    it('should decompress zstd encoded data', () => {
+      const testFileContent = fs.readFileSync('./test/data/zstd.data');
+
+      const response = {
+        getHeader: (_: any) => 'zstd',
+        body: testFileContent
+      };
+
+      // zstd is supported since Node.js 22
+      if (major(process.version) >= 22) {
+        // expect decompression
+        strictEqual(DecompressBody(response as Response), 'zstdTest');
+      } else {
+        // expect no decompression
+        equal(DecompressBody(response as Response), testFileContent);
+      }
     });
 
     it('should handle plain data', () => {
