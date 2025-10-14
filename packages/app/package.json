@@ -80,7 +80,7 @@
     "@angular/core": "19.2.14",
     "@angular/fire": "19.2.0",
     "@angular/forms": "19.2.14",
-    "@angular/localize": "19.2.14",
+    "@angular/localize": "19.2.15",
     "@angular/platform-browser": "19.2.14",
     "@angular/platform-browser-dynamic": "19.2.14",
     "@electron/notarize": "3.0.1",
