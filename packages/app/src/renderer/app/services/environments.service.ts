@@ -1845,6 +1845,21 @@ export class EnvironmentsService {
   }
 
   /**
+   * Navigates to a route
+   */
+  public navigateToRoute(routeUUID: string) {
+    const route = this.store.getRouteByUUID(routeUUID);
+
+    if (!route) {
+      return;
+    }
+
+    this.store.update(setActiveViewAction('ENV_ROUTES'));
+    this.store.update(setActiveRouteAction(routeUUID));
+    this.store.update(setActiveTabAction('RESPONSE'));
+  }
+
+  /**
    * Update the active databucket
    */
   public updateActiveDatabucket(properties: Partial<DataBucket>) {

@@ -269,9 +269,28 @@
                   </div>
                 }
                 @if (selectedLog.route && !selectedLog.proxied) {
-                  <div class="environment-logs-content-item">
-                    <strong>Caught by route:</strong>
-                    {{ selectedLog.route }}
+                  <div
+                    class="environment-logs-content-item d-flex align-items-start"
+                  >
+                    <div>
+                      <strong>Caught by route:</strong>
+                      {{ selectedLog.route }}
+                    </div>
+                    <button
+                      type="button"
+                      class="btn btn-link btn-icon py-0"
+                      [ngbTooltip]="'Go to route'"
+                      [attr.aria-label]="
+                        'Navigate to route ' + selectedLog.route
+                      "
+                      (click)="goToRoute(selectedLog.routeUUID)"
+                    >
+                      <app-svg
+                        icon="goto"
+                        size="14"
+                        style="vertical-align: top"
+                      ></app-svg>
+                    </button>
                   </div>
                 }
               </div>
