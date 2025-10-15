@@ -118,6 +118,40 @@ paths:
   /ref-path:
     $ref: "#/components/paths"
 
+  /all-of-example:
+    get:
+      operationId: getAllOfExample
+      summary: Get an example with allOf schema
+      responses:
+        "200":
+          description: |-
+            Response with allOf schema
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      firstprop:
+                        type: integer
+                        format: int64
+                    example:
+                      firstprop: abc
+                  - type: object
+                    properties:
+                      secondprop:
+                        type: string
+                    example:
+                      secondprop: def
+                  - $ref: "#/components/schemas/SimpleSchema"
+              examples:
+                Example1:
+                  value:
+                    id: 98765
+                    name: Another Name
+                    firstprop: 12345
+                    secondprop: Example Name
+
 components:
   paths:
     get:

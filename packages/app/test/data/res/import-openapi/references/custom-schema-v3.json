@@ -1,22 +1,22 @@
 {
-  "uuid": "00340f2e-cfef-429d-84ef-83f380a9778f",
+  "uuid": "d2c36310-1fb5-4140-9c39-305348dc87f0",
   "lastMigration": 33,
   "name": "Sample v3 schema",
   "endpointPrefix": "api",
   "latency": 0,
-  "port": 3000,
+  "port": 3011,
   "hostname": "",
   "folders": [],
   "routes": [
     {
-      "uuid": "904167c5-544e-447b-821d-f59808c24112",
+      "uuid": "3016cb57-e713-47be-a5a6-a0a8a1e407d8",
       "type": "http",
       "documentation": "",
       "method": "get",
       "endpoint": "endpoint",
       "responses": [
         {
-          "uuid": "b6123cb8-5fa5-4e6c-8f75-a70f4a00d729",
+          "uuid": "47cbdcf8-8667-4fbe-bd13-0f7ac0fdb434",
           "body": "[\n  {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"order\": {{faker 'number.float'}},\n    \"quantity\": {{faker 'number.float'}},\n    \"datetime\": \"{{faker 'date.recent' 365}}\",\n    \"date\": \"{{date '2019' (now) 'yyyy-MM-dd'}}\",\n    \"age\": \"32\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"uuid\": \"{{faker 'string.uuid'}}\",\n    \"tags\": [\n      \"\"\n    ],\n    \"status\": \"{{oneOf (array 'enum1' 'enum2' 'enum3')}}\",\n    \"inProgress\": {{faker 'datatype.boolean'}},\n    \"complete\": true,\n    \"categories\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"allOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"oneOfArray\": [\n      \"\"\n    ],\n    \"anyOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ]\n  }\n]",
           "latency": 0,
           "statusCode": 200,
@@ -61,14 +61,14 @@
       "streamingInterval": 0
     },
     {
-      "uuid": "3862b5d9-6d5c-4b5f-912d-bb5149c68a29",
+      "uuid": "748c0b53-8837-492a-b830-b6e23d5f98a6",
       "type": "http",
       "documentation": "",
       "method": "get",
       "endpoint": "endpoint2",
       "responses": [
         {
-          "uuid": "2d424933-ace9-4193-b911-e8fb8654e6e7",
+          "uuid": "b9bda458-cca9-4062-8a2b-c59e61104c4d",
           "body": "[\n  {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"order\": {{faker 'number.float'}},\n    \"quantity\": {{faker 'number.float'}},\n    \"datetime\": \"{{faker 'date.recent' 365}}\",\n    \"date\": \"{{date '2019' (now) 'yyyy-MM-dd'}}\",\n    \"age\": \"32\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"uuid\": \"{{faker 'string.uuid'}}\",\n    \"tags\": [\n      \"\"\n    ],\n    \"status\": \"{{oneOf (array 'enum1' 'enum2' 'enum3')}}\",\n    \"inProgress\": {{faker 'datatype.boolean'}},\n    \"complete\": true,\n    \"categories\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"allOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"oneOfArray\": [\n      \"\"\n    ],\n    \"anyOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ]\n  }\n]",
           "latency": 0,
           "statusCode": 200,
@@ -97,14 +97,14 @@
       "streamingInterval": 0
     },
     {
-      "uuid": "8669af52-0d5e-4bc0-991b-19f84bb9bbdd",
+      "uuid": "649b9615-43c5-4b13-a5c1-40b11ca67d7a",
       "type": "http",
       "documentation": "",
       "method": "get",
       "endpoint": "endpoint3",
       "responses": [
         {
-          "uuid": "307b3c8e-678f-4427-b8d2-6514b18a1241",
+          "uuid": "bb78fb9c-9191-42d3-b246-880cc013c41a",
           "body": "[\n  {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"order\": {{faker 'number.float'}},\n    \"quantity\": {{faker 'number.float'}},\n    \"datetime\": \"{{faker 'date.recent' 365}}\",\n    \"date\": \"{{date '2019' (now) 'yyyy-MM-dd'}}\",\n    \"age\": \"32\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"uuid\": \"{{faker 'string.uuid'}}\",\n    \"tags\": [\n      \"\"\n    ],\n    \"status\": \"{{oneOf (array 'enum1' 'enum2' 'enum3')}}\",\n    \"inProgress\": {{faker 'datatype.boolean'}},\n    \"complete\": true,\n    \"categories\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"allOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"oneOfArray\": [\n      \"\"\n    ],\n    \"anyOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ]\n  }\n]",
           "latency": 0,
           "statusCode": 200,
@@ -133,14 +133,14 @@
       "streamingInterval": 0
     },
     {
-      "uuid": "1167e635-2d60-4a7d-a237-a27321ef6445",
+      "uuid": "b377be67-75ab-4044-9af6-55e810073cec",
       "type": "http",
       "documentation": "Returns a model.",
       "method": "get",
       "endpoint": "model",
       "responses": [
         {
-          "uuid": "9c38372c-d14d-42a7-bdb4-0127b6a001e8",
+          "uuid": "1b51ab77-03c0-4086-967e-7360ff7951d3",
           "body": "{\n  \"name\": \"custom_name\"\n}",
           "latency": 0,
           "statusCode": 200,
@@ -169,14 +169,14 @@
       "streamingInterval": 0
     },
     {
-      "uuid": "1b09a689-09dc-414b-b287-46eb3311e62c",
+      "uuid": "01b138c0-f375-4065-a089-1e711da12d20",
       "type": "http",
       "documentation": "",
       "method": "get",
       "endpoint": "circular",
       "responses": [
         {
-          "uuid": "02f57e8b-5b87-43a7-9cdd-1fc79af7d9b5",
+          "uuid": "7eed50eb-3615-43af-b9cb-e84b3985f577",
           "body": "{\n  \"name\": \"\",\n  \"sibling\": {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"parent\": \"\"\n  },\n  \"related\": {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"parent\": \"\"\n  }\n}",
           "latency": 0,
           "statusCode": 200,
@@ -205,14 +205,14 @@
       "streamingInterval": 0
     },
     {
-      "uuid": "8e1613e2-bab1-49cb-b677-97d804b9d5b1",
+      "uuid": "e276f01b-20b4-49aa-9f90-0669d83d518e",
       "type": "http",
       "documentation": "",
       "method": "get",
       "endpoint": "ext-ref",
       "responses": [
         {
-          "uuid": "ba7643ee-67a8-4799-99f8-ac52524f7411",
+          "uuid": "ada9be03-1625-4bc4-a030-0aa56356e34e",
           "body": "{\n  \"extprop\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
@@ -241,14 +241,14 @@
       "streamingInterval": 0
     },
     {
-      "uuid": "db5db5ca-77fb-418a-8c37-f5df8f4a2986",
+      "uuid": "6032feeb-d66d-48e7-af78-27d094aba560",
       "type": "http",
       "documentation": "",
       "method": "get",
       "endpoint": "cache-test",
       "responses": [
         {
-          "uuid": "888ab888-63f4-4b0c-9d55-5b2949e8943b",
+          "uuid": "9ce3fd01-269d-44d6-a4ac-e55e9669c9be",
           "body": "{\n  \"extprop\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
@@ -277,14 +277,14 @@
       "streamingInterval": 0
     },
     {
-      "uuid": "2aba3ab3-f352-4f4e-a001-b44fc937f3ae",
+      "uuid": "8dfffa66-1fb1-4168-a75f-2654bdb0b034",
       "type": "http",
       "documentation": "",
       "method": "get",
       "endpoint": "wrong-ext-ref",
       "responses": [
         {
-          "uuid": "10e2dcbf-47b9-44be-9241-ebe675a5053c",
+          "uuid": "3ae1d054-0b8a-4074-ae68-005fca2e6c6c",
           "body": "\"\"",
           "latency": 0,
           "statusCode": 200,
@@ -313,14 +313,14 @@
       "streamingInterval": 0
     },
     {
-      "uuid": "987914ef-9852-4873-bb4b-271ab6f8a970",
+      "uuid": "e6612077-2a97-4607-9dc2-7585867ebc66",
       "type": "http",
       "documentation": "",
       "method": "get",
       "endpoint": "ref-path",
       "responses": [
         {
-          "uuid": "134a60cd-c34f-4d82-ab18-6f2bb83521cf",
+          "uuid": "a7c279da-864e-4b21-b3a9-e46cac5edba2",
           "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"Sample name\"\n  }\n]",
           "latency": 0,
           "statusCode": 200,
@@ -347,44 +347,108 @@
       "responseMode": null,
       "streamingMode": null,
       "streamingInterval": 0
+    },
+    {
+      "uuid": "b508baf6-248c-4485-8d1a-35aeb71f191b",
+      "type": "http",
+      "documentation": "Get an example with allOf schema",
+      "method": "get",
+      "endpoint": "all-of-example",
+      "responses": [
+        {
+          "uuid": "22ebdf02-a91b-4f83-a340-f70b0019a707",
+          "body": "{\n  \"firstprop\": \"abc\",\n  \"secondprop\": \"def\",\n  \"id\": 1,\n  \"name\": \"Sample name\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Response with allOf schema",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "fc73cdf4-752f-4047-84b5-bb942124560f",
+          "body": "{\n  \"id\": 98765,\n  \"name\": \"Another Name\",\n  \"firstprop\": 12345,\n  \"secondprop\": \"Example Name\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Example1",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "rootChildren": [
     {
       "type": "route",
-      "uuid": "904167c5-544e-447b-821d-f59808c24112"
+      "uuid": "3016cb57-e713-47be-a5a6-a0a8a1e407d8"
     },
     {
       "type": "route",
-      "uuid": "3862b5d9-6d5c-4b5f-912d-bb5149c68a29"
+      "uuid": "748c0b53-8837-492a-b830-b6e23d5f98a6"
     },
     {
       "type": "route",
-      "uuid": "8669af52-0d5e-4bc0-991b-19f84bb9bbdd"
+      "uuid": "649b9615-43c5-4b13-a5c1-40b11ca67d7a"
     },
     {
       "type": "route",
-      "uuid": "1167e635-2d60-4a7d-a237-a27321ef6445"
+      "uuid": "b377be67-75ab-4044-9af6-55e810073cec"
     },
     {
       "type": "route",
-      "uuid": "1b09a689-09dc-414b-b287-46eb3311e62c"
+      "uuid": "01b138c0-f375-4065-a089-1e711da12d20"
     },
     {
       "type": "route",
-      "uuid": "8e1613e2-bab1-49cb-b677-97d804b9d5b1"
+      "uuid": "e276f01b-20b4-49aa-9f90-0669d83d518e"
     },
     {
       "type": "route",
-      "uuid": "db5db5ca-77fb-418a-8c37-f5df8f4a2986"
+      "uuid": "6032feeb-d66d-48e7-af78-27d094aba560"
     },
     {
       "type": "route",
-      "uuid": "2aba3ab3-f352-4f4e-a001-b44fc937f3ae"
+      "uuid": "8dfffa66-1fb1-4168-a75f-2654bdb0b034"
     },
     {
       "type": "route",
-      "uuid": "987914ef-9852-4873-bb4b-271ab6f8a970"
+      "uuid": "e6612077-2a97-4607-9dc2-7585867ebc66"
+    },
+    {
+      "type": "route",
+      "uuid": "b508baf6-248c-4485-8d1a-35aeb71f191b"
     }
   ],
   "proxyMode": false,
