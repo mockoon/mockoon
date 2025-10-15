@@ -1,22 +1,22 @@
 {
-  "uuid": "7a1a5cee-8349-49dc-a3f8-f7d6c0c5606f",
+  "uuid": "21143d5b-8fb4-4e5a-a64b-b23240510a29",
   "lastMigration": 33,
   "name": "Sample v2 schema",
   "endpointPrefix": "",
   "latency": 0,
-  "port": 3000,
+  "port": 3005,
   "hostname": "",
   "folders": [],
   "routes": [
     {
-      "uuid": "c04e2525-b164-4845-b2cb-791dd3bbfbc5",
+      "uuid": "1721fd00-f8e1-4e3e-8a7c-e1dc8204379f",
       "type": "http",
       "documentation": "",
       "method": "get",
       "endpoint": "endpoint",
       "responses": [
         {
-          "uuid": "54dfc3f8-ebe6-40a8-a7ad-37ea1eec78c9",
+          "uuid": "8b9eb43d-8f75-4882-8bb9-e0b5f3f64e46",
           "body": "[\n  {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"order\": {{faker 'number.float'}},\n    \"quantity\": {{faker 'number.float'}},\n    \"datetime\": \"{{faker 'date.recent' 365}}\",\n    \"date\": \"{{date '2019' (now) 'yyyy-MM-dd'}}\",\n    \"age\": \"32\",\n    \"email\": \"{{faker 'internet.email'}}\",\n    \"uuid\": \"{{faker 'string.uuid'}}\",\n    \"tags\": [\n      \"\"\n    ],\n    \"status\": \"{{oneOf (array 'enum1' 'enum2' 'enum3')}}\",\n    \"inProgress\": {{faker 'datatype.boolean'}},\n    \"complete\": true,\n    \"categories\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"allOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ],\n    \"oneOfArray\": [\n      \"\"\n    ],\n    \"anyOfArray\": [\n      {\n        \"name\": \"\"\n      }\n    ]\n  }\n]",
           "latency": 0,
           "statusCode": 200,
@@ -48,7 +48,7 @@
   "rootChildren": [
     {
       "type": "route",
-      "uuid": "c04e2525-b164-4845-b2cb-791dd3bbfbc5"
+      "uuid": "1721fd00-f8e1-4e3e-8a7c-e1dc8204379f"
     }
   ],
   "proxyMode": false,
@@ -78,8 +78,18 @@
       "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
     }
   ],
-  "proxyReqHeaders": [{ "key": "", "value": "" }],
-  "proxyResHeaders": [{ "key": "", "value": "" }],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
   "data": [],
   "callbacks": []
 }

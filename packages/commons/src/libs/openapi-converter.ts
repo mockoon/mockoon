@@ -694,6 +694,80 @@ export class OpenApiConverter {
   }
 
   /**
+   * Merge multiple schemas from allOf into a single schema
+   * Combines properties, required fields, and other schema attributes
+   *
+   * @param schemas - Array of schemas to merge
+   * @returns Merged schema
+   */
+  private mergeAllOfSchemas(
+    schemas: (OpenAPIV2.SchemaObject | OpenAPIV3.SchemaObject)[]
+  ): OpenAPIV2.SchemaObject | OpenAPIV3.SchemaObject {
+    const mergedSchema: any = {
+      type: 'object',
+      properties: {},
+      required: []
+    };
+
+    schemas.forEach((subSchema) => {
+      const typedSchema = subSchema as any;
+
+      // Merge properties
+      if (typedSchema.properties) {
+        mergedSchema.properties = {
+          ...mergedSchema.properties,
+          ...typedSchema.properties
+        };
+      }
+
+      // Merge required fields
+      if (typedSchema.required && Array.isArray(typedSchema.required)) {
+        mergedSchema.required = [
+          ...new Set([...mergedSchema.required, ...typedSchema.required])
+        ];
+      }
+
+      // Merge examples from all schemas
+      if (typedSchema.example) {
+        if (!mergedSchema.example) {
+          mergedSchema.example = {};
+        }
+
+        mergedSchema.example = {
+          ...mergedSchema.example,
+          ...typedSchema.example
+        };
+      }
+
+      // Take first default if present
+      if (
+        typedSchema.default !== undefined &&
+        mergedSchema.default === undefined
+      ) {
+        mergedSchema.default = typedSchema.default;
+      }
+
+      // Merge enum values
+      if (typedSchema.enum) {
+        if (!mergedSchema.enum) {
+          mergedSchema.enum = [...typedSchema.enum];
+        } else {
+          mergedSchema.enum = [
+            ...new Set([...mergedSchema.enum, ...typedSchema.enum])
+          ];
+        }
+      }
+    });
+
+    // Clean up empty required array
+    if (mergedSchema.required.length === 0) {
+      delete mergedSchema.required;
+    }
+
+    return mergedSchema;
+  }
+
+  /**
    * Generate a JSON object from a schema
    *
    * @scalar/openapi-parser handles circular references differently than the previous
@@ -763,16 +837,28 @@ export class OpenApiConverter {
 
       const schemaToBuild = schema;
 
-      // check if we have an array of schemas, and take first item
-      for (const propertyName of ['allOf', 'oneOf', 'anyOf']) {
-        if (
-          Object.prototype.hasOwnProperty.call(schema, propertyName) &&
-          schema[propertyName].length > 0
-        ) {
-          const generatedSchema = this.generateSchema(schema[propertyName][0]);
+      // handle schema composition keywords
+      if (schema.allOf && schema.allOf.length > 0) {
+        // allOf: merge all schemas together, then generate from the merged schema
+        const mergedSchema = this.mergeAllOfSchemas(
+          schema.allOf as (OpenAPIV2.SchemaObject | OpenAPIV3.SchemaObject)[]
+        );
 
-          return generatedSchema;
-        }
+        return this.generateSchema(mergedSchema);
+      }
+
+      if (schema.oneOf && schema.oneOf.length > 0) {
+        // oneOf: exactly one schema should match - take first as example
+        return this.generateSchema(
+          schema.oneOf[0] as OpenAPIV2.SchemaObject | OpenAPIV3.SchemaObject
+        );
+      }
+
+      if (schema.anyOf && schema.anyOf.length > 0) {
+        // anyOf: one or more schemas should match - take first as example
+        return this.generateSchema(
+          schema.anyOf[0] as OpenAPIV2.SchemaObject | OpenAPIV3.SchemaObject
+        );
       }
 
       // sometimes we have no type but only 'properties' (=object)
