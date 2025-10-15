@@ -337,4 +337,8 @@ export class EnvironmentLogsComponent implements OnInit {
   public openSettings() {
     this.uiService.openModal('settings');
   }
+
+  public goToRoute(routeUUID: string) {
+    this.environmentsService.navigateToRoute(routeUUID);
+  }
 }
