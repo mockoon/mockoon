@@ -2557,7 +2557,8 @@ export class EnvironmentsService {
     }
 
     const url = `${log.protocol}://${baseUrl}${log.url}${queryParams}`;
-    command.push(`'${url.replace(/'/g, "'\\''")}'`);
+    const escapedUrl = url.replaceAll('"', String.raw`\"`);
+    command.push(`"${escapedUrl}"`);
 
     for (const header of log.request.headers) {
       if (
@@ -2569,18 +2570,18 @@ export class EnvironmentsService {
         continue;
       }
 
-      command.push(
-        '--header',
-        `'${header.key}: ${header.value.replace(/'/g, "'\\''")}'`
-      );
+      const escapedHeaderKey = header.key.replaceAll('"', String.raw`\"`);
+      const escapedHeaderValue = header.value.replaceAll('"', String.raw`\"`);
+      command.push('--header', `"${escapedHeaderKey}: ${escapedHeaderValue}"`);
     }
 
     if (log.request.bodyUnformatted) {
       // Use --data-binary to preserve the exact body bytes
-      command.push(
-        '--data-binary',
-        `'${log.request.bodyUnformatted.replace(/'/g, "'\\''")}'`
+      const escapedBody = log.request.bodyUnformatted.replaceAll(
+        '"',
+        String.raw`\"`
       );
+      command.push('--data-binary', `"${escapedBody}"`);
     }
 
     this.mainApiService.send('APP_WRITE_CLIPBOARD', command.join(' '));
