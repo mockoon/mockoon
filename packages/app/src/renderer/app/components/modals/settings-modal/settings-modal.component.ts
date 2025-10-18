@@ -104,7 +104,7 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
       logTransactions: [SettingsDefault.logTransactions],
       envVarsPrefix: [SettingsDefault.envVarsPrefix],
       enableRandomLatency: [SettingsDefault.enableRandomLatency],
-      displayLogsIsoTimestamp: [SettingsDefault.displayLogsIsoTimestamp]
+      displayLogsIsoTimestamp: [SettingsDefault.displayLogsIsoTimestamp],
       copyCompressedIfAcceptEncoding: [
         SettingsDefault.copyCompressedIfAcceptEncoding
       ]
@@ -150,7 +150,7 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
               logTransactions: settings.logTransactions,
               envVarsPrefix: settings.envVarsPrefix,
               enableRandomLatency: settings.enableRandomLatency,
-              displayLogsIsoTimestamp: settings.displayLogsIsoTimestamp
+              displayLogsIsoTimestamp: settings.displayLogsIsoTimestamp,
               copyCompressedIfAcceptEncoding:
                 settings.copyCompressedIfAcceptEncoding
             },
