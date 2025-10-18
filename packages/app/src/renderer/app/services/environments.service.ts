@@ -2532,13 +2532,23 @@ export class EnvironmentsService {
   public copyLogAsCurl(environmentUUID: string, logUUID: string) {
     const environmentsLogs = this.store.get('environmentsLogs');
     const activeEnvironment = this.store.getActiveEnvironment();
+    const settings = this.store.get('settings');
+
     const log = environmentsLogs[environmentUUID].find(
       (environmentLog) => environmentLog.UUID === logUUID
     );
+    const hasAcceptEncoding = log.request.headers.some(
+      (header) => header.key.toLowerCase() === 'accept-encoding'
+    );
+
     const hostname = activeEnvironment.hostname || 'localhost';
     const baseUrl = `${hostname}:${activeEnvironment.port}`;
     const queryParams = log.request.query ? `?${log.request.query}` : '';
     const command: string[] = ['curl', '--location'];
+
+    if (settings.copyCompressedIfAcceptEncoding && hasAcceptEncoding) {
+      command.push('--compressed');
+    }
 
     if (log.method === 'head') {
       command.push('--head');
@@ -2550,8 +2560,12 @@ export class EnvironmentsService {
     command.push(`'${url.replace(/'/g, "'\\''")}'`);
 
     for (const header of log.request.headers) {
-      // Skip content-length as curl will calculate it
-      if (header.key.toLowerCase() === 'content-length') {
+      if (
+        this.shouldSkipHeader(
+          header.key,
+          settings.copyCompressedIfAcceptEncoding
+        )
+      ) {
         continue;
       }
 
@@ -2617,5 +2631,31 @@ export class EnvironmentsService {
    */
   private validateEnvironment(environment: Environment) {
     return this.dataService.migrateAndValidateEnvironment(environment);
+  }
+
+  /**
+   * Determine if a header should be skipped when generating cURL command
+   *
+   * @param headerKey - The header key to check
+   * @param useCompression - Whether compression is enabled
+   * @returns boolean indicating if the header should be skipped
+   */
+  private shouldSkipHeader(
+    headerKey: string,
+    useCompression: boolean
+  ): boolean {
+    const lowerCaseKey = headerKey.toLowerCase();
+
+    // Skip content-length as curl will calculate it
+    if (lowerCaseKey === 'content-length') {
+      return true;
+    }
+
+    // Skip accept-encoding if we're using --compressed
+    if (useCompression && lowerCaseKey === 'accept-encoding') {
+      return true;
+    }
+
+    return false;
   }
 }

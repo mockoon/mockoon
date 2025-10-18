@@ -140,6 +140,35 @@
         </label>
       </div>
     </div>
+
+    <div class="mb-3">
+      <div class="input-group align-items-center">
+        <div class="form-check mb-0">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="settings-copy-compressed-if-accept-encoding"
+            formControlName="copyCompressedIfAcceptEncoding"
+          />
+          <label
+            class="form-check-label"
+            for="settings-copy-compressed-if-accept-encoding"
+            >Copy compressed response body if Accept-Encoding header is
+            present</label
+          >
+        </div>
+        <div class="input-group-text">
+          <app-svg icon="info" [ngbTooltip]="copyCompressedTooltip"></app-svg>
+          <ng-template #copyCompressedTooltip>
+            <div>
+              When enabled, if the response is compressed (gzip, brotli,
+              deflate) and the request includes an Accept-Encoding header, the
+              response body will be copied in its compressed form.
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
   </div>
 
   @if (!isWeb) {
