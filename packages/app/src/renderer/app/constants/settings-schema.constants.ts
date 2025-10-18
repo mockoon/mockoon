@@ -34,7 +34,8 @@ export const SettingsDefault: Settings = {
   envVarsPrefix: defaultEnvironmentVariablesPrefix,
   activeEnvironmentUuid: null,
   enableRandomLatency: false,
-  recentLocalEnvironments: []
+  recentLocalEnvironments: [],
+  copyCompressedIfAcceptEncoding: true
 };
 
 export const SettingsSchema = Joi.object<Settings, true>({
@@ -145,6 +146,9 @@ export const SettingsSchema = Joi.object<Settings, true>({
       Joi.any().strip()
     )
     .failover(SettingsDefault.recentLocalEnvironments)
+    .required(),
+  copyCompressedIfAcceptEncoding: Joi.boolean()
+    .failover(SettingsDefault.copyCompressedIfAcceptEncoding)
     .required()
 })
   .failover(SettingsDefault)

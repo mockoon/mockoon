@@ -11,7 +11,8 @@ type SettingNames =
   | 'settings-faker-locale'
   | 'settings-start-environments-on-load'
   | 'settings-env-vars-prefix'
-  | 'settings-enable-random-latency';
+  | 'settings-enable-random-latency'
+  | 'settings-copy-compressed-if-accept-encoding';
 
 class Settings {
   public get fileWatchingInputGroup() {

@@ -96,10 +96,13 @@ class Http {
     body: any;
     cookie: string;
   }): Promise<HttpCallResponse> {
-    const data =
-      typeof params.body === 'string'
-        ? params.body
-        : JSON.stringify(params.body || {});
+    let data = '';
+
+    if (typeof params.body === 'string') {
+      data = params.body;
+    } else if (params.body) {
+      data = JSON.stringify(params.body);
+    }
 
     params.hostname = params.hostname ?? 'localhost';
 
