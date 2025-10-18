@@ -38,6 +38,7 @@ export const SettingsDefault: Settings = {
   recentLocalEnvironments: [],
   displayLogsIsoTimestamp: false,
   deployPreferredRegion: null
+  copyCompressedIfAcceptEncoding: true
 };
 
 export const SettingsSchema = Joi.object<Settings, true>({
@@ -163,6 +164,9 @@ export const SettingsSchema = Joi.object<Settings, true>({
       DeployRegions.SA
     )
     .failover(SettingsDefault.deployPreferredRegion)
+    .required(),
+  copyCompressedIfAcceptEncoding: Joi.boolean()
+    .failover(SettingsDefault.copyCompressedIfAcceptEncoding)
     .required()
 })
   .failover(SettingsDefault)

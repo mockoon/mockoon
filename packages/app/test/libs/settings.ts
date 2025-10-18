@@ -13,6 +13,7 @@ type SettingNames =
   | 'settings-env-vars-prefix'
   | 'settings-enable-random-latency'
   | 'settings-log-iso-timestamp';
+  | 'settings-copy-compressed-if-accept-encoding';
 
 class Settings {
   public get fileWatchingInputGroup() {
