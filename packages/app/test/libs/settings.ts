@@ -12,7 +12,7 @@ type SettingNames =
   | 'settings-start-environments-on-load'
   | 'settings-env-vars-prefix'
   | 'settings-enable-random-latency'
-  | 'settings-log-iso-timestamp';
+  | 'settings-log-iso-timestamp'
   | 'settings-copy-compressed-if-accept-encoding';
 
 class Settings {
