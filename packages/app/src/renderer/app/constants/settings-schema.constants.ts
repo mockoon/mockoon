@@ -37,7 +37,7 @@ export const SettingsDefault: Settings = {
   enableRandomLatency: false,
   recentLocalEnvironments: [],
   displayLogsIsoTimestamp: false,
-  deployPreferredRegion: null
+  deployPreferredRegion: null,
   copyCompressedIfAcceptEncoding: true
 };
 
