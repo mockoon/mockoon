@@ -1,6 +1,7 @@
 import { search } from '@jmespath-community/jmespath';
 import {
   Callback,
+  dedupSlashes,
   Header,
   InFlightRequest,
   InvokedCallback,
@@ -341,14 +342,6 @@ export const convertPathToArray = (str: string): string | string[] => {
 
   return str;
 };
-
-/**
- * Remove duplicate slashes from a string
- *
- * @param str
- * @returns
- */
-export const dedupSlashes = (str: string) => str.replace(/\/{2,}/g, '/');
 
 /**
  * Prepare a path for express: add a leading slash, deduplicate slashes and replace spaces with %20

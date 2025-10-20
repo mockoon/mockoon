@@ -19,8 +19,14 @@
           "statusCode": 200,
           "label": "Success",
           "headers": [
-            { "key": "Route-Header", "value": "route-header" },
-            { "key": "Content-Type", "value": "text/plain" }
+            {
+              "key": "Route-Header",
+              "value": "route-header"
+            },
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
           ],
           "filePath": "",
           "sendFileAsBody": false,
@@ -79,7 +85,12 @@
           "latency": 0,
           "statusCode": 200,
           "label": "Get userId 2",
-          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [
@@ -145,7 +156,12 @@
           "latency": 0,
           "statusCode": 400,
           "label": "Missing data",
-          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [
@@ -241,17 +257,64 @@
       "type": "http",
       "streamingMode": null,
       "streamingInterval": 0
+    },
+    {
+      "uuid": "e74b9cde-0724-4bca-a80e-39768b74f3a7",
+      "type": "crud",
+      "documentation": "",
+      "method": "",
+      "endpoint": "resources",
+      "responses": [
+        {
+          "uuid": "a2cc4bac-7098-4655-939e-c2f52c08f0ee",
+          "body": "{}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "DATABUCKET",
+          "filePath": "",
+          "databucketID": "ag0c",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
     }
   ],
   "proxyMode": false,
   "proxyHost": "",
   "cors": true,
   "headers": [
-    { "key": "Global-Header", "value": "global-header" },
-    { "key": "Content-Type", "value": "application/json" }
+    {
+      "key": "Global-Header",
+      "value": "global-header"
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    }
   ],
-  "proxyReqHeaders": [{ "key": "", "value": "" }],
-  "proxyResHeaders": [{ "key": "", "value": "" }],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
   "proxyRemovePrefix": false,
   "hostname": "",
   "tlsOptions": {
@@ -263,14 +326,41 @@
     "caPath": "",
     "passphrase": ""
   },
-  "data": [],
+  "data": [
+    {
+      "uuid": "11999836-bf0d-4f78-8ec4-4e6d669f38cb",
+      "id": "ag0c",
+      "name": "resources",
+      "documentation": "",
+      "value": "[\n]"
+    }
+  ],
   "folders": [],
   "rootChildren": [
-    { "type": "route", "uuid": "e84c9923-6047-11ea-b4a3-058bbf68d234" },
-    { "type": "route", "uuid": "e84c9926-6047-11ea-b4a3-058bbf68d234" },
-    { "type": "route", "uuid": "e84c992a-6047-11ea-b4a3-058bbf68d234" },
-    { "type": "route", "uuid": "e84c992e-6047-11ea-b4a3-058bbf68d234" },
-    { "type": "route", "uuid": "27dbe8b0-60b2-11ea-9b62-4340c341e0a1" }
+    {
+      "type": "route",
+      "uuid": "e84c9923-6047-11ea-b4a3-058bbf68d234"
+    },
+    {
+      "type": "route",
+      "uuid": "e84c9926-6047-11ea-b4a3-058bbf68d234"
+    },
+    {
+      "type": "route",
+      "uuid": "e84c992a-6047-11ea-b4a3-058bbf68d234"
+    },
+    {
+      "type": "route",
+      "uuid": "e84c992e-6047-11ea-b4a3-058bbf68d234"
+    },
+    {
+      "type": "route",
+      "uuid": "27dbe8b0-60b2-11ea-9b62-4340c341e0a1"
+    },
+    {
+      "type": "route",
+      "uuid": "e74b9cde-0724-4bca-a80e-39768b74f3a7"
+    }
   ],
   "callbacks": []
 }

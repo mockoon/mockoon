@@ -11,6 +11,7 @@ import {
   RouteType
 } from '../models/route.model';
 import {
+  crudRoutesBuilder,
   GetRouteResponseContentType,
   RemoveLeadingSlash,
   routesFromFolder
@@ -86,91 +87,118 @@ export class OpenApiConverter {
         }
       ],
       paths: routes.reduce<OpenAPIV3.PathsObject>((paths, route) => {
-        if (route.type !== RouteType.HTTP) {
+        let subRoutes: Route[];
+
+        if (route.type === RouteType.HTTP) {
+          subRoutes = [route];
+        } else if (route.type === RouteType.CRUD) {
+          // create all the CRUD routes for this endpoint
+          const crudRoutes = crudRoutesBuilder(route.endpoint);
+
+          subRoutes = crudRoutes.map((crudRoute) => {
+            return {
+              ...{
+                ...route,
+                responses: [
+                  {
+                    ...route.responses[0],
+                    statusCode: crudRoute.defaultStatus
+                  }
+                ],
+                documentation: crudRoute.docs
+              },
+              method: crudRoute.method as Methods,
+              endpoint: crudRoute.path
+            };
+          });
+        } else {
           return paths;
         }
 
-        const pathParameters = route.endpoint.match(/:[a-zA-Z0-9_]+/g);
-        let endpoint = '/' + route.endpoint;
+        subRoutes.forEach((subRoute) => {
+          const pathParameters = subRoute.endpoint.match(/:[a-zA-Z0-9_]+/g);
+          let endpoint = '/' + subRoute.endpoint;
 
-        if (pathParameters && pathParameters.length > 0) {
-          endpoint = '/' + route.endpoint.replace(/:([a-zA-Z0-9_]+)/g, '{$1}');
-        }
+          if (pathParameters && pathParameters.length > 0) {
+            endpoint =
+              '/' + subRoute.endpoint.replace(/:([a-zA-Z0-9_]+)/g, '{$1}');
+          }
 
-        if (!paths[endpoint]) {
-          paths[endpoint] = {};
-        }
+          if (!paths[endpoint]) {
+            paths[endpoint] = {};
+          }
 
-        (paths[endpoint] as OpenAPIV3.OperationObject)[route.method] = {
-          description: route.documentation,
-          responses: route.responses.reduce<OpenAPIV3.ResponsesObject>(
-            (responses, routeResponse) => {
-              const responseContentType = GetRouteResponseContentType(
-                environment,
-                routeResponse
-              );
+          (paths[endpoint] as OpenAPIV3.OperationObject)[subRoute.method] = {
+            description: subRoute.documentation,
+            responses: subRoute.responses.reduce<OpenAPIV3.ResponsesObject>(
+              (responses, routeResponse) => {
+                const responseContentType = GetRouteResponseContentType(
+                  environment,
+                  routeResponse
+                );
 
-              let responseBody = {};
+                let responseBody = {};
 
-              // use inline body as an example if it parses correctly (valid JSON no containing templating)
-              if (
-                routeResponse.bodyType === BodyTypes.INLINE &&
-                routeResponse.body
-              ) {
-                try {
-                  JSON.parse(routeResponse.body);
-                  responseBody = routeResponse.body;
-                } catch (_error) {}
-              }
+                // use inline body as an example if it parses correctly (valid JSON no containing templating)
+                if (
+                  routeResponse.bodyType === BodyTypes.INLINE &&
+                  routeResponse.body
+                ) {
+                  try {
+                    JSON.parse(routeResponse.body);
+                    responseBody = routeResponse.body;
+                  } catch (_error) {}
+                }
 
-              responses[routeResponse.statusCode.toString()] = {
-                description: routeResponse.label,
-                content: responseContentType
-                  ? { [responseContentType]: { example: responseBody } }
-                  : { '*/*': { example: responseBody } },
-                headers: [
-                  ...environment.headers,
-                  ...routeResponse.headers
-                ].reduce<Record<string, OpenAPIV3.HeaderObject>>(
-                  (headers, header) => {
-                    if (header.key.toLowerCase() !== 'content-type') {
-                      headers[header.key] = {
-                        schema: { type: 'string' },
-                        example: header.value
-                      };
-                    }
+                responses[routeResponse.statusCode.toString()] = {
+                  description: routeResponse.label,
+                  content: responseContentType
+                    ? { [responseContentType]: { example: responseBody } }
+                    : { '*/*': { example: responseBody } },
+                  headers: [
+                    ...environment.headers,
+                    ...routeResponse.headers
+                  ].reduce<Record<string, OpenAPIV3.HeaderObject>>(
+                    (headers, header) => {
+                      if (header.key.toLowerCase() !== 'content-type') {
+                        headers[header.key] = {
+                          schema: { type: 'string' },
+                          example: header.value
+                        };
+                      }
 
-                    return headers;
-                  },
-                  {}
-                )
-              } as any;
+                      return headers;
+                    },
+                    {}
+                  )
+                } as any;
 
-              return responses;
-            },
-            {}
-          )
-        };
+                return responses;
+              },
+              {}
+            )
+          };
 
-        if (pathParameters && pathParameters.length > 0) {
-          (
-            (paths[endpoint] as OpenAPIV3.OperationObject)[
-              route.method
-            ] as OpenAPIV3.OperationObject
-          ).parameters = pathParameters.reduce<OpenAPIV3.ParameterObject[]>(
-            (parameters, parameter) => {
-              parameters.push({
-                name: parameter.slice(1, parameter.length),
-                in: 'path',
-                schema: { type: 'string' },
-                required: true
-              });
+          if (pathParameters && pathParameters.length > 0) {
+            (
+              (paths[endpoint] as OpenAPIV3.OperationObject)[
+                subRoute.method
+              ] as OpenAPIV3.OperationObject
+            ).parameters = pathParameters.reduce<OpenAPIV3.ParameterObject[]>(
+              (parameters, parameter) => {
+                parameters.push({
+                  name: parameter.slice(1, parameter.length),
+                  in: 'path',
+                  schema: { type: 'string' },
+                  required: true
+                });
 
-              return parameters;
-            },
-            []
-          );
-        }
+                return parameters;
+              },
+              []
+            );
+          }
+        });
 
         return paths;
       }, {})

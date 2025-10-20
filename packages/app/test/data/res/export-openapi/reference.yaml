@@ -138,3 +138,146 @@ paths:
           schema:
             type: string
           required: true
+  /resources:
+    get:
+      description: Get all items
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              example: {}
+          headers:
+            Global-Header:
+              schema:
+                type: string
+              example: global-header
+    post:
+      description: Create a new item
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              example: {}
+          headers:
+            Global-Header:
+              schema:
+                type: string
+              example: global-header
+    put:
+      description: Update all items
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              example: {}
+          headers:
+            Global-Header:
+              schema:
+                type: string
+              example: global-header
+    patch:
+      description: Partially update all items
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              example: {}
+          headers:
+            Global-Header:
+              schema:
+                type: string
+              example: global-header
+    delete:
+      description: Delete all items
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              example: {}
+          headers:
+            Global-Header:
+              schema:
+                type: string
+              example: global-header
+  /resources/{id}:
+    get:
+      description: Get item by ID
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              example: {}
+          headers:
+            Global-Header:
+              schema:
+                type: string
+              example: global-header
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+    put:
+      description: Update item by ID
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              example: {}
+          headers:
+            Global-Header:
+              schema:
+                type: string
+              example: global-header
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+    patch:
+      description: Partially update item by ID
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              example: {}
+          headers:
+            Global-Header:
+              schema:
+                type: string
+              example: global-header
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+    delete:
+      description: Delete item by ID
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              example: {}
+          headers:
+            Global-Header:
+              schema:
+                type: string
+              example: global-header
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
