@@ -1,3 +1,4 @@
+import type { crudRoutesBuilder } from '@mockoon/commons';
 import {
   generateUUID,
   ProcessedDatabucket,
@@ -6,24 +7,7 @@ import {
 import { Request, Response } from 'express';
 import { get as getPath, set as setPath } from 'object-path';
 import { applyFilter, parseFilters } from '../filters';
-import { convertPathToArray, dedupSlashes, fullTextSearch } from '../utils';
-
-export type CrudRouteIds =
-  | 'get'
-  | 'getbyId'
-  | 'create'
-  | 'update'
-  | 'updateById'
-  | 'updateMerge'
-  | 'updateMergeById'
-  | 'delete'
-  | 'deleteById';
-
-type CrudRoutes = {
-  id: CrudRouteIds;
-  method: string;
-  path: string;
-}[];
+import { convertPathToArray, fullTextSearch } from '../utils';
 
 export const crudRouteParamName = 'id';
 
@@ -55,65 +39,10 @@ const findItemIndex = (
   });
 
 /**
- * Creates a set of CRUD routes for a given route path
- *
- * @param routePath
- * @returns
- */
-export const crudRoutesBuilder = (routePath: string): CrudRoutes => {
-  const routes: CrudRoutes = [
-    { id: 'get', method: 'get', path: `${routePath}` },
-    {
-      id: 'getbyId',
-      method: 'get',
-      path: `${routePath}/:id`
-    },
-    { id: 'create', method: 'post', path: `${routePath}` },
-    {
-      id: 'update',
-      method: 'put',
-      path: `${routePath}`
-    },
-    {
-      id: 'updateById',
-      method: 'put',
-      path: `${routePath}/:id`
-    },
-    {
-      id: 'updateMerge',
-      method: 'patch',
-      path: `${routePath}`
-    },
-    {
-      id: 'updateMergeById',
-      method: 'patch',
-      path: `${routePath}/:id`
-    },
-    {
-      id: 'delete',
-      method: 'delete',
-      path: `${routePath}`
-    },
-    {
-      id: 'deleteById',
-      method: 'delete',
-      path: `${routePath}/:id`
-    }
-  ];
-
-  // deduplicate slashes as we may get a routePath containing a leading slash
-  for (const route of routes) {
-    route.path = dedupSlashes(route.path);
-  }
-
-  return routes;
-};
-
-/**
  * Creates a set of CRUD actions for a given databucket type
  */
 export const databucketActions = (
-  crudId: CrudRouteIds,
+  crudId: ReturnType<typeof crudRoutesBuilder>[number]['id'],
   databucket: ProcessedDatabucket,
   request: Request,
   response: Response,

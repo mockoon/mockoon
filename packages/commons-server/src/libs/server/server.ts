@@ -22,6 +22,8 @@ import {
   ServerOptions,
   StreamingMode,
   Transaction,
+  crudRoutesBuilder,
+  dedupSlashes,
   defaultEnvironmentVariablesPrefix,
   defaultMaxTransactionLogs,
   generateUUID,
@@ -66,14 +68,13 @@ import {
   CreateCallbackInvocation,
   CreateInFlightRequest,
   CreateTransaction,
-  dedupSlashes,
   isBodySupportingMethod,
   isValidStatusCode,
   preparePath,
   resolvePathFromEnvironment
 } from '../utils';
 import { createAdminEndpoint } from './admin-api';
-import { CrudRouteIds, crudRoutesBuilder, databucketActions } from './crud';
+import { databucketActions } from './crud';
 import {
   BroadcastContext,
   DelegatedBroadcastHandler,
@@ -1129,7 +1130,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     }
   }
 
-  private createRouteHandler(route: Route, crudId?: CrudRouteIds) {
+  private createRouteHandler(
+    route: Route,
+    crudId?: ReturnType<typeof crudRoutesBuilder>[number]['id']
+  ) {
     return (request: Request, response: Response, next: NextFunction) => {
       this.generateRequestDatabuckets(route, this.environment, request);
 

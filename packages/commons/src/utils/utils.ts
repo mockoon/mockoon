@@ -4,6 +4,14 @@ import { Folder, FolderChild } from '../models/folder.model';
 import { Header, Route, RouteResponse, RouteType } from '../models/route.model';
 
 /**
+ * Deduplicate slashes in a string
+ *
+ * @param str
+ * @returns
+ */
+export const dedupSlashes = (str: string) => str.replace(/\/{2,}/g, '/');
+
+/**
  * Extract the content-type from an array of headers
  *
  * @param headers
@@ -308,4 +316,80 @@ export const routesFromFolder = (
   });
 
   return routesList;
+};
+
+/**
+ * Creates a set of CRUD routes for a given route path
+ *
+ * @param routePath
+ * @returns
+ */
+export const crudRoutesBuilder = (routePath: string) => {
+  const routes = [
+    {
+      id: 'get',
+      docs: 'Get all items',
+      method: 'get',
+      path: dedupSlashes(`${routePath}`),
+      defaultStatus: 200
+    },
+    {
+      id: 'getbyId',
+      docs: 'Get item by ID',
+      method: 'get',
+      path: dedupSlashes(`${routePath}/:id`),
+      defaultStatus: 200
+    },
+    {
+      id: 'create',
+      docs: 'Create a new item',
+      method: 'post',
+      path: dedupSlashes(`${routePath}`),
+      defaultStatus: 201
+    },
+    {
+      id: 'update',
+      docs: 'Update all items',
+      method: 'put',
+      path: dedupSlashes(`${routePath}`),
+      defaultStatus: 200
+    },
+    {
+      id: 'updateById',
+      docs: 'Update item by ID',
+      method: 'put',
+      path: dedupSlashes(`${routePath}/:id`),
+      defaultStatus: 200
+    },
+    {
+      id: 'updateMerge',
+      docs: 'Partially update all items',
+      method: 'patch',
+      path: dedupSlashes(`${routePath}`),
+      defaultStatus: 200
+    },
+    {
+      id: 'updateMergeById',
+      docs: 'Partially update item by ID',
+      method: 'patch',
+      path: dedupSlashes(`${routePath}/:id`),
+      defaultStatus: 200
+    },
+    {
+      id: 'delete',
+      docs: 'Delete all items',
+      method: 'delete',
+      path: dedupSlashes(`${routePath}`),
+      defaultStatus: 200
+    },
+    {
+      id: 'deleteById',
+      docs: 'Delete item by ID',
+      method: 'delete',
+      path: dedupSlashes(`${routePath}/:id`),
+      defaultStatus: 200
+    }
+  ] as const;
+
+  return routes;
 };
