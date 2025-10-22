@@ -6,7 +6,8 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output
+  Output,
+  inject
 } from '@angular/core';
 import {
   FormsModule,
@@ -53,6 +54,9 @@ import { Store } from 'src/renderer/app/stores/store';
   ]
 })
 export class HeadersListComponent implements OnInit, OnDestroy {
+  private formBuilder = inject(UntypedFormBuilder);
+  private store = inject(Store);
+
   @Input()
   public activeDataSubject$: Observable<RouteResponse | Environment | Callback>;
   @Input()
@@ -74,11 +78,6 @@ export class HeadersListComponent implements OnInit, OnDestroy {
   public deleteHeaderRequested$ = new TimedBoolean();
   private listenToChanges = true;
   private destroy$ = new Subject<void>();
-
-  constructor(
-    private formBuilder: UntypedFormBuilder,
-    private store: Store
-  ) {}
 
   public get headers() {
     return this.form.get('headers') as UntypedFormArray;

@@ -6,7 +6,8 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output
+  Output,
+  inject
 } from '@angular/core';
 import { ReorderAction, ReorderActionType } from '@mockoon/commons';
 import { Subscription } from 'rxjs';
@@ -17,6 +18,9 @@ import { DragService } from 'src/renderer/app/services/drag.service';
  */
 @Directive({ selector: '[appDropzone]' })
 export class DropzoneDirective implements OnInit, OnDestroy {
+  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private dragService = inject(DragService);
+
   // arbitrary name of the dragged element's container (avoid drag and drop between different containers)
   @Input()
   public dragContainer: string;
@@ -47,10 +51,7 @@ export class DropzoneDirective implements OnInit, OnDestroy {
   private currentReorderAction: ReorderActionType = null;
   private _dragEnabled: boolean;
 
-  constructor(
-    private elementRef: ElementRef<HTMLElement>,
-    private dragService: DragService
-  ) {
+  constructor() {
     this.elementRef.nativeElement.classList.add('drag-item');
   }
 

@@ -3,7 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  OnInit
+  OnInit,
+  inject
 } from '@angular/core';
 import { Plans } from '@mockoon/cloud';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
@@ -30,6 +31,12 @@ import { Config } from 'src/renderer/config';
   imports: [NgbTooltip, SvgComponent, AsyncPipe, SpinnerComponent]
 })
 export class FooterComponent implements OnInit {
+  private store = inject(Store);
+  private eventsService = inject(EventsService);
+  private uiService = inject(UIService);
+  private templateService = inject(TemplatesService);
+  private mainApiService = inject(MainApiService);
+
   @Input() public isTemplateModalOpen: boolean;
   @Input() public isTemplateLoading: boolean;
   public updateAvailable$: BehaviorSubject<string | null>;
@@ -42,14 +49,6 @@ export class FooterComponent implements OnInit {
     .select('user')
     .pipe(map((user) => !!user && user.plan !== Plans.FREE));
   public version = Config.appVersion;
-
-  constructor(
-    private store: Store,
-    private eventsService: EventsService,
-    private uiService: UIService,
-    private templateService: TemplatesService,
-    private mainApiService: MainApiService
-  ) {}
 
   ngOnInit() {
     this.updateAvailable$ = this.eventsService.updateAvailable$;

@@ -4,7 +4,8 @@ import {
   Directive,
   ElementRef,
   HostListener,
-  Input
+  Input,
+  inject
 } from '@angular/core';
 import { DragService } from 'src/renderer/app/services/drag.service';
 
@@ -13,6 +14,9 @@ import { DragService } from 'src/renderer/app/services/drag.service';
  */
 @Directive({ selector: '[appDraggable]' })
 export class DraggableDirective implements AfterViewInit {
+  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private dragService = inject(DragService);
+
   // Define a #dragHandle on a child to use it as the drag handle
   @ContentChild('dragHandle')
   public dragHandle: ElementRef<HTMLElement>;
@@ -29,11 +33,6 @@ export class DraggableDirective implements AfterViewInit {
   @Input()
   public dragIsContainer: boolean;
   private _dragEnabled: boolean;
-
-  constructor(
-    private elementRef: ElementRef<HTMLElement>,
-    private dragService: DragService
-  ) {}
 
   @Input()
   public set dragEnabled(enabled: boolean) {

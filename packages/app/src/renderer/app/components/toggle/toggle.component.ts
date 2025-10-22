@@ -6,7 +6,8 @@ import {
   forwardRef,
   Input,
   OnDestroy,
-  OnInit
+  OnInit,
+  inject
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -50,6 +51,8 @@ import { ToggleItem, ToggleItems } from 'src/renderer/app/models/common.model';
 export class ToggleComponent
   implements OnInit, OnDestroy, ControlValueAccessor
 {
+  private changeDetectorRef = inject(ChangeDetectorRef);
+
   @Input()
   public items: ToggleItems;
   @Input()
@@ -64,8 +67,6 @@ export class ToggleComponent
 
   public control: UntypedFormControl;
   private controlChanges: Subscription;
-
-  constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.control = new UntypedFormControl();

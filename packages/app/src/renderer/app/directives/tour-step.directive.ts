@@ -1,10 +1,10 @@
 import {
   Directive,
   ElementRef,
-  Host,
   Input,
   OnDestroy,
-  OnInit
+  OnInit,
+  inject
 } from '@angular/core';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, filter, switchMap, tap } from 'rxjs';
@@ -19,15 +19,15 @@ import { TourService } from 'src/renderer/app/services/tour.service';
   selector: '[appTourStep]'
 })
 export class TourStepDirective implements OnInit, OnDestroy {
+  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private tourService = inject(TourService);
+  private ngbPopover = inject(NgbPopover, { host: true });
+
   // step id
   @Input() public appTourStep: string;
   private tourStepSubscription: Subscription;
 
-  constructor(
-    private elementRef: ElementRef<HTMLElement>,
-    private tourService: TourService,
-    @Host() private ngbPopover: NgbPopover
-  ) {
+  constructor() {
     this.ngbPopover.triggers = 'manual';
     this.ngbPopover.container = 'body';
     this.ngbPopover.autoClose = false;

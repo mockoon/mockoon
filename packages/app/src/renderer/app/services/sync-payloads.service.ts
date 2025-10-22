@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   DownSyncActions,
   GetFullEnvironmentSyncAction,
@@ -46,13 +46,11 @@ import { Config } from 'src/renderer/config';
 
 @Injectable({ providedIn: 'root' })
 export class SyncPayloadsService {
-  private recentActions: RecentActionsStore = {};
+  private store = inject(Store);
+  private environmentsService = inject(EnvironmentsService);
+  private mainApiService = inject(MainApiService);
 
-  constructor(
-    private store: Store,
-    private environmentsService: EnvironmentsService,
-    private mainApiService: MainApiService
-  ) {}
+  private recentActions: RecentActionsStore = {};
 
   public reducerActionToSyncActionBuilder(
     action: Actions,

@@ -6,7 +6,8 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output
+  Output,
+  inject
 } from '@angular/core';
 import {
   FormsModule,
@@ -64,6 +65,10 @@ import { Store } from 'src/renderer/app/stores/store';
   ]
 })
 export class RouteResponseRulesComponent implements OnInit, OnDestroy {
+  private environmentsService = inject(EnvironmentsService);
+  private formBuilder = inject(UntypedFormBuilder);
+  private store = inject(Store);
+
   @Input()
   public activeRouteResponse$: Observable<RouteResponse>;
   @Input()
@@ -150,12 +155,6 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   public texts = Texts;
   private listenToChanges = true;
   private destroy$ = new Subject<void>();
-
-  constructor(
-    private environmentsService: EnvironmentsService,
-    private formBuilder: UntypedFormBuilder,
-    private store: Store
-  ) {}
 
   public get rules() {
     return this.form.get('rules') as UntypedFormArray;

@@ -1,5 +1,10 @@
 import { AsyncPipe, NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject
+} from '@angular/core';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, EMPTY, Observable, catchError, map, tap } from 'rxjs';
 import {
@@ -35,6 +40,14 @@ type dropdownMenuPayload = { environmentUuid: string };
   ]
 })
 export class ManageInstancesModalComponent implements OnInit {
+  private uiService = inject(UIService);
+  private store = inject(Store);
+  private environmentsService = inject(EnvironmentsService);
+  private deployService = inject(DeployService);
+  private mainApiService = inject(MainApiService);
+  private loggerService = inject(LoggerService);
+  private userService = inject(UserService);
+
   public payload$ = this.uiService.getModalPayload$('manageInstances');
   public taskInProgress$ = new BehaviorSubject<boolean>(false);
   public instances$ = this.store.select('deployInstances');
@@ -138,16 +151,6 @@ export class ManageInstancesModalComponent implements OnInit {
       }
     }
   ];
-
-  constructor(
-    private uiService: UIService,
-    private store: Store,
-    private environmentsService: EnvironmentsService,
-    private deployService: DeployService,
-    private mainApiService: MainApiService,
-    private loggerService: LoggerService,
-    private userService: UserService
-  ) {}
 
   ngOnInit() {
     this.environmentList$ = this.store.select('environments').pipe(

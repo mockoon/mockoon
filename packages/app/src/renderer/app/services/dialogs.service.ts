@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { OpenDialogOptions } from 'electron';
 import { from, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
@@ -10,15 +10,13 @@ import { Store } from 'src/renderer/app/stores/store';
   providedIn: 'root'
 })
 export class DialogsService {
+  private store = inject(Store);
+  private mainApiService = inject(MainApiService);
+
   private filters = {
     openapi: [{ name: 'OpenAPI v2/v3', extensions: ['yml', 'yaml', 'json'] }],
     json: [{ name: 'JSON', extensions: ['json'] }]
   };
-
-  constructor(
-    private store: Store,
-    private mainApiService: MainApiService
-  ) {}
 
   /**
    * Show the save dialog and return the path or null if cancelled

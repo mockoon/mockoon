@@ -8,7 +8,8 @@ import {
   OnDestroy,
   OnInit,
   QueryList,
-  ViewChildren
+  ViewChildren,
+  inject
 } from '@angular/core';
 import {
   FormsModule,
@@ -57,6 +58,10 @@ import { Config } from 'src/renderer/config';
   ]
 })
 export class CommandPaletteModalComponent implements OnInit, OnDestroy {
+  private eventsService = inject(EventsService);
+  private commandPaletteService = inject(CommandPaletteService);
+  private uiService = inject(UIService);
+
   @HostBinding('class')
   public hostClasses = 'command-palette-modal d-flex flex-column flex-fill mh0';
   @ViewChildren('commandElement')
@@ -68,12 +73,6 @@ export class CommandPaletteModalComponent implements OnInit, OnDestroy {
   public isWeb = Config.isWeb;
   private destroy$ = new Subject<void>();
   private commands: Commands = [];
-
-  constructor(
-    private eventsService: EventsService,
-    private commandPaletteService: CommandPaletteService,
-    private uiService: UIService
-  ) {}
 
   /**
    * Navigate through dropdown items with the keyboard

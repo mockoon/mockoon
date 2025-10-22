@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable, NgZone, inject } from '@angular/core';
 import { combineLatest } from 'rxjs';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
@@ -13,16 +13,14 @@ import { FileWatcherOptions } from 'src/shared/models/settings.model';
 
 @Injectable({ providedIn: 'root' })
 export class MainApiListenerService {
-  constructor(
-    private environmentsService: EnvironmentsService,
-    private eventsService: EventsService,
-    private store: Store,
-    private zone: NgZone,
-    private userService: UserService,
-    private uiService: UIService,
-    private tourService: TourService,
-    private mainApiService: MainApiService
-  ) {}
+  private environmentsService = inject(EnvironmentsService);
+  private eventsService = inject(EventsService);
+  private store = inject(Store);
+  private zone = inject(NgZone);
+  private userService = inject(UserService);
+  private uiService = inject(UIService);
+  private tourService = inject(TourService);
+  private mainApiService = inject(MainApiService);
 
   public init() {
     if (!Config.isWeb) {

@@ -4,7 +4,8 @@ import {
   ElementRef,
   HostListener,
   Input,
-  Renderer2
+  Renderer2,
+  inject
 } from '@angular/core';
 import { filter, first } from 'rxjs/operators';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
@@ -22,6 +23,11 @@ export type ColumnType = 'main' | 'secondary';
 
 @Directive({ selector: '[appResizeColumn]' })
 export class ResizeColumnDirective implements AfterViewInit {
+  private elementRef = inject(ElementRef);
+  private settingsService = inject(SettingsService);
+  private store = inject(Store);
+  private renderer = inject(Renderer2);
+
   @Input()
   public type: ColumnType;
   @Input()
@@ -41,13 +47,6 @@ export class ResizeColumnDirective implements AfterViewInit {
   };
   private currentWidth: number;
   private canSaveSettings = false;
-
-  constructor(
-    private elementRef: ElementRef,
-    private settingsService: SettingsService,
-    private store: Store,
-    private renderer: Renderer2
-  ) {}
 
   @HostListener('mousedown', ['$event'])
   public onMouseDown(event) {

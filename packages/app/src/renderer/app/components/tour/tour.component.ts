@@ -5,7 +5,8 @@ import {
   Component,
   OnInit,
   TemplateRef,
-  ViewChild
+  ViewChild,
+  inject
 } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
@@ -18,13 +19,13 @@ import { TourService } from 'src/renderer/app/services/tour.service';
   imports: [NgFor, SvgComponent, NgIf, NgStyle, AsyncPipe]
 })
 export class TourComponent implements OnInit, AfterViewInit {
+  private tourService = inject(TourService);
+
   @ViewChild('popover') public popoverRef: TemplateRef<HTMLElement>;
 
   public backdropSizes$: Observable<
     { top: number; left: number; width: number; height: number }[]
   >;
-
-  constructor(private tourService: TourService) {}
 
   ngOnInit() {
     this.backdropSizes$ = this.tourService.currentHostElement$.pipe(

@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, tap } from 'rxjs';
@@ -17,6 +17,10 @@ import { Store } from 'src/renderer/app/stores/store';
   imports: [ReactiveFormsModule, SvgComponent, AsyncPipe]
 })
 export class FeedbackModalComponent {
+  private uiService = inject(UIService);
+  private store = inject(Store);
+  private userService = inject(UserService);
+
   public feedbackControl = new FormControl<string>('', [
     Validators.required,
     Validators.maxLength(10000),
@@ -26,11 +30,7 @@ export class FeedbackModalComponent {
     .select('user')
     .pipe(map((user) => user?.email));
 
-  constructor(
-    private uiService: UIService,
-    private store: Store,
-    private userService: UserService
-  ) {
+  constructor() {
     this.feedbackControl.setValue(this.store.get('feedback'));
 
     this.feedbackControl.valueChanges

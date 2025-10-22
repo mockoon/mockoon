@@ -3,7 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
-  OnInit
+  OnInit,
+  inject
 } from '@angular/core';
 import {
   FormsModule,
@@ -33,15 +34,13 @@ import { UserService } from 'src/renderer/app/services/user.service';
   imports: [FormsModule, ReactiveFormsModule, NgIf, AsyncPipe, SpinnerComponent]
 })
 export class AuthModalComponent implements OnInit, OnDestroy {
+  private uiService = inject(UIService);
+  private userService = inject(UserService);
+
   public isLoading$ = new BehaviorSubject<boolean>(false);
   public isSuccess$ = new BehaviorSubject<boolean>(false);
   public tokenControl = new UntypedFormControl('');
   private destroy$ = new Subject<void>();
-
-  constructor(
-    private uiService: UIService,
-    private userService: UserService
-  ) {}
 
   ngOnInit() {
     this.tokenControl.valueChanges

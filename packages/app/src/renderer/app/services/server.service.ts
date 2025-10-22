@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable, NgZone, inject } from '@angular/core';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { DeployInstance } from '@mockoon/cloud';
 import {
@@ -36,20 +36,18 @@ import { Config } from 'src/renderer/config';
 
 @Injectable({ providedIn: 'root' })
 export class ServerService {
+  private store = inject(Store);
+  private zone = inject(NgZone);
+  private telemetryService = inject(TelemetryService);
+  private eventsService = inject(EventsService);
+  private mainApiService = inject(MainApiService);
+  private loggerService = inject(LoggerService);
+  private httpClient = inject(HttpClient);
+
   private activeSseConnections = new Map<
     string,
     { subject: Subject<string>; abortController: AbortController }
   >();
-
-  constructor(
-    private store: Store,
-    private zone: NgZone,
-    private telemetryService: TelemetryService,
-    private eventsService: EventsService,
-    private mainApiService: MainApiService,
-    private loggerService: LoggerService,
-    private httpClient: HttpClient
-  ) {}
 
   /**
    * Listen to SSE coming from the currently active environment admin API

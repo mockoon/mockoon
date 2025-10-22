@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Plans } from '@mockoon/cloud';
 import { Route, RouteType } from '@mockoon/commons';
 import { Observable, from, map } from 'rxjs';
@@ -18,15 +18,13 @@ import { Config } from 'src/renderer/config';
 
 @Injectable({ providedIn: 'root' })
 export class CommandPaletteService {
-  private scoreCache: Record<string, ScoreAndPositions> = {};
+  private environmentsService = inject(EnvironmentsService);
+  private uiService = inject(UIService);
+  private store = inject(Store);
+  private tourService = inject(TourService);
+  private mainApiService = inject(MainApiService);
 
-  constructor(
-    private environmentsService: EnvironmentsService,
-    private uiService: UIService,
-    private store: Store,
-    private tourService: TourService,
-    private mainApiService: MainApiService
-  ) {}
+  private scoreCache: Record<string, ScoreAndPositions> = {};
 
   public filterEntries(search$: Observable<string>) {
     return search$.pipe(

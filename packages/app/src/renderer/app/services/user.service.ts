@@ -35,18 +35,16 @@ import { Config } from 'src/renderer/config';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
+  private httpClient = inject(HttpClient);
+  private store = inject(Store);
+  private uiService = inject(UIService);
+  private mainApiService = inject(MainApiService);
+  private loggerService = inject(LoggerService);
+
   private isWeb = Config.isWeb;
   private auth: Auth = inject(Auth);
   private idToken$ = idToken(this.auth);
   private lastUserRefresh = 0;
-
-  constructor(
-    private httpClient: HttpClient,
-    private store: Store,
-    private uiService: UIService,
-    private mainApiService: MainApiService,
-    private loggerService: LoggerService
-  ) {}
 
   /**
    * Monitor auth token state and update the store

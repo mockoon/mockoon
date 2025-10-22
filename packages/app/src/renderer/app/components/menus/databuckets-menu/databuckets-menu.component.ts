@@ -1,5 +1,10 @@
 import { AsyncPipe, NgClass, NgFor } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject
+} from '@angular/core';
 import {
   DataBucket,
   Environment,
@@ -55,6 +60,10 @@ type dropdownMenuPayload = { databucketUuid: string };
   ]
 })
 export class DatabucketsMenuComponent implements OnInit {
+  private environmentsService = inject(EnvironmentsService);
+  private store = inject(Store);
+  private mainApiService = inject(MainApiService);
+
   public settings$: Observable<Settings>;
   public activeEnvironment$: Observable<Environment>;
   public databucketList$: Observable<DataBucket[]>;
@@ -111,12 +120,6 @@ export class DatabucketsMenuComponent implements OnInit {
       }
     }
   ];
-
-  constructor(
-    private environmentsService: EnvironmentsService,
-    private store: Store,
-    private mainApiService: MainApiService
-  ) {}
 
   ngOnInit() {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();

@@ -6,7 +6,8 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output
+  Output,
+  inject
 } from '@angular/core';
 import {
   FormArray,
@@ -54,6 +55,10 @@ import { Store } from 'src/renderer/app/stores/store';
   ]
 })
 export class RouteCallbacksComponent implements OnInit, OnDestroy {
+  private environmentsService = inject(EnvironmentsService);
+  private store = inject(Store);
+  private formBuilder = inject(FormBuilder);
+
   @Input()
   public activeRouteResponse$: Observable<RouteResponse>;
   @Input()
@@ -70,12 +75,6 @@ export class RouteCallbacksComponent implements OnInit, OnDestroy {
   public allCallbacks$: Observable<Callback[]>;
   private listenToChanges = true;
   private destroy$ = new Subject<void>();
-
-  constructor(
-    private environmentsService: EnvironmentsService,
-    private store: Store,
-    private formBuilder: FormBuilder
-  ) {}
 
   public get callbacks() {
     return this.form.get('callbacks') as FormArray;

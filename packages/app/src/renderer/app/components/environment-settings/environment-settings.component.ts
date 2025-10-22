@@ -3,7 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
-  OnInit
+  OnInit,
+  inject
 } from '@angular/core';
 import {
   FormsModule,
@@ -45,6 +46,11 @@ import { Config } from 'src/renderer/config';
   ]
 })
 export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
+  private formBuilder = inject(UntypedFormBuilder);
+  private environmentsService = inject(EnvironmentsService);
+  private store = inject(Store);
+  private dialogsService = inject(DialogsService);
+
   public activeEnvironment$: Observable<Environment>;
   public instanceUrl$: Observable<string>;
   public activeEnvironmentForm: UntypedFormGroup;
@@ -62,13 +68,6 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
   ];
   public isWeb = Config.isWeb;
   private destroy$ = new Subject<void>();
-
-  constructor(
-    private formBuilder: UntypedFormBuilder,
-    private environmentsService: EnvironmentsService,
-    private store: Store,
-    private dialogsService: DialogsService
-  ) {}
 
   ngOnInit() {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();

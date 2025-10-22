@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   NgbModal,
   NgbModalOptions,
@@ -75,6 +75,10 @@ type ModalWithoutPayload = Exclude<
 
 @Injectable({ providedIn: 'root' })
 export class UIService {
+  private store = inject(Store);
+  private eventsService = inject(EventsService);
+  private ngbModal = inject(NgbModal);
+
   private modalsPayloads = {
     deploy: new BehaviorSubject<string>(null),
     editor: new BehaviorSubject<EditorModalPayload>(null),
@@ -173,12 +177,6 @@ export class UIService {
     openApiImport: null,
     manageInstances: null
   };
-
-  constructor(
-    private store: Store,
-    private eventsService: EventsService,
-    private ngbModal: NgbModal
-  ) {}
 
   /**
    * Scroll to bottom of an element

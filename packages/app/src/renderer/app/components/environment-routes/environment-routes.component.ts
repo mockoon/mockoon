@@ -3,7 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
-  OnInit
+  OnInit,
+  inject
 } from '@angular/core';
 import {
   FormsModule,
@@ -139,6 +140,13 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
   ]
 })
 export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
+  private uiService = inject(UIService);
+  private store = inject(Store);
+  private formBuilder = inject(UntypedFormBuilder);
+  private dialogsService = inject(DialogsService);
+  private environmentsService = inject(EnvironmentsService);
+  private mainApiService = inject(MainApiService);
+
   public activeEnvironment$: Observable<Environment>;
   public activeRoute$: Observable<Route>;
   public activeRouteResponse$: Observable<RouteResponse>;
@@ -353,15 +361,6 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     }
   ];
   private destroy$ = new Subject<void>();
-
-  constructor(
-    private uiService: UIService,
-    private store: Store,
-    private formBuilder: UntypedFormBuilder,
-    private dialogsService: DialogsService,
-    private environmentsService: EnvironmentsService,
-    private mainApiService: MainApiService
-  ) {}
 
   ngOnInit() {
     this.activeEnvironment$ = this.store

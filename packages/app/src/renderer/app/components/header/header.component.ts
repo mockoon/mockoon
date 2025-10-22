@@ -1,5 +1,10 @@
 import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject
+} from '@angular/core';
 import { User } from '@mockoon/cloud';
 import { Environment } from '@mockoon/commons';
 import {
@@ -52,6 +57,16 @@ import { environment as env } from 'src/renderer/environments/environment';
   ]
 })
 export class HeaderComponent implements OnInit {
+  private store = inject(Store);
+  private environmentsService = inject(EnvironmentsService);
+  private userService = inject(UserService);
+  private remoteConfigService = inject(RemoteConfigService);
+  private uiService = inject(UIService);
+  private syncService = inject(SyncService);
+  private toastsService = inject(ToastsService);
+  private deployService = inject(DeployService);
+  private mainApiService = inject(MainApiService);
+
   public activeEnvironment$: Observable<Environment>;
   public user$: Observable<User>;
   public activeView$: Observable<ViewsNameType>;
@@ -78,18 +93,6 @@ export class HeaderComponent implements OnInit {
   public isDev = !env.production;
   public isWeb = Config.isWeb;
   public accountUrl = Config.accountUrl;
-
-  constructor(
-    private store: Store,
-    private environmentsService: EnvironmentsService,
-    private userService: UserService,
-    private remoteConfigService: RemoteConfigService,
-    private uiService: UIService,
-    private syncService: SyncService,
-    private toastsService: ToastsService,
-    private deployService: DeployService,
-    private mainApiService: MainApiService
-  ) {}
 
   ngOnInit() {
     this.os$ = from(this.mainApiService.invoke('APP_GET_OS'));

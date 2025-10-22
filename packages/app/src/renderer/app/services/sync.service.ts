@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   BaseSyncAction,
   ConnectedPayload,
@@ -54,20 +54,18 @@ import { Config } from 'src/renderer/config';
 
 @Injectable({ providedIn: 'root' })
 export class SyncService {
+  private userService = inject(UserService);
+  private store = inject(Store);
+  private syncPayloadsService = inject(SyncPayloadsService);
+  private environmentsService = inject(EnvironmentsService);
+  private uiService = inject(UIService);
+  private loggerService = inject(LoggerService);
+
   private deviceId: string;
   private socket: Socket;
   private timeDifference: number;
   private serverMigrationDone = false;
   private migrationApproval: boolean;
-
-  constructor(
-    private userService: UserService,
-    private store: Store,
-    private syncPayloadsService: SyncPayloadsService,
-    private environmentsService: EnvironmentsService,
-    private uiService: UIService,
-    private loggerService: LoggerService
-  ) {}
 
   /**
    * Initialize the socket connection.

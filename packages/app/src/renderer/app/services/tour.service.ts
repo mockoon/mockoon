@@ -1,4 +1,4 @@
-import { Injectable, TemplateRef } from '@angular/core';
+import { Injectable, TemplateRef, inject } from '@angular/core';
 import { BuildHTTPRoute } from '@mockoon/commons';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { Subject } from 'rxjs';
@@ -13,6 +13,9 @@ import { Config } from 'src/renderer/config';
 
 @Injectable({ providedIn: 'root' })
 export class TourService {
+  private store = inject(Store);
+  private environmentService = inject(EnvironmentsService);
+
   public isWeb = Config.isWeb;
   public steps$ = new Subject<{
     data: TourStep;
@@ -201,11 +204,6 @@ export class TourService {
   private openedPopover: NgbPopover;
   private newRouteUuid: string;
   private tourInProgress = false;
-
-  constructor(
-    private store: Store,
-    private environmentService: EnvironmentsService
-  ) {}
 
   /**
    * Register the popover template ref from the tour component

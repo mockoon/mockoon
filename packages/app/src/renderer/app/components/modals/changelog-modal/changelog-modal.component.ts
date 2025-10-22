@@ -1,6 +1,11 @@
 import { AsyncPipe, NgIf } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject
+} from '@angular/core';
 import { MarkdownComponent } from 'ngx-markdown';
 import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, startWith } from 'rxjs/operators';
@@ -15,6 +20,9 @@ import { SpinnerComponent } from '../../spinner.component';
   imports: [NgIf, MarkdownComponent, AsyncPipe, SpinnerComponent]
 })
 export class ChangelogModalComponent implements OnInit {
+  private httpClient = inject(HttpClient);
+  private uiService = inject(UIService);
+
   public appVersion = Config.appVersion;
   public changelog$: Observable<{
     error?: string;
@@ -22,11 +30,6 @@ export class ChangelogModalComponent implements OnInit {
     loading: boolean;
   }>;
   public releaseUrl = `${Config.releasePublicURL}${Config.appVersion}`;
-
-  constructor(
-    private httpClient: HttpClient,
-    private uiService: UIService
-  ) {}
 
   ngOnInit() {
     this.changelog$ = this.httpClient

@@ -10,7 +10,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   HostListener,
-  OnInit
+  OnInit,
+  inject
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Environment } from '@mockoon/commons';
@@ -81,49 +82,28 @@ import { environment } from 'src/renderer/environments/environment';
   ]
 })
 export class AppComponent implements OnInit {
+  private telemetryService = inject(TelemetryService);
+  private environmentsService = inject(EnvironmentsService);
+  private store = inject(Store);
+  private toastService = inject(ToastsService);
+  private uiService = inject(UIService);
+  private mainApiListenerService = inject(MainApiListenerService);
+  private settingsService = inject(SettingsService);
+  private appQuitService = inject(AppQuitService);
+  private userService = inject(UserService);
+  private title = inject(Title);
+  private tourService = inject(TourService);
+  private remoteConfigService = inject(RemoteConfigService);
+  private syncService = inject(SyncService);
+  private deployService = inject(DeployService);
+  private serverService = inject(ServerService);
+  private mainApiService = inject(MainApiService);
+  private loggerService = inject(LoggerService);
   public activeEnvironment$: Observable<Environment>;
   public activeView$: Observable<ViewsNameType>;
   public scrollToBottom = this.uiService.scrollToBottom;
   public toasts$: Observable<Toast[]>;
   public os: string;
-
-  constructor(
-    private telemetryService: TelemetryService,
-    private environmentsService: EnvironmentsService,
-    private store: Store,
-    private toastService: ToastsService,
-    private uiService: UIService,
-    private mainApiListenerService: MainApiListenerService,
-    private settingsService: SettingsService,
-    private appQuitService: AppQuitService,
-    private userService: UserService,
-    private title: Title,
-    private tourService: TourService,
-    private remoteConfigService: RemoteConfigService,
-    private syncService: SyncService,
-    private deployService: DeployService,
-    private serverService: ServerService,
-    private mainApiService: MainApiService,
-    private loggerService: LoggerService
-  ) {
-    this.settingsService.monitorSettings().subscribe();
-    this.settingsService.loadSettings().subscribe();
-    this.settingsService.saveSettings().subscribe();
-    this.environmentsService.loadEnvironments().subscribe();
-    this.environmentsService.saveEnvironments().subscribe();
-    this.environmentsService.listenServerTransactions().subscribe();
-    this.appQuitService.init().subscribe();
-    this.remoteConfigService.init().subscribe();
-    this.userService.init().subscribe();
-    this.syncService.init().subscribe();
-    this.deployService.init().subscribe();
-    this.mainApiListenerService.init();
-    this.serverService.init().subscribe();
-
-    if (environment.web) {
-      this.userService.webAuthHandler().subscribe();
-    }
-  }
 
   /**
    * Refresh the deploy instances and the user information
@@ -170,6 +150,24 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.settingsService.monitorSettings().subscribe();
+    this.settingsService.loadSettings().subscribe();
+    this.settingsService.saveSettings().subscribe();
+    this.environmentsService.loadEnvironments().subscribe();
+    this.environmentsService.saveEnvironments().subscribe();
+    this.environmentsService.listenServerTransactions().subscribe();
+    this.appQuitService.init().subscribe();
+    this.remoteConfigService.init().subscribe();
+    this.userService.init().subscribe();
+    this.syncService.init().subscribe();
+    this.deployService.init().subscribe();
+    this.mainApiListenerService.init();
+    this.serverService.init().subscribe();
+
+    if (environment.web) {
+      this.userService.webAuthHandler().subscribe();
+    }
+
     this.loggerService.logMessage('info', 'INITIALIZING_APP');
 
     from(this.mainApiService.invoke('APP_GET_OS'))

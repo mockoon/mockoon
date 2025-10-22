@@ -11,7 +11,8 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
-  ViewChild
+  ViewChild,
+  inject
 } from '@angular/core';
 import {
   FormsModule,
@@ -115,6 +116,12 @@ type folderDropdownMenuPayload = { folder: Folder; folderUuid: string };
   ]
 })
 export class RoutesMenuComponent implements OnInit, OnDestroy {
+  private environmentsService = inject(EnvironmentsService);
+  private store = inject(Store);
+  private uiService = inject(UIService);
+  private formBuilder = inject(UntypedFormBuilder);
+  private mainApiService = inject(MainApiService);
+
   @ViewChild('routesMenu')
   private routesMenu: ElementRef<HTMLUListElement>;
   public settings$: Observable<Settings>;
@@ -265,14 +272,6 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
     }
   ];
   private destroy$ = new Subject<void>();
-
-  constructor(
-    private environmentsService: EnvironmentsService,
-    private store: Store,
-    private uiService: UIService,
-    private formBuilder: UntypedFormBuilder,
-    private mainApiService: MainApiService
-  ) {}
 
   ngOnInit() {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();

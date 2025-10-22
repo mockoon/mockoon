@@ -1,5 +1,10 @@
 import { AsyncPipe, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject
+} from '@angular/core';
 import { CORSHeaders, Environment, Header } from '@mockoon/commons';
 import { Observable } from 'rxjs';
 import { HeadersListComponent } from 'src/renderer/app/components/headers-list/headers-list.component';
@@ -15,14 +20,11 @@ import { Store } from 'src/renderer/app/stores/store';
   imports: [NgIf, HeadersListComponent, AsyncPipe]
 })
 export class EnvironmentHeadersComponent implements OnInit {
+  private uiService = inject(UIService);
+  private store = inject(Store);
+  private environmentsService = inject(EnvironmentsService);
   public activeEnvironment$: Observable<Environment>;
   public scrollToBottom = this.uiService.scrollToBottom;
-
-  constructor(
-    private uiService: UIService,
-    private store: Store,
-    private environmentsService: EnvironmentsService
-  ) {}
 
   ngOnInit() {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
