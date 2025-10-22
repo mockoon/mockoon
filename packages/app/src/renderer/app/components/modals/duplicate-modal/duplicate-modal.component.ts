@@ -2,7 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
-  OnInit
+  OnInit,
+  inject
 } from '@angular/core';
 import { Callback, DataBucket, Environment, Route } from '@mockoon/commons';
 import { Observable, Subscription } from 'rxjs';
@@ -22,6 +23,10 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
   imports: [NgIf, NgFor, AsyncPipe]
 })
 export class DuplicateModalComponent implements OnInit, OnDestroy {
+  private uiService = inject(UIService);
+  private store = inject(Store);
+  private environmentsService = inject(EnvironmentsService);
+
   public environments$: Observable<Environment[]> = this.store
     .select('environments')
     .pipe(
@@ -48,12 +53,6 @@ export class DuplicateModalComponent implements OnInit, OnDestroy {
   );
 
   private entityDuplicationSubscription: Subscription;
-
-  constructor(
-    private uiService: UIService,
-    private store: Store,
-    private environmentsService: EnvironmentsService
-  ) {}
 
   private get activeEnvironment() {
     return this.store.getActiveEnvironment();

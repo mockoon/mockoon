@@ -3,7 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
-  OnInit
+  OnInit,
+  inject
 } from '@angular/core';
 import {
   FormsModule,
@@ -48,6 +49,12 @@ import { Store } from 'src/renderer/app/stores/store';
   ]
 })
 export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
+  private uiService = inject(UIService);
+  private store = inject(Store);
+  private environmentsService = inject(EnvironmentsService);
+  private formBuilder = inject(UntypedFormBuilder);
+  private serverService = inject(ServerService);
+  private mainApiService = inject(MainApiService);
   public hasDatabuckets$: Observable<boolean>;
   public activeDatabucket$: Observable<DataBucket>;
   public activeDatabucketForm: UntypedFormGroup;
@@ -58,15 +65,6 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
   >;
   public scrollToBottom = this.uiService.scrollToBottom;
   private destroy$ = new Subject<void>();
-
-  constructor(
-    private uiService: UIService,
-    private store: Store,
-    private environmentsService: EnvironmentsService,
-    private formBuilder: UntypedFormBuilder,
-    private serverService: ServerService,
-    private mainApiService: MainApiService
-  ) {}
 
   ngOnInit() {
     this.hasDatabuckets$ = this.store.selectActiveEnvironment().pipe(

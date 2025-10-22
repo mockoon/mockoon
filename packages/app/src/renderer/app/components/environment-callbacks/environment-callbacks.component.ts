@@ -3,7 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
-  OnInit
+  OnInit,
+  inject
 } from '@angular/core';
 import {
   FormsModule,
@@ -88,6 +89,12 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
   ]
 })
 export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
+  private uiService = inject(UIService);
+  private store = inject(Store);
+  private environmentsService = inject(EnvironmentsService);
+  private formBuilder = inject(UntypedFormBuilder);
+  private dialogsService = inject(DialogsService);
+  private mainApiService = inject(MainApiService);
   public activeEnvironment$: Observable<Environment>;
   public hasCallbacks$: Observable<boolean>;
   public activeCallback$: Observable<Callback>;
@@ -193,15 +200,6 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
     }
   ];
   private destroy$ = new Subject<void>();
-
-  constructor(
-    private uiService: UIService,
-    private store: Store,
-    private environmentsService: EnvironmentsService,
-    private formBuilder: UntypedFormBuilder,
-    private dialogsService: DialogsService,
-    private mainApiService: MainApiService
-  ) {}
 
   ngOnInit() {
     this.activeEnvironment$ = this.store

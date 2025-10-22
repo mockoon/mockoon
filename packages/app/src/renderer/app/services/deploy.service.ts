@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { DeployInstance, Plans } from '@mockoon/cloud';
 import {
   EMPTY,
@@ -27,14 +27,12 @@ import { Config } from 'src/renderer/config';
 
 @Injectable({ providedIn: 'root' })
 export class DeployService {
+  private userService = inject(UserService);
+  private store = inject(Store);
+  private httpClient = inject(HttpClient);
+
   public isWeb = Config.isWeb;
   private lastInstancesRefresh = 0;
-
-  constructor(
-    private userService: UserService,
-    private store: Store,
-    private httpClient: HttpClient
-  ) {}
 
   public init() {
     return this.userService

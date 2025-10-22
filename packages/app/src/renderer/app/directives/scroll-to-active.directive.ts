@@ -1,4 +1,10 @@
-import { AfterViewInit, Directive, ElementRef, OnDestroy } from '@angular/core';
+import {
+  AfterViewInit,
+  Directive,
+  ElementRef,
+  OnDestroy,
+  inject
+} from '@angular/core';
 import { Subject } from 'rxjs';
 
 /**
@@ -6,12 +12,12 @@ import { Subject } from 'rxjs';
  */
 @Directive({ selector: '[appScrollWhenActive]' })
 export class ScrollWhenActiveDirective implements AfterViewInit, OnDestroy {
+  private elementRef = inject(ElementRef);
+
   private destroy$ = new Subject<void>();
   private mutationObserver = new MutationObserver(
     this.observeClassChanges.bind(this)
   );
-
-  constructor(private elementRef: ElementRef) {}
 
   ngAfterViewInit() {
     this.mutationObserver.observe(this.elementRef.nativeElement, {

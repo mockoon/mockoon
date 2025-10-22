@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
+  inject,
   Input,
   NgZone,
   OnDestroy,
@@ -46,6 +47,8 @@ declare const ace: any;
 export class EditorComponent
   implements ControlValueAccessor, OnInit, OnDestroy
 {
+  private zone = inject(NgZone);
+
   @Output()
   public textChanged = new EventEmitter();
   @Output()
@@ -64,10 +67,9 @@ export class EditorComponent
   private _text = '';
   private emitChanges = true;
 
-  constructor(
-    elementRef: ElementRef,
-    private zone: NgZone
-  ) {
+  constructor() {
+    const elementRef = inject(ElementRef);
+
     const element = elementRef.nativeElement;
     this.zone.runOutsideAngular(() => {
       this._editor = ace['edit'](element);

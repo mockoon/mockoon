@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -12,13 +12,13 @@ import { UIService } from 'src/renderer/app/services/ui.service';
   imports: [EditorComponent, AsyncPipe]
 })
 export class EditorModalComponent {
+  private uiService = inject(UIService);
+
   public editorModalPayload$ = this.uiService.getModalPayload$('editor');
   public defaultEditorConfig = {
     ...defaultEditorOptions,
     options: { ...defaultEditorOptions.options, useWorker: true }
   };
-
-  constructor(private uiService: UIService) {}
 
   public close() {
     this.uiService.closeModal('editor');

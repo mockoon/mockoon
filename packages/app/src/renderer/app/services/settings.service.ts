@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   Environment,
   IsEqual,
@@ -31,13 +31,11 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
-  constructor(
-    private store: Store,
-    private storageService: StorageService,
-    private telemetryService: TelemetryService,
-    private uiService: UIService,
-    private mainApiService: MainApiService
-  ) {}
+  private store = inject(Store);
+  private storageService = inject(StorageService);
+  private telemetryService = inject(TelemetryService);
+  private uiService = inject(UIService);
+  private mainApiService = inject(MainApiService);
 
   /**
    * Monitor some settings to trigger behaviors in the main process.

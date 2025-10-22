@@ -2,7 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
-  OnInit
+  OnInit,
+  inject
 } from '@angular/core';
 import {
   ReactiveFormsModule,
@@ -40,6 +41,11 @@ import { FileWatcherOptions, Settings } from 'src/shared/models/settings.model';
   ]
 })
 export class SettingsModalComponent implements OnInit, OnDestroy {
+  private formBuilder = inject(UntypedFormBuilder);
+  private settingsService = inject(SettingsService);
+  private store = inject(Store);
+  private uiService = inject(UIService);
+
   public settings$: Observable<Settings>;
   public Infinity = Infinity;
   public faqUrl = Config.docs.faq;
@@ -53,13 +59,6 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
   public isWeb = Config.isWeb;
   public maxLogsPerEnvironmentLimit = Config.maxLogsPerEnvironmentLimit;
   private destroy$ = new Subject<void>();
-
-  constructor(
-    private formBuilder: UntypedFormBuilder,
-    private settingsService: SettingsService,
-    private store: Store,
-    private uiService: UIService
-  ) {}
 
   ngOnInit() {
     this.settings$ = this.store

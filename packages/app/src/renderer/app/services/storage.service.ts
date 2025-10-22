@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Environment } from '@mockoon/commons';
 import { BehaviorSubject, EMPTY, from, Observable, of } from 'rxjs';
 import {
@@ -16,12 +16,10 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class StorageService {
-  private saving$ = new BehaviorSubject<boolean>(false);
+  private mainApiService = inject(MainApiService);
+  private loggerService = inject(LoggerService);
 
-  constructor(
-    private mainApiService: MainApiService,
-    private loggerService: LoggerService
-  ) {}
+  private saving$ = new BehaviorSubject<boolean>(false);
 
   /**
    * Saving in progress observable

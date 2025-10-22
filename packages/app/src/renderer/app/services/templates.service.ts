@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   Template,
   TemplateGenerateOptions,
@@ -25,6 +25,11 @@ import { Config } from 'src/renderer/config';
 
 @Injectable({ providedIn: 'root' })
 export class TemplatesService {
+  private httpClient = inject(HttpClient);
+  private userService = inject(UserService);
+  private toastsService = inject(ToastsService);
+  private store = inject(Store);
+
   public generatingTemplate$ = new BehaviorSubject<
     'NONE' | 'INPROGRESS' | 'DONE'
   >('NONE');
@@ -36,13 +41,6 @@ export class TemplatesService {
   public lastGeneratedTemplate$ = new BehaviorSubject<string>('');
   public lastGeneratedEndpoint$ = new BehaviorSubject<DeepPartial<Route>>(null);
   private templateCache = new Map<string, Observable<Template>>();
-
-  constructor(
-    private httpClient: HttpClient,
-    private userService: UserService,
-    private toastsService: ToastsService,
-    private store: Store
-  ) {}
 
   /**
    * Get the list of available templates

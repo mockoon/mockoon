@@ -33,11 +33,11 @@
   "dependencies": {
     "@mockoon/commons": "9.3.0",
     "@mockoon/commons-server": "9.3.0",
-    "serverless-http": "3.2.0",
+    "serverless-http": "4.0.0",
     "tslib": "2.8.1"
   },
   "devDependencies": {
-    "@types/node": "24.0.1",
-    "typescript": "5.8.3"
+    "@types/node": "24.9.1",
+    "typescript": "5.9.3"
   }
 }

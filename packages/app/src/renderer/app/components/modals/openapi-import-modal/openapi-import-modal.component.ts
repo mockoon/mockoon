@@ -1,6 +1,11 @@
 import { AsyncPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  signal,
+  inject
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormControl,
@@ -49,6 +54,14 @@ import { Config } from 'src/renderer/config';
   ]
 })
 export class OpenapiImportModalComponent {
+  private uiService = inject(UIService);
+  private httpClient = inject(HttpClient);
+  private loggerService = inject(LoggerService);
+  private environmentsService = inject(EnvironmentsService);
+  private dialogsService = inject(DialogsService);
+  private mainApiService = inject(MainApiService);
+  private dataService = inject(DataService);
+
   public defaultEditorConfig = {
     ...defaultEditorOptions,
     options: { ...defaultEditorOptions.options, useWorker: true }
@@ -73,15 +86,7 @@ export class OpenapiImportModalComponent {
   );
   public isWeb = Config.isWeb;
 
-  constructor(
-    private uiService: UIService,
-    private httpClient: HttpClient,
-    private loggerService: LoggerService,
-    private environmentsService: EnvironmentsService,
-    private dialogsService: DialogsService,
-    private mainApiService: MainApiService,
-    private dataService: DataService
-  ) {
+  constructor() {
     this.importForm
       .get('url')
       .valueChanges.pipe(

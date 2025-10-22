@@ -3,7 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
-  OnInit
+  OnInit,
+  inject
 } from '@angular/core';
 import {
   FormsModule,
@@ -42,18 +43,16 @@ import { Store } from 'src/renderer/app/stores/store';
   ]
 })
 export class EnvironmentProxyComponent implements OnInit, OnDestroy {
+  private environmentsService = inject(EnvironmentsService);
+  private uiService = inject(UIService);
+  private store = inject(Store);
+  private formBuilder = inject(UntypedFormBuilder);
+
   public activeEnvironment$: Observable<Environment>;
   public isValidURL = IsValidURL;
   public scrollToBottom = this.uiService.scrollToBottom;
   public environmentProxyForm: UntypedFormGroup;
   private destroy$ = new Subject<void>();
-
-  constructor(
-    private environmentsService: EnvironmentsService,
-    private uiService: UIService,
-    private store: Store,
-    private formBuilder: UntypedFormBuilder
-  ) {}
 
   ngOnInit() {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();

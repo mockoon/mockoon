@@ -1,7 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  HostListener
+  HostListener,
+  inject
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -18,16 +19,14 @@ import { Config } from 'src/renderer/config';
   host: { class: 'position-relative' }
 })
 export class AuthIframeModalComponent {
+  private domSanitizer = inject(DomSanitizer);
+  private userService = inject(UserService);
+  private uiService = inject(UIService);
+
   public appAuthURL = this.domSanitizer.bypassSecurityTrustResourceUrl(
     `${Config.appAuthURL}?webapp=true`
   );
   public displaySpinner = true;
-
-  constructor(
-    private domSanitizer: DomSanitizer,
-    private userService: UserService,
-    private uiService: UIService
-  ) {}
 
   @HostListener('window:message', ['$event'])
   private onMessage(event: MessageEvent) {

@@ -5,7 +5,8 @@ import {
   HostListener,
   OnDestroy,
   OnInit,
-  input
+  input,
+  inject
 } from '@angular/core';
 import {
   FormsModule,
@@ -41,6 +42,12 @@ import { Store } from 'src/renderer/app/stores/store';
   ]
 })
 export class FilterComponent implements OnInit, OnDestroy {
+  private store = inject(Store);
+  private formBuilder = inject(UntypedFormBuilder);
+  private eventsService = inject(EventsService);
+  private uiService = inject(UIService);
+  private mainApiService = inject(MainApiService);
+
   public readonly filterName = input.required<keyof StoreType['filters']>();
   public readonly focusableInput = input.required<FocusableInputs>();
   public readonly classes = input<string>(undefined);
@@ -49,14 +56,6 @@ export class FilterComponent implements OnInit, OnDestroy {
   public os: string;
   public os$: Observable<string>;
   private destroy$ = new Subject<void>();
-
-  constructor(
-    private store: Store,
-    private formBuilder: UntypedFormBuilder,
-    private eventsService: EventsService,
-    private uiService: UIService,
-    private mainApiService: MainApiService
-  ) {}
 
   @HostListener('keydown', ['$event'])
   public escapeFilterInput(event: KeyboardEvent) {

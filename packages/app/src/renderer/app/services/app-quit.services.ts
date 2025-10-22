@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { combineLatest, fromEvent, race, timer } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
@@ -12,14 +12,12 @@ import { environment } from 'src/renderer/environments/environment';
   providedIn: 'root'
 })
 export class AppQuitService {
-  private closing = false;
+  private store = inject(Store);
+  private storageService = inject(StorageService);
+  private telemetryService = inject(TelemetryService);
+  private mainApiService = inject(MainApiService);
 
-  constructor(
-    private store: Store,
-    private storageService: StorageService,
-    private telemetryService: TelemetryService,
-    private mainApiService: MainApiService
-  ) {}
+  private closing = false;
 
   /**
    * On beforeunload event:

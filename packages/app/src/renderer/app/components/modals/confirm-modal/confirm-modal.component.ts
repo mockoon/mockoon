@@ -3,7 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
-  OnInit
+  OnInit,
+  inject
 } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
@@ -18,10 +19,10 @@ import { UIService } from 'src/renderer/app/services/ui.service';
   imports: [NgIf, NgFor, SvgComponent, AsyncPipe]
 })
 export class ConfirmModalComponent implements OnInit, OnDestroy {
+  private uiService = inject(UIService);
+
   public confirmModalPayload$: Observable<ConfirmModalPayload>;
   private destroy$ = new Subject<void>();
-
-  constructor(private uiService: UIService) {}
 
   ngOnInit() {
     this.confirmModalPayload$ = this.uiService.getModalPayload$('confirm').pipe(

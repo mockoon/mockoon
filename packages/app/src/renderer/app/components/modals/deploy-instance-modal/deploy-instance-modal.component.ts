@@ -14,13 +14,7 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import {
-  DeployInstance,
-  DeployInstanceVisibility,
-  DeployRegions,
-  User
-} from '@mockoon/cloud';
-import { Environment } from '@mockoon/commons';
+import { DeployInstanceVisibility, DeployRegions, User } from '@mockoon/cloud';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import {
   BehaviorSubject,
@@ -30,7 +24,6 @@ import {
   EMPTY,
   filter,
   map,
-  Observable,
   switchMap,
   tap,
   withLatestFrom
@@ -68,11 +61,42 @@ import { Config } from 'src/renderer/config';
   ]
 })
 export class DeployInstanceModalComponent implements OnInit {
+  private uiService = inject(UIService);
+  private store = inject(Store);
+  private deployService = inject(DeployService);
+  private formBuilder = inject(FormBuilder);
+  private mainApiService = inject(MainApiService);
+  private loggerService = inject(LoggerService);
   public deployInProgress$ = new BehaviorSubject<boolean>(false);
   public subdomainCheckInProgress$ = new BehaviorSubject<boolean>(false);
-  public existingInstance$: Observable<DeployInstance>;
-  public instanceExists$: Observable<boolean>;
-  public user$: Observable<User>;
+  private environmentUuid$ = this.uiService.getModalPayload$('deploy');
+  public existingInstance$ = this.environmentUuid$.pipe(
+    switchMap((environmentUuid) =>
+      this.store
+        .select('deployInstances')
+        .pipe(map((instances) => ({ environmentUuid, instances })))
+    ),
+    map(({ environmentUuid, instances }) =>
+      instances.find((instance) => instance.environmentUuid === environmentUuid)
+    )
+  );
+  public instanceExists$ = this.existingInstance$.pipe(
+    map((existingInstance) => {
+      if (existingInstance) {
+        this.optionsForm.patchValue({
+          subdomain: existingInstance.subdomain,
+          visibility: existingInstance.visibility
+        });
+
+        this.optionsForm.get('region').disable();
+      } else {
+        this.optionsForm.get('region').enable();
+      }
+
+      return !!existingInstance;
+    })
+  );
+  public user$ = this.store.select('user');
   public accountUrl = Config.accountUrl;
   public isWeb = Config.isWeb;
   public stopInstanceRequested = signal(false);
@@ -100,7 +124,9 @@ export class DeployInstanceModalComponent implements OnInit {
       label: 'public'
     }
   ];
-  public environment$: Observable<Environment>;
+  public environment$ = this.environmentUuid$.pipe(
+    map((environmentUuid) => this.store.getEnvironmentByUUID(environmentUuid))
+  );
   public remoteConfig$ = this.store.selectRemoteConfig().pipe(
     withLatestFrom(
       this.store.select('settings').pipe(filter((settings) => !!settings))
@@ -117,52 +143,9 @@ export class DeployInstanceModalComponent implements OnInit {
       defaultRegion: remoteConfig.defaultRegion
     }))
   );
-  private environmentUuid$ = this.uiService.getModalPayload$('deploy');
   private destroyRef = inject(DestroyRef);
 
-  constructor(
-    private uiService: UIService,
-    private store: Store,
-    private deployService: DeployService,
-    private formBuilder: FormBuilder,
-    private mainApiService: MainApiService,
-    private loggerService: LoggerService
-  ) {}
-
   ngOnInit() {
-    this.environment$ = this.environmentUuid$.pipe(
-      map((environmentUuid) => this.store.getEnvironmentByUUID(environmentUuid))
-    );
-    this.user$ = this.store.select('user');
-    this.existingInstance$ = this.environmentUuid$.pipe(
-      switchMap((environmentUuid) =>
-        this.store
-          .select('deployInstances')
-          .pipe(map((instances) => ({ environmentUuid, instances })))
-      ),
-      map(({ environmentUuid, instances }) =>
-        instances.find(
-          (instance) => instance.environmentUuid === environmentUuid
-        )
-      )
-    );
-    this.instanceExists$ = this.existingInstance$.pipe(
-      map((existingInstance) => {
-        if (existingInstance) {
-          this.optionsForm.patchValue({
-            subdomain: existingInstance.subdomain,
-            visibility: existingInstance.visibility
-          });
-
-          this.optionsForm.get('region').disable();
-        } else {
-          this.optionsForm.get('region').enable();
-        }
-
-        return !!existingInstance;
-      })
-    );
-
     // check subdomain availability (not using async validators to use debounce and stuff)
     this.optionsForm
       .get('subdomain')
@@ -173,7 +156,7 @@ export class DeployInstanceModalComponent implements OnInit {
             subdomain &&
             subdomain.length >= 5 &&
             this.optionsForm.get('subdomain').valid &&
-            (!existingInstance || existingInstance.subdomain !== subdomain)
+            existingInstance?.subdomain !== subdomain
         ),
         tap(() => {
           this.optionsForm.get('subdomain').setErrors(null);

@@ -6,7 +6,12 @@ import {
   NgIf,
   UpperCasePipe
 } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject
+} from '@angular/core';
 import {
   Callback,
   ReorderAction,
@@ -62,6 +67,9 @@ type dropdownMenuPayload = { callbackUuid: string };
   ]
 })
 export class CallbacksMenuComponent implements OnInit {
+  private environmentsService = inject(EnvironmentsService);
+  private store = inject(Store);
+
   public settings$: Observable<Settings>;
   public callbackList$: Observable<Callback[]>;
   public activeCallback$: Observable<Callback>;
@@ -104,11 +112,6 @@ export class CallbacksMenuComponent implements OnInit {
       }
     }
   ];
-
-  constructor(
-    private environmentsService: EnvironmentsService,
-    private store: Store
-  ) {}
 
   ngOnInit() {
     this.activeCallback$ = this.store.selectActiveCallback();

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Plans } from '@mockoon/cloud';
 import { generateUUID } from '@mockoon/commons';
 import { differenceInMilliseconds, endOfDay } from 'date-fns';
@@ -30,6 +30,10 @@ import { Config } from 'src/renderer/config';
   providedIn: 'root'
 })
 export class TelemetryService {
+  private localStorageService = inject(LocalStorageService);
+  private store = inject(Store);
+  private mainApiService = inject(MainApiService);
+
   private session: TelemetrySession = {
     installationId: null,
     firstSession: false,
@@ -45,12 +49,6 @@ export class TelemetryService {
   private event$ = new Subject<void>();
   private closeSession$ = new BehaviorSubject<boolean>(false);
   private sessionInProgress$ = new BehaviorSubject<boolean>(true);
-
-  constructor(
-    private localStorageService: LocalStorageService,
-    private store: Store,
-    private mainApiService: MainApiService
-  ) {}
 
   /**
    * Init the telemetry observable, automatically handling authorizations, data fetching, timers and request

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   EnvironmentsListPayload,
   getEnvironmentByteSize
@@ -148,6 +148,17 @@ import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
   providedIn: 'root'
 })
 export class EnvironmentsService {
+  private dataService = inject(DataService);
+  private eventsService = inject(EventsService);
+  private store = inject(Store);
+  private serverService = inject(ServerService);
+  private uiService = inject(UIService);
+  private storageService = inject(StorageService);
+  private dialogsService = inject(DialogsService);
+  private http = inject(HttpClient);
+  private mainApiService = inject(MainApiService);
+  private loggerService = inject(LoggerService);
+
   private environmentChangesNotified = false;
   private environmentChanges$ = new BehaviorSubject<
     {
@@ -157,19 +168,6 @@ export class EnvironmentsService {
     }[]
   >([]);
   private isWeb = Config.isWeb;
-
-  constructor(
-    private dataService: DataService,
-    private eventsService: EventsService,
-    private store: Store,
-    private serverService: ServerService,
-    private uiService: UIService,
-    private storageService: StorageService,
-    private dialogsService: DialogsService,
-    private http: HttpClient,
-    private mainApiService: MainApiService,
-    private loggerService: LoggerService
-  ) {}
 
   /**
    * Load environments after waiting for the settings to load

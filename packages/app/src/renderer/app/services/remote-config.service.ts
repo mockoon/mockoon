@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { RemoteConfigData } from '@mockoon/cloud';
 import { EMPTY, from, Observable } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
@@ -11,11 +11,9 @@ import { environment } from 'src/renderer/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class RemoteConfigService {
-  constructor(
-    private httpClient: HttpClient,
-    private userService: UserService,
-    private store: Store
-  ) {}
+  private httpClient = inject(HttpClient);
+  private userService = inject(UserService);
+  private store = inject(Store);
 
   /**
    * Monitor auth state and update the store

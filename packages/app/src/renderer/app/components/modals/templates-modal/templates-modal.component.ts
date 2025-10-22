@@ -1,7 +1,6 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import {
   AsyncPipe,
-  DOCUMENT,
   NgClass,
   NgFor,
   NgIf,
@@ -10,11 +9,12 @@ import {
 } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  DOCUMENT,
   Component,
   forwardRef,
-  Inject,
   OnDestroy,
-  OnInit
+  OnInit,
+  inject
 } from '@angular/core';
 import {
   FormControl,
@@ -102,6 +102,13 @@ import { Config } from 'src/renderer/config';
   ]
 })
 export class TemplatesModalComponent implements OnInit, OnDestroy {
+  private modalService = inject(NgbModal);
+  private templatesService = inject(TemplatesService);
+  private environmentsService = inject(EnvironmentsService);
+  private store = inject(Store);
+  private uiService = inject(UIService);
+  private document = inject<Document>(DOCUMENT);
+
   public isDemoLoading$ = new BehaviorSubject<boolean>(false);
   public activeTemplateListItem$ = new BehaviorSubject<TemplateListItem>(null);
   public activeTemplate$: Observable<Template>;
@@ -128,15 +135,6 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
   public accountUrl = Config.accountUrl;
   private isFirstDemo = true;
   private destroy$ = new Subject<void>();
-
-  constructor(
-    private modalService: NgbModal,
-    private templatesService: TemplatesService,
-    private environmentsService: EnvironmentsService,
-    private store: Store,
-    private uiService: UIService,
-    @Inject(DOCUMENT) private document: Document
-  ) {}
 
   ngOnInit() {
     this.user$ = this.store.select('user');

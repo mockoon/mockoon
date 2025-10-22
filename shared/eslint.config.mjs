@@ -1,8 +1,7 @@
 // @ts-check
 
 import eslint from '@eslint/js';
-import stylisticJs from '@stylistic/eslint-plugin-js';
-import stylisticTs from '@stylistic/eslint-plugin-ts';
+import stylistic from '@stylistic/eslint-plugin';
 import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
 import tseslint from 'typescript-eslint';
 
@@ -22,12 +21,11 @@ export const configs = [
       }
     },
     plugins: {
-      '@stylistic/ts': stylisticTs,
-      '@stylistic/js': stylisticJs
+      '@stylistic': stylistic
     },
     rules: {
-      '@stylistic/ts/quotes': ['error', 'single', { avoidEscape: true }],
-      '@stylistic/ts/member-delimiter-style': [
+      '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
+      '@stylistic/member-delimiter-style': [
         'error',
         {
           multiline: {
@@ -40,11 +38,11 @@ export const configs = [
           }
         }
       ],
-      '@stylistic/ts/semi': ['error', 'always'],
-      '@stylistic/ts/type-annotation-spacing': 'error',
-      '@stylistic/js/eol-last': 'error',
-      '@stylistic/js/no-trailing-spaces': 'error',
-      '@stylistic/js/padding-line-between-statements': [
+      '@stylistic/semi': ['error', 'always'],
+      '@stylistic/type-annotation-spacing': 'error',
+      '@stylistic/eol-last': 'error',
+      '@stylistic/no-trailing-spaces': 'error',
+      '@stylistic/padding-line-between-statements': [
         'error',
         {
           blankLine: 'always',
@@ -52,8 +50,8 @@ export const configs = [
           next: 'return'
         }
       ],
-      '@stylistic/js/space-in-parens': ['off', 'never'],
-      '@stylistic/js/spaced-comment': [
+      '@stylistic/space-in-parens': ['off', 'never'],
+      '@stylistic/spaced-comment': [
         'error',
         'always',
         {
@@ -77,7 +75,6 @@ export const configs = [
           ]
         }
       ],
-      '@typescript-eslint/member-ordering': 'error',
       '@typescript-eslint/no-empty-interface': 'error',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-non-null-assertion': 'error',

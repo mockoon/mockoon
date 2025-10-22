@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   BINARY_BODY,
   Callback,
@@ -26,12 +26,10 @@ import { Store } from 'src/renderer/app/stores/store';
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
-  constructor(
-    private store: Store,
-    private migrationService: MigrationService,
-    private settingsService: SettingsService,
-    private loggerService: LoggerService
-  ) {}
+  private store = inject(Store);
+  private migrationService = inject(MigrationService);
+  private settingsService = inject(SettingsService);
+  private loggerService = inject(LoggerService);
 
   /**
    * Migrate an environment and validate it against the schema

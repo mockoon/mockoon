@@ -3,7 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
-  OnInit
+  OnInit,
+  inject
 } from '@angular/core';
 import {
   FormsModule,
@@ -97,6 +98,15 @@ type dropdownMenuPayload = { environmentUuid: string; syncStatus: boolean };
   ]
 })
 export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
+  private formBuilder = inject(UntypedFormBuilder);
+  private environmentsService = inject(EnvironmentsService);
+  private store = inject(Store);
+  private eventsService = inject(EventsService);
+  private settingsService = inject(SettingsService);
+  private syncsService = inject(SyncService);
+  private uiService = inject(UIService);
+  private userService = inject(UserService);
+
   public activeEnvironment$: Observable<Environment>;
   public environments$: Observable<Environments>;
   public cloudEnvironments$: Observable<Environments>;
@@ -348,17 +358,6 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
     collapsed: boolean;
   }[];
   private destroy$ = new Subject<void>();
-
-  constructor(
-    private formBuilder: UntypedFormBuilder,
-    private environmentsService: EnvironmentsService,
-    private store: Store,
-    private eventsService: EventsService,
-    private settingsService: SettingsService,
-    private syncsService: SyncService,
-    private uiService: UIService,
-    private userService: UserService
-  ) {}
 
   ngOnInit() {
     this.settings$ = this.store

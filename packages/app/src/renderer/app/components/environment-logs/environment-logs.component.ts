@@ -6,7 +6,12 @@ import {
   TitleCasePipe,
   UpperCasePipe
 } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject
+} from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { GetContentType, isContentTypeApplicationJson } from '@mockoon/commons';
 import { NgbCollapse, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
@@ -89,6 +94,12 @@ type logsDropdownMenuPayload = { logUuid: string };
   ]
 })
 export class EnvironmentLogsComponent implements OnInit {
+  private store = inject(Store);
+  private environmentsService = inject(EnvironmentsService);
+  private eventsService = inject(EventsService);
+  private uiService = inject(UIService);
+  private datePipe = inject(DatePipe);
+
   public environmentLogs$: Observable<
     (EnvironmentLog & { timeHuman$: Observable<string> })[]
   >;
@@ -152,14 +163,6 @@ export class EnvironmentLogsComponent implements OnInit {
     }
   ];
   public isEnvCloud$ = this.store.selectIsActiveEnvCloud();
-
-  constructor(
-    private store: Store,
-    private environmentsService: EnvironmentsService,
-    private eventsService: EventsService,
-    private uiService: UIService,
-    private datePipe: DatePipe
-  ) {}
 
   ngOnInit() {
     this.logsFilter$ = this.store.selectFilter('logs');

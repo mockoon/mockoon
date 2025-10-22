@@ -1,4 +1,11 @@
-import { Directive, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  inject
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
@@ -9,14 +16,12 @@ import { EventsService } from 'src/renderer/app/services/events.service';
  */
 @Directive({ selector: '[appFocusOnEvent]' })
 export class FocusOnEventDirective implements OnInit, OnDestroy {
+  private elementRef = inject(ElementRef);
+  private eventsService = inject(EventsService);
+
   @Input() public appFocusOnEvent: FocusableInputs;
 
   private eventsSubscription: Subscription;
-
-  constructor(
-    private elementRef: ElementRef,
-    private eventsService: EventsService
-  ) {}
 
   public ngOnInit() {
     this.eventsSubscription = this.eventsService.focusInput

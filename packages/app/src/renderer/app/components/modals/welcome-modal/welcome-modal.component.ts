@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { TourService } from 'src/renderer/app/services/tour.service';
@@ -13,14 +13,12 @@ import { Config } from 'src/renderer/config';
   imports: [SvgComponent]
 })
 export class WelcomeModalComponent {
-  public isWeb = Config.isWeb;
+  private settingsService = inject(SettingsService);
+  private uiService = inject(UIService);
+  private tourService = inject(TourService);
+  private userService = inject(UserService);
 
-  constructor(
-    private settingsService: SettingsService,
-    private uiService: UIService,
-    private tourService: TourService,
-    private userService: UserService
-  ) {}
+  public isWeb = Config.isWeb;
 
   public close(takeTour: boolean) {
     this.uiService.closeModal('welcome');

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   Environment,
   HighestMigrationId,
@@ -11,10 +11,8 @@ import { SettingsService } from 'src/renderer/app/services/settings.service';
 
 @Injectable({ providedIn: 'root' })
 export class MigrationService {
-  constructor(
-    private settingsService: SettingsService,
-    private loggerService: LoggerService
-  ) {}
+  private settingsService = inject(SettingsService);
+  private loggerService = inject(LoggerService);
 
   /**
    * Migrate one environment.
