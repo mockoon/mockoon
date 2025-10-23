@@ -1,3 +1,4 @@
+import { createInterface as readLineCreate } from 'node:readline/promises';
 import { dirname } from 'path';
 
 /**
@@ -28,5 +29,33 @@ export const getDirname = (path: string): string | null => {
 export const terminalColors = {
   reset: '\x1b[39m',
   red: '\x1b[31m',
-  green: '\x1b[32m'
+  green: '\x1b[32m',
+  blue: '\x1b[34m',
+  gray: '\x1b[90m'
+};
+
+/**
+ * Prompt the user for a yes/no confirmation in the terminal.
+ *
+ * @param message
+ * @returns
+ */
+export const confirm = async (message: string): Promise<boolean> => {
+  const readLine = readLineCreate({
+    input: process.stdin,
+    output: process.stdout,
+    terminal: true
+  });
+
+  const answer = await readLine.question(
+    `${terminalColors.blue}?${terminalColors.reset} ${message} ${terminalColors.gray}(y/n)${terminalColors.reset} `
+  );
+
+  readLine.close();
+
+  if (answer.toLowerCase() !== 'y' && answer.toLowerCase() !== 'yes') {
+    return false;
+  }
+
+  return true;
 };

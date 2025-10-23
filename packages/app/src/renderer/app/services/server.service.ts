@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, NgZone, inject } from '@angular/core';
+import { inject, Injectable, NgZone } from '@angular/core';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { DeployInstance } from '@mockoon/cloud';
 import {

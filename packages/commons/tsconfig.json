@@ -5,8 +5,7 @@
     "module": "ESNext",
     "outDir": "./dist/esm",
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "typeRoots": ["node_modules/@types"]
+    "skipLibCheck": true
   },
   "include": [
     "./src",

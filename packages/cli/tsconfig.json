@@ -5,7 +5,6 @@
     "module": "commonjs",
     "outDir": "./dist",
     "skipLibCheck": true,
-    "typeRoots": ["node_modules/@types"],
     "useUnknownInCatchVariables": true
   },
   "include": ["./src", "./test"]

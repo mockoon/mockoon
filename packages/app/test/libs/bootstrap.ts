@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import { glob } from 'glob';
-import { mkdirp } from 'mkdirp';
+import { mkdir } from 'node:fs/promises';
 import { basename } from 'path';
 
 class Bootstrap {
@@ -18,7 +18,7 @@ class Bootstrap {
 
       await fs.rm(storagePath, { recursive: true, force: true });
 
-      await mkdirp(storagePath);
+      await mkdir(storagePath, { recursive: true });
     } catch (_error) {}
   }
 

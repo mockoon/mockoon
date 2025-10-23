@@ -30,9 +30,5 @@
   "dependencies": {
     "@mockoon/commons": "9.3.0",
     "tslib": "2.8.1"
-  },
-  "devDependencies": {
-    "@types/node": "24.9.1",
-    "typescript": "5.9.3"
   }
 }
