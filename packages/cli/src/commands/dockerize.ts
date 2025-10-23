@@ -1,7 +1,7 @@
 import { Command, Flags } from '@oclif/core';
 import { promises as fs } from 'fs';
-import { mkdirp } from 'mkdirp';
 import { render as mustacheRender } from 'mustache';
+import { mkdir } from 'node:fs/promises';
 import { ParsedPath, parse as pathParse, resolve as pathResolve } from 'path';
 import { Config } from '../config';
 import { CLIMessages } from '../constants/cli-messages.constants';
@@ -44,7 +44,7 @@ export default class Dockerize extends Command {
     const resolvedDockerfilePath = pathResolve(userFlags.output);
     const dockerfilePath: ParsedPath = pathParse(resolvedDockerfilePath);
 
-    await mkdirp(dockerfilePath.dir);
+    await mkdir(dockerfilePath.dir, { recursive: true });
 
     if (userFlags.data.length !== userFlags.port.length) {
       this.error(CLIMessages.DOCKERIZE_PORT_DATA_MISMATCH);

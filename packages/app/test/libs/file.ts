@@ -1,6 +1,6 @@
 import { Environment, Environments } from '@mockoon/commons';
+import { objectGetPath } from '@mockoon/commons-server';
 import { promises as fs } from 'fs';
-import { get as objectGetPath } from 'object-path';
 import { Settings } from '../../src/shared/models/settings.model';
 import utils from '../libs/utils';
 

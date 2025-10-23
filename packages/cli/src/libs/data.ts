@@ -1,4 +1,3 @@
-import confirm from '@inquirer/confirm';
 import {
   Environment,
   EnvironmentSchema,
@@ -9,6 +8,7 @@ import {
 } from '@mockoon/commons';
 import { promises as fs } from 'fs';
 import { CLIMessages } from '../constants/cli-messages.constants';
+import { confirm } from './utils';
 
 /**
  * Check if an environment can be run by the CLI and
@@ -23,13 +23,13 @@ const migrateAndValidateEnvironment = async (
 ) => {
   // environment data are too old: lastMigration is not present
   if (environment.lastMigration === undefined && !forceRepair) {
-    const promptResponse: boolean = await confirm({
-      message: `${
+    const answer = await confirm(
+      `${
         environment.name ? '"' + environment.name + '"' : 'This environment'
-      } does not seem to be a valid Mockoon environment or is too old. Let Mockoon attempt to repair it? (y/n)`
-    });
+      } does not seem to be a valid Mockoon environment or is too old. Let Mockoon attempt to repair it?`
+    );
 
-    if (!promptResponse) {
+    if (!answer) {
       throw new Error(CLIMessages.DATA_TOO_OLD_ERROR);
     }
   }

@@ -44,12 +44,13 @@ We recommend the following workflow:
 
 ## Monorepo
 
-Mockoon is using a monorepo setup (with Lerna). We have 4 packages in the `./packages/` folder:
+Mockoon is using a monorepo setup (with NPM workspaces). We have 6 packages in the `./packages/` folder:
 
 **Libraries** used by the desktop application and the CLI:
 
 - _@mockoon/commons_: this library contains mostly typings, utils and migrations designed to be used in both the browser and Node.js environments. Thus, it is safe to use in the desktop Electron's main or renderer processes, and the CLI.
 - _@mockoon/commons-server_: this library contains mostly "server side" code designed to be used in a Node.js environment. Thus, it is safe to use it in the desktop application Electron's main process and the CLI, but **not** in the desktop application Electron's renderer process.
+- _@mockoon/cloud_: this library contains mostly types and utils to interact with the Mockoon Cloud API.
 
 **Applications**:
 
@@ -62,7 +63,7 @@ Mockoon is using a monorepo setup (with Lerna). We have 4 packages in the `./pac
 Prepare the repository:
 
 1. Clone the repository: `git@github.com:mockoon/mockoon.git`.
-2. Install the dependencies and create internal symlinks: `npm run bootstrap`.
+2. Install the dependencies and create internal symlinks (using NPM workspaces): `npm install`.
 3. Build the 2 libraries: `npm run build:libs`. You can also build them in watch mode with `npm run build:libs:watch`.
 
 For the CLI:
@@ -155,7 +156,7 @@ Open a pull request to be merged in the `main` branch. All branches should start
 
 ## **[Maintainers only]** Build, package and release the applications for production
 
-- Increment the version (which follows [semver](https://semver.org/)) in each package.json file depending on the changes, using `npm run set-versions`. To ignore a package give it the same version. Lerna will take care of increasing the internal dependencies version numbers.
+- Increment all the packages version (which follows [semver](https://semver.org/)) using `npm run set-versions x.x.x`.
 - Push.
 
 > Versions are synchronized between the desktop application, CLI and the libraries. We release all of them at the same time with a **major** version bump when a data migration is included in the release, or when new common features are added (common = feature working in both desktop and CLI). The libraries can be released independently from the desktop application for minor and patch versions when the changes are only affecting the libraries.

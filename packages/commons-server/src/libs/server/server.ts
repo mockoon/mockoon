@@ -45,7 +45,6 @@ import {
   Server as httpsServer
 } from 'https';
 import killable from 'killable';
-import { lookup as mimeTypeLookup } from 'mime-types';
 import { basename, extname, isAbsolute, resolve } from 'path';
 import { match } from 'path-to-regexp';
 import { parse as qsParse } from 'qs';
@@ -70,6 +69,7 @@ import {
   CreateTransaction,
   isBodySupportingMethod,
   isValidStatusCode,
+  mimeTypeLookup,
   preparePath,
   resolvePathFromEnvironment
 } from '../utils';

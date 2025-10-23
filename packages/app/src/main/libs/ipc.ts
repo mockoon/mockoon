@@ -1,4 +1,5 @@
 import { Environment, Environments } from '@mockoon/commons';
+import { mimeTypeLookup } from '@mockoon/commons-server';
 import { createHash } from 'crypto';
 import {
   BrowserWindow,
@@ -11,7 +12,6 @@ import {
 import { getDataPath } from 'electron-json-storage';
 import { promises as fsPromises } from 'fs';
 import { createServer } from 'http';
-import { lookup as mimeTypeLookup } from 'mime-types';
 import {
   format as pathFormat,
   join as pathJoin,
