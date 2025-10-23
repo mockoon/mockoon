@@ -27,6 +27,8 @@ import { xml2js } from 'xml-js';
 import { brotliDecompressSync, inflateSync, unzipSync } from 'zlib';
 import { ServerRequest } from './requests';
 
+export { lookup as mimeTypeLookup } from 'mime-types';
+
 /**
  * Transform http headers objects to Mockoon's Header key value object
  *

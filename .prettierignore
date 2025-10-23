@@ -1,0 +1,5 @@
+.github
+packages/app/packages
+*.md
+site.webmanifest
+**/test/data/** 
