@@ -104,10 +104,7 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
       logTransactions: [SettingsDefault.logTransactions],
       envVarsPrefix: [SettingsDefault.envVarsPrefix],
       enableRandomLatency: [SettingsDefault.enableRandomLatency],
-      displayLogsIsoTimestamp: [SettingsDefault.displayLogsIsoTimestamp],
-      copyCompressedIfAcceptEncoding: [
-        SettingsDefault.copyCompressedIfAcceptEncoding
-      ]
+      displayLogsIsoTimestamp: [SettingsDefault.displayLogsIsoTimestamp]
     });
 
     // send new activeEnvironmentForm values to the store, one by one
@@ -150,9 +147,7 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
               logTransactions: settings.logTransactions,
               envVarsPrefix: settings.envVarsPrefix,
               enableRandomLatency: settings.enableRandomLatency,
-              displayLogsIsoTimestamp: settings.displayLogsIsoTimestamp,
-              copyCompressedIfAcceptEncoding:
-                settings.copyCompressedIfAcceptEncoding
+              displayLogsIsoTimestamp: settings.displayLogsIsoTimestamp
             },
             { emitEvent: false }
           );

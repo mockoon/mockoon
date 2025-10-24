@@ -49,5 +49,4 @@ export type Settings = {
   recentLocalEnvironments: RecentLocalEnvironment[];
   displayLogsIsoTimestamp: boolean;
   deployPreferredRegion: DeployRegions;
-  copyCompressedIfAcceptEncoding: boolean;
 };
