@@ -253,6 +253,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     app.disable('x-powered-by');
     app.disable('etag');
 
+    app.use(this.removeExpectHeader);
+
     // This middleware is required to parse the body for createAdminEndpoint requests
     app.use(this.parseBody);
 
@@ -328,6 +330,34 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   public updateEnvironment(environment: Environment): void {
     this.environment = environment;
   }
+
+  /**
+   * ### Middleware ###
+   * Remove the Expect: 100-continue header.
+   * Express will always respond with 100 Continue if the header is present.
+   *
+   * However, http-proxy-middleware hang (onProxyReq is not triggered) if the header is present.
+   * See https://github.com/http-party/node-http-proxy/issues/1219
+   * A workaround would be to remove it and re-add it in the onProxyReq function,
+   * but it's probably better to just remove it.
+   *
+   * @param request
+   * @param response
+   * @param next
+   */
+  private removeExpectHeader = (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) => {
+    const expectHeader = request.get('expect');
+
+    if (expectHeader?.toLowerCase().includes('100-continue')) {
+      delete request.headers.expect;
+    }
+
+    next();
+  };
 
   /**
    * ### Middleware ###
