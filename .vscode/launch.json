@@ -9,9 +9,9 @@
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceFolder}/packages/app/",
-      "runtimeExecutable": "${workspaceFolder}/packages/app/node_modules/.bin/electron",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
       "windows": {
-        "runtimeExecutable": "${workspaceFolder}/packages/app/node_modules/.bin/electron.cmd"
+        "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
       },
       "args": [".", "--remote-debugging-port=8888"],
       "sourceMaps": true
