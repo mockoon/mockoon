@@ -148,6 +148,12 @@ import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
   providedIn: 'root'
 })
 export class EnvironmentsService {
+  /**
+   * Compression algorithms supported by cURL's --compressed flag
+   */
+  private static readonly COMPRESSION_ALGORITHMS =
+    'gzip|deflate|br|compress|zstd';
+
   private dataService = inject(DataService);
   private eventsService = inject(EventsService);
   private store = inject(Store);
@@ -2532,21 +2538,16 @@ export class EnvironmentsService {
   public copyLogAsCurl(environmentUUID: string, logUUID: string) {
     const environmentsLogs = this.store.get('environmentsLogs');
     const activeEnvironment = this.store.getActiveEnvironment();
-    const settings = this.store.get('settings');
-
     const log = environmentsLogs[environmentUUID].find(
       (environmentLog) => environmentLog.UUID === logUUID
     );
-    const hasAcceptEncoding = log.request.headers.some(
-      (header) => header.key.toLowerCase() === 'accept-encoding'
-    );
-
+    const hasAcceptEncoding = this.hasCompressionEncoding(log.request.headers);
     const hostname = activeEnvironment.hostname || 'localhost';
     const baseUrl = `${hostname}:${activeEnvironment.port}`;
     const queryParams = log.request.query ? `?${log.request.query}` : '';
     const command: string[] = ['curl', '--location'];
 
-    if (settings.copyCompressedIfAcceptEncoding && hasAcceptEncoding) {
+    if (hasAcceptEncoding) {
       command.push('--compressed');
     }
 
@@ -2557,30 +2558,22 @@ export class EnvironmentsService {
     }
 
     const url = `${log.protocol}://${baseUrl}${log.url}${queryParams}`;
-    const escapedUrl = url.replaceAll('"', String.raw`\"`);
+    const escapedUrl = this.escapeForCurl(url);
     command.push(`"${escapedUrl}"`);
 
     for (const header of log.request.headers) {
-      if (
-        this.shouldSkipHeader(
-          header.key,
-          settings.copyCompressedIfAcceptEncoding
-        )
-      ) {
+      if (this.shouldSkipHeader(header.key, hasAcceptEncoding)) {
         continue;
       }
 
-      const escapedHeaderKey = header.key.replaceAll('"', String.raw`\"`);
-      const escapedHeaderValue = header.value.replaceAll('"', String.raw`\"`);
+      const escapedHeaderKey = this.escapeForCurl(header.key);
+      const escapedHeaderValue = this.escapeForCurl(header.value);
       command.push('--header', `"${escapedHeaderKey}: ${escapedHeaderValue}"`);
     }
 
     if (log.request.bodyUnformatted) {
       // Use --data-binary to preserve the exact body bytes
-      const escapedBody = log.request.bodyUnformatted.replaceAll(
-        '"',
-        String.raw`\"`
-      );
+      const escapedBody = this.escapeForCurl(log.request.bodyUnformatted);
       command.push('--data-binary', `"${escapedBody}"`);
     }
 
@@ -2635,6 +2628,35 @@ export class EnvironmentsService {
   }
 
   /**
+   * Escape special characters for use in cURL command
+   *
+   * @param value - The string to escape
+   * @returns The escaped string
+   */
+  private escapeForCurl(value: string): string {
+    return value.replaceAll('"', String.raw`\"`);
+  }
+
+  /**
+   * Check if request headers contain compression encoding
+   *
+   * @param headers - The request headers
+   * @returns true if compression encoding is present
+   */
+  private hasCompressionEncoding(headers: Header[]): boolean {
+    return headers.some((header) => {
+      if (header.key.toLowerCase() !== 'accept-encoding') {
+        return false;
+      }
+      const value = header.value.toLowerCase();
+
+      return new RegExp(
+        `\\b(${EnvironmentsService.COMPRESSION_ALGORITHMS})\\b`
+      ).test(value);
+    });
+  }
+
+  /**
    * Determine if a header should be skipped when generating cURL command
    *
    * @param headerKey - The header key to check
@@ -2652,8 +2674,8 @@ export class EnvironmentsService {
       return true;
     }
 
-    // Skip accept-encoding if we're using --compressed
-    if (useCompression && lowerCaseKey === 'accept-encoding') {
+    // Skip accept-encoding only if we're using --compressed
+    if (lowerCaseKey === 'accept-encoding' && useCompression) {
       return true;
     }
 

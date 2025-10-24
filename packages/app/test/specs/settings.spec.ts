@@ -268,45 +268,4 @@ describe('Settings', () => {
       );
     });
   });
-
-  describe('Copy compressed if accept-encoding', () => {
-    it('should verify default value is true', async () => {
-      await utils.waitForAutosave();
-      await file.verifyObjectPropertyInFile(
-        './tmp/storage/settings.json',
-        'copyCompressedIfAcceptEncoding',
-        true
-      );
-    });
-
-    it('should disable copy compressed setting and verify persistence', async () => {
-      await settings.open();
-      await settings.toggleSetting(
-        'settings-copy-compressed-if-accept-encoding'
-      );
-      await modals.close();
-
-      await utils.waitForAutosave();
-      await file.verifyObjectPropertyInFile(
-        './tmp/storage/settings.json',
-        'copyCompressedIfAcceptEncoding',
-        false
-      );
-    });
-
-    it('should re-enable copy compressed setting and verify persistence', async () => {
-      await settings.open();
-      await settings.toggleSetting(
-        'settings-copy-compressed-if-accept-encoding'
-      );
-      await modals.close();
-
-      await utils.waitForAutosave();
-      await file.verifyObjectPropertyInFile(
-        './tmp/storage/settings.json',
-        'copyCompressedIfAcceptEncoding',
-        true
-      );
-    });
-  });
 });
