@@ -2541,7 +2541,8 @@ export class EnvironmentsService {
     const log = environmentsLogs[environmentUUID].find(
       (environmentLog) => environmentLog.UUID === logUUID
     );
-    const hasAcceptEncoding = this.hasCompressionEncoding(log.request.headers);
+    const headers = log.request.headersRaw || log.request.headers;
+    const hasAcceptEncoding = this.hasCompressionEncoding(headers);
     const hostname = activeEnvironment.hostname || 'localhost';
     const baseUrl = `${hostname}:${activeEnvironment.port}`;
     const queryParams = log.request.query ? `?${log.request.query}` : '';
@@ -2561,7 +2562,7 @@ export class EnvironmentsService {
     const escapedUrl = this.escapeForCurl(url);
     command.push(`"${escapedUrl}"`);
 
-    for (const header of log.request.headers) {
+    for (const header of headers) {
       if (this.shouldSkipHeader(header.key, hasAcceptEncoding)) {
         continue;
       }

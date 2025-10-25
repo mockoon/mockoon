@@ -4,6 +4,7 @@ export type EnvironmentLogs = Record<string, EnvironmentLog[]>;
 
 export type EnvironmentLogRequest = {
   headers: Header[];
+  headersRaw?: Header[];
   params: { name: string; value: string }[];
   query: string;
   queryParams: { name: string; value: string }[];

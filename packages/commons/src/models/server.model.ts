@@ -44,6 +44,7 @@ export type InFlightRequest = {
     queryParams?: any;
     body?: any;
     headers?: Header[];
+    headersRaw?: Header[];
   };
   completed?: boolean;
   status?: {
@@ -69,6 +70,7 @@ export type Transaction = {
     queryParams: any;
     body: any;
     headers: Header[];
+    headersRaw?: Header[];
   };
   response: {
     statusCode: number;
