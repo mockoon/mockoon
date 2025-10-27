@@ -82,7 +82,7 @@ describe('Environment logs', () => {
         );
         await environmentsLogs.assertLogItem('Method:  GET', 'request', 2, 2);
         await environmentsLogs.assertLogItem(
-          'Caught by route: /prefix/endpoint/:param1',
+          'Caught by route: /prefix/endpoint/:param1 - Response 1 (200)  ',
           'request',
           2,
           3

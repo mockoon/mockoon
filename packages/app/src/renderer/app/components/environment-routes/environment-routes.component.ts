@@ -83,7 +83,11 @@ import { InputNumberDirective } from 'src/renderer/app/directives/input-number.d
 import { TourStepDirective } from 'src/renderer/app/directives/tour-step.directive';
 import { ValidPathDirective } from 'src/renderer/app/directives/valid-path.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
-import { buildFullPath, textFilter } from 'src/renderer/app/libs/utils.lib';
+import {
+  buildFullPath,
+  buildResponseLabel,
+  textFilter
+} from 'src/renderer/app/libs/utils.lib';
 import {
   DropdownItems,
   ToggleItems
@@ -159,6 +163,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     mimeType: string;
     supportsTemplating: boolean;
   }>;
+  public buildResponseLabel = buildResponseLabel;
   public effectiveContentType$: Observable<string>;
   public defaultResponseTooltip$: Observable<string>;
   public environmentsStatus$: Observable<EnvironmentsStatuses>;

@@ -274,21 +274,22 @@
                   >
                     <div>
                       <strong>Caught by route:</strong>
-                      {{ selectedLog.route }}
+                      {{ selectedLog.route }} -
+                      <span [innerHTML]="selectedLog.routeResponseLabel"></span>
                     </div>
                     <button
                       type="button"
-                      class="btn btn-link btn-icon py-0"
-                      [ngbTooltip]="'Go to route'"
+                      class="btn btn-link py-0"
+                      [ngbTooltip]="'Go to route response'"
                       [attr.aria-label]="
-                        'Navigate to route ' + selectedLog.route
+                        'Navigate to route response ' + selectedLog.route
                       "
-                      (click)="goToRoute(selectedLog.routeUUID)"
+                      (click)="goToRouteResponse(selectedLog)"
                     >
                       <app-svg
                         icon="goto"
                         size="14"
-                        style="vertical-align: top"
+                        class="align-top"
                       ></app-svg>
                     </button>
                   </div>
