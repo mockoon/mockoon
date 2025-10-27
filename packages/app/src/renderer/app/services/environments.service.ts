@@ -1858,6 +1858,30 @@ export class EnvironmentsService {
   }
 
   /**
+   * Navigates to a route response
+   */
+  public navigateToRouteResponse(routeUuid: string, routeResponseUuid: string) {
+    const route = this.store.getRouteByUUID(routeUuid);
+
+    if (!route) {
+      return;
+    }
+
+    const routeResponse = route.responses.find(
+      (response) => response.uuid === routeResponseUuid
+    );
+
+    if (!routeResponse) {
+      return;
+    }
+
+    this.store.update(setActiveViewAction('ENV_ROUTES'));
+    this.store.update(setActiveRouteAction(routeUuid));
+    this.store.update(setActiveRouteResponseAction(routeResponseUuid));
+    this.store.update(setActiveTabAction('RESPONSE'));
+  }
+
+  /**
    * Update the active databucket
    */
   public updateActiveDatabucket(properties: Partial<DataBucket>) {

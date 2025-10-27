@@ -9,8 +9,8 @@ import {
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
-  inject
+  inject,
+  OnInit
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { GetContentType, isContentTypeApplicationJson } from '@mockoon/commons';
@@ -37,6 +37,7 @@ import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constant
 import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import {
+  buildResponseLabel,
   GetEditorModeFromContentType,
   textFilter
 } from 'src/renderer/app/libs/utils.lib';
@@ -105,7 +106,11 @@ export class EnvironmentLogsComponent implements OnInit {
   >;
   public activeEnvironmentLogsTab$: Observable<EnvironmentLogsTabsNameType>;
   public activeEnvironmentUUID$: Observable<string>;
-  public activeEnvironmentLog$: Observable<EnvironmentLog>;
+  public activeEnvironmentLog$: Observable<
+    EnvironmentLog & {
+      routeResponseLabel?: string;
+    }
+  >;
   public environmentLogsCount$: Observable<number>;
   public settings$: Observable<Settings>;
   public logsOrigin = new FormControl<'all' | EnvironmentLogOrigin>('all');
@@ -215,6 +220,10 @@ export class EnvironmentLogsComponent implements OnInit {
     this.activeEnvironmentLog$ = this.store.selectActiveEnvironmentLog().pipe(
       distinctUntilChanged(),
       map((environmentLog) => {
+        const updatedEnvironmentLog: EnvironmentLog & {
+          routeResponseLabel?: string;
+        } = environmentLog;
+
         if (environmentLog) {
           if (environmentLog.response?.body) {
             const contentEncoding = environmentLog.response.headers.find(
@@ -227,12 +236,25 @@ export class EnvironmentLogsComponent implements OnInit {
               contentEncoding === 'deflate' ||
               contentEncoding === 'zstd'
             ) {
-              environmentLog.response.decompressed = true;
+              updatedEnvironmentLog.response.decompressed = true;
             }
+          }
+
+          const route = this.store.getRouteByUUID(environmentLog.routeUUID);
+          const routeResponseIndex = route?.responses.findIndex(
+            (response) => response.uuid === environmentLog.routeResponseUUID
+          );
+
+          if (routeResponseIndex !== undefined && routeResponseIndex > -1) {
+            updatedEnvironmentLog.routeResponseLabel = buildResponseLabel(
+              route.type,
+              routeResponseIndex,
+              route.responses[routeResponseIndex]
+            );
           }
         }
 
-        return environmentLog;
+        return updatedEnvironmentLog;
       })
     );
 
@@ -341,7 +363,10 @@ export class EnvironmentLogsComponent implements OnInit {
     this.uiService.openModal('settings');
   }
 
-  public goToRoute(routeUUID: string) {
-    this.environmentsService.navigateToRoute(routeUUID);
+  public goToRouteResponse(log: EnvironmentLog) {
+    this.environmentsService.navigateToRouteResponse(
+      log.routeUUID,
+      log.routeResponseUUID
+    );
   }
 }

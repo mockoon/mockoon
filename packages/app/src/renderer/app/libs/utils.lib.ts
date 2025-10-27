@@ -3,6 +3,7 @@ import {
   Environment,
   ParsedJSONBodyMimeTypes,
   Route,
+  RouteResponse,
   RouteType,
   stringIncludesArrayItems
 } from '@mockoon/commons';
@@ -258,4 +259,33 @@ export const triggerBrowserDownload = (filename: string, data: string) => {
   document.body.removeChild(link);
 
   URL.revokeObjectURL(blobUrl);
+};
+
+/**
+ * Build the route response label to be used in templates
+ *
+ * @param routeType
+ * @param routeResponseIndex
+ * @param routeResponse
+ * @returns
+ */
+export const buildResponseLabel = (
+  routeType: RouteType,
+  routeResponseIndex: number,
+  routeResponse: RouteResponse
+) => {
+  let label = `Response ${routeResponseIndex + 1}`;
+
+  if (
+    routeType === RouteType.HTTP ||
+    (routeType === RouteType.CRUD && !routeResponse.default)
+  ) {
+    label += ` (${routeResponse.statusCode})`;
+  } else if (routeType === RouteType.CRUD && routeResponse.default) {
+    label = `CRUD operations`;
+  }
+
+  label += `&nbsp;&nbsp;${routeResponse.label}`;
+
+  return label;
 };
