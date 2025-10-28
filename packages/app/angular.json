@@ -1,5 +1,5 @@
 {
-  "$schema": "node_modules/@angular/cli/lib/config/schema.json",
+  "$schema": "../../node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
@@ -26,7 +26,7 @@
             },
             "index": "src/renderer/index.html",
             "tsConfig": "src/renderer/tsconfig.app.json",
-            "polyfills": ["src/renderer/polyfills.ts"],
+            "polyfills": ["zone.js", "@angular/localize/init"],
             "externalDependencies": ["crypto"],
             "allowedCommonJsDependencies": [
               "joi",
