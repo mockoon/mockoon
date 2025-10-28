@@ -67,7 +67,7 @@
     "socket.io-client": "4.8.1"
   },
   "devDependencies": {
-    "@angular/animations": "20.3.6",
+    "@angular/animations": "20.3.7",
     "@angular/build": "20.3.6",
     "@angular/cli": "20.3.6",
     "@angular/common": "20.3.6",
