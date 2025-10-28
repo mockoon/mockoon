@@ -35,7 +35,7 @@ jobs:
           mkdir -p sbom-files
           cd packages/app && npm sbom --sbom-type application --sbom-format spdx --omit dev > ../../sbom-files/mockoon-app-v${{steps.app-version.outputs.APP_VERSION}}-sbom.spdx.json
       - name: Upload SBOM artifact
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: app-sbom-file-v${{steps.app-version.outputs.APP_VERSION}}
           path: sbom-files/
@@ -78,7 +78,7 @@ jobs:
           shasum -a 256 ./packages/app/packages/mockoon.setup.*.arm64.dmg
           shasum -a 256 ./packages/app/packages/mockoon.setup.*.x64.dmg
       - name: Upload macOS dmg
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: dmg
           path: ./packages/app/packages/mockoon.setup*.dmg
@@ -105,22 +105,22 @@ jobs:
           npm run build:desktop:prod
           npm run package:desktop:linux
       - name: Upload Linux AppImage
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: appimage
           path: ./packages/app/packages/mockoon-*.AppImage
       - name: Upload Linux deb
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: deb
           path: ./packages/app/packages/mockoon-*.deb
       - name: Upload Linux rpm
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: rpm
           path: ./packages/app/packages/mockoon-*.rpm
       - name: Upload Linux snap
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: snap
           path: ./packages/app/packages/mockoon-*.snap
@@ -151,12 +151,12 @@ jobs:
           npm run package:desktop:win
         shell: pwsh
       - name: Upload Windows setup exe
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: exe
           path: ./packages/app/packages/mockoon.setup.*.exe
       - name: Upload Windows portable exe
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: exe-portable
           path: ./packages/app/packages/mockoon.portable.*.exe
@@ -183,7 +183,7 @@ jobs:
           npm run package:desktop:win:appx
         shell: pwsh
       - name: Upload Windows appx
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: appx
           path: ./packages/app/packages/mockoon.*.appx
