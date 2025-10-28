@@ -4,7 +4,8 @@ import {
   FolderChild,
   GetRouteResponseContentType,
   ReorderActionType,
-  Route
+  Route,
+  routesFromFolder
 } from '@mockoon/commons';
 import { helpersAutocompletions } from 'src/renderer/app/constants/autocomplete.constant';
 import {
@@ -13,28 +14,32 @@ import {
   RemoveAtIndex,
   isRouteDuplicates
 } from 'src/renderer/app/libs/utils.lib';
-import {
-  DuplicatedRoutesTypes,
-  StoreType
-} from 'src/renderer/app/models/store.model';
+import { StoreType } from 'src/renderer/app/models/store.model';
 
 /**
  * Return a Set of the duplicated route UUIDs in an environment
  *
  * @param environment
  */
-const listDuplicatedRouteUUIDs = (environment: Environment): Set<string> => {
+export const listDuplicatedRouteUuids = (
+  environment: Environment
+): Set<string> => {
   const duplicates = new Set<string>();
+  const orderedRoutes = routesFromFolder(
+    environment.rootChildren,
+    environment.folders,
+    environment.routes
+  );
 
-  environment.routes.forEach((route: Route, routeIndex: number) => {
-    environment.routes.forEach((otherRoute: Route, otherRouteIndex: number) => {
-      if (
-        otherRouteIndex > routeIndex &&
-        isRouteDuplicates(route, otherRoute)
-      ) {
-        duplicates.add(otherRoute.uuid);
-      }
-    });
+  orderedRoutes.forEach((routeA: Route, routeAIndex: number) => {
+    const duplicateRoute = orderedRoutes.find(
+      (routeB: Route, routeBIndex: number) =>
+        routeBIndex > routeAIndex && isRouteDuplicates(routeA, routeB)
+    );
+
+    if (duplicateRoute) {
+      duplicates.add(duplicateRoute.uuid);
+    }
   });
 
   return duplicates;
@@ -98,23 +103,6 @@ export const getBodyEditorMode = (state: StoreType) => {
   );
 
   return GetEditorModeFromContentType(routeResponseContentType);
-};
-
-/**
- * List duplicated routes per environment (sharing same endpoint and method)
- *
- * @param state
- */
-export const updateDuplicatedRoutes = (
-  state: StoreType
-): DuplicatedRoutesTypes => {
-  const duplicatedRoutes: DuplicatedRoutesTypes = {};
-
-  state.environments.forEach((environment) => {
-    duplicatedRoutes[environment.uuid] = listDuplicatedRouteUUIDs(environment);
-  });
-
-  return duplicatedRoutes;
 };
 
 /**

@@ -264,9 +264,9 @@ export const getLatency = (
  *
  * If filterByType is provided, it will only return routes of the specified type.
  *
- * @param folderChildren
- * @param allFolders
- * @param allRoutes
+ * @param folderChildren - rootChildren object, or folder children array
+ * @param allFolders - environment folders array
+ * @param allRoutes - environment routes array
  * @param excludeList
  * @param filterByType
  * @returns

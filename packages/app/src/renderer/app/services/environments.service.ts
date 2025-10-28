@@ -2061,7 +2061,8 @@ export class EnvironmentsService {
         environmentHasRoute(targetEnvironment, {
           endpoint,
           method: log.method,
-          type: routeType
+          type: routeType,
+          responseMode: null
         })
       ) {
         return;
