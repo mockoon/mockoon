@@ -59,9 +59,9 @@
   },
   "devDependencies": {
     "@types/busboy": "1.5.4",
-    "@types/cookie-parser": "1.4.9",
-    "@types/express": "5.0.3",
-    "@types/mime-types": "2.1.4",
+    "@types/cookie-parser": "1.4.10",
+    "@types/express": "5.0.5",
+    "@types/mime-types": "3.0.1",
     "@types/object-path": "0.11.4",
     "@types/qs": "6.14.0",
     "@types/semver": "7.7.1",
