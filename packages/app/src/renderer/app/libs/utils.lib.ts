@@ -1,7 +1,9 @@
 import { DeployInstance } from '@mockoon/cloud';
 import {
   Environment,
+  Methods,
   ParsedJSONBodyMimeTypes,
+  ResponseMode,
   Route,
   RouteResponse,
   RouteType,
@@ -184,23 +186,43 @@ export const buildFullPath = (
 /**
  * Check if two routes are duplicates, if:
  * - CRUD + same endpoint
- * - HTTP + same endpoint + same method
+ * - HTTP + same endpoint + same method, or first route is 'ALL' method
+ *
+ * If routeA is a fallback it's not a duplicate as it "conflicts" on purpose
+ *
+ * We don't consider this as a conflict:
+ * - HTTP+ CRUD with same endpoint, as it allows some CRUD endpoints override
  *
  * @param routeA
  * @param routeB
  * @returns
  */
 export const isRouteDuplicates = (
-  routeA: Route | Pick<Route, 'type' | 'endpoint' | 'method'>,
-  routeB: Route | Pick<Route, 'type' | 'endpoint' | 'method'>
-): boolean =>
-  (routeB.type === RouteType.CRUD &&
+  routeA: Route | Pick<Route, 'type' | 'endpoint' | 'method' | 'responseMode'>,
+  routeB: Route | Pick<Route, 'type' | 'endpoint' | 'method' | 'responseMode'>
+): boolean => {
+  // exact same WS
+  const isSameWs =
+    routeB.type === RouteType.WS &&
+    routeA.type === RouteType.WS &&
+    routeB.endpoint === routeA.endpoint;
+  // exact same CRUD
+  const isSameCrud =
+    routeB.type === RouteType.CRUD &&
     routeA.type === RouteType.CRUD &&
-    routeB.endpoint === routeA.endpoint) ||
-  (routeB.type === RouteType.HTTP &&
+    routeB.endpoint === routeA.endpoint;
+  // exact same HTTP or method overlap with 'ALL'
+  const isSameHttp =
+    routeB.type === RouteType.HTTP &&
     routeA.type === RouteType.HTTP &&
     routeB.endpoint === routeA.endpoint &&
-    routeB.method === routeA.method);
+    (routeB.method === routeA.method || routeA.method === Methods.all);
+
+  return (
+    (isSameWs || isSameCrud || isSameHttp) &&
+    routeA.responseMode !== ResponseMode.FALLBACK
+  );
+};
 
 /**
  * Check if an environment has a route that is a duplicate of the provided route
@@ -212,7 +234,7 @@ export const isRouteDuplicates = (
  */
 export const environmentHasRoute = (
   environment: Environment,
-  route: Route | Pick<Route, 'type' | 'endpoint' | 'method'>
+  route: Route | Pick<Route, 'type' | 'endpoint' | 'method' | 'responseMode'>
 ): boolean =>
   environment.routes.some((envRoute) => isRouteDuplicates(envRoute, route));
 

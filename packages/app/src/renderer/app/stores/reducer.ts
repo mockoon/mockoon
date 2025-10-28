@@ -37,9 +37,9 @@ import {
   findRouteFolderHierarchy,
   getBodyEditorMode,
   getFirstRouteAndResponseUUIDs,
+  listDuplicatedRouteUuids,
   markEnvStatusRestart,
   responseTabForcedNavigation,
-  updateDuplicatedRoutes,
   updateEditorAutocomplete
 } from 'src/renderer/app/stores/reducer-utils';
 import { Config } from 'src/renderer/config';
@@ -357,9 +357,16 @@ export const environmentReducer = (
     }
 
     case ActionTypes.REORDER_ROUTES: {
+      let newEnvironment: Environment;
+
       const newEnvironments = state.environments.map((environment) => {
         if (environment.uuid === action.environmentUuid) {
-          return reorderRoutesMutator(environment, action.reorderAction);
+          newEnvironment = reorderRoutesMutator(
+            environment,
+            action.reorderAction
+          );
+
+          return newEnvironment;
         }
 
         return environment;
@@ -368,7 +375,11 @@ export const environmentReducer = (
       newState = {
         ...state,
         environments: newEnvironments,
-        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid)
+        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid),
+        duplicatedRoutes: {
+          ...state.duplicatedRoutes,
+          [action.environmentUuid]: listDuplicatedRouteUuids(newEnvironment)
+        }
       };
       break;
     }
@@ -632,6 +643,10 @@ export const environmentReducer = (
           logs: '',
           routeResponses: ''
         },
+        duplicatedRoutes: {
+          ...state.duplicatedRoutes,
+          [newEnvironment.uuid]: listDuplicatedRouteUuids(newEnvironment)
+        },
         settings: newSettings
       };
       break;
@@ -856,8 +871,13 @@ export const environmentReducer = (
         needRestart: false
       };
 
-      // reset the duplicated routes, as they will be refreshed and recreated
-      duplicatedRoutes = { ...duplicatedRoutes };
+      // reset the duplicated routes and recreate them on the new uuid
+      duplicatedRoutes = {
+        ...duplicatedRoutes,
+        [action.newEnvironment.uuid]: listDuplicatedRouteUuids(
+          action.newEnvironment
+        )
+      };
       delete duplicatedRoutes[action.previousUUID];
 
       newState = {
@@ -946,7 +966,11 @@ export const environmentReducer = (
         environments: newEnvironments,
         activeRouteUUID: newActiveRouteUUID,
         activeRouteResponseUUID: newActiveRouteResponseUUID,
-        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid)
+        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid),
+        duplicatedRoutes: {
+          ...state.duplicatedRoutes,
+          [action.environmentUuid]: listDuplicatedRouteUuids(newEnvironment)
+        }
       };
 
       break;
@@ -1071,17 +1095,31 @@ export const environmentReducer = (
         };
       }
 
+      let newEnvironment: Environment;
+
+      const newEnvironments = state.environments.map((environment) => {
+        if (environment.uuid === action.environmentUuid) {
+          newEnvironment = addRouteMutator(
+            environment,
+            newRoute,
+            action.parentId
+          );
+
+          return newEnvironment;
+        }
+
+        return environment;
+      });
+
       newState = {
         ...state,
         ...uiUpdate,
-        environments: state.environments.map((environment) => {
-          if (environment.uuid === action.environmentUuid) {
-            return addRouteMutator(environment, newRoute, action.parentId);
-          }
-
-          return environment;
-        }),
-        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid)
+        environments: newEnvironments,
+        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid),
+        duplicatedRoutes: {
+          ...state.duplicatedRoutes,
+          [action.environmentUuid]: listDuplicatedRouteUuids(newEnvironment)
+        }
       };
       break;
     }
@@ -1094,24 +1132,41 @@ export const environmentReducer = (
         'streamingInterval'
       ];
 
+      let newEnvironment: Environment;
+
+      const newEnvironments = state.environments.map((environment) => {
+        if (environment.uuid === action.environmentUuid) {
+          newEnvironment = updateRouteMutator(
+            environment,
+            action.routeUuid,
+            action.properties
+          );
+
+          return newEnvironment;
+        }
+
+        return environment;
+      });
+
       newState = {
         ...state,
-        environments: state.environments.map((environment) => {
-          if (environment.uuid === action.environmentUuid) {
-            return updateRouteMutator(
-              environment,
-              action.routeUuid,
-              action.properties
-            );
-          }
-
-          return environment;
-        }),
+        environments: newEnvironments,
         environmentsStatus: markEnvStatusRestart(
           state,
           action.environmentUuid,
           ArrayContainsObjectKey(action.properties, propertiesNeedingRestart)
-        )
+        ),
+        duplicatedRoutes:
+          action.properties &&
+          (action.properties.endpoint ||
+            action.properties.method ||
+            'responseMode' in action.properties)
+            ? {
+                ...state.duplicatedRoutes,
+                [action.environmentUuid]:
+                  listDuplicatedRouteUuids(newEnvironment)
+              }
+            : state.duplicatedRoutes
       };
       break;
     }
@@ -1489,6 +1544,8 @@ export const environmentReducer = (
     }
 
     case ActionTypes.DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT: {
+      let newEnvironment: Environment;
+
       const newEnvironments = state.environments.map((environment) => {
         if (environment.uuid === action.targetEnvironmentUUID) {
           const rootChildren: FolderChild[] = [
@@ -1496,11 +1553,13 @@ export const environmentReducer = (
             { type: 'route', uuid: action.route.uuid }
           ];
 
-          return {
+          newEnvironment = {
             ...environment,
             routes: [...environment.routes, action.route],
             rootChildren
           };
+
+          return newEnvironment;
         }
 
         return environment;
@@ -1521,6 +1580,11 @@ export const environmentReducer = (
           state,
           action.targetEnvironmentUUID
         ),
+        duplicatedRoutes: {
+          ...state.duplicatedRoutes,
+          [action.targetEnvironmentUUID]:
+            listDuplicatedRouteUuids(newEnvironment)
+        },
         filters: {
           ...state.filters,
           routes: '',
@@ -1674,19 +1738,7 @@ export const environmentReducer = (
             ? updateEditorAutocomplete(newState)
             : newState.bodyEditorConfig.options.enableBasicAutocompletion
       }
-    },
-    duplicatedRoutes:
-      action.type === ActionTypes.ADD_ENVIRONMENT ||
-      action.type === ActionTypes.RELOAD_ENVIRONMENT ||
-      action.type === ActionTypes.ADD_ROUTE ||
-      action.type === ActionTypes.REMOVE_ROUTE ||
-      action.type === ActionTypes.REORDER_ROUTES ||
-      action.type === ActionTypes.DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT ||
-      (action.type === ActionTypes.UPDATE_ROUTE &&
-        action.properties &&
-        (action.properties.endpoint || action.properties.method))
-        ? updateDuplicatedRoutes(newState)
-        : newState.duplicatedRoutes
+    }
   };
 
   return newState;
