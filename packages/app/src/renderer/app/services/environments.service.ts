@@ -2053,7 +2053,10 @@ export class EnvironmentsService {
 
       // escape parenthesis with backslashes because they are
       // otherwise interpreted as regex groups by path-to-regexp
-      endpoint = endpoint.replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
+      endpoint = endpoint
+        .replace(/\\/g, '\\\\')
+        .replace(/\(/g, '\\(')
+        .replace(/\)/g, '\\)');
 
       // check if route already exists
       if (
