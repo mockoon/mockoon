@@ -287,6 +287,7 @@ export class CommandPaletteService {
     const hasAtLeastOneEnvironment = this.store.get('environments').length > 0;
     const hasMoreThanOneEnvironment = this.store.get('environments').length > 1;
     const hasActiveEnvironment = !!this.store.getActiveEnvironment();
+    const activeEnvironmentIsLocal = this.store.getIsActiveEnvLocal();
     const hasActiveRoute = !!this.store.getActiveRoute();
     const activeEnvironment = this.store.getActiveEnvironment();
     const activeEnvironmentUuid = activeEnvironment?.uuid;
@@ -744,9 +745,10 @@ export class CommandPaletteService {
       }
     ];
 
+    // desktop only commands (zoom, local env management, etc.)
     if (!Config.isWeb) {
       commonCommands.push(
-        // zoom cannot be controled in the browser
+        // zoom cannot be controlled in the browser
         {
           id: 'VIEW_ZOOM_IN',
           label: 'Zoom in',
@@ -757,7 +759,7 @@ export class CommandPaletteService {
           score: 1,
           enabled: true
         },
-        // zoom cannot be controled in the browser
+        // zoom cannot be controlled in the browser
         {
           id: 'VIEW_ZOOM_OUT',
           label: 'Zoom out',
@@ -768,7 +770,7 @@ export class CommandPaletteService {
           score: 1,
           enabled: true
         },
-        // zoom cannot be controled in the browser
+        // zoom cannot be controlled in the browser
         {
           id: 'VIEW_ZOOM_RESET',
           label: 'Reset zoom',
@@ -906,6 +908,17 @@ export class CommandPaletteService {
           },
           score: 1,
           enabled: true
+        },
+        {
+          id: 'CONVERT_ENVIRONMENT_TO_CLOUD',
+          label: 'Convert Current Local Environment to Cloud',
+          action: () => {
+            this.environmentsService
+              .convertCurrentEnvironmentToCloud()
+              .subscribe();
+          },
+          score: 1,
+          enabled: hasActiveEnvironment && activeEnvironmentIsLocal
         }
       );
     } else {

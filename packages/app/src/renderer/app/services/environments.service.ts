@@ -1980,6 +1980,29 @@ export class EnvironmentsService {
   }
 
   /**
+   * Convert the current active local environment to a cloud environment
+   * In reality, closes the current environment and re-adds it as a cloud environment with the same data and uuid
+   *
+   * This is useful when the user wants to convert a local environment to cloud and keep
+   * the link between the local environment and the deployed instance (same uuid).
+   * This will be mostly used during the migration after 9.4.0 prohibits deployment of
+   * local environments to the cloud.
+   *
+   * @returns
+   */
+  public convertCurrentEnvironmentToCloud() {
+    const activeEnvironment = this.store.getActiveEnvironment();
+
+    if (this.store.getIsEnvCloud(activeEnvironment.uuid)) {
+      return EMPTY;
+    }
+
+    return this.closeEnvironment(activeEnvironment.uuid, true).pipe(
+      switchMap(() => this.addCloudEnvironment(activeEnvironment, true))
+    );
+  }
+
+  /**
    * Reorder an items list
    */
   public reorderItems(
