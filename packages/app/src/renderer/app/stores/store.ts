@@ -575,6 +575,15 @@ export class Store {
   }
 
   /**
+   * Check if the active environment is a local environment
+   *
+   * @returns
+   */
+  public getIsActiveEnvLocal(): boolean {
+    return !this.getIsActiveEnvCloud();
+  }
+
+  /**
    * Check if the active environment is a cloud environment
    *
    * @returns
