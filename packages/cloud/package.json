@@ -28,7 +28,7 @@
   },
   "funding": "https://mockoon.com/sponsor-us/",
   "dependencies": {
-    "@mockoon/commons": "9.3.0",
+    "@mockoon/commons": "9.4.0",
     "tslib": "2.8.1"
   }
 }
