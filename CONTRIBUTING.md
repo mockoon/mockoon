@@ -156,7 +156,7 @@ Open a pull request to be merged in the `main` branch. All branches should start
 
 ## **[Maintainers only]** Build, package and release the applications for production
 
-- Increment all the packages version (which follows [semver](https://semver.org/)) using `npm run set-versions x.x.x`.
+- Increment all the packages version (which follows [semver](https://semver.org/)) using `npm run set-versions`.
 - Push.
 
 > Versions are synchronized between the desktop application, CLI and the libraries. We release all of them at the same time with a **major** version bump when a data migration is included in the release, or when new common features are added (common = feature working in both desktop and CLI). The libraries can be released independently from the desktop application for minor and patch versions when the changes are only affecting the libraries.
