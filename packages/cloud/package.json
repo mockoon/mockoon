@@ -1,7 +1,7 @@
 {
   "name": "@mockoon/cloud",
   "description": "Mockoon's cloud sync library. Used in Mockoon desktop application and backend.",
-  "version": "9.3.2",
+  "version": "9.4.0",
   "author": {
     "name": "Mockoon (1kB SARL-S)",
     "email": "team@mockoon.com",

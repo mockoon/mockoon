@@ -1,7 +1,7 @@
 {
   "name": "@mockoon/app",
   "description": "Mockoon is the easiest and quickest way to run mock APIs locally. No remote deployment, no account required, open source.",
-  "version": "9.3.0",
+  "version": "9.4.0",
   "author": {
     "name": "Mockoon (1kB SARL-S)",
     "email": "team@mockoon.com",
