@@ -64,6 +64,7 @@ import {
   withLatestFrom
 } from 'rxjs/operators';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
+import { CurlCommandBuilder } from 'src/renderer/app/libs/curl-command-builder.lib';
 import {
   HumanizeText,
   environmentHasRoute,
@@ -2521,6 +2522,36 @@ export class EnvironmentsService {
         })
       )
     );
+  }
+
+  /**
+   * Copy a log as cURL command to the clipboard
+   *
+   * @param environmentUUID - UUID of the environment
+   * @param logUUID - UUID of the log entry
+   */
+  public copyLogAsCurl(environmentUUID: string, logUUID: string) {
+    const environmentsLogs = this.store.get('environmentsLogs');
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const log = environmentsLogs[environmentUUID].find(
+      (environmentLog) => environmentLog.UUID === logUUID
+    );
+    const hostname = activeEnvironment.hostname || 'localhost';
+    const baseUrl = `${hostname}:${activeEnvironment.port}`;
+    const queryParams = log.request.query ? `?${log.request.query}` : '';
+    const url = `${log.protocol}://${baseUrl}${log.url}${queryParams}`;
+    const headers = log.request.headers;
+
+    const command = new CurlCommandBuilder()
+      .withLocation()
+      .withCompressionIfPresent(headers)
+      .withMethod(log.method)
+      .withUrl(url)
+      .withHeaders(headers)
+      .withBody(log.request.bodyUnformatted)
+      .build();
+
+    this.mainApiService.send('APP_WRITE_CLIPBOARD', command);
   }
 
   /**

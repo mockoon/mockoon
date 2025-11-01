@@ -8,6 +8,7 @@ export type EnvironmentLogRequest = {
   query: string;
   queryParams: { name: string; value: string }[];
   body: string;
+  bodyUnformatted: string;
   isInvalidJson: boolean;
 };
 
