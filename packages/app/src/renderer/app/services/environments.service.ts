@@ -2542,8 +2542,7 @@ export class EnvironmentsService {
     const url = `${log.protocol}://${baseUrl}${log.url}${queryParams}`;
     const headers = log.request.headers;
 
-    const builder = new CurlCommandBuilder();
-    const command = builder
+    const command = new CurlCommandBuilder()
       .withLocation()
       .withCompressionIfPresent(headers)
       .withMethod(log.method)

@@ -9,7 +9,6 @@ export class CurlCommandBuilder {
    */
   private static readonly COMPRESSION_ALGORITHMS =
     'gzip|deflate|br|compress|zstd';
-
   private readonly commandParts: string[] = ['curl'];
   private hasCompression = false;
 
@@ -41,9 +40,9 @@ export class CurlCommandBuilder {
     const normalizedMethod = method.toLowerCase();
     if (normalizedMethod === 'head') {
       this.commandParts.push('--head');
-    } else if (normalizedMethod !== 'get') {
-      this.commandParts.push('--request', method.toUpperCase());
     }
+
+    this.commandParts.push('--request', method.toUpperCase());
 
     return this;
   }
