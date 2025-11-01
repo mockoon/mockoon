@@ -90,7 +90,6 @@ export class DataService {
         body: request.request.body,
         bodyUnformatted: request.request.body,
         headers: request.request.headers,
-        headersRaw: request.request.headersRaw,
         params: request.request.params || [],
         queryParams: request.request.queryParams || []
       },
@@ -162,7 +161,6 @@ export class DataService {
         body: requestBody,
         bodyUnformatted: transaction.request.body,
         headers: transaction.request.headers,
-        headersRaw: transaction.request.headersRaw,
         isInvalidJson: isReqJsonInvalid
       },
       proxied: transaction.proxied,
