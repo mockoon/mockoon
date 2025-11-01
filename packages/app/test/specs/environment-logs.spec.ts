@@ -148,7 +148,7 @@ describe('Environment logs', () => {
         await utils.closeTooltip();
         const clipboardContent = await clipboard.read();
         expect(clipboardContent).toEqual(
-          'curl --location "http://localhost:3000/prefix/endpoint/1?param1=value&param2[]=value1&param2[]=value2&param3[prop1]=value1&param3[prop2]=value2" --header "Connection: keep-alive" --header "Host: localhost:3000" --data-binary "requestbody"'
+          'curl --location "http://localhost:3000/prefix/endpoint/1?param1=value&param2[]=value1&param2[]=value2&param3[prop1]=value1&param3[prop2]=value2" --header "connection: keep-alive" --header "host: localhost:3000" --data-binary "requestbody"'
         );
       });
 
@@ -263,7 +263,7 @@ describe('Environment logs', () => {
         await utils.closeTooltip();
         const clipboardContent = await clipboard.read();
         expect(clipboardContent).toEqual(
-          'curl --location "http://localhost:3000/prefix/test" --header "Connection: keep-alive" --header "Host: localhost:3000"'
+          'curl --location "http://localhost:3000/prefix/test" --header "connection: keep-alive" --header "host: localhost:3000"'
         );
       });
     });
@@ -318,7 +318,7 @@ describe('Environment logs', () => {
         await utils.closeTooltip();
         const clipboardContent = await clipboard.read();
         expect(clipboardContent).toEqual(
-          'curl --location "http://localhost:3000/prefix/file" --header "Connection: keep-alive" --header "Host: localhost:3000"'
+          'curl --location "http://localhost:3000/prefix/file" --header "connection: keep-alive" --header "host: localhost:3000"'
         );
       });
     });
@@ -487,7 +487,7 @@ describe('Environment logs', () => {
       description: 'Call GET /prefix/endpoint/1 with accept-encoding header',
       path: '/prefix/endpoint/1',
       method: 'GET',
-      headers: { 'Accept-Encoding': 'gzip, deflate, br' },
+      headers: { 'accept-encoding': 'gzip, deflate, br' },
       body: 'requestbody',
       testedResponse: {
         body: 'responsebody',
@@ -521,7 +521,7 @@ describe('Environment logs', () => {
       await utils.closeTooltip();
       const clipboardContent = await clipboard.read();
       expect(clipboardContent).toEqual(
-        'curl --location --compressed "http://localhost:3000/prefix/endpoint/1" --header "Connection: keep-alive" --header "Host: localhost:3000" --data-binary "requestbody"'
+        'curl --location --compressed "http://localhost:3000/prefix/endpoint/1" --header "connection: keep-alive" --header "host: localhost:3000" --data-binary "requestbody"'
       );
     });
 
@@ -532,7 +532,7 @@ describe('Environment logs', () => {
       await utils.closeTooltip();
       const clipboardContent = await clipboard.read();
       expect(clipboardContent).toEqual(
-        'curl --location "http://localhost:3000/prefix/endpoint/2" --header "Connection: keep-alive" --header "Host: localhost:3000" --data-binary "requestbody"'
+        'curl --location "http://localhost:3000/prefix/endpoint/2" --header "connection: keep-alive" --header "host: localhost:3000" --data-binary "requestbody"'
       );
     });
 
@@ -541,7 +541,7 @@ describe('Environment logs', () => {
         description: 'Call GET /prefix/endpoint/3 with identity encoding',
         path: '/prefix/endpoint/3',
         method: 'GET',
-        headers: { 'Accept-Encoding': 'identity' },
+        headers: { 'accept-encoding': 'identity' },
         body: 'requestbody',
         testedResponse: {
           body: 'responsebody',
@@ -555,7 +555,7 @@ describe('Environment logs', () => {
       await utils.closeTooltip();
       const clipboardContent = await clipboard.read();
       expect(clipboardContent).toEqual(
-        'curl --location "http://localhost:3000/prefix/endpoint/3" --header "Accept-Encoding: identity" --header "Connection: keep-alive" --header "Host: localhost:3000" --data-binary "requestbody"'
+        'curl --location "http://localhost:3000/prefix/endpoint/3" --header "connection: keep-alive" --header "accept-encoding: identity" --header "host: localhost:3000" --data-binary "requestbody"'
       );
     });
 
@@ -564,7 +564,7 @@ describe('Environment logs', () => {
         description: 'Call GET /prefix/endpoint/4 with empty encoding',
         path: '/prefix/endpoint/4',
         method: 'GET',
-        headers: { 'Accept-Encoding': '' },
+        headers: { 'accept-encoding': '' },
         body: 'requestbody',
         testedResponse: {
           body: 'responsebody',
@@ -578,7 +578,7 @@ describe('Environment logs', () => {
       await utils.closeTooltip();
       const clipboardContent = await clipboard.read();
       expect(clipboardContent).toEqual(
-        'curl --location "http://localhost:3000/prefix/endpoint/4" --header "Accept-Encoding: " --header "Connection: keep-alive" --header "Host: localhost:3000" --data-binary "requestbody"'
+        'curl --location "http://localhost:3000/prefix/endpoint/4" --header "connection: keep-alive" --header "accept-encoding: " --header "host: localhost:3000" --data-binary "requestbody"'
       );
     });
   });

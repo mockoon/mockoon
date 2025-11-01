@@ -2536,12 +2536,11 @@ export class EnvironmentsService {
     const log = environmentsLogs[environmentUUID].find(
       (environmentLog) => environmentLog.UUID === logUUID
     );
-
     const hostname = activeEnvironment.hostname || 'localhost';
     const baseUrl = `${hostname}:${activeEnvironment.port}`;
     const queryParams = log.request.query ? `?${log.request.query}` : '';
     const url = `${log.protocol}://${baseUrl}${log.url}${queryParams}`;
-    const headers = log.request.headersRaw || log.request.headers;
+    const headers = log.request.headers;
 
     const builder = new CurlCommandBuilder();
     const command = builder

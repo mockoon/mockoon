@@ -56,24 +56,6 @@ const TransformHeaders = (
   }, []);
 
 /**
- * Transform raw headers array to Mockoon's Header key value object
- * Preserves original header name casing from rawHeaders
- *
- * @param rawHeaders - Raw headers array from IncomingMessage
- */
-const TransformRawHeaders = (rawHeaders: string[]): Header[] => {
-  const headers: Header[] = [];
-
-  for (let i = 0; i < rawHeaders.length; i += 2) {
-    const key = rawHeaders[i];
-    const value = rawHeaders[i + 1] || '';
-    headers.push({ key, value });
-  }
-
-  return headers;
-};
-
-/**
  * Sort by ascending order
  *
  * @param a
@@ -202,9 +184,6 @@ export function CreateInFlightRequest(
       urlPath: parsedUrl.pathname,
       route: route.endpoint,
       headers: TransformHeaders(request.headers).sort(AscSort),
-      headersRaw: request.rawHeaders
-        ? TransformRawHeaders(request.rawHeaders).sort(AscSort)
-        : undefined,
       body: request.body,
       query: parsedUrl.search,
       params: [], // we don't support params yet
@@ -250,10 +229,7 @@ export function CreateTransaction(
       query: requestUrl ? queryString : null,
       queryParams: request.query,
       body: request.stringBody,
-      headers: TransformHeaders(request.headers).sort(AscSort),
-      headersRaw: request.rawHeaders
-        ? TransformRawHeaders(request.rawHeaders).sort(AscSort)
-        : undefined
+      headers: TransformHeaders(request.headers).sort(AscSort)
     },
     response: {
       statusCode: response.statusCode,
