@@ -72,7 +72,7 @@
     "@angular/cli": "20.3.7",
     "@angular/common": "20.3.7",
     "@angular/compiler": "20.3.7",
-    "@angular/compiler-cli": "20.3.7",
+    "@angular/compiler-cli": "20.3.10",
     "@angular/core": "20.3.7",
     "@angular/fire": "20.0.1",
     "@angular/forms": "20.3.7",
