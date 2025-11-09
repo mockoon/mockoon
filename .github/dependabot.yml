@@ -2,6 +2,8 @@ version: 2
 
 updates:
   - package-ecosystem: "npm"
+    cooldown:
+      default-days: 7
     directories:
       - "/"
       - "/packages/app"
