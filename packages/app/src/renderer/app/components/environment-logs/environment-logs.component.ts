@@ -16,7 +16,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { GetContentType, isContentTypeApplicationJson } from '@mockoon/commons';
 import { NgbCollapse, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { formatDistanceToNow } from 'date-fns';
-import { Observable, timer } from 'rxjs';
+import { Observable, of, timer } from 'rxjs';
 import {
   combineLatestWith,
   distinctUntilChanged,
@@ -131,9 +131,11 @@ export class EnvironmentLogsComponent implements OnInit {
     request: typeof defaultEditorOptions;
     response: typeof defaultEditorOptions;
   }>;
+  public isWeb = Config.isWeb;
   public logsFilter$: Observable<string>;
   public dateFormat = 'yyyy-MM-dd HH:mm:ss:SSS';
   public focusableInputs = FocusableInputs;
+  public isEnvCloud$ = this.store.selectIsActiveEnvCloud();
   public dropdownMenuItems: DropdownMenuItem[] = [
     {
       label: 'Create mock endpoint',
@@ -148,18 +150,37 @@ export class EnvironmentLogsComponent implements OnInit {
       }
     },
     {
-      label: 'Copy as cURL',
+      label: () =>
+        this.isEnvCloud$.pipe(
+          map((isCloud) =>
+            isCloud ? 'Copy as cURL (localhost)' : 'Copy as cURL'
+          )
+        ),
       icon: 'content_copy',
       twoSteps: false,
       action: ({ logUuid }: logsDropdownMenuPayload) => {
         this.environmentsService.copyLogAsCurl(
           this.store.get('activeEnvironmentUUID'),
-          logUuid
+          logUuid,
+          false
         );
-      }
+      },
+      hidden$: () => of(this.isWeb)
+    },
+    {
+      label: `Copy as cURL${this.isWeb ? '' : ' (cloud)'}`,
+      icon: 'content_copy',
+      twoSteps: false,
+      action: ({ logUuid }: logsDropdownMenuPayload) => {
+        this.environmentsService.copyLogAsCurl(
+          this.store.get('activeEnvironmentUUID'),
+          logUuid,
+          true
+        );
+      },
+      hidden$: () => this.isEnvCloud$.pipe(map((isCloud) => !isCloud))
     }
   ];
-  public isWeb = Config.isWeb;
   public logOrigins: ToggleItems = [
     {
       value: 'all',
@@ -178,7 +199,6 @@ export class EnvironmentLogsComponent implements OnInit {
       iconSize: 14
     }
   ];
-  public isEnvCloud$ = this.store.selectIsActiveEnvCloud();
 
   ngOnInit() {
     this.logsFilter$ = this.store.selectFilter('logs');

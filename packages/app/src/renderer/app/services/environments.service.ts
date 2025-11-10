@@ -2527,20 +2527,35 @@ export class EnvironmentsService {
   /**
    * Copy a log as cURL command to the clipboard
    *
-   * @param environmentUUID - UUID of the environment
-   * @param logUUID - UUID of the log entry
+   * @param environmentUuid - UUID of the environment
+   * @param logUuid - UUID of the log entry
+   * @param isCloud - whether we copy the cloud URL or local URL
    */
-  public copyLogAsCurl(environmentUUID: string, logUUID: string) {
+  public copyLogAsCurl(
+    environmentUuid: string,
+    logUuid: string,
+    isCloud = false
+  ) {
+    const instances = this.store.get('deployInstances');
+
     const environmentsLogs = this.store.get('environmentsLogs');
     const activeEnvironment = this.store.getActiveEnvironment();
-    const log = environmentsLogs[environmentUUID].find(
-      (environmentLog) => environmentLog.UUID === logUUID
+    const log = environmentsLogs[environmentUuid].find(
+      (environmentLog) => environmentLog.UUID === logUuid
     );
     const hostname = activeEnvironment.hostname || 'localhost';
-    const baseUrl = `${hostname}:${activeEnvironment.port}`;
-    const queryParams = log.request.query ? `?${log.request.query}` : '';
-    const url = `${log.protocol}://${baseUrl}${log.url}${queryParams}`;
     const headers = log.request.headers;
+    const queryParams = log.request.query ? `?${log.request.query}` : '';
+    let baseUrl = `${log.protocol}://${hostname}:${activeEnvironment.port}`;
+
+    if (this.isWeb || isCloud) {
+      baseUrl =
+        instances.find(
+          (instance) => instance.environmentUuid === environmentUuid
+        )?.url ?? baseUrl;
+    }
+
+    const url = `${baseUrl}${log.url}${queryParams}`;
 
     const command = new CurlCommandBuilder()
       .withLocation()

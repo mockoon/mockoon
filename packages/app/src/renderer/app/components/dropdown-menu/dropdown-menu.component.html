@@ -42,40 +42,47 @@
         @if (isSeparator(item)) {
           <hr class="dropdown-divider" />
         } @else if (isItem(item)) {
+          @let itemLabel =
+            typeof item.label === 'function'
+              ? (item.label() | async)
+              : item.label;
           @let disabled = item.disabled$ && item.disabled$(payload()) | async;
+          @let hidden = item.hidden$ && item.hidden$(payload()) | async;
           @let disabledLabel =
             item.disabledLabel$ && item.disabledLabel$(payload()) | async;
           @let needConfirm = item.twoSteps && confirmRequested.enabled;
 
-          <button
-            class="btn dropdown-item d-flex"
-            [ngClass]="{
-              'text-danger': needConfirm
-            }"
-            (click)="itemClicked(item, dropdownInstance)"
-            [disabled]="disabled"
-          >
-            <span class="text-truncate">
-              @if (item.icon) {
-                <app-svg
-                  [icon]="needConfirm ? item.confirmIcon : item.icon"
-                  class="pe-2"
-                >
-                </app-svg>
-              }
-              {{
-                needConfirm
-                  ? item.confirmLabel
-                  : disabled
-                    ? disabledLabel || item.label
-                    : item.label
-              }}
-              @if (item.subLabel) {
-                <br />
-                <small class="text-muted">{{ item.subLabel }}</small>
-              }
-            </span>
-          </button>
+          @if (!hidden) {
+            <button
+              class="btn dropdown-item d-flex"
+              [ngClass]="{
+                'text-danger': needConfirm
+              }"
+              (click)="itemClicked(item, dropdownInstance)"
+              [disabled]="disabled"
+            >
+              <span class="text-truncate">
+                @if (item.icon) {
+                  <app-svg
+                    [icon]="needConfirm ? item.confirmIcon : item.icon"
+                    class="pe-2"
+                  >
+                  </app-svg>
+                }
+                {{
+                  needConfirm
+                    ? item.confirmLabel
+                    : disabled
+                      ? disabledLabel || itemLabel
+                      : itemLabel
+                }}
+                @if (item.subLabel) {
+                  <br />
+                  <small class="text-muted">{{ item.subLabel }}</small>
+                }
+              </span>
+            </button>
+          }
         }
       }
     </div>

@@ -10,7 +10,7 @@ import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 
 export type DropdownMenuItem = {
-  label: string;
+  label: string | (() => Observable<string>);
   // less visible label (for additional information, ⚠️ not really compatible with twoSteps)
   subLabel?: string;
   icon: string;
@@ -22,6 +22,8 @@ export type DropdownMenuItem = {
   confirmLabel?: string;
   // If provided, the item will be disabled when the observable emits true
   disabled$?: (payload: any) => Observable<boolean>;
+  // If provided, the item will be hidden when the observable emits true
+  hidden$?: (payload: any) => Observable<boolean>;
   // Can be provided to display a custom disabled label
   disabledLabel$?: (payload: any) => Observable<string>;
   action?: (payload: any) => void;

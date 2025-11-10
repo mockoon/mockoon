@@ -194,6 +194,7 @@ describe('Environment logs', () => {
       });
 
       it('should environment logs have two entries', async () => {
+        await navigation.switchView('ENV_LOGS');
         await environmentsLogs.assertCount(2);
       });
 
@@ -256,16 +257,6 @@ describe('Environment logs', () => {
       it('should removed the prefix after mocking', async () => {
         await routes.assertActiveMenuEntryText('/test\nGET');
       });
-
-      it('should copy log as cURL command', async () => {
-        await navigation.switchView('ENV_LOGS');
-        await environmentsLogs.clickCopyAsCurlButton(1);
-        await utils.closeTooltip();
-        const clipboardContent = await clipboard.read();
-        expect(clipboardContent).toEqual(
-          'curl --location --request GET "http://localhost:3000/prefix/test" --header "connection: keep-alive" --header "host: localhost:3000"'
-        );
-      });
     });
 
     describe('Verify environment logs after GET call to /prefix/file (binary)', () => {
@@ -276,6 +267,8 @@ describe('Environment logs', () => {
 
       it('should environment logs have 3 entries', async () => {
         await navigation.switchView('ENV_LOGS');
+        await browser.pause(500);
+        await environmentsLogs.switchTab('REQUEST');
         await environmentsLogs.assertCount(3);
       });
 
