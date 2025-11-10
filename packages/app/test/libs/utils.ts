@@ -43,7 +43,8 @@ export enum DropdownMenuFolderActions {
 }
 
 export enum DropdownMenuLogsActions {
-  MOCK = 1
+  MOCK = 1,
+  COPY_AS_CURL = 2
 }
 
 class Utils {

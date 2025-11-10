@@ -125,6 +125,13 @@ class EnvironmentsLogs {
     );
   }
 
+  public async clickCopyAsCurlButton(logIndex: number) {
+    await utils.dropdownMenuClick(
+      `.environment-logs-column:nth-child(1) .menu-list .nav-item:nth-child(${logIndex}) .nav-link`,
+      DropdownMenuLogsActions.COPY_AS_CURL
+    );
+  }
+
   public async assertViewBodyLogButtonPresence(reverse = false) {
     await $('.view-body-link').waitForExist({ reverse });
   }

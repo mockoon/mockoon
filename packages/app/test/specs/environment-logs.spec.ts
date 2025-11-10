@@ -1,4 +1,5 @@
 import { promises as fs } from 'fs';
+import clipboard from '../libs/clipboard';
 import environments from '../libs/environments';
 import environmentsLogs from '../libs/environments-logs';
 import http from '../libs/http';
@@ -142,6 +143,15 @@ describe('Environment logs', () => {
         await environmentsLogs.assertLogBody('requestbody', 'request');
       });
 
+      it('should copy log as cURL command', async () => {
+        await environmentsLogs.clickCopyAsCurlButton(1);
+        await utils.closeTooltip();
+        const clipboardContent = await clipboard.read();
+        expect(clipboardContent).toEqual(
+          'curl --location --request GET "http://localhost:3000/prefix/endpoint/1?param1=value&param2[]=value1&param2[]=value2&param3[prop1]=value1&param3[prop2]=value2" --header "connection: keep-alive" --header "host: localhost:3000" --data-binary "requestbody"'
+        );
+      });
+
       it('should verify response tab content', async () => {
         await environmentsLogs.switchTab('RESPONSE');
         await environmentsLogs.assertLogItem(
@@ -246,6 +256,16 @@ describe('Environment logs', () => {
       it('should removed the prefix after mocking', async () => {
         await routes.assertActiveMenuEntryText('/test\nGET');
       });
+
+      it('should copy log as cURL command', async () => {
+        await navigation.switchView('ENV_LOGS');
+        await environmentsLogs.clickCopyAsCurlButton(1);
+        await utils.closeTooltip();
+        const clipboardContent = await clipboard.read();
+        expect(clipboardContent).toEqual(
+          'curl --location --request GET "http://localhost:3000/prefix/test" --header "connection: keep-alive" --header "host: localhost:3000"'
+        );
+      });
     });
 
     describe('Verify environment logs after GET call to /prefix/file (binary)', () => {
@@ -290,6 +310,15 @@ describe('Environment logs', () => {
           'response',
           6,
           1
+        );
+      });
+
+      it('should copy log as cURL command', async () => {
+        await environmentsLogs.clickCopyAsCurlButton(1);
+        await utils.closeTooltip();
+        const clipboardContent = await clipboard.read();
+        expect(clipboardContent).toEqual(
+          'curl --location --request GET "http://localhost:3000/prefix/file" --header "connection: keep-alive" --header "host: localhost:3000"'
         );
       });
     });
@@ -450,6 +479,107 @@ describe('Environment logs', () => {
       await environments.select(1);
       await navigation.switchView('ENV_LOGS');
       await environmentsLogs.assertActiveLogEntry(2);
+    });
+  });
+
+  describe('Copy log as cURL with compression', () => {
+    const callWithAcceptEncoding: HttpCall = {
+      description: 'Call GET /prefix/endpoint/1 with accept-encoding header',
+      path: '/prefix/endpoint/1',
+      method: 'GET',
+      headers: { 'accept-encoding': 'gzip, deflate, br' },
+      body: 'requestbody',
+      testedResponse: {
+        body: 'responsebody',
+        status: 200,
+        statusMessage: 'OK'
+      }
+    };
+
+    const callWithoutAcceptEncoding: HttpCall = {
+      description: 'Call GET /prefix/endpoint/2 without accept-encoding header',
+      path: '/prefix/endpoint/2',
+      method: 'GET',
+      body: 'requestbody',
+      testedResponse: {
+        body: 'responsebody',
+        status: 200,
+        statusMessage: 'OK'
+      }
+    };
+
+    it('should reload and start the first environment', async () => {
+      await browser.reloadSession();
+      await environments.start();
+    });
+
+    it('should copy log as cURL with --compressed flag when accept-encoding header is present', async () => {
+      await http.assertCall(callWithAcceptEncoding);
+      await navigation.switchView('ENV_LOGS');
+      await environmentsLogs.select(1);
+      await environmentsLogs.clickCopyAsCurlButton(1);
+      await utils.closeTooltip();
+      const clipboardContent = await clipboard.read();
+      expect(clipboardContent).toEqual(
+        'curl --location --compressed --request GET "http://localhost:3000/prefix/endpoint/1" --header "connection: keep-alive" --header "host: localhost:3000" --data-binary "requestbody"'
+      );
+    });
+
+    it('should copy log as cURL without --compressed flag when accept-encoding header is not present', async () => {
+      await http.assertCall(callWithoutAcceptEncoding);
+      await environmentsLogs.select(1);
+      await environmentsLogs.clickCopyAsCurlButton(1);
+      await utils.closeTooltip();
+      const clipboardContent = await clipboard.read();
+      expect(clipboardContent).toEqual(
+        'curl --location --request GET "http://localhost:3000/prefix/endpoint/2" --header "connection: keep-alive" --header "host: localhost:3000" --data-binary "requestbody"'
+      );
+    });
+
+    it('should copy log as cURL without --compressed flag when accept-encoding is identity', async () => {
+      const callWithIdentityEncoding: HttpCall = {
+        description: 'Call GET /prefix/endpoint/3 with identity encoding',
+        path: '/prefix/endpoint/3',
+        method: 'GET',
+        headers: { 'accept-encoding': 'identity' },
+        body: 'requestbody',
+        testedResponse: {
+          body: 'responsebody',
+          status: 200,
+          statusMessage: 'OK'
+        }
+      };
+      await http.assertCall(callWithIdentityEncoding);
+      await environmentsLogs.select(1);
+      await environmentsLogs.clickCopyAsCurlButton(1);
+      await utils.closeTooltip();
+      const clipboardContent = await clipboard.read();
+      expect(clipboardContent).toEqual(
+        'curl --location --request GET "http://localhost:3000/prefix/endpoint/3" --header "accept-encoding: identity" --header "connection: keep-alive" --header "host: localhost:3000" --data-binary "requestbody"'
+      );
+    });
+
+    it('should copy log as cURL without --compressed flag when accept-encoding is empty', async () => {
+      const callWithEmptyEncoding: HttpCall = {
+        description: 'Call GET /prefix/endpoint/4 with empty encoding',
+        path: '/prefix/endpoint/4',
+        method: 'GET',
+        headers: { 'accept-encoding': '' },
+        body: 'requestbody',
+        testedResponse: {
+          body: 'responsebody',
+          status: 200,
+          statusMessage: 'OK'
+        }
+      };
+      await http.assertCall(callWithEmptyEncoding);
+      await environmentsLogs.select(1);
+      await environmentsLogs.clickCopyAsCurlButton(1);
+      await utils.closeTooltip();
+      const clipboardContent = await clipboard.read();
+      expect(clipboardContent).toEqual(
+        'curl --location --request GET "http://localhost:3000/prefix/endpoint/4" --header "accept-encoding: " --header "connection: keep-alive" --header "host: localhost:3000" --data-binary "requestbody"'
+      );
     });
   });
 });
