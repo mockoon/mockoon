@@ -148,7 +148,7 @@ describe('Environment logs', () => {
         await utils.closeTooltip();
         const clipboardContent = await clipboard.read();
         expect(clipboardContent).toEqual(
-          'curl --location "http://localhost:3000/prefix/endpoint/1?param1=value&param2[]=value1&param2[]=value2&param3[prop1]=value1&param3[prop2]=value2" --header "connection: keep-alive" --header "host: localhost:3000" --data-binary "requestbody"'
+          'curl --location --request GET "http://localhost:3000/prefix/endpoint/1?param1=value&param2[]=value1&param2[]=value2&param3[prop1]=value1&param3[prop2]=value2" --header "connection: keep-alive" --header "host: localhost:3000" --data-binary "requestbody"'
         );
       });
 
@@ -263,7 +263,7 @@ describe('Environment logs', () => {
         await utils.closeTooltip();
         const clipboardContent = await clipboard.read();
         expect(clipboardContent).toEqual(
-          'curl --location "http://localhost:3000/prefix/test" --header "connection: keep-alive" --header "host: localhost:3000"'
+          'curl --location --request GET "http://localhost:3000/prefix/test" --header "connection: keep-alive" --header "host: localhost:3000"'
         );
       });
     });
@@ -318,7 +318,7 @@ describe('Environment logs', () => {
         await utils.closeTooltip();
         const clipboardContent = await clipboard.read();
         expect(clipboardContent).toEqual(
-          'curl --location "http://localhost:3000/prefix/file" --header "connection: keep-alive" --header "host: localhost:3000"'
+          'curl --location --request GET "http://localhost:3000/prefix/file" --header "connection: keep-alive" --header "host: localhost:3000"'
         );
       });
     });
@@ -521,7 +521,7 @@ describe('Environment logs', () => {
       await utils.closeTooltip();
       const clipboardContent = await clipboard.read();
       expect(clipboardContent).toEqual(
-        'curl --location --compressed "http://localhost:3000/prefix/endpoint/1" --header "connection: keep-alive" --header "host: localhost:3000" --data-binary "requestbody"'
+        'curl --location --compressed --request GET "http://localhost:3000/prefix/endpoint/1" --header "connection: keep-alive" --header "host: localhost:3000" --data-binary "requestbody"'
       );
     });
 
@@ -532,7 +532,7 @@ describe('Environment logs', () => {
       await utils.closeTooltip();
       const clipboardContent = await clipboard.read();
       expect(clipboardContent).toEqual(
-        'curl --location "http://localhost:3000/prefix/endpoint/2" --header "connection: keep-alive" --header "host: localhost:3000" --data-binary "requestbody"'
+        'curl --location --request GET "http://localhost:3000/prefix/endpoint/2" --header "connection: keep-alive" --header "host: localhost:3000" --data-binary "requestbody"'
       );
     });
 
@@ -555,7 +555,7 @@ describe('Environment logs', () => {
       await utils.closeTooltip();
       const clipboardContent = await clipboard.read();
       expect(clipboardContent).toEqual(
-        'curl --location "http://localhost:3000/prefix/endpoint/3" --header "connection: keep-alive" --header "accept-encoding: identity" --header "host: localhost:3000" --data-binary "requestbody"'
+        'curl --location --request GET "http://localhost:3000/prefix/endpoint/3" --header "accept-encoding: identity" --header "connection: keep-alive" --header "host: localhost:3000" --data-binary "requestbody"'
       );
     });
 
@@ -578,7 +578,7 @@ describe('Environment logs', () => {
       await utils.closeTooltip();
       const clipboardContent = await clipboard.read();
       expect(clipboardContent).toEqual(
-        'curl --location "http://localhost:3000/prefix/endpoint/4" --header "connection: keep-alive" --header "accept-encoding: " --header "host: localhost:3000" --data-binary "requestbody"'
+        'curl --location --request GET "http://localhost:3000/prefix/endpoint/4" --header "accept-encoding: " --header "connection: keep-alive" --header "host: localhost:3000" --data-binary "requestbody"'
       );
     });
   });
