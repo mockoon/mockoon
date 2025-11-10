@@ -77,7 +77,7 @@
     "@angular/fire": "20.0.1",
     "@angular/forms": "20.3.7",
     "@angular/localize": "20.3.7",
-    "@angular/platform-browser": "20.3.7",
+    "@angular/platform-browser": "20.3.9",
     "@angular/platform-browser-dynamic": "20.3.7",
     "@electron/notarize": "3.1.0",
     "@ng-bootstrap/ng-bootstrap": "19.0.1",
