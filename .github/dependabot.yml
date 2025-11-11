@@ -17,7 +17,10 @@ updates:
     groups:
       angular:
         patterns:
-          - "^(\\@angular\\/).*"
+          - "@angular*"
+        update-types:
+          - "minor"
+          - "patch"
     ignore:
       - dependency-name: "express"
         # Ignore new versions for 5.x
