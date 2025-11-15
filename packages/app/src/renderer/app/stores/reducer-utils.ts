@@ -311,13 +311,14 @@ export const findRouteFolderHierarchy = (
 };
 
 /**
- * Check that we are not switching from a regular response to a CRUD
- * operation response where some tabs are not available.
- * If so, switch to the RESPONSE tab.
+ * Check that we are not switching to a route type that doesn't support
+ * the currently active tab (e.g., CRUD default responses don't have CALLBACKS,
+ * WebSocket routes don't have HEADERS or CALLBACKS).
+ * If the current tab is incompatible with the new route type, switch to RESPONSE tab.
  *
  * @param state
  * @param routeResponseUuid
- * @returns
+ * @returns The appropriate tab for the new route/response
  */
 export const responseTabForcedNavigation = (
   state: StoreType,
@@ -339,6 +340,13 @@ export const responseTabForcedNavigation = (
     activeRoute.type === 'crud' &&
     activatedRouteResponse.default &&
     !['RESPONSE', 'HEADERS'].includes(state.activeTab)
+  ) {
+    newActiveTab = 'RESPONSE';
+  }
+
+  if (
+    activeRoute.type === 'ws' &&
+    !['RESPONSE', 'RULES'].includes(state.activeTab)
   ) {
     newActiveTab = 'RESPONSE';
   }
