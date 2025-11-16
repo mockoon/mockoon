@@ -311,10 +311,8 @@ export const findRouteFolderHierarchy = (
 };
 
 /**
- * Check that we are not switching to a route type that doesn't support
- * the currently active tab (e.g., CRUD default responses don't have CALLBACKS,
- * WebSocket routes don't have HEADERS or CALLBACKS).
- * If the current tab is incompatible with the new route type, switch to RESPONSE tab.
+ * Check that we are not switching to a route type that doesn't support the currently active tab.
+ * If the current tab is inexistent for the new route type, switch to RESPONSE tab.
  *
  * @param state
  * @param routeResponseUuid
