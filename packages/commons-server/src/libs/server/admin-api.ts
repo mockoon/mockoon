@@ -45,7 +45,10 @@ export const createAdminEndpoint = (
           ? parseInt(request.query.maxlogs, 10)
           : undefined;
       const logs = getLogs();
-      const limitedLogs = maxLogs ? logs.slice(0, maxLogs) : logs;
+      const limitedLogs =
+        maxLogs != null && !isNaN(maxLogs) && maxLogs > 0
+          ? logs.slice(maxLogs * -1)
+          : logs;
 
       return [
         ...replayableEvents,
