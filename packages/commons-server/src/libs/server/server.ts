@@ -587,17 +587,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
       this.emit('transaction-complete', transaction);
 
-      // store the transaction logs at beginning of the array
-      this.transactionLogs.unshift(transaction);
+      this.transactionLogs.push(transaction);
 
       // keep only the last n transactions
       if (this.transactionLogs.length > this.options.maxTransactionLogs) {
-        this.transactionLogs.pop();
-      }
-      if (this.transactionLogs.length > this.options.maxTransactionLogs) {
         this.transactionLogs = this.transactionLogs.slice(
-          0,
-          this.options.maxTransactionLogs
+          this.options.maxTransactionLogs * -1
         );
       }
     });
