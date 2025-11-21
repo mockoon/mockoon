@@ -29,7 +29,7 @@ export class AuthIframeModalComponent {
   public displaySpinner = true;
 
   @HostListener('window:message', ['$event'])
-  private onMessage(event: MessageEvent) {
+  protected onMessage(event: MessageEvent) {
     if (event.origin === Config.websiteURL.replace(/\/$/, '')) {
       if (event.data.includes('token=')) {
         const token = event.data.split('token=')[1];
