@@ -953,12 +953,27 @@ export const environmentReducer = (
 
       let newActiveRouteUUID = state.activeRouteUUID;
       let newActiveRouteResponseUUID = state.activeRouteResponseUUID;
+      let newActiveTab = state.activeTab;
 
       if (state.activeRouteUUID === action.routeUuid) {
         ({
           routeUUID: newActiveRouteUUID,
           routeResponseUUID: newActiveRouteResponseUUID
         } = getFirstRouteAndResponseUUIDs(newEnvironment));
+
+        if (newActiveRouteResponseUUID) {
+          const tempState = {
+            ...state,
+            environments: newEnvironments,
+            activeRouteUUID: newActiveRouteUUID
+          };
+          newActiveTab = responseTabForcedNavigation(
+            tempState,
+            newActiveRouteResponseUUID
+          );
+        } else {
+          newActiveTab = 'RESPONSE';
+        }
       }
 
       newState = {
@@ -966,6 +981,7 @@ export const environmentReducer = (
         environments: newEnvironments,
         activeRouteUUID: newActiveRouteUUID,
         activeRouteResponseUUID: newActiveRouteResponseUUID,
+        activeTab: newActiveTab,
         environmentsStatus: markEnvStatusRestart(state, action.environmentUuid),
         duplicatedRoutes: {
           ...state.duplicatedRoutes,

@@ -311,13 +311,12 @@ export const findRouteFolderHierarchy = (
 };
 
 /**
- * Check that we are not switching from a regular response to a CRUD
- * operation response where some tabs are not available.
- * If so, switch to the RESPONSE tab.
+ * Check that we are not switching to a route type that doesn't support the currently active tab.
+ * If the current tab is inexistent for the new route type, switch to RESPONSE tab.
  *
  * @param state
  * @param routeResponseUuid
- * @returns
+ * @returns The appropriate tab for the new route/response
  */
 export const responseTabForcedNavigation = (
   state: StoreType,
@@ -339,6 +338,13 @@ export const responseTabForcedNavigation = (
     activeRoute.type === 'crud' &&
     activatedRouteResponse.default &&
     !['RESPONSE', 'HEADERS'].includes(state.activeTab)
+  ) {
+    newActiveTab = 'RESPONSE';
+  }
+
+  if (
+    activeRoute.type === 'ws' &&
+    !['RESPONSE', 'RULES'].includes(state.activeTab)
   ) {
     newActiveTab = 'RESPONSE';
   }

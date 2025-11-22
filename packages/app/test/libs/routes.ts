@@ -621,6 +621,14 @@ class Routes {
     await $(selectors[tabName]).click();
   }
 
+  public async assertActiveRouteTab(index: number): Promise<void> {
+    const selector = $(
+      `#route-responses-menu .nav.nav-tabs .nav-item:nth-child(${index}) .nav-link`
+    );
+
+    await utils.assertHasClass(selector, 'active');
+  }
+
   public async assertRoutePaddingLevel(
     index: number,
     level: number
