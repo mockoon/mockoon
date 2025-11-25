@@ -40,6 +40,8 @@ export class DraggableDirective implements AfterViewInit {
     this.updateDraggable();
   }
 
+  private safeZoneWidth = 10;
+
   /**
    * Only enable drag when the handle is used (if a handle was found)
    *
@@ -57,6 +59,18 @@ export class DraggableDirective implements AfterViewInit {
 
   @HostListener('dragstart', ['$event'])
   public onDragStart(event: DragEvent) {
+    const rect = this.elementRef.nativeElement.getBoundingClientRect();
+
+    // prevent dragging from a safe zone on the right (to allow resizing, etc.)
+    if (
+      !this.dragHandle &&
+      event.clientX - rect.left > rect.width - this.safeZoneWidth
+    ) {
+      event.preventDefault();
+
+      return;
+    }
+
     (event.target as any).style.opacity = 1;
     this.dragService.startDragging({
       elementId: this.dragId,

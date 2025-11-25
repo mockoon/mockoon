@@ -126,8 +126,7 @@ export const buildApiUrl = (options: {
           ? 'https://'
           : 'http://'
         : '') +
-      (options.environment?.hostname ||
-        `localhost:${options.environment?.port}`);
+      `${options.environment?.hostname || 'localhost'}:${options.environment?.port}`;
   }
 
   if (options.includePrefix && options.environment?.endpointPrefix) {
