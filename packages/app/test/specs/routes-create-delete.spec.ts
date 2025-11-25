@@ -43,7 +43,7 @@ describe('Create and delete routes', () => {
   });
 
   describe('Delete route with tab reset from HTTP CALLBACKS to CRUD RESPONSE', () => {
-    it('should create a new environment and ', async () => {
+    it('should create a new environment and remove a route', async () => {
       await environments.localAdd('test-env-crud');
       await routes.remove(1);
     });
