@@ -2,9 +2,7 @@ import { AsyncPipe, NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   inject,
-  OnInit,
   signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -19,14 +17,14 @@ import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import {
   BehaviorSubject,
   catchError,
+  combineLatest,
   combineLatestWith,
   debounceTime,
   EMPTY,
   filter,
   map,
   switchMap,
-  tap,
-  withLatestFrom
+  tap
 } from 'rxjs';
 import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
 import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
@@ -60,7 +58,7 @@ import { Config } from 'src/renderer/config';
     CustomSelectComponent
   ]
 })
-export class DeployInstanceModalComponent implements OnInit {
+export class DeployInstanceModalComponent {
   private uiService = inject(UIService);
   private store = inject(Store);
   private deployService = inject(DeployService);
@@ -81,20 +79,7 @@ export class DeployInstanceModalComponent implements OnInit {
     )
   );
   public instanceExists$ = this.existingInstance$.pipe(
-    map((existingInstance) => {
-      if (existingInstance) {
-        this.optionsForm.patchValue({
-          subdomain: existingInstance.subdomain,
-          visibility: existingInstance.visibility
-        });
-
-        this.optionsForm.get('region').disable();
-      } else {
-        this.optionsForm.get('region').enable();
-      }
-
-      return !!existingInstance;
-    })
+    map((existingInstance) => !!existingInstance)
   );
   public user$ = this.store.select('user');
   public accountUrl = Config.accountUrl;
@@ -128,24 +113,45 @@ export class DeployInstanceModalComponent implements OnInit {
     map((environmentUuid) => this.store.getEnvironmentByUUID(environmentUuid))
   );
   public remoteConfig$ = this.store.selectRemoteConfig().pipe(
-    withLatestFrom(
-      this.store.select('settings').pipe(filter((settings) => !!settings))
-    ),
-    tap(([remoteConfig, settings]) => {
-      this.optionsForm
-        .get('region')
-        .setValue(
-          settings.deployPreferredRegion ?? remoteConfig.defaultRegion ?? null
-        );
-    }),
-    map(([remoteConfig]) => ({
+    map((remoteConfig) => ({
       regions: remoteConfig.regions,
       defaultRegion: remoteConfig.defaultRegion
     }))
   );
-  private destroyRef = inject(DestroyRef);
 
-  ngOnInit() {
+  constructor() {
+    // repopulate form if instance already exists
+    combineLatest([
+      this.existingInstance$,
+      this.remoteConfig$,
+      this.store.select('settings').pipe(filter((settings) => !!settings))
+    ])
+      .pipe(
+        tap(([existingInstance, remoteConfig, settings]) => {
+          if (existingInstance) {
+            this.optionsForm.patchValue({
+              subdomain: existingInstance.subdomain,
+              visibility: existingInstance.visibility,
+              region: existingInstance.region
+            });
+
+            this.optionsForm.get('region').disable();
+          } else {
+            this.optionsForm
+              .get('region')
+              .setValue(
+                settings.deployPreferredRegion ??
+                  remoteConfig.defaultRegion ??
+                  null
+              );
+
+            this.optionsForm.get('region').enable();
+          }
+        }),
+        takeUntilDestroyed()
+      )
+      .subscribe();
+
     // check subdomain availability (not using async validators to use debounce and stuff)
     this.optionsForm
       .get('subdomain')
@@ -183,7 +189,7 @@ export class DeployInstanceModalComponent implements OnInit {
               })
             )
         ),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed()
       )
       .subscribe();
 
@@ -200,7 +206,7 @@ export class DeployInstanceModalComponent implements OnInit {
             })
           );
         }),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed()
       )
       .subscribe();
   }
