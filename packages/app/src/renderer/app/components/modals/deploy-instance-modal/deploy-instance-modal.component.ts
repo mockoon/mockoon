@@ -127,7 +127,7 @@ export class DeployInstanceModalComponent {
       this.store.select('settings').pipe(filter((settings) => !!settings))
     ])
       .pipe(
-        tap(([existingInstance, remoteConfig, settings]) => {
+        switchMap(([existingInstance, remoteConfig, settings]) => {
           if (existingInstance) {
             this.optionsForm.patchValue({
               subdomain: existingInstance.subdomain,
@@ -136,6 +136,8 @@ export class DeployInstanceModalComponent {
             });
 
             this.optionsForm.get('region').disable();
+
+            return EMPTY;
           } else {
             this.optionsForm
               .get('region')
@@ -146,6 +148,19 @@ export class DeployInstanceModalComponent {
               );
 
             this.optionsForm.get('region').enable();
+
+            // Save last region used only if deploying a new instance
+            return this.optionsForm.get('region').valueChanges.pipe(
+              // filter initial null value
+              filter((region) => !!region),
+              tap((region) => {
+                this.store.update(
+                  updateSettingsAction({
+                    deployPreferredRegion: region
+                  })
+                );
+              })
+            );
           }
         }),
         takeUntilDestroyed()
@@ -189,23 +204,6 @@ export class DeployInstanceModalComponent {
               })
             )
         ),
-        takeUntilDestroyed()
-      )
-      .subscribe();
-
-    // Save last region used
-    this.optionsForm
-      .get('region')
-      .valueChanges.pipe(
-        // filter initial null value
-        filter((region) => !!region),
-        tap((region) => {
-          this.store.update(
-            updateSettingsAction({
-              deployPreferredRegion: region
-            })
-          );
-        }),
         takeUntilDestroyed()
       )
       .subscribe();
