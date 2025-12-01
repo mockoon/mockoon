@@ -1,18 +1,13 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-  inject
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup
 } from '@angular/forms';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subject, merge } from 'rxjs';
-import { filter, map, takeUntil, tap } from 'rxjs/operators';
+import { Observable, merge } from 'rxjs';
+import { filter, map, tap } from 'rxjs/operators';
 import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TitleSeparatorComponent } from 'src/renderer/app/components/title-separator/title-separator.component';
@@ -40,12 +35,11 @@ import { FileWatcherOptions, Settings } from 'src/shared/models/settings.model';
     CustomSelectComponent
   ]
 })
-export class SettingsModalComponent implements OnInit, OnDestroy {
+export class SettingsModalComponent {
   private formBuilder = inject(UntypedFormBuilder);
   private settingsService = inject(SettingsService);
   private store = inject(Store);
   private uiService = inject(UIService);
-
   public settings$: Observable<Settings>;
   public Infinity = Infinity;
   public faqUrl = Config.docs.faq;
@@ -58,40 +52,12 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
   public settingsForm: UntypedFormGroup;
   public isWeb = Config.isWeb;
   public maxLogsPerEnvironmentLimit = Config.maxLogsPerEnvironmentLimit;
-  private destroy$ = new Subject<void>();
 
-  ngOnInit() {
+  constructor() {
     this.settings$ = this.store
       .select('settings')
       .pipe(filter((settings) => !!settings));
 
-    this.initForms();
-    this.initFormValues();
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
-  }
-
-  /**
-   * Call the store to update the settings
-   *
-   * @param newValue
-   * @param settingName
-   */
-  public settingsUpdated(settingNewValue: string, settingName: keyof Settings) {
-    this.settingsService.updateSettings({ [settingName]: settingNewValue });
-  }
-
-  public close() {
-    this.uiService.closeModal('settings');
-  }
-
-  /**
-   * Init active environment form and subscribe to changes
-   */
-  private initForms() {
     this.settingsForm = this.formBuilder.group({
       truncateRouteName: [SettingsDefault.truncateRouteName],
       maxLogsPerEnvironment: [SettingsDefault.maxLogsPerEnvironment],
@@ -121,15 +87,10 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
         tap((newProperty) => {
           this.settingsService.updateSettings(newProperty);
         }),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed()
       )
       .subscribe();
-  }
 
-  /**
-   * Listen to stores to init form values
-   */
-  private initFormValues() {
     // subscribe to active environment changes to reset the form
     this.settings$
       .pipe(
@@ -152,8 +113,22 @@ export class SettingsModalComponent implements OnInit, OnDestroy {
             { emitEvent: false }
           );
         }),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed()
       )
       .subscribe();
+  }
+
+  /**
+   * Call the store to update the settings
+   *
+   * @param newValue
+   * @param settingName
+   */
+  public settingsUpdated(settingNewValue: string, settingName: keyof Settings) {
+    this.settingsService.updateSettings({ [settingName]: settingNewValue });
+  }
+
+  public close() {
+    this.uiService.closeModal('settings');
   }
 }

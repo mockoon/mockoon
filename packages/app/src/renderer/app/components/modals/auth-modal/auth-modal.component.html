@@ -1,3 +1,6 @@
+@let isLoading = isLoading$ | async;
+@let isSuccess = isSuccess$ | async;
+
 <div class="modal-header">
   <h4 class="modal-title">Log in to Mockoon Cloud</h4>
 </div>
@@ -15,22 +18,22 @@
       [formControl]="tokenControl"
       placeholder="Manually enter the token"
     />
-    <div *ngIf="isLoading$ | async" class="input-group-text">
-      <app-spinner></app-spinner>
+    @if (isLoading) {
+      <div class="input-group-text">
+        <app-spinner />
+      </div>
+    }
+  </div>
+  @if (tokenControl.hasError('invalid')) {
+    <div class="error-message ms-auto text-center pe-2">
+      This token is invalid or cannot be used to log in
     </div>
-  </div>
-  <div
-    *ngIf="tokenControl.hasError('invalid')"
-    class="error-message ms-auto text-center pe-2"
-  >
-    This token is invalid or cannot be used to log in
-  </div>
-  <div
-    *ngIf="isSuccess$ | async"
-    class="success-message ms-auto text-center pe-2"
-  >
-    You are now logged in
-  </div>
+  }
+  @if (isSuccess) {
+    <div class="success-message ms-auto text-center pe-2">
+      You are now logged in
+    </div>
+  }
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-secondary modal-close" (click)="close()">

@@ -1,13 +1,8 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-  inject
-} from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { ConfirmModalPayload } from 'src/renderer/app/models/ui.model';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -18,13 +13,11 @@ import { UIService } from 'src/renderer/app/services/ui.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgIf, NgFor, SvgComponent, AsyncPipe]
 })
-export class ConfirmModalComponent implements OnInit, OnDestroy {
+export class ConfirmModalComponent {
   private uiService = inject(UIService);
-
   public confirmModalPayload$: Observable<ConfirmModalPayload>;
-  private destroy$ = new Subject<void>();
 
-  ngOnInit() {
+  constructor() {
     this.confirmModalPayload$ = this.uiService.getModalPayload$('confirm').pipe(
       tap((confirmModalPayload) => {
         this.uiService
@@ -38,13 +31,8 @@ export class ConfirmModalComponent implements OnInit, OnDestroy {
             confirmModalPayload.confirmed$.next(false);
           });
       }),
-      takeUntil(this.destroy$)
+      takeUntilDestroyed()
     );
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
   }
 
   public close() {

@@ -1,13 +1,13 @@
-import { NgClass, NgFor, NgIf, UpperCasePipe } from '@angular/common';
+import { NgFor, NgIf, UpperCasePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   forwardRef,
+  inject,
   Input,
   OnDestroy,
-  OnInit,
-  inject
+  OnInit
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -40,7 +40,6 @@ import { ToggleItem, ToggleItems } from 'src/renderer/app/models/common.model';
   imports: [
     NgIf,
     NgFor,
-    NgClass,
     NgbTooltip,
     FormsModule,
     ReactiveFormsModule,

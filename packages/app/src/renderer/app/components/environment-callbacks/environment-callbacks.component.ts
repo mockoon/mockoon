@@ -1,11 +1,6 @@
-import { AsyncPipe, NgClass } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-  inject
-} from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -24,14 +19,12 @@ import {
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import {
   Observable,
-  Subject,
   distinctUntilChanged,
   filter,
   from,
   map,
   merge,
   mergeMap,
-  takeUntil,
   tap,
   withLatestFrom
 } from 'rxjs';
@@ -72,7 +65,6 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CallbacksMenuComponent,
-    NgClass,
     FormsModule,
     ReactiveFormsModule,
     FocusOnEventDirective,
@@ -86,7 +78,7 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
     AsyncPipe
   ]
 })
-export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
+export class EnvironmentCallbacksComponent {
   private uiService = inject(UIService);
   private store = inject(Store);
   private environmentsService = inject(EnvironmentsService);
@@ -107,7 +99,6 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
   public focusableInputs = FocusableInputs;
   public bodyEditorConfig$: Observable<any>;
   public scrollToBottom = this.uiService.scrollToBottom;
-
   public databuckets$: Observable<DropdownItems>;
   public httpMethod = Methods;
   public bodySupportingMethods = [Methods.post, Methods.put, Methods.patch];
@@ -197,9 +188,8 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
       }
     }
   ];
-  private destroy$ = new Subject<void>();
 
-  ngOnInit() {
+  constructor() {
     this.activeEnvironment$ = this.store
       .selectActiveEnvironment()
       .pipe(filter((activeEnvironment) => !!activeEnvironment));
@@ -208,8 +198,86 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
     );
     this.activeCallback$ = this.store.selectActiveCallback();
     this.bodyEditorConfig$ = this.store.select('bodyEditorConfig');
-    this.initForms();
-    this.initFormValues();
+    this.activeCallbackForm = this.formBuilder.group({
+      body: [CallbackDefault.body],
+      bodyType: [CallbackDefault.bodyType],
+      databucketID: [CallbackDefault.databucketID],
+      documentation: [CallbackDefault.documentation],
+      filePath: [CallbackDefault.filePath],
+      headers: [CallbackDefault.headers],
+      method: [CallbackDefault.method],
+      name: [CallbackDefault.name],
+      sendFileAsBody: [CallbackDefault.sendFileAsBody],
+      uri: [CallbackDefault.uri]
+    });
+
+    // send new activeDatabucketForm values to the store, one by one
+    merge(
+      ...Object.keys(this.activeCallbackForm.controls).map((controlName) =>
+        this.activeCallbackForm.get(controlName).valueChanges.pipe(
+          map((newValue) => {
+            if (
+              controlName === 'method' &&
+              !this.bodySupportingMethods.includes(newValue as Methods)
+            ) {
+              this.activeCallbackForm
+                .get('bodyType')
+                .setValue(BodyTypes.INLINE, { emitEvent: false });
+              this.activeCallbackForm
+                .get('body')
+                .setValue('', { emitEvent: false });
+              this.activeCallbackForm
+                .get('filePath')
+                .setValue('', { emitEvent: false });
+              this.activeCallbackForm
+                .get('databucketID')
+                .setValue('', { emitEvent: false });
+
+              return {
+                [controlName]: newValue,
+                body: '',
+                databucketID: '',
+                filePath: '',
+                bodyType: BodyTypes.INLINE
+              };
+            }
+
+            return { [controlName]: newValue };
+          })
+        )
+      )
+    )
+      .pipe(
+        tap((newProperty) => {
+          this.environmentsService.updateActiveCallback(newProperty);
+        }),
+        takeUntilDestroyed()
+      )
+      .subscribe();
+    // subscribe to active route changes to reset the form
+    this.activeCallback$
+      .pipe(
+        filter((cb) => !!cb),
+        this.store.distinctUUIDOrForce(),
+        takeUntilDestroyed()
+      )
+      .subscribe((activeCallback) => {
+        this.activeCallbackForm.patchValue(
+          {
+            body: activeCallback.body,
+            bodyType: activeCallback.bodyType,
+            databucketID: activeCallback.databucketID,
+            documentation: activeCallback.documentation,
+            filePath: activeCallback.filePath,
+            headers: activeCallback.headers,
+            method: activeCallback.method,
+            name: activeCallback.name,
+            sendFileAsBody: activeCallback.sendFileAsBody,
+            uri: activeCallback.uri
+          },
+          { emitEvent: false }
+        );
+      });
 
     const activeCallbackId$ = this.activeCallback$.pipe(
       filter((cb) => !!cb),
@@ -279,11 +347,6 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
-  }
-
   /**
    * Update the store when proxy headers lists are updated
    */
@@ -316,94 +379,5 @@ export class EnvironmentCallbacksComponent implements OnInit, OnDestroy {
     response: CallbackResponseUsage
   ) {
     this.environmentsService.navigateToCallbackUsageInRoute(route, response);
-  }
-
-  private initForms() {
-    this.activeCallbackForm = this.formBuilder.group({
-      body: [CallbackDefault.body],
-      bodyType: [CallbackDefault.bodyType],
-      databucketID: [CallbackDefault.databucketID],
-      documentation: [CallbackDefault.documentation],
-      filePath: [CallbackDefault.filePath],
-      headers: [CallbackDefault.headers],
-      method: [CallbackDefault.method],
-      name: [CallbackDefault.name],
-      sendFileAsBody: [CallbackDefault.sendFileAsBody],
-      uri: [CallbackDefault.uri]
-    });
-
-    // send new activeDatabucketForm values to the store, one by one
-    merge(
-      ...Object.keys(this.activeCallbackForm.controls).map((controlName) =>
-        this.activeCallbackForm.get(controlName).valueChanges.pipe(
-          map((newValue) => {
-            if (
-              controlName === 'method' &&
-              !this.bodySupportingMethods.includes(newValue as Methods)
-            ) {
-              this.activeCallbackForm
-                .get('bodyType')
-                .setValue(BodyTypes.INLINE, { emitEvent: false });
-              this.activeCallbackForm
-                .get('body')
-                .setValue('', { emitEvent: false });
-              this.activeCallbackForm
-                .get('filePath')
-                .setValue('', { emitEvent: false });
-              this.activeCallbackForm
-                .get('databucketID')
-                .setValue('', { emitEvent: false });
-
-              return {
-                [controlName]: newValue,
-                body: '',
-                databucketID: '',
-                filePath: '',
-                bodyType: BodyTypes.INLINE
-              };
-            }
-
-            return { [controlName]: newValue };
-          })
-        )
-      )
-    )
-      .pipe(
-        tap((newProperty) => {
-          this.environmentsService.updateActiveCallback(newProperty);
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
-  }
-
-  /**
-   * Listen to stores to init form values
-   */
-  private initFormValues() {
-    // subscribe to active route changes to reset the form
-    this.activeCallback$
-      .pipe(
-        filter((cb) => !!cb),
-        this.store.distinctUUIDOrForce(),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((activeCallback) => {
-        this.activeCallbackForm.patchValue(
-          {
-            body: activeCallback.body,
-            bodyType: activeCallback.bodyType,
-            databucketID: activeCallback.databucketID,
-            documentation: activeCallback.documentation,
-            filePath: activeCallback.filePath,
-            headers: activeCallback.headers,
-            method: activeCallback.method,
-            name: activeCallback.name,
-            sendFileAsBody: activeCallback.sendFileAsBody,
-            uri: activeCallback.uri
-          },
-          { emitEvent: false }
-        );
-      });
   }
 }

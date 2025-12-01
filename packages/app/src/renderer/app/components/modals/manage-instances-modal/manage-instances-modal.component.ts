@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -32,7 +32,6 @@ type dropdownMenuPayload = { environmentUuid: string };
   imports: [
     HideAfterDirective,
     SvgComponent,
-    NgClass,
     NgbTooltip,
     DropdownMenuComponent,
     AsyncPipe,

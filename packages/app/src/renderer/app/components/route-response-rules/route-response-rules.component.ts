@@ -1,14 +1,12 @@
-import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
   Output,
   inject
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -22,18 +20,16 @@ import {
   ResponseRule,
   ResponseRuleOperators,
   ResponseRuleTargets,
-  Route,
   RouteResponse,
   RulesDisablingResponseModes
 } from '@mockoon/commons';
 import { NgbTooltip, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
   filter,
   map,
-  takeUntil,
   tap
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
@@ -68,7 +64,6 @@ import { Store } from 'src/renderer/app/stores/store';
     NgFor,
     DraggableDirective,
     DropzoneDirective,
-    NgClass,
     CustomSelectComponent,
     NgbTypeahead,
     NgbTooltip,
@@ -76,15 +71,12 @@ import { Store } from 'src/renderer/app/stores/store';
     AsyncPipe
   ]
 })
-export class RouteResponseRulesComponent implements OnInit, OnDestroy {
+export class RouteResponseRulesComponent {
   private environmentsService = inject(EnvironmentsService);
   private formBuilder = inject(UntypedFormBuilder);
   private store = inject(Store);
-
-  @Input()
-  public activeRouteResponse$: Observable<RouteResponse>;
-  @Input()
-  public activeRoute$: Observable<Route>;
+  public activeRouteResponse$ = this.store.selectActiveRouteResponse();
+  public activeRoute$ = this.store.selectActiveRoute();
   @Output()
   public ruleAdded = new EventEmitter<void>();
   public routeResponse$: Observable<RouteResponse>;
@@ -170,13 +162,12 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     (text$: Observable<string>) => Observable<readonly any[]>
   >();
   private listenToChanges = true;
-  private destroy$ = new Subject<void>();
 
   public get rules() {
     return this.form.get('rules') as UntypedFormArray;
   }
 
-  ngOnInit() {
+  constructor() {
     this.form = this.formBuilder.group({
       rulesOperator: ['OR'],
       rules: this.formBuilder.array([])
@@ -201,14 +192,9 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
         tap((newProperties) => {
           this.environmentsService.updateActiveRouteResponse(newProperties);
         }),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed()
       )
       .subscribe();
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
   }
 
   /**

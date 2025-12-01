@@ -1,11 +1,6 @@
-import { AsyncPipe, NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-  inject
-} from '@angular/core';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -30,13 +25,12 @@ import {
   NgbPopover,
   NgbTooltip
 } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subject, combineLatest, merge, of } from 'rxjs';
+import { Observable, combineLatest, merge, of } from 'rxjs';
 import {
   distinctUntilChanged,
   distinctUntilKeyChanged,
   filter,
   map,
-  takeUntil,
   tap
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
@@ -79,8 +73,6 @@ type dropdownMenuPayload = { environmentUuid: string; syncStatus: boolean };
   imports: [
     NgbPopover,
     TourStepDirective,
-    NgStyle,
-    NgClass,
     DraggableDirective,
     DropzoneDirective,
     SvgComponent,
@@ -97,7 +89,7 @@ type dropdownMenuPayload = { environmentUuid: string; syncStatus: boolean };
     AsyncPipe
   ]
 })
-export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
+export class EnvironmentsMenuComponent {
   private formBuilder = inject(UntypedFormBuilder);
   private environmentsService = inject(EnvironmentsService);
   private store = inject(Store);
@@ -375,9 +367,8 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
     label: string;
     collapsed: boolean;
   }[];
-  private destroy$ = new Subject<void>();
 
-  ngOnInit() {
+  constructor() {
     this.settings$ = this.store
       .select('settings')
       .pipe(filter(Boolean), distinctUntilChanged());
@@ -541,13 +532,44 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.initForms();
-    this.initFormValues();
-  }
+    this.activeEnvironmentForm = this.formBuilder.group({
+      name: new UntypedFormControl('')
+    });
 
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
+    // send new activeEnvironmentForm values to the store, one by one
+    merge(
+      ...Object.keys(this.activeEnvironmentForm.controls).map((controlName) =>
+        this.activeEnvironmentForm.get(controlName).valueChanges.pipe(
+          map((newValue) => ({
+            [controlName]: newValue
+          }))
+        )
+      )
+    )
+      .pipe(
+        tap((newProperty) => {
+          this.environmentsService.updateActiveEnvironment(newProperty, true);
+        }),
+        takeUntilDestroyed()
+      )
+      .subscribe();
+
+    // subscribe to active environment changes to reset the form
+    this.activeEnvironment$
+      .pipe(
+        filter((environment) => !!environment),
+        distinctUntilKeyChanged('uuid'),
+        tap((activeEnvironment) => {
+          this.activeEnvironmentForm.setValue(
+            {
+              name: activeEnvironment.name
+            },
+            { emitEvent: false }
+          );
+        }),
+        takeUntilDestroyed()
+      )
+      .subscribe();
   }
 
   public enableDrag(enable: boolean) {
@@ -632,54 +654,5 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
     });
 
     navigator.clipboard.writeText(urls[urlName]);
-  }
-
-  /**
-   * Init active environment form and subscribe to changes
-   */
-  private initForms() {
-    this.activeEnvironmentForm = this.formBuilder.group({
-      name: new UntypedFormControl('')
-    });
-
-    // send new activeEnvironmentForm values to the store, one by one
-    merge(
-      ...Object.keys(this.activeEnvironmentForm.controls).map((controlName) =>
-        this.activeEnvironmentForm.get(controlName).valueChanges.pipe(
-          map((newValue) => ({
-            [controlName]: newValue
-          }))
-        )
-      )
-    )
-      .pipe(
-        tap((newProperty) => {
-          this.environmentsService.updateActiveEnvironment(newProperty, true);
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
-  }
-
-  /**
-   * Listen to stores to init form values
-   */
-  private initFormValues() {
-    // subscribe to active environment changes to reset the form
-    this.activeEnvironment$
-      .pipe(
-        filter((environment) => !!environment),
-        distinctUntilKeyChanged('uuid'),
-        tap((activeEnvironment) => {
-          this.activeEnvironmentForm.setValue(
-            {
-              name: activeEnvironment.name
-            },
-            { emitEvent: false }
-          );
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
   }
 }

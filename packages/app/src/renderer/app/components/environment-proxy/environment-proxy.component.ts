@@ -1,11 +1,6 @@
 import { AsyncPipe, NgIf } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-  inject
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -19,8 +14,8 @@ import {
   IsValidURL
 } from '@mockoon/commons';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subject, merge } from 'rxjs';
-import { filter, map, takeUntil, tap } from 'rxjs/operators';
+import { Observable, merge } from 'rxjs';
+import { filter, map, tap } from 'rxjs/operators';
 import { HeadersListComponent } from 'src/renderer/app/components/headers-list/headers-list.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { HeadersProperties } from 'src/renderer/app/models/common.model';
@@ -42,7 +37,7 @@ import { Store } from 'src/renderer/app/stores/store';
     AsyncPipe
   ]
 })
-export class EnvironmentProxyComponent implements OnInit, OnDestroy {
+export class EnvironmentProxyComponent {
   private environmentsService = inject(EnvironmentsService);
   private uiService = inject(UIService);
   private store = inject(Store);
@@ -52,33 +47,9 @@ export class EnvironmentProxyComponent implements OnInit, OnDestroy {
   public isValidURL = IsValidURL;
   public scrollToBottom = this.uiService.scrollToBottom;
   public environmentProxyForm: UntypedFormGroup;
-  private destroy$ = new Subject<void>();
 
-  ngOnInit() {
+  constructor() {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
-
-    this.initForms();
-    this.initFormValues();
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
-  }
-
-  /**
-   * Update the store when proxy headers lists are updated
-   */
-  public headersUpdated(targetHeaders: HeadersProperties, headers: Header[]) {
-    this.environmentsService.updateActiveEnvironment({
-      [targetHeaders]: headers
-    });
-  }
-
-  /**
-   * Init active environment proxy form
-   */
-  private initForms() {
     this.environmentProxyForm = this.formBuilder.group({
       proxyMode: [EnvironmentDefault.proxyMode],
       proxyHost: [EnvironmentDefault.proxyHost],
@@ -99,15 +70,10 @@ export class EnvironmentProxyComponent implements OnInit, OnDestroy {
         tap((newProperty) => {
           this.environmentsService.updateActiveEnvironment(newProperty);
         }),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed()
       )
       .subscribe();
-  }
 
-  /**
-   * Listen to the store to init proxy form values
-   */
-  private initFormValues() {
     this.activeEnvironment$
       .pipe(
         filter((environment) => !!environment),
@@ -122,8 +88,16 @@ export class EnvironmentProxyComponent implements OnInit, OnDestroy {
             { emitEvent: false }
           );
         }),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed()
       )
       .subscribe();
+  }
+  /**
+   * Update the store when proxy headers lists are updated
+   */
+  public headersUpdated(targetHeaders: HeadersProperties, headers: Header[]) {
+    this.environmentsService.updateActiveEnvironment({
+      [targetHeaders]: headers
+    });
   }
 }

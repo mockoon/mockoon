@@ -7,7 +7,7 @@
           index as callbackIndex
         "
         class="callback-item"
-        [ngClass]="{
+        [class]="{
           'pt-1': callbackIndex !== 0,
           'pb-1': callbackIndex !== form.get('callbacks')['controls'].length - 1
         }"
@@ -20,10 +20,10 @@
           [items]="callbacks$ | async"
           placeholder="Select a callback"
           [dropdownId]="'callback' + callbackIndex + 'target'"
-        ></app-custom-select>
+        />
 
         <span class="input-group-text" ngbTooltip="Callback latency (ms)">
-          <app-svg icon="access_time"></app-svg>
+          <app-svg icon="access_time" />
         </span>
 
         <input
@@ -51,7 +51,7 @@
             )
           "
         >
-          <app-svg icon="goto"></app-svg>
+          <app-svg icon="goto" />
         </button>
 
         <button
@@ -59,7 +59,7 @@
           [attr.data-testid]="'callback' + callbackIndex + 'delete'"
           type="button"
           class="btn btn-link btn-icon delete-callback"
-          [ngClass]="{
+          [class]="{
             'text-danger':
               deleteCallbackRequested.enabled === true &&
               deleteCallbackRequested.payload === callbackIndex
@@ -72,7 +72,7 @@
           "
           (click)="removeCallback(callbackIndex)"
         >
-          <app-svg icon="delete"></app-svg>
+          <app-svg icon="delete" />
         </button>
       </div>
     </div>
@@ -83,7 +83,7 @@
         class="btn btn-link btn-icon add-callback"
         (click)="addCallback(allCallbacks)"
       >
-        <app-svg icon="add_box" class="text-success pe-2"></app-svg>
+        <app-svg icon="add_box" class="text-success pe-2" />
         Add callback
       </button>
       <p *ngIf="allCallbacks.length === 0" class="message w-100 text-center">

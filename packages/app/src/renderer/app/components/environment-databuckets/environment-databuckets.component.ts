@@ -1,11 +1,6 @@
-import { AsyncPipe, NgClass, NgIf } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-  inject
-} from '@angular/core';
+import { AsyncPipe, NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -18,7 +13,7 @@ import {
   ProcessedDatabucketWithoutValue
 } from '@mockoon/commons';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subject, filter, map, merge, takeUntil, tap } from 'rxjs';
+import { Observable, filter, map, merge, tap } from 'rxjs';
 import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
 import { DatabucketsMenuComponent } from 'src/renderer/app/components/menus/databuckets-menu/databuckets-menu.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
@@ -43,12 +38,11 @@ import { Store } from 'src/renderer/app/stores/store';
     NgIf,
     EditorComponent,
     NgbTooltip,
-    NgClass,
     SvgComponent,
     AsyncPipe
   ]
 })
-export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
+export class EnvironmentDatabucketsComponent {
   private uiService = inject(UIService);
   private store = inject(Store);
   private environmentsService = inject(EnvironmentsService);
@@ -64,9 +58,8 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
     Record<string, ProcessedDatabucketWithoutValue>
   >;
   public scrollToBottom = this.uiService.scrollToBottom;
-  private destroy$ = new Subject<void>();
 
-  ngOnInit() {
+  constructor() {
     this.hasDatabuckets$ = this.store.selectActiveEnvironment().pipe(
       filter((environment) => !!environment),
       map((environment) => environment.data.length > 0)
@@ -75,13 +68,46 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
     this.processedDatabuckets$ =
       this.store.selectActiveEnvironmentProcessedDatabuckets();
     this.bodyEditorConfig$ = this.store.select('bodyEditorConfig');
-    this.initForms();
-    this.initFormValues();
-  }
 
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
+    this.activeDatabucketForm = this.formBuilder.group({
+      name: [DataBucketDefault.name],
+      documentation: [DataBucketDefault.documentation],
+      value: [DataBucketDefault.value]
+    });
+
+    // send new activeDatabucketForm values to the store, one by one
+    merge(
+      ...Object.keys(this.activeDatabucketForm.controls).map((controlName) =>
+        this.activeDatabucketForm
+          .get(controlName)
+          .valueChanges.pipe(map((newValue) => ({ [controlName]: newValue })))
+      )
+    )
+      .pipe(
+        tap((newProperty) => {
+          this.environmentsService.updateActiveDatabucket(newProperty);
+        }),
+        takeUntilDestroyed()
+      )
+      .subscribe();
+
+    // subscribe to active route changes to reset the form
+    this.activeDatabucket$
+      .pipe(
+        filter((databucket) => !!databucket),
+        this.store.distinctUUIDOrForce(),
+        takeUntilDestroyed()
+      )
+      .subscribe((activeDatabucket) => {
+        this.activeDatabucketForm.patchValue(
+          {
+            name: activeDatabucket.name,
+            documentation: activeDatabucket.documentation,
+            value: activeDatabucket.value
+          },
+          { emitEvent: false }
+        );
+      });
   }
 
   public copyToClipboard(databucketId: string) {
@@ -104,53 +130,6 @@ export class EnvironmentDatabucketsComponent implements OnInit, OnDestroy {
             'This is the current in-memory value of the processed databucket content',
           text: validJson ? JSON.stringify(d, null, 2) : d
         });
-      });
-  }
-
-  private initForms() {
-    this.activeDatabucketForm = this.formBuilder.group({
-      name: [DataBucketDefault.name],
-      documentation: [DataBucketDefault.documentation],
-      value: [DataBucketDefault.value]
-    });
-
-    // send new activeDatabucketForm values to the store, one by one
-    merge(
-      ...Object.keys(this.activeDatabucketForm.controls).map((controlName) =>
-        this.activeDatabucketForm
-          .get(controlName)
-          .valueChanges.pipe(map((newValue) => ({ [controlName]: newValue })))
-      )
-    )
-      .pipe(
-        tap((newProperty) => {
-          this.environmentsService.updateActiveDatabucket(newProperty);
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
-  }
-
-  /**
-   * Listen to stores to init form values
-   */
-  private initFormValues() {
-    // subscribe to active route changes to reset the form
-    this.activeDatabucket$
-      .pipe(
-        filter((databucket) => !!databucket),
-        this.store.distinctUUIDOrForce(),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((activeDatabucket) => {
-        this.activeDatabucketForm.patchValue(
-          {
-            name: activeDatabucket.name,
-            documentation: activeDatabucket.documentation,
-            value: activeDatabucket.value
-          },
-          { emitEvent: false }
-        );
       });
   }
 }

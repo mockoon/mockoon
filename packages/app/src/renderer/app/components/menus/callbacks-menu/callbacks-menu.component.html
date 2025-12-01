@@ -14,14 +14,14 @@
           (click)="addCallback()"
           ngbTooltip="Add callback"
         >
-          <app-svg icon="add_box"></app-svg>
+          <app-svg icon="add_box" />
         </button>
       </div>
       <div class="flex-grow-1">
         <app-filter
           filterName="callbacks"
           [focusableInput]="focusableInputs.CALLBACK_FILTER"
-        ></app-filter>
+        />
       </div>
     </div>
 
@@ -40,7 +40,7 @@
       >
         <a
           class="nav-link d-flex pe-0 hover-parent"
-          [ngClass]="{
+          [class]="{
             active: data.activeCallback?.uuid === callback.uuid
           }"
           appScrollWhenActive
@@ -51,7 +51,7 @@
             <div
               *ngIf="data.settings"
               class="nav-link-label callback-path"
-              [ngClass]="{
+              [class]="{
                 'text-truncate': data.settings.truncateRouteName,
                 'text-break': !data.settings.truncateRouteName
               }"
@@ -80,7 +80,7 @@
               }"
               [iconFaded]="true"
               [noYPadding]="true"
-            ></app-dropdown-menu>
+            />
           </div>
         </a>
       </li>

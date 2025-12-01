@@ -1,16 +1,16 @@
-import { AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   HostBinding,
   HostListener,
-  OnDestroy,
   OnInit,
-  QueryList,
-  ViewChildren,
-  inject
+  inject,
+  viewChildren
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -19,7 +19,6 @@ import {
 import {
   BehaviorSubject,
   Observable,
-  Subject,
   concat,
   debounceTime,
   distinctUntilChanged,
@@ -27,7 +26,6 @@ import {
   merge,
   startWith,
   take,
-  takeUntil,
   tap
 } from 'rxjs';
 import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
@@ -52,26 +50,24 @@ import { Config } from 'src/renderer/config';
     FormsModule,
     FocusOnEventDirective,
     ReactiveFormsModule,
-    NgClass,
     AsyncPipe,
     SpinnerComponent
   ]
 })
-export class CommandPaletteModalComponent implements OnInit, OnDestroy {
+export class CommandPaletteModalComponent implements OnInit {
   private eventsService = inject(EventsService);
   private commandPaletteService = inject(CommandPaletteService);
   private uiService = inject(UIService);
-
+  private destroyRef = inject(DestroyRef);
   @HostBinding('class')
   public hostClasses = 'command-palette-modal d-flex flex-column flex-fill mh0';
-  @ViewChildren('commandElement')
-  public commandElements: QueryList<ElementRef<HTMLButtonElement>>;
+  public commandElements =
+    viewChildren<ElementRef<HTMLButtonElement>>('commandElement');
   public focusableInputs = FocusableInputs;
   public commands$: Observable<Commands>;
   public searchControl = new UntypedFormControl('');
   public focusedItemIndex$ = new BehaviorSubject<number>(0);
   public isWeb = Config.isWeb;
-  private destroy$ = new Subject<void>();
   private commands: Commands = [];
 
   /**
@@ -88,9 +84,11 @@ export class CommandPaletteModalComponent implements OnInit, OnDestroy {
       }
 
       this.focusedItemIndex$.next(this.focusedItemIndex$.value + 1);
-      this.commandElements
-        .get(this.focusedItemIndex$.value)
-        .nativeElement.scrollIntoView({ block: 'nearest' });
+      this.commandElements()[
+        this.focusedItemIndex$.value
+      ]?.nativeElement.scrollIntoView({
+        block: 'nearest'
+      });
     } else if (event.key === 'ArrowUp') {
       event.preventDefault();
       if (this.focusedItemIndex$.value <= 0) {
@@ -98,33 +96,15 @@ export class CommandPaletteModalComponent implements OnInit, OnDestroy {
       }
 
       this.focusedItemIndex$.next(this.focusedItemIndex$.value - 1);
-      this.commandElements
-        .get(this.focusedItemIndex$.value)
-        .nativeElement.scrollIntoView({ block: 'nearest' });
+      this.commandElements()[
+        this.focusedItemIndex$.value
+      ]?.nativeElement.scrollIntoView({
+        block: 'nearest'
+      });
     }
   }
 
-  ngOnInit() {
-    const modal = this.uiService.getModalInstance('commandPalette');
-
-    merge(
-      modal.shown.pipe(
-        tap(() => {
-          this.eventsService.focusInput.next(
-            FocusableInputs.COMMAND_PALETTE_SEARCH
-          );
-        })
-      ),
-      modal.hidden.pipe(
-        tap(() => {
-          this.focusedItemIndex$.next(0);
-          this.searchControl.setValue('');
-        })
-      )
-    )
-      .pipe(takeUntil(this.destroy$))
-      .subscribe();
-
+  constructor() {
     const searchControl$ = this.searchControl.valueChanges.pipe(
       startWith(''),
       map((search) => search.trim())
@@ -149,9 +129,26 @@ export class CommandPaletteModalComponent implements OnInit, OnDestroy {
       );
   }
 
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
+  ngOnInit() {
+    const modal = this.uiService.getModalInstance('commandPalette');
+
+    merge(
+      modal.shown.pipe(
+        tap(() => {
+          this.eventsService.focusInput.next(
+            FocusableInputs.COMMAND_PALETTE_SEARCH
+          );
+        })
+      ),
+      modal.hidden.pipe(
+        tap(() => {
+          this.focusedItemIndex$.next(0);
+          this.searchControl.setValue('');
+        })
+      )
+    )
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 
   public onCommandActivate(event: Event, command?: Command) {

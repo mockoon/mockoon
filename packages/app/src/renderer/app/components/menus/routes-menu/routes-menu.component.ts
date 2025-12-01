@@ -1,19 +1,12 @@
-import {
-  AsyncPipe,
-  NgClass,
-  NgStyle,
-  NgTemplateOutlet,
-  UpperCasePipe
-} from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet, UpperCasePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-  inject
+  inject,
+  viewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -38,13 +31,12 @@ import {
   NgbPopover,
   NgbTooltip
 } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subject, merge, of } from 'rxjs';
+import { Observable, merge, of } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
   filter,
   map,
-  takeUntil,
   tap,
   withLatestFrom
 } from 'rxjs/operators';
@@ -103,9 +95,7 @@ type folderDropdownMenuPayload = { folder: Folder; folderUuid: string };
     ResizeColumnDirective,
     DraggableDirective,
     DropzoneDirective,
-    NgClass,
     ScrollWhenActiveDirective,
-    NgStyle,
     FormsModule,
     ReactiveFormsModule,
     EditableElementComponent,
@@ -115,15 +105,13 @@ type folderDropdownMenuPayload = { folder: Folder; folderUuid: string };
     UpperCasePipe
   ]
 })
-export class RoutesMenuComponent implements OnInit, OnDestroy {
+export class RoutesMenuComponent {
   private environmentsService = inject(EnvironmentsService);
   private store = inject(Store);
   private uiService = inject(UIService);
   private formBuilder = inject(UntypedFormBuilder);
   private mainApiService = inject(MainApiService);
-
-  @ViewChild('routesMenu')
-  private routesMenu: ElementRef<HTMLUListElement>;
+  private routesMenu = viewChild<ElementRef<HTMLUListElement>>('routesMenu');
   public settings$: Observable<Settings>;
   public activeEnvironment$: Observable<Environment>;
   public isActiveEnvironmentCloud$ = this.store.selectIsActiveEnvCloud();
@@ -271,9 +259,8 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
       }
     }
   ];
-  private destroy$ = new Subject<void>();
 
-  ngOnInit() {
+  constructor() {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeRoute$ = this.store.selectActiveRoute();
     this.duplicatedRoutes$ = this.store.select('duplicatedRoutes');
@@ -316,12 +303,29 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.initForms();
-  }
+    this.folderForm = this.formBuilder.group({
+      uuid: [''],
+      name: ['']
+    });
 
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
+    // send new activeRouteForm values to the store, one by one
+    merge(
+      ...Object.keys(this.folderForm.controls).map((controlName) =>
+        this.folderForm
+          .get(controlName)
+          .valueChanges.pipe(map((newValue) => ({ [controlName]: newValue })))
+      )
+    )
+      .pipe(
+        tap((newFolderProperties: Partial<Folder>) => {
+          this.environmentsService.updateFolder(
+            this.folderForm.get('uuid').value,
+            newFolderProperties
+          );
+        }),
+        takeUntilDestroyed()
+      )
+      .subscribe();
   }
 
   /**
@@ -384,7 +388,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
     this.environmentsService.addFolder('root');
 
     // manually scroll to the bottom when adding a new folder as they cannot use the scrollWhenActive directive
-    this.uiService.scrollToBottom(this.routesMenu.nativeElement);
+    this.uiService.scrollToBottom(this.routesMenu().nativeElement);
   }
 
   /**
@@ -476,34 +480,5 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
         }
       })
     };
-  }
-
-  /**
-   * Init forms and subscribe to changes
-   */
-  private initForms() {
-    this.folderForm = this.formBuilder.group({
-      uuid: [''],
-      name: ['']
-    });
-
-    // send new activeRouteForm values to the store, one by one
-    merge(
-      ...Object.keys(this.folderForm.controls).map((controlName) =>
-        this.folderForm
-          .get(controlName)
-          .valueChanges.pipe(map((newValue) => ({ [controlName]: newValue })))
-      )
-    )
-      .pipe(
-        tap((newFolderProperties: Partial<Folder>) => {
-          this.environmentsService.updateFolder(
-            this.folderForm.get('uuid').value,
-            newFolderProperties
-          );
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
   }
 }
