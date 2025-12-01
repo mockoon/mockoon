@@ -2,7 +2,6 @@ import {
   AsyncPipe,
   DatePipe,
   LowerCasePipe,
-  NgClass,
   TitleCasePipe,
   UpperCasePipe
 } from '@angular/common';
@@ -81,7 +80,6 @@ type logsDropdownMenuPayload = { logUuid: string };
     SvgComponent,
     FilterComponent,
     ReactiveFormsModule,
-    NgClass,
     DropdownMenuComponent,
     ResizeColumnDirective,
     NgbCollapse,

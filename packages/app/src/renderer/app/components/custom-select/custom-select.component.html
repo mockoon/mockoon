@@ -26,12 +26,12 @@
         >
           <span
             *ngIf="data.selectedItem?.label"
-            [ngClass]="data.selectedItem?.classes"
+            [class]="data.selectedItem?.classes"
             >{{ data.selectedItem.label }}</span
           >
           <span
             *ngIf="!data.selectedItem?.label"
-            [ngClass]="placeholderClasses ? placeholderClasses : 'text-muted'"
+            [class]="placeholderClasses ? placeholderClasses : 'text-muted'"
             >{{ placeholder }}</span
           >
         </div>
@@ -42,7 +42,7 @@
         class="dropdown-menu {{
           enableCustomInput ? 'dropdown-menu-with-fixed-search' : ''
         }}"
-        [ngStyle]="{
+        [style]="{
           'min-width': dropdownElement.getBoundingClientRect().width + 'px',
           'max-width':
             window.innerWidth -
@@ -76,13 +76,13 @@
               #dropdownMenuItems
               type="button"
               class="btn dropdown-item d-flex"
-              [ngClass]="{ 'ps-4': hasCategory }"
+              [class]="{ 'ps-4': hasCategory }"
               ngbDropdownItem
               (click)="setValue(item)"
               (keydown)="itemKeydown(item, $event)"
               [disabled]="disabledList?.includes(item.value)"
             >
-              <span class="text-truncate" [ngClass]="item.classes">{{
+              <span class="text-truncate" [class]="item.classes">{{
                 item.label
               }}</span>
             </button>
@@ -102,7 +102,7 @@
       class="btn btn-custom"
       ngbTooltip="Clear selection"
     >
-      <app-svg icon="clear"></app-svg>
+      <app-svg icon="clear" />
     </button>
   </div>
 </ng-container>

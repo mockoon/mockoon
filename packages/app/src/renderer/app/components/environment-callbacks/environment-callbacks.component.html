@@ -12,7 +12,7 @@
   } as data"
 >
   <div class="d-flex h-100">
-    <app-callbacks-menu class="h-100"></app-callbacks-menu>
+    <app-callbacks-menu class="h-100" />
 
     <div class="d-flex flex-column flex-fill mh0">
       <ng-container *ngIf="data.activeCallback; else noActiveCallback">
@@ -21,7 +21,7 @@
             <li class="nav-item">
               <a
                 class="nav-link"
-                [ngClass]="{ active: data.activeTab === 'SPEC' }"
+                [class]="{ active: data.activeTab === 'SPEC' }"
                 (click)="setActiveTab('SPEC')"
                 >Definition</a
               >
@@ -29,7 +29,7 @@
             <li class="nav-item">
               <a
                 class="nav-link d-flex align-items-center"
-                [ngClass]="{ active: data.activeTab === 'USAGE' }"
+                [class]="{ active: data.activeTab === 'USAGE' }"
                 (click)="setActiveTab('USAGE')"
               >
                 Usage
@@ -72,7 +72,7 @@
               [enableCustomInput]="false"
               [items]="callbackMethods"
               dropdownId="cbmethods"
-            ></app-custom-select>
+            />
 
             <div class="col-10 ps-2">
               <input
@@ -89,7 +89,7 @@
               <li class="nav-item">
                 <a
                   class="nav-link"
-                  [ngClass]="{ active: data.activeSpecTab === 'BODY' }"
+                  [class]="{ active: data.activeSpecTab === 'BODY' }"
                   (click)="setActiveSpecTab('BODY')"
                   >Body</a
                 >
@@ -97,7 +97,7 @@
               <li class="nav-item">
                 <a
                   class="nav-link"
-                  [ngClass]="{ active: data.activeSpecTab === 'HEADERS' }"
+                  [class]="{ active: data.activeSpecTab === 'HEADERS' }"
                   (click)="setActiveSpecTab('HEADERS')"
                   >Headers</a
                 >
@@ -118,8 +118,7 @@
                 headersPropertyName="headers"
                 (headersUpdated)="headersUpdated($event)"
                 (headerAdded)="scrollToBottom(responseCallbackHeadersContainer)"
-              >
-              </app-headers-list>
+              />
             </div>
           </ng-container>
 
@@ -149,7 +148,7 @@
                   label="Body"
                   [items]="bodyType$ | async"
                   [uncheckable]="false"
-                ></app-toggle>
+                />
               </div>
 
               <ng-container *ngIf="data.activeCallback?.bodyType === 'INLINE'">
@@ -160,8 +159,7 @@
                     mode="json"
                     [uuid]="data.activeCallback?.uuid"
                     formControlName="body"
-                  >
-                  </app-editor>
+                  />
                 </div>
               </ng-container>
 
@@ -180,7 +178,7 @@
                     class="btn btn-custom"
                     ngbTooltip="Clear"
                   >
-                    <app-svg icon="clear"></app-svg>
+                    <app-svg icon="clear" />
                   </button>
                   <!-- File options dropdown -->
                   <div class="d-flex align-items-center">
@@ -191,7 +189,7 @@
                         filePath: data.activeCallback?.filePath,
                         environmentUuid: data.activeEnvironment?.uuid
                       }"
-                    ></app-dropdown-menu>
+                    />
                   </div>
                 </div>
 
@@ -235,7 +233,7 @@
                     placeholder="Select a databucket"
                     [clearable]="true"
                     [defaultClearValue]="''"
-                  ></app-custom-select>
+                  />
                 </div>
               </ng-container>
             </div>

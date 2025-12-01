@@ -1,7 +1,6 @@
 import {
   AsyncPipe,
   LowerCasePipe,
-  NgClass,
   NgFor,
   NgIf,
   UpperCasePipe
@@ -58,7 +57,6 @@ type dropdownMenuPayload = { callbackUuid: string };
     DraggableDirective,
     DropzoneDirective,
     ScrollWhenActiveDirective,
-    NgClass,
     DropdownMenuComponent,
     ResizeColumnDirective,
     AsyncPipe,

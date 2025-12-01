@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass, NgFor } from '@angular/common';
+import { AsyncPipe, NgFor } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -53,7 +53,6 @@ type dropdownMenuPayload = { databucketUuid: string };
     DraggableDirective,
     DropzoneDirective,
     ScrollWhenActiveDirective,
-    NgClass,
     DropdownMenuComponent,
     ResizeColumnDirective,
     AsyncPipe

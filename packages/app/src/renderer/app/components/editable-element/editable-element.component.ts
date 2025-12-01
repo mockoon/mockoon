@@ -1,3 +1,4 @@
+import { NgClass, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -11,12 +12,11 @@ import {
 } from '@angular/core';
 import {
   ControlValueAccessor,
-  NG_VALUE_ACCESSOR,
-  UntypedFormControl,
   FormsModule,
-  ReactiveFormsModule
+  NG_VALUE_ACCESSOR,
+  ReactiveFormsModule,
+  UntypedFormControl
 } from '@angular/forms';
-import { NgIf, NgClass } from '@angular/common';
 
 /**
  * Editable element (span) that switches to an input when clicked and save on Enter or blur.

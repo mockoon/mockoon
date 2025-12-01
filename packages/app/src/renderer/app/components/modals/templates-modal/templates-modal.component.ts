@@ -1,7 +1,6 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import {
   AsyncPipe,
-  NgClass,
   NgFor,
   NgIf,
   NgTemplateOutlet,
@@ -9,13 +8,14 @@ import {
 } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  DOCUMENT,
   Component,
+  DestroyRef,
+  DOCUMENT,
   forwardRef,
-  OnDestroy,
-  OnInit,
-  inject
+  inject,
+  OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormControl,
   FormsModule,
@@ -46,9 +46,7 @@ import {
   Observable,
   of,
   repeat,
-  Subject,
   switchMap,
-  takeUntil,
   tap,
   withLatestFrom
 } from 'rxjs';
@@ -85,7 +83,6 @@ import { Config } from 'src/renderer/config';
   ],
   imports: [
     NgIf,
-    NgClass,
     SvgComponent,
     NgFor,
     EditorComponent,
@@ -101,14 +98,14 @@ import { Config } from 'src/renderer/config';
     forwardRef(() => FilterComponent)
   ]
 })
-export class TemplatesModalComponent implements OnInit, OnDestroy {
+export class TemplatesModalComponent implements OnInit {
   private modalService = inject(NgbModal);
   private templatesService = inject(TemplatesService);
   private environmentsService = inject(EnvironmentsService);
   private store = inject(Store);
   private uiService = inject(UIService);
   private document = inject<Document>(DOCUMENT);
-
+  private destroyRef = inject(DestroyRef);
   public isDemoLoading$ = new BehaviorSubject<boolean>(false);
   public activeTemplateListItem$ = new BehaviorSubject<TemplateListItem>(null);
   public activeTemplate$: Observable<Template>;
@@ -134,9 +131,8 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
   public open = false;
   public accountUrl = Config.accountUrl;
   private isFirstDemo = true;
-  private destroy$ = new Subject<void>();
 
-  ngOnInit() {
+  constructor() {
     this.user$ = this.store.select('user');
     this.activeTemplatesTab$ = this.store.select('activeTemplatesTab');
     this.activeTemplatesTab$
@@ -153,37 +149,9 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
             );
           }
         }),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed()
       )
       .subscribe();
-
-    const modal = this.uiService.getModalInstance('templates');
-
-    merge(
-      modal.shown.pipe(
-        tap(() => {
-          if (this.templatesService.generatingTemplate$.value === 'DONE') {
-            this.templatesService.generatingTemplate$.next('NONE');
-          }
-
-          if (this.templatesService.generatingEndpoint$.value === 'DONE') {
-            this.templatesService.generatingEndpoint$.next('NONE');
-          }
-        })
-      ),
-      modal.hidden.pipe(
-        tap(() => {
-          if (this.templatesService.generatingTemplate$.value === 'DONE') {
-            this.templatesService.generatingTemplate$.next('NONE');
-          }
-
-          if (this.templatesService.generatingEndpoint$.value === 'DONE') {
-            this.templatesService.generatingEndpoint$.next('NONE');
-          }
-          this.resetAnimation();
-        })
-      )
-    ).subscribe();
 
     this.templatesFilter$ = this.store.selectFilter('templates');
 
@@ -220,14 +188,39 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
         tap((template) => {
           this.generatedTemplateBody.setValue(template);
         }),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed()
       )
       .subscribe();
   }
 
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
+  ngOnInit() {
+    const modal = this.uiService.getModalInstance('templates');
+
+    merge(
+      modal.shown.pipe(
+        tap(() => {
+          if (this.templatesService.generatingTemplate$.value === 'DONE') {
+            this.templatesService.generatingTemplate$.next('NONE');
+          }
+
+          if (this.templatesService.generatingEndpoint$.value === 'DONE') {
+            this.templatesService.generatingEndpoint$.next('NONE');
+          }
+        })
+      ),
+      modal.hidden.pipe(
+        tap(() => {
+          if (this.templatesService.generatingTemplate$.value === 'DONE') {
+            this.templatesService.generatingTemplate$.next('NONE');
+          }
+
+          if (this.templatesService.generatingEndpoint$.value === 'DONE') {
+            this.templatesService.generatingEndpoint$.next('NONE');
+          }
+          this.resetAnimation();
+        })
+      )
+    ).subscribe();
   }
 
   public generateTemplate() {
@@ -413,7 +406,7 @@ export class TemplatesModalComponent implements OnInit, OnDestroy {
     return of(true).pipe(
       mergeMap(() => createAnimation(demoTemplates)),
       repeat(),
-      takeUntil(this.destroy$)
+      takeUntilDestroyed(this.destroyRef)
     );
   }
 }

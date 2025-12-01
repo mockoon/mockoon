@@ -27,9 +27,24 @@ configs[1].rules = {
   '@typescript-eslint/prefer-nullish-coalescing': 'off'
 };
 
-export default tseslint.config(...configs, {
-  files: ['test/**/*.ts'],
-  rules: {
-    '@typescript-eslint/no-empty-function': 'off'
+export default tseslint.config(
+  ...configs,
+  {
+    files: ['test/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-empty-function': 'off'
+    }
+  },
+  {
+    files: ['**/*.component.html'],
+    ignores: ['**/svg.component.html'],
+    languageOptions: {
+      parser: angular.configs.templateRecommended[0].languageOptions.parser
+    },
+    plugins: angular.configs.templateRecommended[0].plugins,
+    rules: {
+      ...angular.configs.templateRecommended[0].rules,
+      '@angular-eslint/template/prefer-self-closing-tags': ['error']
+    }
   }
-});
+);

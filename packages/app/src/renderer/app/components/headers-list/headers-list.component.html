@@ -6,7 +6,7 @@
           class="header-item"
           *ngFor="let header of headers.controls; index as headerIndex"
           [formGroupName]="headerIndex"
-          [ngClass]="{
+          [class]="{
             'mb-2': headerIndex !== headers.controls.length - 1
           }"
         >
@@ -30,7 +30,7 @@
               *ngIf="deleteHeaderRequested$ | async as deleteHeaderRequested"
               type="button"
               class="btn btn-link btn-icon"
-              [ngClass]="{
+              [class]="{
                 'text-danger':
                   deleteHeaderRequested.enabled === true &&
                   deleteHeaderRequested.payload === headerIndex
@@ -43,7 +43,7 @@
               "
               (click)="removeHeader(headerIndex)"
             >
-              <app-svg icon="delete"></app-svg>
+              <app-svg icon="delete" />
             </button>
           </div>
         </div>
@@ -55,7 +55,7 @@
           class="btn btn-link btn-icon mt-2 add-header"
           (click)="addHeader()"
         >
-          <app-svg icon="add_box" class="text-success pe-2"></app-svg>
+          <app-svg icon="add_box" class="text-success pe-2" />
           Add header
         </button>
         <button

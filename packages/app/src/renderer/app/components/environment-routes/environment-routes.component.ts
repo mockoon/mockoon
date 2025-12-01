@@ -1,11 +1,6 @@
-import { AsyncPipe, NgClass, NgIf, NgStyle } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-  inject
-} from '@angular/core';
+import { AsyncPipe, NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -45,7 +40,7 @@ import {
   NgbPopover,
   NgbTooltip
 } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subject, combineLatest, from, merge } from 'rxjs';
+import { Observable, combineLatest, from, merge } from 'rxjs';
 import {
   combineLatestWith,
   distinctUntilChanged,
@@ -53,7 +48,6 @@ import {
   map,
   mergeMap,
   startWith,
-  takeUntil,
   tap
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
@@ -122,14 +116,12 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
     ValidPathDirective,
     FocusOnEventDirective,
     NgbTooltip,
-    NgClass,
     SvgComponent,
     ToggleComponent,
     InputNumberDirective,
     NgbDropdown,
     NgbDropdownToggle,
     NgbDropdownMenu,
-    NgStyle,
     FilterComponent,
     NgbDropdownButtonItem,
     NgbDropdownItem,
@@ -143,7 +135,7 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
     AsyncPipe
   ]
 })
-export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
+export class EnvironmentRoutesComponent {
   private uiService = inject(UIService);
   private store = inject(Store);
   private formBuilder = inject(UntypedFormBuilder);
@@ -365,9 +357,8 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       }
     }
   ];
-  private destroy$ = new Subject<void>();
 
-  ngOnInit() {
+  constructor() {
     this.activeEnvironment$ = this.store
       .selectActiveEnvironment()
       .pipe(distinctUntilChanged());
@@ -498,13 +489,126 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     this.activeTab$ = this.store.select('activeTab');
     this.bodyEditorConfig$ = this.store.select('bodyEditorConfig');
 
-    this.initForms();
-    this.initFormValues();
-  }
+    this.activeRouteForm = this.formBuilder.group({
+      documentation: [RouteDefault.documentation],
+      method: [RouteDefault.method],
+      endpoint: [RouteDefault.endpoint],
+      responseMode: [RouteDefault.responseMode],
+      streamingMode: [RouteDefault.streamingMode],
+      streamingInterval: [RouteDefault.streamingInterval]
+    });
 
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
+    this.defaultResponseTooltip$ = this.activeRouteForm
+      .get('responseMode')
+      .valueChanges.pipe(
+        startWith(RouteDefault.responseMode),
+        map((responseMode: ResponseMode) => {
+          if (
+            responseMode === ResponseMode.SEQUENTIAL ||
+            responseMode === ResponseMode.RANDOM
+          ) {
+            return 'Default response disabled by random or sequential responses';
+          } else if (responseMode === ResponseMode.DISABLE_RULES) {
+            return 'Default response always served as rules are disabled';
+          }
+
+          return 'Default response served if no rule matches';
+        })
+      );
+
+    // send new activeRouteForm values to the store, one by one
+    merge(
+      ...Object.keys(this.activeRouteForm.controls).map((controlName) =>
+        this.activeRouteForm
+          .get(controlName)
+          .valueChanges.pipe(map((newValue) => ({ [controlName]: newValue })))
+      )
+    )
+      .pipe(
+        tap((newProperty) => {
+          this.environmentsService.updateActiveRoute(newProperty);
+        }),
+        takeUntilDestroyed()
+      )
+      .subscribe();
+
+    this.activeRouteResponseForm = this.formBuilder.group({
+      statusCode: [RouteResponseDefault.statusCode],
+      label: [RouteResponseDefault.label],
+      latency: [RouteResponseDefault.latency],
+      bodyType: [RouteResponseDefault.bodyType],
+      filePath: [RouteResponseDefault.filePath],
+      databucketID: [RouteResponseDefault.databucketID],
+      sendFileAsBody: [RouteResponseDefault.sendFileAsBody],
+      body: [RouteResponseDefault.body],
+      rules: this.formBuilder.array([]),
+      disableTemplating: [RouteResponseDefault.disableTemplating],
+      fallbackTo404: [RouteResponseDefault.fallbackTo404],
+      crudKey: [RouteResponseDefault.crudKey]
+    });
+
+    // send new activeRouteResponseForm values to the store, one by one
+    merge(
+      ...Object.keys(this.activeRouteResponseForm.controls).map((controlName) =>
+        this.activeRouteResponseForm
+          .get(controlName)
+          .valueChanges.pipe(map((newValue) => ({ [controlName]: newValue })))
+      )
+    )
+      .pipe(
+        tap((newProperty) => {
+          this.environmentsService.updateActiveRouteResponse(newProperty);
+        }),
+        takeUntilDestroyed()
+      )
+      .subscribe();
+
+    // subscribe to active route changes to reset the form
+    this.activeRoute$
+      .pipe(
+        filter((route) => !!route),
+        this.store.distinctUUIDOrForce(),
+        takeUntilDestroyed()
+      )
+      .subscribe((activeRoute) => {
+        this.activeRouteForm.patchValue(
+          {
+            documentation: activeRoute.documentation,
+            method: activeRoute.method,
+            endpoint: activeRoute.endpoint,
+            responseMode: activeRoute.responseMode,
+            streamingMode: activeRoute.streamingMode,
+            streamingInterval: activeRoute.streamingInterval
+          },
+          { emitEvent: false }
+        );
+      });
+    // subscribe to active route response changes to reset the form
+    this.activeRouteResponse$
+      .pipe(
+        filter((routeResponse) => !!routeResponse),
+        this.store.distinctUUIDOrForce(),
+        takeUntilDestroyed()
+      )
+      .subscribe((activeRouteResponse) => {
+        this.activeRouteResponseForm.patchValue(
+          {
+            statusCode: activeRouteResponse.statusCode,
+            label: activeRouteResponse.label,
+            latency: activeRouteResponse.latency,
+            bodyType: activeRouteResponse.bodyType,
+            filePath: activeRouteResponse.filePath,
+            databucketID: activeRouteResponse.databucketID,
+            sendFileAsBody: activeRouteResponse.sendFileAsBody,
+            body: activeRouteResponse.body,
+            rules: activeRouteResponse.rules,
+            disableTemplating: activeRouteResponse.disableTemplating,
+            fallbackTo404: activeRouteResponse.fallbackTo404,
+            crudKey: activeRouteResponse.crudKey
+          },
+          { emitEvent: false }
+        );
+      });
   }
 
   /**
@@ -641,137 +745,5 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
     if (routeResponseUuid != null) {
       this.environmentsService.setDefaultRouteResponse(routeResponseUuid);
     }
-  }
-
-  /**
-   * Init forms and subscribe to changes
-   */
-  private initForms() {
-    this.activeRouteForm = this.formBuilder.group({
-      documentation: [RouteDefault.documentation],
-      method: [RouteDefault.method],
-      endpoint: [RouteDefault.endpoint],
-      responseMode: [RouteDefault.responseMode],
-      streamingMode: [RouteDefault.streamingMode],
-      streamingInterval: [RouteDefault.streamingInterval]
-    });
-
-    this.defaultResponseTooltip$ = this.activeRouteForm
-      .get('responseMode')
-      .valueChanges.pipe(
-        startWith(RouteDefault.responseMode),
-        map((responseMode: ResponseMode) => {
-          if (
-            responseMode === ResponseMode.SEQUENTIAL ||
-            responseMode === ResponseMode.RANDOM
-          ) {
-            return 'Default response disabled by random or sequential responses';
-          } else if (responseMode === ResponseMode.DISABLE_RULES) {
-            return 'Default response always served as rules are disabled';
-          }
-
-          return 'Default response served if no rule matches';
-        })
-      );
-
-    // send new activeRouteForm values to the store, one by one
-    merge(
-      ...Object.keys(this.activeRouteForm.controls).map((controlName) =>
-        this.activeRouteForm
-          .get(controlName)
-          .valueChanges.pipe(map((newValue) => ({ [controlName]: newValue })))
-      )
-    )
-      .pipe(
-        tap((newProperty) => {
-          this.environmentsService.updateActiveRoute(newProperty);
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
-
-    this.activeRouteResponseForm = this.formBuilder.group({
-      statusCode: [RouteResponseDefault.statusCode],
-      label: [RouteResponseDefault.label],
-      latency: [RouteResponseDefault.latency],
-      bodyType: [RouteResponseDefault.bodyType],
-      filePath: [RouteResponseDefault.filePath],
-      databucketID: [RouteResponseDefault.databucketID],
-      sendFileAsBody: [RouteResponseDefault.sendFileAsBody],
-      body: [RouteResponseDefault.body],
-      rules: this.formBuilder.array([]),
-      disableTemplating: [RouteResponseDefault.disableTemplating],
-      fallbackTo404: [RouteResponseDefault.fallbackTo404],
-      crudKey: [RouteResponseDefault.crudKey]
-    });
-
-    // send new activeRouteResponseForm values to the store, one by one
-    merge(
-      ...Object.keys(this.activeRouteResponseForm.controls).map((controlName) =>
-        this.activeRouteResponseForm
-          .get(controlName)
-          .valueChanges.pipe(map((newValue) => ({ [controlName]: newValue })))
-      )
-    )
-      .pipe(
-        tap((newProperty) => {
-          this.environmentsService.updateActiveRouteResponse(newProperty);
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
-  }
-
-  /**
-   * Listen to store to init form values
-   * Init only when the UUID changes or when the action is forcing an update
-   */
-  private initFormValues() {
-    // subscribe to active route changes to reset the form
-    this.activeRoute$
-      .pipe(
-        filter((route) => !!route),
-        this.store.distinctUUIDOrForce(),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((activeRoute) => {
-        this.activeRouteForm.patchValue(
-          {
-            documentation: activeRoute.documentation,
-            method: activeRoute.method,
-            endpoint: activeRoute.endpoint,
-            responseMode: activeRoute.responseMode,
-            streamingMode: activeRoute.streamingMode,
-            streamingInterval: activeRoute.streamingInterval
-          },
-          { emitEvent: false }
-        );
-      });
-    // subscribe to active route response changes to reset the form
-    this.activeRouteResponse$
-      .pipe(
-        filter((routeResponse) => !!routeResponse),
-        this.store.distinctUUIDOrForce(),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((activeRouteResponse) => {
-        this.activeRouteResponseForm.patchValue(
-          {
-            statusCode: activeRouteResponse.statusCode,
-            label: activeRouteResponse.label,
-            latency: activeRouteResponse.latency,
-            bodyType: activeRouteResponse.bodyType,
-            filePath: activeRouteResponse.filePath,
-            databucketID: activeRouteResponse.databucketID,
-            sendFileAsBody: activeRouteResponse.sendFileAsBody,
-            body: activeRouteResponse.body,
-            rules: activeRouteResponse.rules,
-            disableTemplating: activeRouteResponse.disableTemplating,
-            fallbackTo404: activeRouteResponse.fallbackTo404,
-            crudKey: activeRouteResponse.crudKey
-          },
-          { emitEvent: false }
-        );
-      });
   }
 }

@@ -1,11 +1,6 @@
-import { AsyncPipe, NgIf } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-  inject
-} from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -14,13 +9,11 @@ import {
 import {
   BehaviorSubject,
   EMPTY,
-  Subject,
   catchError,
   debounceTime,
   delay,
   filter,
   mergeMap,
-  takeUntil,
   tap
 } from 'rxjs';
 import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
@@ -31,18 +24,16 @@ import { UserService } from 'src/renderer/app/services/user.service';
   selector: 'app-auth-modal',
   templateUrl: './auth-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, ReactiveFormsModule, NgIf, AsyncPipe, SpinnerComponent]
+  imports: [FormsModule, ReactiveFormsModule, AsyncPipe, SpinnerComponent]
 })
-export class AuthModalComponent implements OnInit, OnDestroy {
+export class AuthModalComponent {
   private uiService = inject(UIService);
   private userService = inject(UserService);
-
   public isLoading$ = new BehaviorSubject<boolean>(false);
   public isSuccess$ = new BehaviorSubject<boolean>(false);
   public tokenControl = new UntypedFormControl('');
-  private destroy$ = new Subject<void>();
 
-  ngOnInit() {
+  constructor() {
     this.tokenControl.valueChanges
       .pipe(
         debounceTime(500),
@@ -69,14 +60,9 @@ export class AuthModalComponent implements OnInit, OnDestroy {
         tap(() => {
           this.close();
         }),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed()
       )
       .subscribe();
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
   }
 
   public close() {

@@ -1,14 +1,12 @@
-import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
   Output,
   inject
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormArray,
   FormBuilder,
@@ -21,12 +19,11 @@ import {
   Callback,
   CallbackInvocation,
   Environment,
-  Route,
   RouteResponse
 } from '@mockoon/commons';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subject } from 'rxjs';
-import { filter, map, takeUntil, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { filter, map, tap } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
@@ -46,7 +43,6 @@ import { Store } from 'src/renderer/app/stores/store';
     FormsModule,
     ReactiveFormsModule,
     NgFor,
-    NgClass,
     CustomSelectComponent,
     NgbTooltip,
     SvgComponent,
@@ -54,15 +50,12 @@ import { Store } from 'src/renderer/app/stores/store';
     AsyncPipe
   ]
 })
-export class RouteCallbacksComponent implements OnInit, OnDestroy {
+export class RouteCallbacksComponent {
   private environmentsService = inject(EnvironmentsService);
   private store = inject(Store);
   private formBuilder = inject(FormBuilder);
-
-  @Input()
-  public activeRouteResponse$: Observable<RouteResponse>;
-  @Input()
-  public activeRoute$: Observable<Route>;
+  public activeRouteResponse$ = this.store.selectActiveRouteResponse();
+  public activeRoute$ = this.store.selectActiveRoute();
   @Output()
   public callbackAdded = new EventEmitter<void>();
   public activeEnvironment$: Observable<Environment>;
@@ -74,13 +67,12 @@ export class RouteCallbacksComponent implements OnInit, OnDestroy {
   public Infinity = Infinity;
   public allCallbacks$: Observable<Callback[]>;
   private listenToChanges = true;
-  private destroy$ = new Subject<void>();
 
   public get callbacks() {
     return this.form.get('callbacks') as FormArray;
   }
 
-  ngOnInit() {
+  constructor() {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.form = this.formBuilder.group({
       callbacks: this.formBuilder.array([])
@@ -118,14 +110,9 @@ export class RouteCallbacksComponent implements OnInit, OnDestroy {
         tap((newProperties) => {
           this.environmentsService.updateActiveRouteResponse(newProperties);
         }),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed()
       )
       .subscribe();
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
   }
 
   /**

@@ -9,12 +9,12 @@
       <label
         id="{{ prefix }}-{{ item.label | uppercase }}"
         class="btn btn-custom px-2 d-flex align-items-center"
-        [ngClass]="{
+        [class]="{
           'btn-primary': control.value === true,
           active: control.value === true
         }"
         [ngbTooltip]="item.tooltip"
-        [ngClass]="
+        [class]="
           control.value === true
             ? item.activeClass
               ? item.activeClass
@@ -33,9 +33,8 @@
           *ngIf="item.icon"
           [icon]="item.icon"
           size="{{ item.iconSize ?? 16 }}"
-          [ngClass]="{ 'me-2': !!item.label }"
-        ></app-svg
-        >{{ item.label }}
+          [class]="{ 'me-2': !!item.label }"
+        />{{ item.label }}
       </label>
     </ng-container>
 
@@ -44,12 +43,12 @@
       <label
         id="{{ prefix }}-{{ item.value }}"
         class="btn btn-custom px-2 d-flex align-items-center"
-        [ngClass]="{
+        [class]="{
           'btn-primary': item.value === control.value,
           active: item.value === control.value
         }"
         [ngbTooltip]="item.tooltip"
-        [ngClass]="
+        [class]="
           item.value === control.value
             ? item.activeClass
               ? item.activeClass
@@ -70,9 +69,8 @@
           *ngIf="item.icon"
           [icon]="item.icon"
           size="{{ item.iconSize ?? 16 }}"
-          [ngClass]="{ 'me-2': !!item.label }"
-        ></app-svg
-        >{{ item.label }}
+          [class]="{ 'me-2': !!item.label }"
+        />{{ item.label }}
       </label>
     </ng-container>
   </ng-container>

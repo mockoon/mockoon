@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -48,7 +48,6 @@ import { environment as env } from 'src/renderer/environments/environment';
     NgbTooltip,
     SvgComponent,
     NgFor,
-    NgClass,
     TeamPresenceComponent,
     NgbDropdown,
     NgbDropdownToggle,

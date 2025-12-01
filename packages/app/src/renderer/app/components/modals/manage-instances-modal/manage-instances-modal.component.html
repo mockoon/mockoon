@@ -12,8 +12,7 @@
   @if (payload?.environmentUuid) {
     <div class="ms-auto" [appHideAfter]="3000">
       <small class="text-success h6">
-        <app-svg icon="check" class="me-2"></app-svg>Instance deployed
-        successfully!
+        <app-svg icon="check" class="me-2" />Instance deployed successfully!
       </small>
     </div>
   }
@@ -38,7 +37,7 @@
         @for (instance of instances; track $index) {
           <tr
             class="hover-parent"
-            [ngClass]="{
+            [class]="{
               'animation-fast-highlight':
                 payload?.environmentUuid === instance.environmentUuid
             }"
@@ -50,13 +49,13 @@
                   icon="record"
                   class="text-success"
                   ngbTooltip="Running"
-                ></app-svg>
+                />
               } @else {
                 <app-svg
                   icon="record"
                   class="text-danger"
                   ngbTooltip="Stopped"
-                ></app-svg>
+                />
               }
             </td>
             <td>
@@ -88,16 +87,16 @@
                   ngbTooltip="Click to copy"
                   (click)="copyToClipboard(instance.url)"
                 >
-                  <app-svg icon="assignment"></app-svg>
+                  <app-svg icon="assignment" />
                 </button>
               </div>
             </td>
             <td>
               <div class="d-flex align-items-center">
                 @if (instance.visibility === 'PUBLIC') {
-                  <app-svg icon="public" class="me-2"></app-svg>Public
+                  <app-svg icon="public" class="me-2" />Public
                 } @else {
-                  <app-svg icon="lock" class="me-2"></app-svg>Private
+                  <app-svg icon="lock" class="me-2" />Private
                 }
               </div>
             </td>
@@ -108,7 +107,7 @@
                 ngbTooltip="Click to copy the API key. The API key must be used in the Authorization header to access the API when private. The API key is always required to access the admin API."
                 (click)="copyToClipboard(instance.apiKey)"
               >
-                <app-svg icon="key"></app-svg>
+                <app-svg icon="key" />
               </button>
             </td>
             <td>
@@ -120,7 +119,7 @@
                 }"
                 [iconFaded]="true"
                 [noYPadding]="true"
-              ></app-dropdown-menu>
+              />
             </td>
           </tr>
         } @empty {
@@ -135,7 +134,7 @@
                     [items]="deployEnvList"
                     [icon]="null"
                     label="Deploy environment"
-                  ></app-dropdown-menu>
+                  />
                 }
               </div>
 
@@ -162,7 +161,7 @@
     <div class="col-6 d-flex align-items-center">
       <p
         class="mb-0"
-        [ngClass]="{
+        [class]="{
           'text-warning':
             user?.deployInstancesQuotaUsed >= user?.deployInstancesQuota
         }"
@@ -177,14 +176,14 @@
         target="_blank"
       >
         My account
-        <app-svg icon="open_in_new" class="ps-1" size="12"></app-svg>
+        <app-svg icon="open_in_new" class="ps-1" size="12" />
       </a>
     </div>
   }
   <div class="ms-auto d-flex align-items-center">
     @if (taskInProgress) {
       <div class="d-inline-block me-2">
-        <app-spinner></app-spinner>
+        <app-spinner />
       </div>
     }
     <button

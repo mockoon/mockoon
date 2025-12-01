@@ -3,8 +3,8 @@ import {
   ElementRef,
   forwardRef,
   HostListener,
-  Renderer2,
-  inject
+  inject,
+  Renderer2
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -31,10 +31,12 @@ export class ValidPathDirective {
   /**
    * Handle values entered in the input field
    */
-  @HostListener('input', ['$event.target.value'])
-  public handleInput(inputValue: string) {
+  @HostListener('input', ['$event'])
+  public handleInput(event: Event) {
     const cursorPosition = this.elementRef.nativeElement.selectionStart;
-    const sanitizedValue = this.sanitize(inputValue);
+    const sanitizedValue = this.sanitize(
+      (event.target as HTMLInputElement).value
+    );
 
     this.onChange(sanitizedValue);
 

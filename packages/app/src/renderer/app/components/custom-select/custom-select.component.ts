@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass, NgIf, NgStyle } from '@angular/common';
+import { AsyncPipe, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,9 +8,8 @@ import {
   HostListener,
   Input,
   OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren
+  viewChild,
+  viewChildren
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -58,9 +57,7 @@ import {
     NgIf,
     NgbDropdown,
     NgbDropdownToggle,
-    NgClass,
     NgbDropdownMenu,
-    NgStyle,
     FormsModule,
     NgxMaskDirective,
     ReactiveFormsModule,
@@ -101,13 +98,11 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
   public defaultClearValue?: any;
   @Input()
   public placeholderClasses?: string;
-
-  @ViewChild('dropdown')
-  public dropdown: NgbDropdown;
-  @ViewChildren('dropdownMenuItems')
-  public dropdownMenuItems: QueryList<ElementRef>;
-  @ViewChild('customValueInput')
-  public customValueInput: ElementRef;
+  public dropdown = viewChild<NgbDropdown>('dropdown');
+  public dropdownMenuItems =
+    viewChildren<ElementRef<HTMLButtonElement>>('dropdownMenuItems');
+  public customValueInput =
+    viewChild<ElementRef<HTMLInputElement>>('customValueInput');
 
   public items$ = new BehaviorSubject<DropdownItems>(null);
   public selectedItem$: Observable<DropdownItem>;
@@ -140,24 +135,24 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
 
       if (
         this.focusedItemIndex$.value ===
-        this.dropdownMenuItems.toArray().length - 1
+        this.dropdownMenuItems().length - 1
       ) {
         this.focusedItemIndex$.next(-1);
       }
 
-      this.dropdownMenuItems
-        .get(this.focusedItemIndex$.value + 1)
-        .nativeElement.focus();
+      this.dropdownMenuItems()[
+        this.focusedItemIndex$.value + 1
+      ].nativeElement.focus();
       this.focusedItemIndex$.next(this.focusedItemIndex$.value + 1);
     } else if (event.key === 'ArrowUp') {
       event.preventDefault();
       if (this.focusedItemIndex$.value <= 0) {
-        this.focusedItemIndex$.next(this.dropdownMenuItems.toArray().length);
+        this.focusedItemIndex$.next(this.dropdownMenuItems().length);
       }
 
-      this.dropdownMenuItems
-        .get(this.focusedItemIndex$.value - 1)
-        .nativeElement.focus();
+      this.dropdownMenuItems()[
+        this.focusedItemIndex$.value - 1
+      ].nativeElement.focus();
       this.focusedItemIndex$.next(this.focusedItemIndex$.value - 1);
     }
   }
@@ -222,10 +217,10 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
       // if we have a custom input focus it, or focus the first item
       setTimeout(() => {
         if (this.enableCustomInput) {
-          this.customValueInput.nativeElement.focus();
+          this.customValueInput().nativeElement.focus();
         } else {
-          if (this.dropdownMenuItems.length > 0) {
-            this.dropdownMenuItems.first.nativeElement.focus();
+          if (this.dropdownMenuItems().length > 0) {
+            this.dropdownMenuItems()[0].nativeElement.focus();
             this.focusedItemIndex$.next(0);
           }
         }
@@ -248,7 +243,7 @@ export class CustomSelectComponent implements OnInit, ControlValueAccessor {
     this.onChange(item.value);
     this.customValue.reset();
     this.focusedItemIndex$.next(-1);
-    this.dropdown.close();
+    this.dropdown().close();
   }
 
   public clearValue() {

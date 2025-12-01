@@ -23,7 +23,7 @@
         [disabled]="current === 1"
         (click)="previous()"
       >
-        <app-svg icon="chevron_left"></app-svg>
+        <app-svg icon="chevron_left" />
         Prev
       </button>
       <div class="">{{ current }} / {{ total }}</div>
@@ -33,7 +33,7 @@
         (click)="next()"
       >
         Next
-        <app-svg icon="chevron_right"></app-svg>
+        <app-svg icon="chevron_right" />
       </button>
       <button
         *ngIf="current === total"
@@ -50,7 +50,7 @@
   <div
     *ngFor="let backdropSize of data.backdropSizes"
     class="tour-backdrop"
-    [ngStyle]="{
+    [style]="{
       width: backdropSize.width + 'px',
       height: backdropSize.height + 'px',
       top: backdropSize.top + 'px',

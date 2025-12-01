@@ -20,7 +20,7 @@
             type="button"
             ngbTooltip="Re-deploy in progress"
           >
-            <app-svg icon="spinner" size="20"></app-svg>
+            <app-svg icon="spinner" size="20" />
           </button>
         } @else if (
           activeEnvironmentState?.running &&
@@ -37,7 +37,7 @@
             "
             [disabled]="!activeEnvironment"
           >
-            <app-svg icon="refresh" size="20"></app-svg>
+            <app-svg icon="refresh" size="20" />
           </button>
         } @else if (
           activeEnvironmentState?.running &&
@@ -53,7 +53,7 @@
             "
             [disabled]="!activeEnvironment"
           >
-            <app-svg icon="server_settings" size="20"></app-svg>
+            <app-svg icon="server_settings" size="20" />
           </button>
         } @else if (!activeEnvironmentState?.running) {
           <button
@@ -66,7 +66,7 @@
             "
             [disabled]="!activeEnvironment"
           >
-            <app-svg icon="play_arrow" size="20"></app-svg>
+            <app-svg icon="play_arrow" size="20" />
           </button>
         }
       } @else {
@@ -77,7 +77,7 @@
             type="button"
             disabled
           >
-            <app-svg icon="play_arrow" size="20"></app-svg>
+            <app-svg icon="play_arrow" size="20" />
           </button>
         </div>
       }
@@ -98,7 +98,7 @@
           "
           [disabled]="!activeEnvironment"
         >
-          <app-svg icon="refresh" size="20"></app-svg>
+          <app-svg icon="refresh" size="20" />
         </button>
       } @else if (
         activeEnvironmentState?.running && !activeEnvironmentState?.needRestart
@@ -113,7 +113,7 @@
           "
           [disabled]="!activeEnvironment"
         >
-          <app-svg icon="stop" size="20"></app-svg>
+          <app-svg icon="stop" size="20" />
         </button>
       } @else if (!activeEnvironmentState?.running) {
         <button
@@ -126,7 +126,7 @@
           "
           [disabled]="!activeEnvironment"
         >
-          <app-svg icon="play_arrow" size="20"></app-svg>
+          <app-svg icon="play_arrow" size="20" />
         </button>
       }
     }
@@ -140,13 +140,13 @@
     >
       <a
         class="nav-link d-flex align-items-center"
-        [ngClass]="{
+        [class]="{
           active: activeView === tab.id && activeEnvironment,
           disabled: !activeEnvironment
         }"
         (click)="setActiveView(tab.id)"
       >
-        <app-svg [icon]="tab.icon" class="pe-2"></app-svg>
+        <app-svg [icon]="tab.icon" class="pe-2" />
         {{ tab.title }}
         <span
           *ngIf="tab.count$ | async as tabCount"
@@ -167,7 +167,7 @@
       }} connected"
       class="badge badge-custom align-middle"
     >
-      <app-svg icon="computer"></app-svg>
+      <app-svg icon="computer" />
       <span class="number-indicator">
         {{ sync.presence.devices - 1 }}
       </span>
@@ -181,7 +181,7 @@
       [user]="user"
       [displaySelf]="true"
       [maxDisplayedUsers]="5"
-    ></app-team-presence>
+    />
 
     <div>
       <button
@@ -193,7 +193,7 @@
         "
         (click)="openCommandPalette()"
       >
-        <app-svg class="align-bottom" icon="command_palette"></app-svg>
+        <app-svg class="align-bottom" icon="command_palette" />
       </button>
     </div>
   </div>
@@ -204,8 +204,8 @@
       type="button"
       ngbDropdownToggle
     >
-      <span [ngClass]="{ 'with-indicator': !!user }">
-        <app-svg icon="account"></app-svg>
+      <span [class]="{ 'with-indicator': !!user }">
+        <app-svg icon="account" />
       </span>
     </button>
     <div class="dropdown-menu" ngbDropdownMenu>
@@ -221,27 +221,27 @@
           </h6>
         </div>
         <a class="btn dropdown-item" href="{{ accountUrl }}" target="_blank">
-          <app-svg icon="account" class="pe-2"></app-svg>
+          <app-svg icon="account" class="pe-2" />
           My account
-          <app-svg icon="open_in_new" class="ps-2"></app-svg>
+          <app-svg icon="open_in_new" class="ps-2" />
         </a>
         <button class="btn dropdown-item" (click)="refreshAccount()">
-          <app-svg icon="refresh" class="pe-2"></app-svg>
+          <app-svg icon="refresh" class="pe-2" />
           Refresh account information
         </button>
         <button class="btn dropdown-item" (click)="logout()">
-          <app-svg icon="logout" class="pe-2"></app-svg>
+          <app-svg icon="logout" class="pe-2" />
           Log out
         </button>
       } @else {
         <button class="btn dropdown-item" (click)="login()">
-          <app-svg icon="login" class="pe-2"></app-svg>
+          <app-svg icon="login" class="pe-2" />
           Sign in
-          <app-svg icon="open_in_new" class="ps-2"></app-svg>
+          <app-svg icon="open_in_new" class="ps-2" />
         </button>
       }
       <button class="btn dropdown-item" (click)="openSettings()">
-        <app-svg icon="settings" class="pe-2"></app-svg>Application settings
+        <app-svg icon="settings" class="pe-2" />Application settings
       </button>
 
       @if (isDev) {

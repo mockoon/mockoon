@@ -8,7 +8,7 @@
             formControlName="rulesOperator"
             [items]="rulesOperators"
             [uncheckable]="false"
-          ></app-toggle>
+          />
         </div>
 
         <div class="brackets"></div>
@@ -25,7 +25,7 @@
               index as ruleIndex
             "
             class="rule-item"
-            [ngClass]="{
+            [class]="{
               'pt-1': ruleIndex !== 0,
               'pb-1': ruleIndex !== form.get('rules')['controls'].length - 1
             }"
@@ -46,7 +46,7 @@
               [hasCategory]="true"
               [items]="responseRuleTargets"
               [dropdownId]="'rules' + ruleIndex + 'target'"
-            ></app-custom-select>
+            />
 
             <div class="me-2">
               <!-- the modifier is disabled for request number, method and path as there is nothing to "explore" (number/string values) -->
@@ -75,7 +75,7 @@
               formControlName="invert"
               prefix="rule"
               [items]="rulesInvert"
-            ></app-toggle>
+            />
 
             <app-custom-select
               class="me-2"
@@ -88,7 +88,7 @@
                   form.get(['rules', ruleIndex, 'target']).value
                 ]
               "
-            ></app-custom-select>
+            />
 
             <input
               type="text"
@@ -112,7 +112,7 @@
               *ngIf="deleteRuleRequested$ | async as deleteRuleRequested"
               type="button"
               class="btn btn-link btn-icon delete-rule"
-              [ngClass]="{
+              [class]="{
                 'text-danger':
                   deleteRuleRequested.enabled === true &&
                   deleteRuleRequested.payload === ruleIndex
@@ -125,7 +125,7 @@
               "
               (click)="removeRule(ruleIndex)"
             >
-              <app-svg icon="delete"></app-svg>
+              <app-svg icon="delete" />
             </button>
 
             <button
@@ -135,7 +135,7 @@
               type="button"
               class="btn btn-link btn-icon cursor-grab text-muted"
             >
-              <app-svg icon="drag_indicator"></app-svg>
+              <app-svg icon="drag_indicator" />
             </button>
           </div>
         </ng-container>
@@ -147,7 +147,7 @@
         class="btn btn-link btn-icon add-rule"
         (click)="addRule()"
       >
-        <app-svg icon="add_box" class="text-success pe-2"></app-svg>
+        <app-svg icon="add_box" class="text-success pe-2" />
         Add rule
       </button>
       <ng-container *ngIf="activeRoute$ | async as activeRoute">

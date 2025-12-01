@@ -10,7 +10,7 @@
 >
   <button
     class="btn dropdown-toggle h-100 d-flex align-items-center"
-    [ngClass]="{
+    [class]="{
       'btn-custom': label(),
       'btn-link': icon(),
       'btn-icon': icon(),
@@ -24,7 +24,7 @@
     (click)="$event.stopPropagation()"
   >
     @if (icon()) {
-      <app-svg [icon]="icon()"></app-svg>
+      <app-svg [icon]="icon()" />
     }
     @if (label()) {
       <div class="dropdown-toggle-label">{{ label() }}</div>
@@ -32,7 +32,7 @@
   </button>
   <div
     class="dropdown-menu"
-    [ngClass]="{ 'dropdown-menu-height-content': menuHeightFitContent() }"
+    [class]="{ 'dropdown-menu-height-content': menuHeightFitContent() }"
     style="max-width: 40vw"
     [id]="idPrefix() + '-dropdown-menu'"
     ngbDropdownMenu
@@ -55,7 +55,7 @@
           @if (!hidden) {
             <button
               class="btn dropdown-item d-flex"
-              [ngClass]="{
+              [class]="{
                 'text-danger': needConfirm
               }"
               (click)="itemClicked(item, dropdownInstance)"
@@ -66,8 +66,7 @@
                   <app-svg
                     [icon]="needConfirm ? item.confirmIcon : item.icon"
                     class="pe-2"
-                  >
-                  </app-svg>
+                  />
                 }
                 {{
                   needConfirm

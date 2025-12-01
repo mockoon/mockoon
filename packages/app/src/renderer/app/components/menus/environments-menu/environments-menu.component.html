@@ -26,10 +26,10 @@
   ) {
     <div
       class="d-flex flex-column overflow-hidden"
-      [ngStyle]="{
+      [style]="{
         flex: category.collapsed ? '0 0 min-content' : 1
       }"
-      [ngClass]="{
+      [class]="{
         'border-bottom': (category.collapsed && !isLast) || !isLast
       }"
     >
@@ -49,7 +49,7 @@
             <button
               type="button"
               class="btn btn-link btn-icon btn-sm p-0"
-              [ngClass]="{
+              [class]="{
                 'text-danger':
                   (!user || user.plan === 'FREE' || !sync.status) &&
                   environments.cloud.length > 0,
@@ -87,10 +87,10 @@
                 "
                 [ngbTooltip]="category.id === 'cloud' ? cloudIconTooltip : null"
                 class="pe-2"
-              ></app-svg>
+              />
             </button>
           } @else {
-            <app-svg icon="computer" class="pe-2"></app-svg>
+            <app-svg icon="computer" class="pe-2" />
           }
           <div class="text-truncate">
             {{ category.label }}
@@ -102,14 +102,14 @@
                   href="{{ offlineWarningLink }}"
                   target="_blank"
                 >
-                  <app-svg icon="warning"></app-svg>
+                  <app-svg icon="warning" />
                 </a>
               } @else {
                 <span
                   class="ms-2 text-warning"
                   [ngbTooltip]="alertLabels[syncAlert]"
                 >
-                  <app-svg icon="warning"></app-svg>
+                  <app-svg icon="warning" />
                 </span>
               }
             }
@@ -128,8 +128,7 @@
               [items]="cloudDropdownMenuItems"
               [iconFaded]="true"
               [noYPadding]="true"
-            >
-            </app-dropdown-menu>
+            />
           } @else if (category.id === 'local') {
             <app-dropdown-menu
               idPrefix="local-environments-add"
@@ -138,8 +137,7 @@
               [iconFaded]="true"
               [noYPadding]="true"
               [menuHeightFitContent]="true"
-            >
-            </app-dropdown-menu>
+            />
           }
           @if (!isWeb) {
             <button
@@ -149,7 +147,7 @@
             >
               <app-svg
                 [icon]="category.collapsed ? 'unfold_more' : 'unfold_less'"
-              ></app-svg>
+              />
             </button>
           }
         </div>
@@ -165,8 +163,7 @@
             environmentsStatus: environmentsStatus,
             dragContainer: category.id + 'Environments'
           }"
-        >
-        </ng-container>
+        />
       </div>
     </div>
   }
@@ -204,7 +201,7 @@
         >
           <a
             class="nav-link d-flex pe-0 hover-parent"
-            [ngClass]="{
+            [class]="{
               active: activeEnvironment?.uuid === environment.uuid
             }"
             appScrollWhenActive
@@ -216,7 +213,7 @@
             >
               <div
                 class="nav-link-label"
-                [ngClass]="{
+                [class]="{
                   'text-truncate': settings.truncateRouteName,
                   'text-break': !settings.truncateRouteName
                 }"
@@ -226,7 +223,7 @@
                   formControlName="name"
                   [editCondition]="activeEnvironment?.uuid === environment.uuid"
                   (editChange)="enableDrag(!$event)"
-                ></app-editable-element>
+                />
               </div>
 
               @if (isWeb) {
@@ -235,7 +232,7 @@
                 >
                   <app-svg
                     class="me-2"
-                    [ngClass]="{
+                    [class]="{
                       'text-success':
                         instances[environment.uuid]?.status === 'RUNNING',
                       'text-muted':
@@ -248,14 +245,14 @@
                         ? 'Cloud instance running'
                         : 'Cloud instance stopped'
                     "
-                  ></app-svg>
+                  />
                   @if (environment.proxyMode) {
                     <app-svg
                       class="text-primary me-2"
                       icon="security"
                       size="12"
                       ngbTooltip="Proxy mode enabled"
-                    ></app-svg>
+                    />
                   }
                   @if ((logsRecording$ | async)[environment.uuid] === true) {
                     <app-svg
@@ -263,7 +260,7 @@
                       icon="record"
                       size="12"
                       ngbTooltip="Recording in progress"
-                    ></app-svg>
+                    />
                   }
                   @let webUrl =
                     instanceUrls[environment.uuid].webUrl +
@@ -293,7 +290,7 @@
                   @if (environmentsStatus[environment.uuid]) {
                     <app-svg
                       class="me-2"
-                      [ngClass]="{
+                      [class]="{
                         'text-success':
                           environmentsStatus[environment.uuid]?.running &&
                           !environmentsStatus[environment.uuid]?.needRestart,
@@ -314,7 +311,7 @@
                               ? 'Local server needs restart'
                               : ''
                       "
-                    ></app-svg>
+                    />
                   }
                   @if (environment.tlsOptions.enabled) {
                     <app-svg
@@ -322,7 +319,7 @@
                       icon="lock"
                       size="12"
                       ngbTooltip="TLS enabled"
-                    ></app-svg>
+                    />
                   }
                   @if (environment.proxyMode) {
                     <app-svg
@@ -330,7 +327,7 @@
                       icon="security"
                       size="12"
                       ngbTooltip="Proxy mode enabled"
-                    ></app-svg>
+                    />
                   }
                   @if ((logsRecording$ | async)[environment.uuid] === true) {
                     <app-svg
@@ -338,7 +335,7 @@
                       icon="record"
                       size="12"
                       ngbTooltip="Recording in progress"
-                    ></app-svg>
+                    />
                   }
                   @let localUrl =
                     instanceUrls[environment.uuid].localUrl +
@@ -368,7 +365,7 @@
                   >
                     <app-svg
                       class="me-2"
-                      [ngClass]="{
+                      [class]="{
                         'text-success':
                           instances[environment.uuid]?.status === 'RUNNING',
                         'text-muted':
@@ -381,7 +378,7 @@
                           ? 'Cloud instance running'
                           : 'Cloud instance stopped'
                       "
-                    ></app-svg>
+                    />
 
                     @let webUrl =
                       instanceUrls[environment.uuid].webUrl +
@@ -421,7 +418,7 @@
                 }"
                 [iconFaded]="true"
                 [noYPadding]="true"
-              ></app-dropdown-menu>
+              />
               <app-team-presence
                 [presence]="sync?.presence"
                 [user]="user"
@@ -430,7 +427,7 @@
                 [filterContext]="environment.uuid"
                 size="16"
                 [showTooltipList]="false"
-              ></app-team-presence>
+              />
             </div>
           </a>
         </li>
@@ -459,7 +456,7 @@
       <li class="nav-item" (click)="openManageInstancesModal()">
         <a class="nav-link border-top mt-auto text-truncate">
           <small>
-            <app-svg class="pe-2" icon="server_settings"></app-svg>
+            <app-svg class="pe-2" icon="server_settings" />
             {{ deployInstances.length }}&nbsp;
             {{ deployInstances.length > 1 ? 'instances' : 'instance' }}
             running

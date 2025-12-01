@@ -19,7 +19,7 @@
         ngbTooltip="Record"
         (click)="startRecording(activeEnvironmentUUID)"
       >
-        <app-svg icon="record"></app-svg>
+        <app-svg icon="record" />
       </button>
     }
     @if (logsRecording?.[activeEnvironmentUUID] === true) {
@@ -30,7 +30,7 @@
         ngbTooltip="Stop recording"
         (click)="stopRecording(activeEnvironmentUUID)"
       >
-        <app-svg icon="stop"></app-svg>
+        <app-svg icon="stop" />
       </button>
     }
     @if (!isWeb && isEnvCloud) {
@@ -40,7 +40,7 @@
         [formControl]="logsOrigin"
         [items]="logOrigins"
         [uncheckable]="false"
-      ></app-toggle>
+      />
     }
   </div>
   <div>
@@ -56,7 +56,7 @@
       (click)="clearEnvironmentLogs()"
       [disabled]="environmentLogsCount === 0"
     >
-      <app-svg icon="delete"></app-svg>
+      <app-svg icon="delete" />
     </button>
   </div>
 </div>
@@ -65,15 +65,15 @@
     <app-filter
       filterName="logs"
       [focusableInput]="focusableInputs.LOGS_FILTER"
-      classes="mb-1"
-    ></app-filter>
+      class="mb-1"
+    />
     @if (environmentLogs?.length) {
       <ul class="nav flex-column menu-list">
         @for (log of environmentLogs; track log.UUID) {
           <li class="nav-item">
             <a
               class="nav-link d-flex pe-0 hover-parent"
-              [ngClass]="{
+              [class]="{
                 active: log.UUID === selectedLog?.UUID
               }"
               (click)="selectLog(log.UUID)"
@@ -81,7 +81,7 @@
               <div class="d-flex flex-column mw0">
                 <div
                   class="nav-link-label"
-                  [ngClass]="{
+                  [class]="{
                     'text-truncate': settings.truncateRouteName,
                     'text-break': !settings.truncateRouteName
                   }"
@@ -98,14 +98,14 @@
                         icon="computer"
                         size="12"
                         ngbTooltip="Local log"
-                      ></app-svg>
+                      />
                     } @else if (log.origin === 'cloud') {
                       <app-svg
                         class="text-muted me-2"
                         icon="cloud"
                         size="12"
                         ngbTooltip="Cloud log"
-                      ></app-svg>
+                      />
                     }
                   }
                   @if (log.protocol === 'ws') {
@@ -136,7 +136,7 @@
                       icon="check"
                       size="12"
                       ngbTooltip="Request caught"
-                    ></app-svg>
+                    />
                   }
                   @if (log.proxied) {
                     <app-svg
@@ -144,7 +144,7 @@
                       icon="security"
                       size="12"
                       ngbTooltip="Request proxied"
-                    ></app-svg>
+                    />
                   }
                   @if (settings?.displayLogsIsoTimestamp) {
                     <span class="text-truncate pe-1">
@@ -167,7 +167,7 @@
                   [payload]="{ logUuid: log.UUID }"
                   [iconFaded]="true"
                   [noYPadding]="true"
-                ></app-dropdown-menu>
+                />
               </div>
             </a>
           </li>
@@ -201,21 +201,22 @@
           <li class="nav-item">
             <a
               class="nav-link"
-              [ngClass]="{
+              [class]="{
                 active: activeEnvironmentLogsTab === 'REQUEST'
               }"
               (click)="setActiveTab('REQUEST')"
-              >Request <app-svg icon="call_received"></app-svg
-            ></a>
+            >
+              Request <app-svg icon="call_received" />
+            </a>
           </li>
           <li class="nav-item">
             <a
               class="nav-link"
-              [ngClass]="{
+              [class]="{
                 active: activeEnvironmentLogsTab === 'RESPONSE'
               }"
               (click)="setActiveTab('RESPONSE')"
-              >Response <app-svg icon="call_made"></app-svg>
+              >Response <app-svg icon="call_made" />
             </a>
           </li>
         </ul>
@@ -236,7 +237,7 @@
                       ? 'unfold_more'
                       : 'unfold_less'
                   "
-                ></app-svg>
+                />
 
                 General
               </div>
@@ -286,11 +287,7 @@
                       "
                       (click)="goToRouteResponse(selectedLog)"
                     >
-                      <app-svg
-                        icon="goto"
-                        size="14"
-                        class="align-top"
-                      ></app-svg>
+                      <app-svg icon="goto" size="14" class="align-top" />
                     </button>
                   </div>
                 }
@@ -311,7 +308,7 @@
                       ? 'unfold_more'
                       : 'unfold_less'
                   "
-                ></app-svg>
+                />
 
                 Headers ({{ selectedLog?.request?.headers?.length }})
               </div>
@@ -342,7 +339,7 @@
                       ? 'unfold_more'
                       : 'unfold_less'
                   "
-                ></app-svg>
+                />
 
                 Route params ({{ selectedLog?.request?.params?.length }})
               </div>
@@ -369,7 +366,7 @@
                       ? 'unfold_more'
                       : 'unfold_less'
                   "
-                ></app-svg>
+                />
 
                 Query params ({{
                   selectedLog?.request?.queryParams?.length || 'none'
@@ -408,7 +405,7 @@
                       ? 'unfold_more'
                       : 'unfold_less'
                   "
-                ></app-svg>
+                />
 
                 Body {{ !selectedLog?.request?.body ? '(none)' : '' }}
               </div>
@@ -421,8 +418,7 @@
                     [readOnly]="true"
                     [uuid]="selectedLog?.UUID + '-request'"
                     [text]="selectedLog?.request?.body"
-                  >
-                  </app-editor>
+                  />
                 </div>
               </div>
             </div>
@@ -446,7 +442,7 @@
                       ? 'unfold_more'
                       : 'unfold_less'
                   "
-                ></app-svg>
+                />
 
                 General
               </div>
@@ -487,7 +483,7 @@
                       ? 'unfold_more'
                       : 'unfold_less'
                   "
-                ></app-svg>
+                />
 
                 Headers ({{ selectedLog?.response?.headers?.length }})
               </div>
@@ -518,7 +514,7 @@
                       ? 'unfold_more'
                       : 'unfold_less'
                   "
-                ></app-svg>
+                />
 
                 Body
                 {{ selectedLog.response?.decompressed ? '(decompressed)' : '' }}
@@ -533,8 +529,7 @@
                       [readOnly]="true"
                       [uuid]="selectedLog?.UUID + '-response'"
                       [text]="selectedLog?.response?.body"
-                    >
-                    </app-editor>
+                    />
                   </div>
                 }
                 @if (selectedLog?.response?.binaryBody) {

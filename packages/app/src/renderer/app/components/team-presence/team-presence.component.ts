@@ -1,4 +1,3 @@
-import { NgClass, NgStyle } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { SyncPresence, SyncUserPresence, User } from '@mockoon/cloud';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
@@ -17,7 +16,7 @@ import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
   templateUrl: './team-presence.component.html',
   styleUrls: ['./team-presence.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgbTooltip, NgStyle, SvgComponent, NgClass]
+  imports: [NgbTooltip, SvgComponent]
 })
 export class TeamPresenceComponent {
   @Input({ required: false })

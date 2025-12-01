@@ -8,7 +8,7 @@
       heading="User interface"
       [isFirst]="true"
       icon="web_asset"
-    ></app-title-separator>
+    />
 
     <div class="ps-4">
       <div class="mb-3">
@@ -29,10 +29,7 @@
   </div>
 
   @if (!isWeb) {
-    <app-title-separator
-      heading="Environment variables"
-      icon="list"
-    ></app-title-separator>
+    <app-title-separator heading="Environment variables" icon="list" />
 
     <div class="ps-4">
       <div class="mb-3">
@@ -47,7 +44,7 @@
             formControlName="envVarsPrefix"
           />
           <div class="input-group-text">
-            <app-svg icon="info" [ngbTooltip]="envVarsPrefixTooltip"></app-svg>
+            <app-svg icon="info" [ngbTooltip]="envVarsPrefixTooltip" />
             <ng-template #envVarsPrefixTooltip>
               <div>
                 Restrict access to environment variables starting with the
@@ -67,10 +64,7 @@
     </div>
   }
 
-  <app-title-separator
-    heading="Environment logs"
-    icon="history"
-  ></app-title-separator>
+  <app-title-separator heading="Environment logs" icon="history" />
 
   <div class="ps-4">
     @if (!isWeb) {
@@ -88,10 +82,7 @@
             </label>
           </div>
           <div class="input-group-text">
-            <app-svg
-              icon="info"
-              [ngbTooltip]="logTransactionsTooltip"
-            ></app-svg>
+            <app-svg icon="info" [ngbTooltip]="logTransactionsTooltip" />
             <ng-template #logTransactionsTooltip>
               <div>
                 Logs the full transaction (for requests, responses and
@@ -147,7 +138,7 @@
       heading="Faker.js"
       subheading="Templating system supports Faker.js"
       icon="code"
-    ></app-title-separator>
+    />
 
     <div class="ps-4">
       <div class="mb-3">
@@ -159,9 +150,9 @@
             [enableCustomInput]="false"
             [items]="fakerLocales"
             dropdownId="settings-faker-locale"
-          ></app-custom-select>
+          />
           <div class="input-group-text">
-            <app-svg icon="info" [ngbTooltip]="fakerLocaleTooltip"></app-svg>
+            <app-svg icon="info" [ngbTooltip]="fakerLocaleTooltip" />
             <ng-template #fakerLocaleTooltip>
               <div>
                 Set Faker.js's primary locale. Faker.js will fallback to English
@@ -190,7 +181,7 @@
             formControlName="fakerSeed"
           />
           <div class="input-group-text">
-            <app-svg icon="info" [ngbTooltip]="fakerSeedTooltip"></app-svg>
+            <app-svg icon="info" [ngbTooltip]="fakerSeedTooltip" />
             <ng-template #fakerSeedTooltip>
               <div>
                 By setting a seed, Faker.js will always generate the same data
@@ -205,10 +196,7 @@
       </div>
     </div>
 
-    <app-title-separator
-      heading="Environments options"
-      icon="misc"
-    ></app-title-separator>
+    <app-title-separator heading="Environments options" icon="misc" />
 
     <div class="ps-4">
       <div class="mb-3">
@@ -249,7 +237,7 @@
             </label>
           </div>
           <div class="input-group-text">
-            <app-svg icon="info" [ngbTooltip]="latencyTooltip"></app-svg>
+            <app-svg icon="info" [ngbTooltip]="latencyTooltip" />
             <ng-template #latencyTooltip>
               <div>
                 Randomize global and responses latencies between 0 and the
@@ -264,7 +252,7 @@
       </div>
     </div>
 
-    <app-title-separator heading="Storage" icon="save"></app-title-separator>
+    <app-title-separator heading="Storage" icon="save" />
 
     <div class="ps-4">
       <div class="mb-3">
@@ -276,12 +264,12 @@
             [enableCustomInput]="false"
             [items]="fileWatcherOptions"
             dropdownId="settings-storage-file-watcher"
-          ></app-custom-select>
+          />
           <div class="input-group-text">
             <app-svg
               icon="info"
               ngbTooltip="Mockoon will watch environment files for external changes and prompt (or not) for reload"
-            ></app-svg>
+            />
           </div>
         </div>
       </div>
@@ -303,10 +291,7 @@
       </div>
     </div>
 
-    <app-title-separator
-      heading="Telemetry"
-      icon="show_chart"
-    ></app-title-separator>
+    <app-title-separator heading="Telemetry" icon="show_chart" />
 
     <div class="ps-4">
       <div class="mb-3">
@@ -324,7 +309,7 @@
           </div>
           <div class="input-group-text">
             <a href="{{ faqUrl }}" target="_blank">
-              <app-svg icon="info" [ngbTooltip]="telemetryTooltip"></app-svg>
+              <app-svg icon="info" [ngbTooltip]="telemetryTooltip" />
             </a>
             <ng-template #telemetryTooltip>
               <div>

@@ -13,9 +13,9 @@
               (presenceUser.uid === user.uid ? ' (you)' : '')
             "
             class="team-presence-user d-flex"
-            [ngStyle]="{ color: presenceUser.cssColor }"
+            [style]="{ color: presenceUser.cssColor }"
           >
-            <app-svg icon="account" [size]="size"></app-svg>
+            <app-svg icon="account" [size]="size" />
           </div>
         }
       }
@@ -48,11 +48,11 @@
                 <app-svg
                   icon="account"
                   class="me-2"
-                  [ngStyle]="{ color: presenceUser.cssColor }"
-                ></app-svg>
+                  [style]="{ color: presenceUser.cssColor }"
+                />
                 <span
                   class="text-truncate"
-                  [ngClass]="{
+                  [class]="{
                     'fw-bold': presenceUser.uid === user.uid
                   }"
                   >{{ presenceUser.uid === user.uid ? '(you)&nbsp;' : ''

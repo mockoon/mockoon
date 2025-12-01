@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import {
   NgbDropdown,
@@ -48,7 +48,6 @@ export type DropdownMenuElement = DropdownMenuItem | DropdownMenuSeparator;
   imports: [
     NgbDropdown,
     NgbDropdownToggle,
-    NgClass,
     SvgComponent,
     NgbDropdownMenu,
     AsyncPipe

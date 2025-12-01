@@ -10,7 +10,7 @@
     @if (updateVersion) {
       <div class="footer-item d-flex align-items-center px-2">
         <p class="mb-0">
-          <app-svg icon="update"></app-svg> Update available
+          <app-svg icon="update" /> Update available
           <a href="{{ releaseUrl + updateVersion + '/' }}" target="_blank">
             View changelog
           </a>
@@ -28,7 +28,7 @@
   @if (uiState.closing || uiState.saving) {
     <div class="footer-item d-flex align-items-center px-2">
       <div class="footer-save animation-flash">
-        <app-svg icon="save" class="me-2"></app-svg>
+        <app-svg icon="save" class="me-2" />
         @if (uiState.closing) {
           Shutting down...
         }
@@ -46,7 +46,7 @@
           class="btn btn-custom btn-xs text-success"
           (click)="openTemplateModal('GENERATE_TEMPLATE')"
         >
-          <app-svg icon="magic" class="me-2"></app-svg>
+          <app-svg icon="magic" class="me-2" />
           Template generated
         </button>
       }
@@ -55,7 +55,7 @@
           class="btn btn-custom btn-xs text-warning d-flex align-items-center"
           (click)="openTemplateModal('GENERATE_TEMPLATE')"
         >
-          <app-spinner class="me-2"></app-spinner>
+          <app-spinner class="me-2" />
           Generating template
         </button>
       }
@@ -69,7 +69,7 @@
           class="btn btn-custom btn-xs text-success"
           (click)="openTemplateModal('GENERATE_ENDPOINT')"
         >
-          <app-svg icon="magic" class="me-2"></app-svg>
+          <app-svg icon="magic" class="me-2" />
           Endpoint generated
         </button>
       }
@@ -78,7 +78,7 @@
           class="btn btn-custom btn-xs text-warning d-flex align-items-center"
           (click)="openTemplateModal('GENERATE_ENDPOINT')"
         >
-          <app-spinner class="me-2"></app-spinner>
+          <app-spinner class="me-2" />
           Generating endpoint
         </button>
       }
@@ -92,7 +92,7 @@
         (click)="openFeedbackModal()"
         ngbTooltip="Get priority support"
       >
-        <app-svg icon="help_outline"></app-svg>
+        <app-svg icon="help_outline" />
       </button>
     </div>
   }

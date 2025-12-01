@@ -15,12 +15,12 @@
 <div class="d-flex flex-column h-100" @mainFadeIn>
   <!-- Main container (minus footer) -->
   <div class="d-flex flex-fill mh0">
-    <app-environments-menu class="h-100"></app-environments-menu>
+    <app-environments-menu class="h-100" />
 
     <!-- Right "column" = header + routes menu + main-content -->
     <div class="d-flex flex-column flex-fill h-100 position-relative">
       <!-- Header: env name +start / env port + prefix -->
-      <app-header></app-header>
+      <app-header />
 
       <div
         *ngIf="
@@ -30,49 +30,40 @@
         class="main-content flex-fill mh0 h-100"
       >
         <ng-container [ngSwitch]="activeView$ | async">
-          <app-environment-routes
-            *ngSwitchCase="'ENV_ROUTES'"
-            class="h-100"
-          ></app-environment-routes>
+          <app-environment-routes *ngSwitchCase="'ENV_ROUTES'" class="h-100" />
 
           <app-environment-databuckets
             *ngSwitchCase="'ENV_DATABUCKETS'"
             class="h-100"
-          ></app-environment-databuckets>
+          />
 
           <app-environment-callbacks
             *ngSwitchCase="'ENV_CALLBACKS'"
             class="h-100"
-          >
-          </app-environment-callbacks>
+          />
 
           <app-environment-headers
             *ngSwitchCase="'ENV_HEADERS'"
             class="h-100"
-          ></app-environment-headers>
+          />
 
           <app-environment-logs
             *ngSwitchCase="'ENV_LOGS'"
             class="h-100 d-flex flex-column"
-          ></app-environment-logs>
+          />
 
-          <app-environment-proxy
-            *ngSwitchCase="'ENV_PROXY'"
-            class="h-100"
-          ></app-environment-proxy>
+          <app-environment-proxy *ngSwitchCase="'ENV_PROXY'" class="h-100" />
 
           <app-environment-settings
             *ngSwitchCase="'ENV_SETTINGS'"
             class="h-100"
-          ></app-environment-settings>
+          />
         </ng-container>
       </div>
-
-      <!-- <app-cloud-warning></app-cloud-warning> -->
     </div>
   </div>
 
-  <app-footer></app-footer>
+  <app-footer />
 </div>
 
 <ng-template #noActiveEnvironment>
@@ -81,4 +72,4 @@
   </div>
 </ng-template>
 
-<app-tour></app-tour>
+<app-tour />

@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -52,7 +52,6 @@ import { Config } from 'src/renderer/config';
     SvgComponent,
     NgbTooltip,
     ToggleComponent,
-    NgClass,
     AsyncPipe,
     SpinnerComponent,
     CustomSelectComponent

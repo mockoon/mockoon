@@ -3,9 +3,9 @@ import {
   ElementRef,
   forwardRef,
   HostListener,
+  inject,
   Input,
-  Renderer2,
-  inject
+  Renderer2
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -48,9 +48,11 @@ export class InputNumberDirective implements ControlValueAccessor {
   /**
    * Handle values entered in the input field
    */
-  @HostListener('input', ['$event.target.value'])
-  public handleInput(inputValue: string): void {
-    const sanitizedValue = this.sanitize(inputValue);
+  @HostListener('input', ['$event'])
+  public handleInput(event: Event): void {
+    const sanitizedValue = this.sanitize(
+      (event.target as HTMLInputElement).value
+    );
 
     this.onChange(sanitizedValue);
 
