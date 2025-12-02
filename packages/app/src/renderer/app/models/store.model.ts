@@ -58,6 +58,13 @@ export type EnvironmentsStatuses = Record<string, EnvironmentStatus>;
 
 export type DuplicatedRoutesTypes = Record<string, Set<string>>;
 
+/**
+ * Runtime-only overrides for active route responses per environment
+ * Format: { environmentUuid: { routeUuid: responseUuid } }
+ * This state is NOT persisted and resets on app restart
+ */
+export type ActiveResponseOverrides = Record<string, Record<string, string>>;
+
 export type UIState = {
   closing: boolean;
   saving: boolean;
@@ -85,6 +92,8 @@ export type StoreType = {
   bodyEditorConfig: any;
   // duplicated routes per environment
   duplicatedRoutes: DuplicatedRoutesTypes;
+  // runtime-only overrides for active route responses (NOT persisted)
+  activeResponseOverrides: ActiveResponseOverrides;
   environmentsLogs: EnvironmentLogs;
   // the active log UUID per environment
   activeEnvironmentLogsUUID: ActiveEnvironmentsLogUUIDs;

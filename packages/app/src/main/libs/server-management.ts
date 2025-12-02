@@ -13,6 +13,7 @@ import { getSettings } from 'src/main/libs/settings';
 
 export class ServerInstance {
   private static instances: Record<string, ServerInstance> = {};
+  private static responseOverrides: Record<string, Record<string, string>> = {};
   private mockoonServer: MockoonServer | null = null;
 
   constructor(
@@ -29,6 +30,23 @@ export class ServerInstance {
         ServerInstance.instances[
           environment.uuid
         ].mockoonServer.updateEnvironment(environment);
+      }
+    });
+  };
+
+  public static updateResponseOverrides = (
+    activeResponseOverrides: Record<string, Record<string, string>>
+  ) => {
+    console.log('[ServerInstance] Updating response overrides:', activeResponseOverrides);
+    ServerInstance.responseOverrides = activeResponseOverrides;
+
+    // Update each running server instance with the new overrides
+    Object.keys(ServerInstance.instances).forEach((environmentUuid) => {
+      const instance = ServerInstance.instances[environmentUuid];
+      if (instance?.mockoonServer) {
+        const overridesForEnv = activeResponseOverrides[environmentUuid] || {};
+        console.log(`[ServerInstance] Setting overrides for env ${environmentUuid}:`, overridesForEnv);
+        instance.mockoonServer.setResponseOverrides(overridesForEnv);
       }
     });
   };
@@ -67,6 +85,10 @@ export class ServerInstance {
       maxTransactionLogs: getSettings().maxLogsPerEnvironment,
       enableRandomLatency: getSettings().enableRandomLatency
     });
+
+    // Set any existing response overrides for this environment
+    const overridesForEnv = ServerInstance.responseOverrides[this.environment.uuid] || {};
+    server.setResponseOverrides(overridesForEnv);
 
     listenServerEvents(
       server,

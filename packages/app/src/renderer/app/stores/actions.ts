@@ -70,6 +70,7 @@ export const enum ActionTypes {
   SET_ACTIVE_ROUTE_RESPONSE = 'SET_ACTIVE_ROUTE_RESPONSE',
   ADD_ROUTE_RESPONSE = 'ADD_ROUTE_RESPONSE',
   UPDATE_ROUTE_RESPONSE = 'UPDATE_ROUTE_RESPONSE',
+  SET_ACTIVE_RESPONSE_OVERRIDE = 'SET_ACTIVE_RESPONSE_OVERRIDE',
   SET_ACTIVE_DATABUCKET = 'SET_ACTIVE_DATABUCKET',
   SET_ACTIVE_CALLBACK = 'SET_ACTIVE_CALLBACK',
   ADD_DATABUCKET = 'ADD_DATABUCKET',
@@ -743,6 +744,26 @@ export const updateRouteResponseAction = (
   }) as const;
 
 /**
+ * Set a runtime-only override for the active response of a route
+ * This does NOT persist to the JSON file and resets on app restart
+ *
+ * @param environmentUuid - environment UUID
+ * @param routeUuid - route UUID
+ * @param routeResponseUuid - response UUID to set as active override, or null to clear
+ */
+export const setActiveResponseOverrideAction = (
+  environmentUuid: string,
+  routeUuid: string,
+  routeResponseUuid: string | null
+) =>
+  ({
+    type: ActionTypes.SET_ACTIVE_RESPONSE_OVERRIDE,
+    environmentUuid,
+    routeUuid,
+    routeResponseUuid
+  }) as const;
+
+/**
  * Set the active databucket (currently displayed)
  *
  * @param databucketUUID - databucket UUID to set as active
@@ -1060,6 +1081,7 @@ export type Actions =
   | ReturnType<typeof setActiveRouteResponseAction>
   | ReturnType<typeof addRouteResponseAction>
   | ReturnType<typeof updateRouteResponseAction>
+  | ReturnType<typeof setActiveResponseOverrideAction>
   | ReturnType<typeof setActiveDatabucketAction>
   | ReturnType<typeof setActiveCallbackAction>
   | ReturnType<typeof addDatabucketAction>

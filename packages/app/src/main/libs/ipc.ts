@@ -137,6 +137,11 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     ServerInstance.updateEnvironments(environments);
   });
 
+  ipcMain.on('APP_UPDATE_RESPONSE_OVERRIDES', (event, activeResponseOverrides: Record<string, Record<string, string>>) => {
+    console.log('[IPC] Received APP_UPDATE_RESPONSE_OVERRIDES:', activeResponseOverrides);
+    ServerInstance.updateResponseOverrides(activeResponseOverrides);
+  });
+
   ipcMain.on('APP_APPLY_UPDATE', () => {
     applyUpdate();
   });

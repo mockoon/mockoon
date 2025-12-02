@@ -155,6 +155,7 @@ export class AppComponent implements OnInit {
     this.settingsService.saveSettings().subscribe();
     this.environmentsService.loadEnvironments().subscribe();
     this.environmentsService.saveEnvironments().subscribe();
+    this.environmentsService.syncResponseOverridesToServer().subscribe();
     this.environmentsService.listenServerTransactions().subscribe();
     this.appQuitService.init().subscribe();
     this.remoteConfigService.init().subscribe();

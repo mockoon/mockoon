@@ -6,6 +6,7 @@
 @let settings = settings$ | async;
 @let routesFilter = routesFilter$ | async;
 @let isActiveEnvironmentCloud = isActiveEnvironmentCloud$ | async;
+@let activeResponseOverrides = activeResponseOverrides$ | async;
 
 <div
   class="routes-menu d-flex flex-column h-100"
@@ -320,20 +321,30 @@
                   track response.uuid;
                   let idx = $index
                 ) {
+                  @let isActive = isResponseActive(
+                    activeEnvironment.uuid,
+                    route.uuid,
+                    response,
+                    activeResponseOverrides
+                  );
+                  @let hasOverride =
+                    activeResponseOverrides?.[activeEnvironment.uuid]?.[route.uuid];
                   <button
                     type="button"
                     class="btn btn-xs response-pill"
                     [ngClass]="{
-                      'response-pill-default': response.default,
-                      'response-pill-non-default': !response.default
+                      'response-pill-default': isActive,
+                      'response-pill-non-default': !isActive
                     }"
                     (click)="
                       setDefaultRouteResponse(route.uuid, response.uuid, $event)
                     "
                     [ngbTooltip]="
-                      response.default
-                        ? 'Default response'
-                        : 'Click to set as default'
+                      isActive
+                        ? hasOverride
+                          ? 'Active (runtime override - not saved)'
+                          : 'Default response'
+                        : 'Click to set as active (runtime only)'
                     "
                   >
                     @if (
