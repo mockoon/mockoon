@@ -313,6 +313,44 @@
                 }}
               </span>
             </div>
+            @if (route.responses.length > 1) {
+              <div class="nav-link-pills mt-2 d-flex flex-wrap gap-1">
+                @for (
+                  response of route.responses;
+                  track response.uuid;
+                  let idx = $index
+                ) {
+                  <button
+                    type="button"
+                    class="btn btn-xs response-pill"
+                    [ngClass]="{
+                      'response-pill-default': response.default,
+                      'response-pill-non-default': !response.default
+                    }"
+                    (click)="
+                      setDefaultRouteResponse(route.uuid, response.uuid, $event)
+                    "
+                    [ngbTooltip]="
+                      response.default
+                        ? 'Default response'
+                        : 'Click to set as default'
+                    "
+                  >
+                    @if (
+                      route.type === RouteType.HTTP ||
+                      (route.type === RouteType.CRUD && !response.default)
+                    ) {
+                      <span class="response-pill-status"
+                        >{{ response.statusCode }}</span
+                      >
+                    }
+                    @if (response.label) {
+                      <span class="response-pill-label">{{ response.label }}</span>
+                    }
+                  </button>
+                }
+              </div>
+            }
           </div>
           <div class="ms-auto ps-2 d-flex align-items-start">
             <app-dropdown-menu

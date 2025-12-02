@@ -1833,6 +1833,25 @@ export class EnvironmentsService {
   }
 
   /**
+   * Set the route response as default for a specific route
+   */
+  public setDefaultRouteResponseForRoute(
+    routeUuid: string,
+    routeResponseUuid: string
+  ) {
+    const activeEnvironment = this.store.getActiveEnvironment();
+
+    this.store.update(
+      updateRouteResponseAction(
+        activeEnvironment.uuid,
+        routeUuid,
+        routeResponseUuid,
+        { default: true }
+      )
+    );
+  }
+
+  /**
    * Navigates to the definition of the provided callback by id.
    */
   public navigateToCallbackDefinition(callbackUUID: string) {

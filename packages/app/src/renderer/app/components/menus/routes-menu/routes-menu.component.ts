@@ -29,7 +29,8 @@ import {
   ReorderAction,
   ReorderableContainers,
   ResponseMode,
-  Route
+  Route,
+  RouteType
 } from '@mockoon/commons';
 import {
   NgbDropdown,
@@ -142,6 +143,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   public menuSize = Config.defaultSecondaryMenuSize;
   public draggedFolderCollapsed: boolean;
   public ResponseMode = ResponseMode;
+  public RouteType = RouteType;
   public isWeb = Config.isWeb;
   public routeDropdownMenuItems: DropdownMenuItem[] = [
     {
@@ -412,6 +414,21 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
     } else {
       this.dragEnabled = true;
     }
+  }
+
+  /**
+   * Set a route response as default for a specific route
+   */
+  public setDefaultRouteResponse(
+    routeUuid: string,
+    routeResponseUuid: string,
+    event: MouseEvent
+  ) {
+    event.stopPropagation();
+    this.environmentsService.setDefaultRouteResponseForRoute(
+      routeUuid,
+      routeResponseUuid
+    );
   }
 
   /**
