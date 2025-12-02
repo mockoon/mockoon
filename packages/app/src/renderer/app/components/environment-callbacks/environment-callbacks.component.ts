@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -71,7 +71,6 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
   styleUrls: ['./environment-callbacks.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     CallbacksMenuComponent,
     NgClass,
     FormsModule,
@@ -84,7 +83,6 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
     NgbTooltip,
     SvgComponent,
     DropdownMenuComponent,
-    NgFor,
     AsyncPipe
   ]
 })

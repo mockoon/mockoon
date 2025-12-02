@@ -145,4 +145,15 @@ export type ServerOptions = {
    * Max file upload size (multipart/form-data).
    */
   maxFileSize?: number;
+
+  /**
+   * Public base URL used to:
+   * - resolve relative callback URLs
+   * - provide the value for the `baseUrl` templating helper
+   *
+   * Must include the protocol and the port if non-standard (e.g. https://toto.com, http://localhost:3000).
+   * ⚠️ This is NOT the bind address (hostname) used by the server
+   * which is configured in the environment definition.
+   */
+  publicBaseUrl?: string;
 };

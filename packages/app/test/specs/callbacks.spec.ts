@@ -504,15 +504,15 @@ describe('Callback usages', () => {
       await environments.select(1);
     });
 
-    it('should add a callback', async () => {
+    it('should add an absolute callback', async () => {
       await navigation.switchView('ENV_CALLBACKS');
       await callbacks.add();
-      await callbacks.setName('basic call');
+      await callbacks.setName('absolute call');
       await callbacks.setUri('http://localhost:3001/answer');
       await callbacks.setMethod(1);
     });
 
-    it('should attach callback to each route', async () => {
+    it('should attach callback to the first route', async () => {
       await navigation.switchView('ENV_ROUTES');
       await routes.select(1);
       await routes.callbacksTab.click();
@@ -521,7 +521,7 @@ describe('Callback usages', () => {
       await utils.selectDropdownItem('callback0target', 7);
     });
 
-    it('should start the environment call each route and verify the callback has been called', async () => {
+    it('should start the callbacks environment call the first route and verify the callback has been called', async () => {
       await environments.start();
       await environments.select(2);
       await navigation.switchView('ENV_LOGS');
@@ -529,6 +529,53 @@ describe('Callback usages', () => {
       await http.assertCallWithPort({ method: 'GET', path: '/inline' }, 3000);
       await browser.pause(1000);
       await environmentsLogs.assertCount(1);
+      await environmentsLogs.assertLogItem(
+        'Request URL: /answer',
+        'request',
+        2,
+        1
+      );
+    });
+
+    it('should add a relative callback calling the third callback env route', async () => {
+      await environments.select(1);
+      await navigation.switchView('ENV_CALLBACKS');
+      await callbacks.add();
+      await callbacks.setName('relative call');
+      await callbacks.setUri('/databucket');
+      await callbacks.setMethod(1);
+    });
+
+    it('should attach callback to the first route', async () => {
+      await navigation.switchView('ENV_ROUTES');
+      await routes.select(1);
+      await routes.callbacksTab.click();
+      await callbacks.attachCallback();
+      await utils.openDropdown('callback0target');
+      await utils.selectDropdownItem('callback0target', 8);
+    });
+
+    it('should restart the callbacks environment call the first route and verify the callback has been called', async () => {
+      await environments.stop();
+      await environments.start();
+      await navigation.switchView('ENV_LOGS');
+
+      await http.assertCallWithPort({ method: 'GET', path: '/inline' }, 3000);
+      await browser.pause(1000);
+      await environmentsLogs.assertCount(3);
+      await environmentsLogs.select(1);
+      await environmentsLogs.assertLogItem(
+        'Request URL: /databucket',
+        'request',
+        2,
+        1
+      );
+      await environmentsLogs.assertLogItem(
+        'X-mockoon-callback-trigger-response-uuid: aa1b9d75-8161-49bf-80d7-c7a50d341a15',
+        'request',
+        4,
+        8
+      );
     });
   });
 });
