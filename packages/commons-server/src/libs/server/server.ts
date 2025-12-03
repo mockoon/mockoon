@@ -45,6 +45,7 @@ import {
   Server as httpsServer
 } from 'https';
 import killable from 'killable';
+import { AddressInfo, isIPv6 } from 'node:net';
 import { basename, extname, isAbsolute, resolve } from 'path';
 import { match } from 'path-to-regexp';
 import { parse as qsParse } from 'qs';
@@ -1290,26 +1291,35 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     };
   }
 
-  private makeCallbacks(
+  private executeCallbacks(
     routeResponse: RouteResponse,
     request: Request,
     response: Response
   ) {
+    // avoid infinite callback loops
+    if (
+      request.header('X-Mockoon-Callback-Trigger-Response-Uuid') ===
+      routeResponse.uuid
+    ) {
+      return;
+    }
+
     if (routeResponse.callbacks && routeResponse.callbacks.length > 0) {
       const serverRequest = fromExpressRequest(request);
-      for (const invocation of routeResponse.callbacks) {
-        const cb = this.environment.callbacks.find(
-          (ref) => ref.uuid === invocation.uuid
+
+      for (const callbackInvocation of routeResponse.callbacks) {
+        const callback = this.environment.callbacks.find(
+          (ref) => ref.uuid === callbackInvocation.uuid
         );
 
-        if (!cb) {
+        if (!callback) {
           continue;
         }
 
         try {
-          const url = TemplateParser({
+          let url = TemplateParser({
             shouldOmitDataHelper: false,
-            content: cb.uri,
+            content: callback.uri,
             environment: this.environment,
             processedDatabuckets: this.processedDatabuckets,
             globalVariables: this.globalVariables,
@@ -1318,15 +1328,35 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             envVarsPrefix: this.options.envVarsPrefix
           });
 
-          let content = cb.body;
+          let extraHeaders = {};
+
+          // detect if relative URL and add current host and protocol
+          if (url.startsWith('/')) {
+            const serverAddress = this.serverInstance.address() as AddressInfo;
+
+            const hostname =
+              this.options.publicBaseUrl ||
+              `${this.environment.tlsOptions.enabled ? 'https' : 'http'}://${isIPv6(serverAddress.address) ? `[${serverAddress.address}]` : serverAddress.address}:${serverAddress.port}`;
+            url = `${hostname}${this.environment.endpointPrefix ? '/' + this.environment.endpointPrefix : ''}${url}`;
+
+            // add extra headers only for internal calls
+            extraHeaders = {
+              'X-Mockoon-Callback-Trigger-Response-Uuid': routeResponse.uuid
+            };
+          }
+
+          let content = callback.body;
           let templateParse = true;
 
-          if (cb.bodyType === BodyTypes.DATABUCKET && cb.databucketID) {
+          if (
+            callback.bodyType === BodyTypes.DATABUCKET &&
+            callback.databucketID
+          ) {
             templateParse = false;
 
             const servedDatabucket = this.processedDatabuckets.find(
               (processedDatabucket) =>
-                processedDatabucket.id === cb.databucketID
+                processedDatabucket.id === callback.databucketID
             );
 
             if (servedDatabucket) {
@@ -1342,11 +1372,14 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
                 content = JSON.stringify(content);
               }
             }
-          } else if (cb.bodyType === BodyTypes.FILE && cb.filePath) {
+          } else if (
+            callback.bodyType === BodyTypes.FILE &&
+            callback.filePath
+          ) {
             this.sendFileWithCallback(
               routeResponse,
-              cb,
-              invocation,
+              callback,
+              callbackInvocation,
               request,
               response
             );
@@ -1357,7 +1390,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           const sendingHeaders = {
             headers: {}
           };
-          this.setHeaders(cb.headers || [], sendingHeaders, request);
+          this.setHeaders(callback.headers || [], sendingHeaders, request);
 
           // apply templating if specified
           if (!routeResponse.disableTemplating && templateParse) {
@@ -1376,14 +1409,19 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           setTimeout(() => {
             fetch(url, {
               // uppercase even if most methods will work in lower case, but PATCH has to be uppercase or could be rejected by some servers (Node.js)
-              method: cb.method.toUpperCase(),
-              headers: sendingHeaders.headers,
-              body: isBodySupportingMethod(cb.method) ? content : undefined
+              method: callback.method.toUpperCase(),
+              headers: {
+                ...sendingHeaders.headers,
+                ...extraHeaders
+              },
+              body: isBodySupportingMethod(callback.method)
+                ? content
+                : undefined
             })
               .then((res) => {
                 this.emitCallbackInvoked(
                   res,
-                  cb,
+                  callback,
                   url,
                   content,
                   sendingHeaders.headers
@@ -1391,13 +1429,13 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               })
               .catch((e) =>
                 this.emit('error', ServerErrorCodes.CALLBACK_ERROR, e, {
-                  callbackName: cb.name
+                  callbackName: callback.name
                 })
               );
-          }, invocation.latency);
+          }, callbackInvocation.latency);
         } catch (error: any) {
           this.emit('error', ServerErrorCodes.CALLBACK_ERROR, error, {
-            callbackName: cb.name
+            callbackName: callback.name
           });
         }
       }
@@ -1438,7 +1476,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       response.body = content;
 
       // execute callbacks after generating the template, to be able to use the eventual templating variables in the callback
-      this.makeCallbacks(routeResponse, request, response);
+      this.executeCallbacks(routeResponse, request, response);
 
       response.send(content);
     } catch (error: any) {
@@ -1670,7 +1708,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             response.body = fileContent;
 
             // execute callbacks after generating the file content, to be able to use the eventual templating variables in the callback
-            this.makeCallbacks(routeResponse, request, response);
+            this.executeCallbacks(routeResponse, request, response);
 
             response.send(fileContent);
           } catch (error: any) {
@@ -1742,7 +1780,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             }
           }
 
-          this.makeCallbacks(routeResponse, request, response);
+          this.executeCallbacks(routeResponse, request, response);
 
           stream.pipe(response);
         } catch (error: any) {

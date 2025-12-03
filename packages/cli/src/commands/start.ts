@@ -53,6 +53,12 @@ export default class Start extends Command {
       multiple: true,
       default: []
     }),
+    'public-base-url': Flags.string({
+      description:
+        'Public base URL used to resolve relative callback URLs and for the baseUrl templating helper (e.g. https://api.example.com or http://localhost:3000). Must include the protocol and port if non-standard.',
+      multiple: true,
+      default: []
+    }),
     repair: Flags.boolean({
       char: 'r',
       description:
@@ -173,7 +179,8 @@ export default class Start extends Command {
           enableAdminApi: !userFlags['disable-admin-api'],
           disableTls: userFlags['disable-tls'],
           maxTransactionLogs: userFlags['max-transaction-logs'],
-          enableRandomLatency: userFlags['enable-random-latency']
+          enableRandomLatency: userFlags['enable-random-latency'],
+          publicBaseUrl: userFlags['public-base-url'][index]
         });
 
         if (!dataFilePath.startsWith('http') && userFlags.watch) {
@@ -222,6 +229,7 @@ export default class Start extends Command {
       environment: Environment;
       logTransaction?: boolean;
       fileTransportOptions?: Parameters<typeof createLoggerInstance>[0] | null;
+      publicBaseUrl?: string;
     }
   ) => {
     const logger = createLoggerInstance(parameters.fileTransportOptions);
@@ -233,7 +241,8 @@ export default class Start extends Command {
       enableAdminApi: parameters.enableAdminApi,
       disableTls: parameters.disableTls,
       maxTransactionLogs: parameters.maxTransactionLogs,
-      enableRandomLatency: parameters.enableRandomLatency
+      enableRandomLatency: parameters.enableRandomLatency,
+      publicBaseUrl: parameters.publicBaseUrl
     });
 
     listenServerEvents(
