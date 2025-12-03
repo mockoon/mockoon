@@ -571,7 +571,7 @@ describe('Callback usages', () => {
         1
       );
       await environmentsLogs.assertLogItem(
-        'X-mockoon-callback-trigger-response-uuid: aa1b9d75-8161-49bf-80d7-c7a50d341a15',
+        'X-mockoon-callback-chain: aa1b9d75-8161-49bf-80d7-c7a50d341a15',
         'request',
         4,
         8

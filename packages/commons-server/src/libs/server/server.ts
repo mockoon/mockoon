@@ -3,7 +3,6 @@ import {
   BodyTypes,
   CORSHeaders,
   Callback,
-  CallbackInvocation,
   Environment,
   FileExtensionsWithTemplating,
   GetContentType,
@@ -1296,11 +1295,25 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     request: Request,
     response: Response
   ) {
-    // avoid infinite callback loops
-    if (
-      request.header('X-Mockoon-Callback-Trigger-Response-Uuid') ===
-      routeResponse.uuid
-    ) {
+    // avoid infinite callback loops by tracking the chain of callback triggers
+    const incomingCallbackChain =
+      request.header('X-Mockoon-Callback-Chain') || '';
+    const callbackChainArray = incomingCallbackChain
+      ? incomingCallbackChain.split(',')
+      : [];
+
+    // check if current route response is already in the callback chain
+    if (callbackChainArray.includes(routeResponse.uuid)) {
+      this.emit(
+        'error',
+        ServerErrorCodes.CALLBACK_ERROR,
+        new Error('Infinite callback loop detected'),
+        {
+          routeResponseUUID: routeResponse.uuid,
+          callbackChain: incomingCallbackChain
+        }
+      );
+
       return;
     }
 
@@ -1328,7 +1341,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             envVarsPrefix: this.options.envVarsPrefix
           });
 
-          let extraHeaders = {};
+          // build the callback chain by appending current route response UUID
+          const newCallbackChain = [
+            ...callbackChainArray,
+            routeResponse.uuid
+          ].join(',');
+
+          const extraHeaders = {
+            'X-Mockoon-Callback-Chain': newCallbackChain
+          };
 
           // detect if relative URL and add current host and protocol
           if (url.startsWith('/')) {
@@ -1338,15 +1359,19 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               this.options.publicBaseUrl ||
               `${this.environment.tlsOptions.enabled ? 'https' : 'http'}://${isIPv6(serverAddress.address) ? `[${serverAddress.address}]` : serverAddress.address}:${serverAddress.port}`;
             url = `${hostname}${this.environment.endpointPrefix ? '/' + this.environment.endpointPrefix : ''}${url}`;
-
-            // add extra headers only for internal calls
-            extraHeaders = {
-              'X-Mockoon-Callback-Trigger-Response-Uuid': routeResponse.uuid
-            };
           }
 
-          let content = callback.body;
+          const fileServingError = (error) => {
+            this.emit('error', ServerErrorCodes.CALLBACK_FILE_ERROR, error, {
+              callbackName: callback.name
+            });
+          };
+          let content: string | FormData | undefined = callback.body;
           let templateParse = true;
+          const sendingHeaders = {
+            headers: {}
+          };
+          this.setHeaders(callback.headers || [], sendingHeaders, request);
 
           if (
             callback.bodyType === BodyTypes.DATABUCKET &&
@@ -1376,27 +1401,45 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             callback.bodyType === BodyTypes.FILE &&
             callback.filePath
           ) {
-            this.sendFileWithCallback(
-              routeResponse,
-              callback,
-              callbackInvocation,
-              request,
-              response
-            );
+            try {
+              const filePath = this.getSafeFilePath(
+                callback.filePath,
+                serverRequest
+              );
 
-            continue;
+              const fileMimeType = mimeTypeLookup(filePath) || '';
+              const definedContentType = sendingHeaders.headers['Content-Type'];
+
+              if (callback.sendFileAsBody) {
+                const data = readFileSync(filePath);
+                content = data.toString();
+
+                if (!MimeTypesWithTemplating.includes(fileMimeType)) {
+                  templateParse = false;
+                }
+
+                // set content-type the detected mime type if any
+                if (!definedContentType && fileMimeType) {
+                  sendingHeaders.headers['Content-Type'] = fileMimeType;
+                }
+              } else {
+                templateParse = false;
+                const buffer = readFileSync(filePath);
+                content = new FormData();
+                content.append('file', new Blob([buffer]));
+              }
+            } catch (error: any) {
+              fileServingError(error);
+
+              continue;
+            }
           }
-
-          const sendingHeaders = {
-            headers: {}
-          };
-          this.setHeaders(callback.headers || [], sendingHeaders, request);
 
           // apply templating if specified
           if (!routeResponse.disableTemplating && templateParse) {
             content = TemplateParser({
               shouldOmitDataHelper: false,
-              content: content || '',
+              content: (content as string) || '',
               environment: this.environment,
               processedDatabuckets: this.processedDatabuckets,
               globalVariables: this.globalVariables,
@@ -1423,7 +1466,9 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
                   res,
                   callback,
                   url,
-                  content,
+                  content instanceof FormData
+                    ? `<buffer of ${callback.filePath}`
+                    : content,
                   sendingHeaders.headers
                 );
               })
@@ -1489,134 +1534,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         response,
         format(ServerMessages.ROUTE_SERVING_ERROR, error.message)
       );
-    }
-  }
-
-  private sendFileWithCallback(
-    routeResponse: RouteResponse,
-    callback: Callback,
-    invocation: CallbackInvocation,
-    request: Request,
-    response: Response
-  ) {
-    if (!callback.filePath) {
-      return;
-    }
-
-    const fileServingError = (error) => {
-      this.emit('error', ServerErrorCodes.CALLBACK_FILE_ERROR, error, {
-        callbackName: callback.name
-      });
-    };
-
-    const serverRequest = fromExpressRequest(request);
-    try {
-      const url = TemplateParser({
-        shouldOmitDataHelper: false,
-        content: callback.uri,
-        environment: this.environment,
-        processedDatabuckets: this.processedDatabuckets,
-        globalVariables: this.globalVariables,
-        request: serverRequest,
-        response,
-        envVarsPrefix: this.options.envVarsPrefix
-      });
-
-      const filePath = this.getSafeFilePath(callback.filePath, serverRequest);
-
-      const fileMimeType = mimeTypeLookup(filePath) || '';
-
-      const sendingHeaders = {
-        headers: {}
-      };
-      this.setHeaders(callback.headers || [], sendingHeaders, request);
-
-      const definedContentType = sendingHeaders.headers['Content-Type'];
-
-      // parse templating for a limited list of mime types
-
-      try {
-        if (!callback.sendFileAsBody) {
-          const buffer = readFileSync(filePath);
-          const form = new FormData();
-          form.append('file', new Blob([buffer]));
-
-          setTimeout(() => {
-            fetch(url, {
-              // uppercase even if most methods will work in lower case, but PATCH has to be uppercase or could be rejected by some servers (Node.js)
-              method: callback.method.toUpperCase(),
-              body: form,
-              headers: sendingHeaders.headers
-            })
-              .then((res) => {
-                this.emitCallbackInvoked(
-                  res,
-                  callback,
-                  url,
-                  `<buffer of ${filePath}`,
-                  sendingHeaders.headers
-                );
-              })
-              .catch((e) =>
-                this.emit('error', ServerErrorCodes.CALLBACK_ERROR, e, {
-                  callbackName: callback.name
-                })
-              );
-          }, invocation.latency);
-        } else {
-          const data = readFileSync(filePath);
-          let fileContent;
-          if (
-            MimeTypesWithTemplating.includes(fileMimeType) &&
-            !routeResponse.disableTemplating
-          ) {
-            fileContent = TemplateParser({
-              shouldOmitDataHelper: false,
-              content: data.toString(),
-              environment: this.environment,
-              processedDatabuckets: this.processedDatabuckets,
-              globalVariables: this.globalVariables,
-              request: serverRequest,
-              response,
-              envVarsPrefix: this.options.envVarsPrefix
-            });
-          } else {
-            fileContent = data.toString();
-          }
-
-          // set content-type the detected mime type if any
-          if (!definedContentType && fileMimeType) {
-            sendingHeaders.headers['Content-Type'] = fileMimeType;
-          }
-
-          setTimeout(() => {
-            fetch(url, {
-              // uppercase even if most methods will work in lower case, but PATCH has to be uppercase or could be rejected by some servers (Node.js)
-              method: callback.method.toUpperCase(),
-              headers: sendingHeaders.headers,
-              body: fileContent
-            })
-              .then((res) => {
-                this.emitCallbackInvoked(
-                  res,
-                  callback,
-                  url,
-                  fileContent,
-                  sendingHeaders.headers
-                );
-              })
-              .catch((e) =>
-                this.emit('error', ServerErrorCodes.CALLBACK_ERROR, e, {
-                  callbackName: callback.name
-                })
-              );
-          }, invocation.latency);
-        }
-      } catch (error: any) {
-        fileServingError(error);
-      }
-    } catch (error: any) {
-      fileServingError(error);
     }
   }
 
