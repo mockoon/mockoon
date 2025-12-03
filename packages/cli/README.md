@@ -115,7 +115,7 @@ Mockoon's CLI has been tested on Node.js versions 18 and 20.
 Starts one (or more) mock API from Mockoon's environment file(s) as a foreground process.
 
 The mocks will run by default on the ports and hostnames specified in the files. You can override these values by using the `--port` and `--hostname` flags.
-`--data`, `--port` and `--hostname` flags support multiple entries to run multiple mock APIs at once (see examples below).
+`--data`, `--port`, `--hostname`, and `--public-base-url` flags support multiple entries to run multiple mock APIs at once (see examples below).
 
 > 💡 To run the CLI as a background process, add an `&` at the end of the command: `mockoon-cli start -d ./data-file.json &`.
 
@@ -142,6 +142,7 @@ The mocks will run by default on the ports and hostnames specified in the files.
 |--max-transaction-logs | Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100)|
 |--enable-random-latency | Randomize global and responses latencies between 0 and the specified value (default: false)|
 |--proxy | Override the environment's proxy settings (options: 'enabled' or 'disabled')|
+|--public-base-url | Public base URL used to resolve [relative callback URLs](https://mockoon.com/docs/latest/callbacks/overview/#configure-a-callback) and for the [`baseUrl` templating helper](https://mockoon.com/docs/latest/templating/mockoon-request-helpers/#baseurl) (e.g. https://api.example.com or http://localhost:3000). Must include the protocol and port if non-standard.|
 |-h, --help | Show CLI help|
 
 **Examples**:
@@ -155,6 +156,7 @@ $ mockoon-cli start --data ~/data.json --log-transaction
 $ mockoon-cli start --data ~/data.json --disable-routes route1 route2 folder1
 $ mockoon-cli start --data ~/data.json --disable-routes=*
 $ mockoon-cli start --data ~/data.json --disable-routes "*"
+$ mockoon-cli start --data ~/data.json --public-base-url https://api.example.com
 ```
 
 #### Admin API
