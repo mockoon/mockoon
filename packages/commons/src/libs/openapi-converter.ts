@@ -220,9 +220,10 @@ export class OpenApiConverter {
   public async dereference(parsedSpec: any): Promise<any> {
     const externalCache = new Map<string, any>();
     const internalCache = new Map<string, any>();
+    const dereferenceCache = new Map<string, any>();
     const visitedNodes = new Set<any>();
     const circularRefs = new Set<string>();
-    const rootSchema = JSON.parse(JSON.stringify(parsedSpec));
+    const rootSchema = parsedSpec;
 
     /**
      * Fetch and parse external reference
@@ -328,6 +329,11 @@ export class OpenApiConverter {
       if (current.$ref && typeof current.$ref === 'string') {
         const refPath = current.$ref;
 
+        // Check if we already dereferenced this exact ref - if so, return cached result
+        if (dereferenceCache.has(refPath)) {
+          return dereferenceCache.get(refPath);
+        }
+
         /**
          * Check for circular reference before processing
          * Returns an empty object that will be converted in a simple string in generateSchema()
@@ -345,6 +351,9 @@ export class OpenApiConverter {
           const result = await crawl(resolvedRef, refPath);
           // Remove from circular reference tracking after processing
           circularRefs.delete(refPath);
+
+          // Cache the dereferenced result
+          dereferenceCache.set(refPath, result);
 
           return result;
         } else {
