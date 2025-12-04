@@ -47,7 +47,8 @@ export class ResponseRulesInterpreter {
     private environment: Environment,
     private processedDatabuckets: ProcessedDatabucket[],
     private globalVariables: Record<string, any>,
-    private envVarsPrefix: string
+    private envVarsPrefix: string,
+    private responseOverrideUuid?: string
   ) {
     this.extractTargets();
   }
@@ -60,10 +61,40 @@ export class ResponseRulesInterpreter {
     requestNumber: number,
     requestMessage?: string
   ): RouteResponse | null {
-    // if no rules were fulfilled find the default one, or first one if no default
+    console.log('[ResponseRulesInterpreter] chooseResponse called with override:', this.responseOverrideUuid);
+    console.log('[ResponseRulesInterpreter] responseMode:', this.responseMode);
+    console.log('[ResponseRulesInterpreter] available responses:', this.routeResponses.map(r => ({ uuid: r.uuid, label: r.label, default: r.default })));
+
+    // if there's a runtime override, use that response (unless in RANDOM/SEQUENTIAL mode)
+    if (
+      this.responseOverrideUuid &&
+      this.responseMode !== ResponseMode.RANDOM &&
+      this.responseMode !== ResponseMode.SEQUENTIAL
+    ) {
+      const overrideResponse = this.routeResponses.find(
+        (routeResponse) => routeResponse.uuid === this.responseOverrideUuid
+      );
+
+      console.log('[ResponseRulesInterpreter] Found override response:', overrideResponse ? { uuid: overrideResponse.uuid, label: overrideResponse.label } : null);
+
+      // If override response exists, use it for DISABLE_RULES mode or as fallback default
+      if (overrideResponse) {
+        if (this.responseMode === ResponseMode.DISABLE_RULES) {
+          console.log('[ResponseRulesInterpreter] Returning override for DISABLE_RULES mode');
+          return overrideResponse;
+        }
+        // For normal mode and FALLBACK mode, the override becomes the new "default"
+        // We'll continue with normal rule matching but use override as fallback
+        console.log('[ResponseRulesInterpreter] Override will be used as fallback default');
+      }
+    }
+
+    // if no rules were fulfilled find the default one (or override), or first one if no default
     const defaultResponse =
-      this.routeResponses.find((routeResponse) => routeResponse.default) ??
-      this.routeResponses[0];
+      (this.responseOverrideUuid &&
+        this.routeResponses.find((r) => r.uuid === this.responseOverrideUuid)) ||
+      (this.routeResponses.find((routeResponse) => routeResponse.default) ??
+        this.routeResponses[0]);
 
     if (this.responseMode === ResponseMode.RANDOM) {
       const randomStatus = Math.floor(
@@ -101,6 +132,7 @@ export class ResponseRulesInterpreter {
 
       response ??= defaultResponse;
 
+      console.log('[ResponseRulesInterpreter] Final response chosen:', response ? { uuid: response.uuid, label: response.label, statusCode: response.statusCode } : null);
       return response;
     }
   }

@@ -49,6 +49,7 @@ export const storeDefaultState: StoreType = {
   environmentsStatus: {},
   bodyEditorConfig: defaultEditorOptions,
   duplicatedRoutes: {},
+  activeResponseOverrides: {},
   environmentsLogs: {},
   toasts: [],
   uiState: {

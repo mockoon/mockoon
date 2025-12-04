@@ -1429,6 +1429,36 @@ export const environmentReducer = (
       break;
     }
 
+    case ActionTypes.SET_ACTIVE_RESPONSE_OVERRIDE: {
+      console.log('[Reducer] SET_ACTIVE_RESPONSE_OVERRIDE:', {
+        environmentUuid: action.environmentUuid,
+        routeUuid: action.routeUuid,
+        routeResponseUuid: action.routeResponseUuid
+      });
+
+      const newActiveResponseOverrides = { ...state.activeResponseOverrides };
+
+      if (!newActiveResponseOverrides[action.environmentUuid]) {
+        newActiveResponseOverrides[action.environmentUuid] = {};
+      }
+
+      if (action.routeResponseUuid === null) {
+        // Clear the override for this route
+        delete newActiveResponseOverrides[action.environmentUuid][action.routeUuid];
+      } else {
+        // Set the override for this route
+        newActiveResponseOverrides[action.environmentUuid][action.routeUuid] = action.routeResponseUuid;
+      }
+
+      console.log('[Reducer] New activeResponseOverrides:', newActiveResponseOverrides);
+
+      newState = {
+        ...state,
+        activeResponseOverrides: newActiveResponseOverrides
+      };
+      break;
+    }
+
     case ActionTypes.LOG_REQUEST: {
       // do not process if the timestamp is already in the logs
       if (

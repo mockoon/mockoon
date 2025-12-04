@@ -129,6 +129,7 @@ import {
   setActiveTabAction,
   setActiveTabInCallbackViewAction,
   setActiveViewAction,
+  setActiveResponseOverrideAction,
   startEntityDuplicationToAnotherEnvironmentAction,
   updateCallbackAction,
   updateDatabucketAction,
@@ -356,6 +357,37 @@ export class EnvironmentsService {
           )
         )
       )
+    );
+  }
+
+  /**
+   * Subscribe to sync runtime response overrides to the server
+   * This does NOT save to disk - it's runtime-only state
+   *
+   * @returns
+   */
+  public syncResponseOverridesToServer(): Observable<void> {
+    return this.store.select('activeResponseOverrides').pipe(
+      debounceTime(100),
+      tap((activeResponseOverrides) => {
+        console.log('[Frontend] Syncing response overrides to server:', activeResponseOverrides);
+        console.log('[Frontend] Config.isWeb =', Config.isWeb);
+        if (!Config.isWeb) {
+          console.log('[Frontend] Sending IPC message APP_UPDATE_RESPONSE_OVERRIDES');
+          try {
+            this.mainApiService.send(
+              'APP_UPDATE_RESPONSE_OVERRIDES',
+              activeResponseOverrides
+            );
+            console.log('[Frontend] IPC message sent successfully');
+          } catch (error) {
+            console.error('[Frontend] Error sending IPC message:', error);
+          }
+        } else {
+          console.log('[Frontend] Skipping IPC send because Config.isWeb is true');
+        }
+      }),
+      map(() => void 0)
     );
   }
 
@@ -1828,6 +1860,25 @@ export class EnvironmentsService {
         activeRoute.uuid,
         routeResponseUuid,
         { default: true }
+      )
+    );
+  }
+
+  /**
+   * Set a runtime-only override for the active response of a specific route
+   * This does NOT persist to the JSON file and resets on server/app restart
+   */
+  public setDefaultRouteResponseForRoute(
+    routeUuid: string,
+    routeResponseUuid: string
+  ) {
+    const activeEnvironment = this.store.getActiveEnvironment();
+
+    this.store.update(
+      setActiveResponseOverrideAction(
+        activeEnvironment.uuid,
+        routeUuid,
+        routeResponseUuid
       )
     );
   }

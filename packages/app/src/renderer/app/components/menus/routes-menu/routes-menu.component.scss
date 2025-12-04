@@ -8,3 +8,47 @@
 
   position: relative; // we need this for the resize-column
 }
+
+.response-pill {
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 1rem;
+  cursor: pointer;
+  border: 1px solid;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  &.response-pill-default {
+    background-color: $primary;
+    border-color: $primary;
+    color: $white;
+
+    &:hover {
+      background-color: darken($primary, 10%);
+      border-color: darken($primary, 10%);
+    }
+  }
+
+  &.response-pill-non-default {
+    background-color: transparent;
+    border-color: lighten($gray-900, 15%);
+    color: lighten($gray-900, 60%);
+
+    &:hover {
+      background-color: lighten($gray-900, 5%);
+      border-color: lighten($gray-900, 20%);
+      color: lighten($gray-900, 80%);
+    }
+  }
+
+  .response-pill-status {
+    font-weight: 600;
+  }
+
+  .response-pill-label {
+    font-weight: 400;
+    opacity: 0.9;
+  }
+}

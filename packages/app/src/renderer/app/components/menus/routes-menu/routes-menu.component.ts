@@ -29,7 +29,9 @@ import {
   ReorderAction,
   ReorderableContainers,
   ResponseMode,
-  Route
+  Route,
+  RouteResponse,
+  RouteType
 } from '@mockoon/commons';
 import {
   NgbDropdown,
@@ -63,6 +65,7 @@ import { TourStepDirective } from 'src/renderer/app/directives/tour-step.directi
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { buildFullPath, textFilter } from 'src/renderer/app/libs/utils.lib';
 import {
+  ActiveResponseOverrides,
   DuplicatedRoutesTypes,
   EnvironmentsStatuses
 } from 'src/renderer/app/models/store.model';
@@ -136,12 +139,14 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
   public disabledRoutes$: Observable<string[]>;
   public collapsedFolders$: Observable<string[]>;
   public routesFilter$: Observable<string>;
+  public activeResponseOverrides$: Observable<ActiveResponseOverrides>;
   public dragEnabled = true;
   public focusableInputs = FocusableInputs;
   public folderForm: UntypedFormGroup;
   public menuSize = Config.defaultSecondaryMenuSize;
   public draggedFolderCollapsed: boolean;
   public ResponseMode = ResponseMode;
+  public RouteType = RouteType;
   public isWeb = Config.isWeb;
   public routeDropdownMenuItems: DropdownMenuItem[] = [
     {
@@ -280,6 +285,7 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
     this.environmentsStatus$ = this.store.select('environmentsStatus');
     this.settings$ = this.store.select('settings');
     this.routesFilter$ = this.store.selectFilter('routes');
+    this.activeResponseOverrides$ = this.store.select('activeResponseOverrides');
     this.disabledRoutes$ = this.store.selectActiveEnvironment().pipe(
       withLatestFrom(this.store.select('settings')),
       filter(
@@ -412,6 +418,41 @@ export class RoutesMenuComponent implements OnInit, OnDestroy {
     } else {
       this.dragEnabled = true;
     }
+  }
+
+  /**
+   * Set a route response as active override for a specific route
+   * This creates a runtime-only override that doesn't persist to the JSON file
+   */
+  public setDefaultRouteResponse(
+    routeUuid: string,
+    routeResponseUuid: string,
+    event: MouseEvent
+  ) {
+    event.stopPropagation();
+    this.environmentsService.setDefaultRouteResponseForRoute(
+      routeUuid,
+      routeResponseUuid
+    );
+  }
+
+  /**
+   * Check if a response is currently active for a route
+   * considering both runtime overrides and default property
+   */
+  public isResponseActive(
+    environmentUuid: string,
+    routeUuid: string,
+    response: RouteResponse,
+    activeResponseOverrides: ActiveResponseOverrides
+  ): boolean {
+    const overrideForRoute = activeResponseOverrides?.[environmentUuid]?.[routeUuid];
+
+    if (overrideForRoute) {
+      return response.uuid === overrideForRoute;
+    }
+
+    return response.default;
   }
 
   /**

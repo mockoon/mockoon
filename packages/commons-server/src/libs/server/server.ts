@@ -112,6 +112,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   private requestNumbers: Record<string, number> = {};
   // templating global variables
   private globalVariables: Record<string, any> = {};
+  // runtime-only response overrides: { routeUuid: responseUuid }
+  private responseOverrides: Record<string, string> = {};
   private options: ServerOptions = {
     environmentDirectory: '.',
     disabledRoutes: [],
@@ -329,6 +331,17 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    */
   public updateEnvironment(environment: Environment): void {
     this.environment = environment;
+  }
+
+  /**
+   * Set runtime-only response overrides for routes
+   * This does NOT persist and resets when the server restarts
+   *
+   * @param overrides - Map of routeUuid to responseUuid
+   */
+  public setResponseOverrides(overrides: Record<string, string>): void {
+    console.log('[MockoonServer] Setting response overrides:', overrides);
+    this.responseOverrides = overrides;
   }
 
   /**
@@ -848,7 +861,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           this.environment,
           this.processedDatabuckets,
           this.globalVariables,
-          this.options.envVarsPrefix
+          this.options.envVarsPrefix,
+          this.responseOverrides[routeInMessage.uuid]
         ).chooseResponse(responseNumber, messageData);
 
         if (!enabledRouteResponse) {
@@ -1052,7 +1066,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         this.environment,
         this.processedDatabuckets,
         this.globalVariables,
-        this.options.envVarsPrefix
+        this.options.envVarsPrefix,
+        this.responseOverrides[route.uuid]
       ).chooseResponse(responseNumber);
 
       if (!enabledRouteResponse) {
@@ -1183,7 +1198,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         this.environment,
         this.processedDatabuckets,
         this.globalVariables,
-        this.options.envVarsPrefix
+        this.options.envVarsPrefix,
+        this.responseOverrides[route.uuid]
       ).chooseResponse(this.requestNumbers[route.uuid]);
 
       if (!enabledRouteResponse) {

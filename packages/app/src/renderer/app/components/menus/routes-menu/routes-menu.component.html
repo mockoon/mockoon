@@ -6,6 +6,7 @@
 @let settings = settings$ | async;
 @let routesFilter = routesFilter$ | async;
 @let isActiveEnvironmentCloud = isActiveEnvironmentCloud$ | async;
+@let activeResponseOverrides = activeResponseOverrides$ | async;
 
 <div
   class="routes-menu d-flex flex-column h-100"
@@ -313,6 +314,54 @@
                 }}
               </span>
             </div>
+            @if (route.responses.length > 1) {
+              <div class="nav-link-pills mt-2 d-flex flex-wrap gap-1">
+                @for (
+                  response of route.responses;
+                  track response.uuid;
+                  let idx = $index
+                ) {
+                  @let isActive = isResponseActive(
+                    activeEnvironment.uuid,
+                    route.uuid,
+                    response,
+                    activeResponseOverrides
+                  );
+                  @let hasOverride =
+                    activeResponseOverrides?.[activeEnvironment.uuid]?.[route.uuid];
+                  <button
+                    type="button"
+                    class="btn btn-xs response-pill"
+                    [ngClass]="{
+                      'response-pill-default': isActive,
+                      'response-pill-non-default': !isActive
+                    }"
+                    (click)="
+                      setDefaultRouteResponse(route.uuid, response.uuid, $event)
+                    "
+                    [ngbTooltip]="
+                      isActive
+                        ? hasOverride
+                          ? 'Active (runtime override - not saved)'
+                          : 'Default response'
+                        : 'Click to set as active (runtime only)'
+                    "
+                  >
+                    @if (
+                      route.type === RouteType.HTTP ||
+                      (route.type === RouteType.CRUD && !response.default)
+                    ) {
+                      <span class="response-pill-status"
+                        >{{ response.statusCode }}</span
+                      >
+                    }
+                    @if (response.label) {
+                      <span class="response-pill-label">{{ response.label }}</span>
+                    }
+                  </button>
+                }
+              </div>
+            }
           </div>
           <div class="ms-auto ps-2 d-flex align-items-start">
             <app-dropdown-menu
