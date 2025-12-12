@@ -848,7 +848,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           this.environment,
           this.processedDatabuckets,
           this.globalVariables,
-          this.options.envVarsPrefix
+          this.options.envVarsPrefix,
+          this.options.publicBaseUrl
         ).chooseResponse(responseNumber, messageData);
 
         if (!enabledRouteResponse) {
@@ -953,7 +954,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             processedDatabuckets: this.processedDatabuckets,
             globalVariables: this.globalVariables,
             request: finalRequest,
-            envVarsPrefix: this.options.envVarsPrefix
+            envVarsPrefix: this.options.envVarsPrefix,
+            publicBaseUrl: this.options.publicBaseUrl
           })
       );
 
@@ -968,7 +970,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         processedDatabuckets: this.processedDatabuckets,
         globalVariables: this.globalVariables,
         request: finalRequest,
-        envVarsPrefix: this.options.envVarsPrefix
+        envVarsPrefix: this.options.envVarsPrefix,
+        publicBaseUrl: this.options.publicBaseUrl
       });
     }
 
@@ -1021,7 +1024,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         environment: this.environment,
         processedDatabuckets: this.processedDatabuckets,
         globalVariables: this.globalVariables,
-        envVarPrefix: this.options.envVarsPrefix
+        envVarPrefix: this.options.envVarsPrefix,
+        publicBaseUrl: this.options.publicBaseUrl
       },
       request,
       handler
@@ -1052,7 +1056,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         this.environment,
         this.processedDatabuckets,
         this.globalVariables,
-        this.options.envVarsPrefix
+        this.options.envVarsPrefix,
+        this.options.publicBaseUrl
       ).chooseResponse(responseNumber);
 
       if (!enabledRouteResponse) {
@@ -1183,7 +1188,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         this.environment,
         this.processedDatabuckets,
         this.globalVariables,
-        this.options.envVarsPrefix
+        this.options.envVarsPrefix,
+        this.options.publicBaseUrl
       ).chooseResponse(this.requestNumbers[route.uuid]);
 
       if (!enabledRouteResponse) {
@@ -1338,7 +1344,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             globalVariables: this.globalVariables,
             request: serverRequest,
             response,
-            envVarsPrefix: this.options.envVarsPrefix
+            envVarsPrefix: this.options.envVarsPrefix,
+            publicBaseUrl: this.options.publicBaseUrl
           });
 
           // build the callback chain by appending current route response UUID
@@ -1445,7 +1452,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               globalVariables: this.globalVariables,
               request: serverRequest,
               response,
-              envVarsPrefix: this.options.envVarsPrefix
+              envVarsPrefix: this.options.envVarsPrefix,
+              publicBaseUrl: this.options.publicBaseUrl
             });
           }
 
@@ -1512,7 +1520,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           globalVariables: this.globalVariables,
           request: fromExpressRequest(request),
           response,
-          envVarsPrefix: this.options.envVarsPrefix
+          envVarsPrefix: this.options.envVarsPrefix,
+          publicBaseUrl: this.options.publicBaseUrl
         });
       }
 
@@ -1617,7 +1626,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               globalVariables: this.globalVariables,
               request: serverRequest,
               response,
-              envVarsPrefix: this.options.envVarsPrefix
+              envVarsPrefix: this.options.envVarsPrefix,
+              publicBaseUrl: this.options.publicBaseUrl
             });
 
             this.applyResponseLocals(response);
@@ -1924,7 +1934,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           processedDatabuckets: this.processedDatabuckets,
           globalVariables: this.globalVariables,
           request: fromExpressRequest(request),
-          envVarsPrefix: this.options.envVarsPrefix
+          envVarsPrefix: this.options.envVarsPrefix,
+          publicBaseUrl: this.options.publicBaseUrl
         });
       } catch (error: any) {
         this.emit('error', ServerErrorCodes.HEADER_PARSING_ERROR, error, {
@@ -2027,7 +2038,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         environment,
         processedDatabuckets: this.processedDatabuckets,
         globalVariables: this.globalVariables,
-        envVarsPrefix: this.options.envVarsPrefix
+        envVarsPrefix: this.options.envVarsPrefix,
+        publicBaseUrl: this.options.publicBaseUrl
       });
 
     if (
@@ -2117,7 +2129,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               environment,
               processedDatabuckets: this.processedDatabuckets,
               globalVariables: this.globalVariables,
-              envVarsPrefix: this.options.envVarsPrefix
+              envVarsPrefix: this.options.envVarsPrefix,
+              publicBaseUrl: this.options.publicBaseUrl
             });
 
             const JSONParsedContent = JSON.parse(templateParsedContent);
@@ -2340,7 +2353,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
               processedDatabuckets: this.processedDatabuckets,
               globalVariables: this.globalVariables,
               request: fromExpressRequest(request),
-              envVarsPrefix: this.options.envVarsPrefix
+              envVarsPrefix: this.options.envVarsPrefix,
+              publicBaseUrl: this.options.publicBaseUrl
             });
 
             const JSONParsedcontent = JSON.parse(content);
@@ -2436,7 +2450,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       processedDatabuckets: this.processedDatabuckets,
       globalVariables: this.globalVariables,
       request,
-      envVarsPrefix: this.options.envVarsPrefix
+      envVarsPrefix: this.options.envVarsPrefix,
+      publicBaseUrl: this.options.publicBaseUrl
     });
 
     // Determine if the path is absolute or relative
