@@ -26,6 +26,7 @@ export type ServerContext = {
   processedDatabuckets: ProcessedDatabucket[];
   globalVariables: Record<string, any>;
   envVarPrefix: string;
+  publicBaseUrl?: string;
 };
 
 /**
@@ -65,7 +66,8 @@ export class WsRunningInstance {
         this.serverContext.environment,
         this.serverContext.processedDatabuckets,
         this.serverContext.globalVariables,
-        this.serverContext.envVarPrefix
+        this.serverContext.envVarPrefix,
+        this.serverContext.publicBaseUrl
       ).chooseResponse(responseNumber);
 
       if (!enabledRouteResponse) {

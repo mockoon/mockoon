@@ -22,7 +22,8 @@ export const requestHelperNames: (keyof ReturnType<typeof RequestHelpers>)[] = [
 
 export const RequestHelpers = function (
   request: ServerRequest,
-  environment: Environment
+  environment: Environment,
+  publicBaseUrl?: string
 ) {
   return {
     // get json property from body
@@ -143,6 +144,11 @@ export const RequestHelpers = function (
       const prefix = environment.endpointPrefix
         ? `/${environment.endpointPrefix}`
         : '';
+
+      if (publicBaseUrl) {
+        return `${publicBaseUrl}${prefix}`;
+      }
+
       const protocol = environment.tlsOptions.enabled ? 'https' : 'http';
 
       return `${protocol}://${request.hostname}:${environment.port}${prefix}`;

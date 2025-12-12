@@ -1056,6 +1056,34 @@ describe('Request helpers', () => {
       });
       strictEqual(parseResult, 'https://localhost:3001');
     });
+
+    it('should return the publicBaseUrl if provided', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{baseUrl}}',
+        environment: {
+          tlsOptions: {
+            enabled: false,
+            type: 'CERT',
+            pfxPath: '',
+            certPath: '',
+            keyPath: '',
+            caPath: '',
+            passphrase: ''
+          },
+          port: 3001,
+          endpointPrefix: 'myapi'
+        } as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
+          hostname: 'localhost'
+        } as any,
+        envVarsPrefix: '',
+        publicBaseUrl: 'https://subdomain.mockoon.app:12345'
+      });
+      strictEqual(parseResult, 'https://subdomain.mockoon.app:12345/myapi');
+    });
   });
 
   describe('Helper: header', () => {

@@ -34,7 +34,8 @@ export const TemplateParser = function ({
   globalVariables,
   request,
   response,
-  envVarsPrefix
+  envVarsPrefix,
+  publicBaseUrl
 }: {
   shouldOmitDataHelper: boolean;
   content: string;
@@ -44,6 +45,7 @@ export const TemplateParser = function ({
   request?: ServerRequest;
   response?: Response;
   envVarsPrefix: string;
+  publicBaseUrl?: string;
 }): string {
   let helpers = {
     ...FakerWrapper,
@@ -62,7 +64,7 @@ export const TemplateParser = function ({
   if (request) {
     helpers = {
       ...helpers,
-      ...RequestHelpers(request, environment)
+      ...RequestHelpers(request, environment, publicBaseUrl)
     };
   }
 

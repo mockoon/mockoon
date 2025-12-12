@@ -47,7 +47,8 @@ export class ResponseRulesInterpreter {
     private environment: Environment,
     private processedDatabuckets: ProcessedDatabucket[],
     private globalVariables: Record<string, any>,
-    private envVarsPrefix: string
+    private envVarsPrefix: string,
+    private publicBaseUrl?: string
   ) {
     this.extractTargets();
   }
@@ -330,7 +331,8 @@ export class ResponseRulesInterpreter {
         request: requestMessage
           ? fromServerRequest(this.request, requestMessage)
           : this.request,
-        envVarsPrefix: this.envVarsPrefix
+        envVarsPrefix: this.envVarsPrefix,
+        publicBaseUrl: this.publicBaseUrl
       });
     } catch (_error) {
       return value;
