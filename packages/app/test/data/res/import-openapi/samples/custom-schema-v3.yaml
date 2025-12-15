@@ -17,6 +17,11 @@ servers:
           - "apiv2"
         default: "api"
 paths:
+  /withparams/{paramName}/{param-id}:
+    get:
+      responses:
+        "200":
+          description: "Success"
   /endpoint:
     get:
       responses:

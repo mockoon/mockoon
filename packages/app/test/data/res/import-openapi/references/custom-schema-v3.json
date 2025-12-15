@@ -9,6 +9,41 @@
   "folders": [],
   "routes": [
     {
+      "uuid": "77eadb17-5b1a-49e6-afbd-0c5bda9588bf",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "withparams/:paramName/:paramid",
+      "responses": [
+        {
+          "uuid": "87f2b90c-df63-4c99-a672-6789022d7259",
+          "body": "",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Success",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },{
       "uuid": "3016cb57-e713-47be-a5a6-a0a8a1e407d8",
       "type": "http",
       "documentation": "",
@@ -410,6 +445,10 @@
     }
   ],
   "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "77eadb17-5b1a-49e6-afbd-0c5bda9588bf"
+    },
     {
       "type": "route",
       "uuid": "3016cb57-e713-47be-a5a6-a0a8a1e407d8"
