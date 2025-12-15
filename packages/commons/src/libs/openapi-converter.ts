@@ -591,7 +591,9 @@ export class OpenApiConverter {
             ...BuildHTTPRoute(false),
             documentation: parsedRoute.summary || parsedRoute.description || '',
             method: routeMethod as Methods,
-            endpoint: RemoveLeadingSlash(this.v2ParametersReplace(routePath)),
+            endpoint: RemoveLeadingSlash(
+              this.routeParametersReplace(routePath)
+            ),
             responses: routeResponses
           };
 
@@ -683,14 +685,17 @@ export class OpenApiConverter {
   }
 
   /**
-   * Replace parameters in `str`
+   * Replace parameters in `str`:
+   * - {parameter-name} => :parametername (Express does
+   * not support hyphens in parameter names)
+   * - {param} => :param
    *
    * @param str
    */
-  private v2ParametersReplace(str: string) {
+  private routeParametersReplace(str: string) {
     return str.replace(
-      /{(\w+)}/gi,
-      (searchValue, replaceValue) => ':' + replaceValue
+      /{([-\w]+)}/gi,
+      (searchValue, replaceValue) => ':' + replaceValue.replaceAll('-', '')
     );
   }
 
