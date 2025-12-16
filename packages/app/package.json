@@ -108,6 +108,6 @@
     "webpack-node-externals": "3.0.0",
     "ws": "8.18.3",
     "yaml": "2.8.1",
-    "zone.js": "~0.15.0"
+    "zone.js": "~0.16.0"
   }
 }
