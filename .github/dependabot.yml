@@ -4,6 +4,7 @@ updates:
   - package-ecosystem: "npm"
     cooldown:
       default-days: 7
+    versioning-strategy: increase
     directories:
       - "/"
       - "/packages/app"
