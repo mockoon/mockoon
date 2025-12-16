@@ -57,7 +57,7 @@
     "@types/mustache": "4.2.6",
     "eslint-config-oclif": "6.0.122",
     "eslint-config-oclif-typescript": "3.1.14",
-    "oclif": "4.22.52",
+    "oclif": "4.22.54",
     "yaml": "2.8.1"
   },
   "engines": {
