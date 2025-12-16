@@ -53,7 +53,7 @@
     "range-parser": "1.2.1",
     "tslib": "2.8.1",
     "typed-emitter": "2.1.0",
-    "winston": "3.18.3",
+    "winston": "3.19.0",
     "ws": "8.18.3",
     "xml-js": "1.6.11"
   },
