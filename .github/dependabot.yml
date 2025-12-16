@@ -5,14 +5,7 @@ updates:
     cooldown:
       default-days: 7
     versioning-strategy: increase
-    directories:
-      - "/"
-      - "/packages/app"
-      - "/packages/cli"
-      - "/packages/cloud"
-      - "/packages/commons"
-      - "/packages/commons-server"
-      - "/packages/serverless"
+    directory: "/"
     schedule:
       interval: "weekly"
     groups:
