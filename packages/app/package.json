@@ -83,7 +83,7 @@
     "@ng-bootstrap/ng-bootstrap": "19.0.1",
     "@types/electron-json-storage": "4.5.4",
     "@types/semver": "7.7.1",
-    "@wdio/cli": "9.20.0",
+    "@wdio/cli": "9.21.1",
     "@wdio/local-runner": "9.21.0",
     "@wdio/mocha-framework": "9.20.0",
     "@wdio/spec-reporter": "9.20.0",
