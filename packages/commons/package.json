@@ -34,7 +34,7 @@
   "dependencies": {
     "joi": "18.0.2",
     "tslib": "2.8.1",
-    "yaml": "2.8.1"
+    "yaml": "2.8.2"
   },
   "devDependencies": {
     "openapi-types": "12.1.3"
