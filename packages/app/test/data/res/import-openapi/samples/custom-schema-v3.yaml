@@ -50,6 +50,20 @@ paths:
             Header-From-Schema-Int:
               schema:
                 type: integer
+        "404":
+          description: "Not found"
+          content:
+            application/problem+json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  message:
+                    type: string
+                example:
+                  status: 404
+                  message: "Resource not found"
   /endpoint2:
     get:
       responses:
