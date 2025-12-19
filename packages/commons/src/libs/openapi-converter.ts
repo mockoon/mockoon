@@ -13,6 +13,7 @@ import {
 import {
   crudRoutesBuilder,
   GetRouteResponseContentType,
+  isContentTypeApplicationJson,
   RemoveLeadingSlash,
   routesFromFolder
 } from '../utils/utils';
@@ -529,7 +530,7 @@ export class OpenApiConverter {
 
               // extract schema
               const contentTypeHeader = contentTypeHeaders.find((header) =>
-                header.includes('application/json')
+                isContentTypeApplicationJson(header)
               );
 
               if (contentTypeHeader) {

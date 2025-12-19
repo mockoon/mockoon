@@ -236,8 +236,12 @@ export const stringIncludesArrayItems = (
  *
  * @param headers
  */
-export const isContentTypeApplicationJson = (headers: Header[]): boolean => {
-  const contentType = GetContentType(headers)?.toLowerCase();
+export const isContentTypeApplicationJson = (
+  headers: Header[] | string
+): boolean => {
+  const contentType = Array.isArray(headers)
+    ? GetContentType(headers)?.toLowerCase()
+    : headers.toLowerCase();
 
   return contentType
     ? stringIncludesArrayItems(ParsedJSONBodyMimeTypes, contentType)
