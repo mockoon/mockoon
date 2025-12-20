@@ -1,7 +1,6 @@
 import { strictEqual } from 'node:assert';
 import { mkdir, readFile, rm } from 'node:fs/promises';
 import { after, before, describe, it } from 'node:test';
-import { parse as yamlParse } from 'yaml';
 import { spawnCli } from '../libs/helpers';
 
 describe('Export command', () => {
@@ -73,8 +72,8 @@ describe('Export command', () => {
     );
 
     strictEqual(
-      JSON.stringify(yamlParse(yamlFileContent.toString())),
-      JSON.stringify(yamlParse(expectedContent.toString()))
+      yamlFileContent.toString().replace(/\r\n/g, '\n'),
+      expectedContent.toString().replace(/\r\n/g, '\n')
     );
 
     await rm('./tmp/export-file.yaml');
