@@ -1,7 +1,6 @@
 import { generateUUID } from '@mockoon/commons';
 import { promises as fs } from 'fs';
 import { resolve } from 'node:path';
-import { parse as yamlParse } from 'yaml';
 import commandPalette from '../libs/command-palette';
 import dialogs from '../libs/dialogs';
 import environments from '../libs/environments';
@@ -50,8 +49,8 @@ describe('OpenAPI export', () => {
       resolve('./test/data/res/export-openapi/reference.yaml')
     );
 
-    expect(yamlParse(exportedFile.toString())).toEqual(
-      yamlParse(referenceFile.toString())
+    expect(exportedFile.toString().replace(/\r\n/g, '\n')).toEqual(
+      referenceFile.toString().replace(/\r\n/g, '\n')
     );
   });
 });
