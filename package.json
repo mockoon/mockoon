@@ -77,7 +77,7 @@
     "packages/serverless"
   ],
   "devDependencies": {
-    "@eslint/js": "9.39.1",
+    "@eslint/js": "9.39.2",
     "@stylistic/eslint-plugin": "5.5.0",
     "@types/node": "24.10.2",
     "concurrently": "9.2.1",
