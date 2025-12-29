@@ -48,7 +48,7 @@
     "@mockoon/commons": "9.4.0",
     "@mockoon/commons-server": "9.4.0",
     "@oclif/core": "4.8.0",
-    "@oclif/plugin-help": "6.2.35",
+    "@oclif/plugin-help": "6.2.36",
     "chokidar": "4.0.3",
     "mustache": "4.2.0",
     "tslib": "2.8.1"
