@@ -22,7 +22,7 @@ export const spawnCli = (
   output: Promise<{ stdout: string; stderr: string }>;
 }> =>
   new Promise((resolve) => {
-    const instance = spawn('node', ['./bin/run.js', ...args]);
+    const instance = spawn('node', ['./bin/dev.js', ...args]);
 
     const output = new Promise<{ stdout: string; stderr: string }>(
       (outputResolve) => {

@@ -1,0 +1,61 @@
+@let environment = environment$ | async;
+@let cliCommand = cliCommand$ | async;
+
+<div class="modal-header">
+  <h4 class="modal-title">Self-host "{{ environment?.name }}" with the CLI</h4>
+</div>
+<div class="modal-body">
+  <p>
+    You can run this cloud environment on your own infrastructure using Mockoon
+    CLI (<a [href]="cloudDeployCliPull" target="_blank"
+      >Learn more<app-svg icon="open_in_new" class="ps-2"></app-svg></a
+    >). Follow the steps below to get started:
+  </p>
+
+  <h5 class="mt-3">1. Create an access token</h5>
+  <p class="mb-2">
+    Go to your account management and create an authentication token. Only the
+    <code>environments:read</code> scope is required to run the environment
+    using the CLI.
+  </p>
+  <p>
+    <a [href]="accountAuthenticationUrl" target="_blank">
+      Open authentication settings<app-svg
+        icon="open_in_new"
+        class="ps-2"
+      ></app-svg>
+    </a>
+  </p>
+
+  <h5 class="mt-3">2. Start the mock with the CLI</h5>
+  <p class="mb-2">
+    Use the following command and replace <code>&lt;YOUR_TOKEN&gt;</code> with
+    the token you created:
+  </p>
+  <div class="d-flex align-items-center gap-2">
+    <div class="flex-grow-1 user-select-all">
+      <code class="d-block p-3">{{ cliCommand }}</code>
+    </div>
+    <div>
+      <button
+        type="button"
+        class="btn btn-icon btn-link"
+        ngbTooltip="Click to copy"
+        (click)="copy(cliCommand)"
+      >
+        <app-svg icon="content_copy"></app-svg>
+      </button>
+    </div>
+  </div>
+
+  <p class="mt-3 mb-0 fst-italic">
+    Tip: you can also export your token as an environment variable
+    <code class="user-select-all">MOCKOON_CLOUD_TOKEN</code>, then omit the
+    <code>--token</code> flag.
+  </p>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary modal-close" (click)="close()">
+    Close
+  </button>
+</div>

@@ -45,12 +45,15 @@ export const SharedConfig = (options: {
       cloudSync: cloudDocsUrl + 'data-synchronization-team-collaboration/',
       cloudSyncOffline:
         cloudDocsUrl +
-        'data-synchronization-team-collaboration/#offline-editing'
+        'data-synchronization-team-collaboration/#offline-editing',
+      cloudDeployCliPull:
+        cloudDocsUrl + 'api-mock-cloud-deployments/#self-host-with-the-cli'
     },
     // URLs should not be used directly in desktop app (but there is a redirection for the web app in user service). Instead use the flow methods in the user service
     appAuthURL: `${options.websiteURL}app-auth/`,
     loginURL: `${options.websiteURL}login/`,
     accountUrl: `${options.websiteURL}account/subscription/`,
+    accountAuthenticationUrl: `${options.websiteURL}account/authentication/`,
     cloudPlansURL: `${options.websiteURL}cloud/`,
     maxPromptLength: 500,
     defaultMaxLogsPerEnvironment: defaultMaxTransactionLogs,
