@@ -79,6 +79,23 @@ You can also directly load Mockoon's environment file from a URL. To do so, prov
 $ mockoon-cli start --data https://domain.com/your-environment-file.json
 ```
 
+### Run a cloud-hosted Mockoon environment
+
+Since v9.5.0, you can also run a cloud-hosted Mockoon environment directly from the CLI by providing the cloud URL as the `data` parameter:
+
+```sh-sessions
+$ mockoon-cli start --data cloud://{UUID} --token {TOKEN}
+```
+
+Where `{UUID}` is your environment's UUID and `{TOKEN}` is your Mockoon Cloud [access token](https://mockoon.com/cloud/docs/access-tokens/).
+
+The application will provide you with the necessary **commands and instructions** to set up and run the mock on your own servers in the environment dropdown menu:
+
+![application dialog showing instructions to pull a cloud environment](https://mockoon.com/images/docs/repo/cli/cli-pull-instructions.png)
+
+Learn more about self-hosting cloud environments in the [official Mockoon Cloud documentation](https://mockoon.com/cloud/docs/api-mock-cloud-deployments/#self-host-with-the-cli).
+
+
 ### Use an OpenAPI specification file
 
 Another option is to directly pass an OpenAPI specification file as the `data` parameter. Mockoon supports both JSON and YAML formats in versions 2.0.0 and 3.0.0.
@@ -99,7 +116,7 @@ $ mockoon-cli start --data https://domain.com/your-opeanapi-file.yaml
 
 ## Compatibility
 
-Mockoon's CLI has been tested on Node.js versions 18 and 20.
+Mockoon's CLI has been tested on Node.js versions 18, 20, 22 and 24.
 
 ## Commands
 
@@ -125,7 +142,7 @@ The mocks will run by default on the ports and hostnames specified in the files.
 **Options**:
 |Flag|Description|
 |-|-|
-|-d, --data |[required] Path(s) or URL(s) to your Mockoon file(s)|
+|-d, --data |[required] Path(s) or URL(s) to your Mockoon file(s). Supports cloud URLs (e.g. `cloud://`, [see above](#run-a-cloud-hosted-mockoon-environment)).|
 |-p, --port |Override environment(s) port(s)|
 |-l, --hostname |Override default listening hostname(s)|
 |-c, --faker-locale | Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see below.)|
@@ -143,6 +160,7 @@ The mocks will run by default on the ports and hostnames specified in the files.
 |--enable-random-latency | Randomize global and responses latencies between 0 and the specified value (default: false)|
 |--proxy | Override the environment's proxy settings (options: 'enabled' or 'disabled')|
 |--public-base-url | Public base URL used to resolve [relative callback URLs](https://mockoon.com/docs/latest/callbacks/overview/#configure-a-callback) and for the [`baseUrl` templating helper](https://mockoon.com/docs/latest/templating/mockoon-request-helpers/#baseurl) (e.g. https://api.example.com or http://localhost:3000). Must include the protocol and port if non-standard.|
+|-k, --token | Access token used to fetch cloud-hosted Mockoon environments (see  [access token documentation](https://mockoon.com/cloud/docs/access-tokens/))|
 |-h, --help | Show CLI help|
 
 **Examples**:
@@ -157,6 +175,7 @@ $ mockoon-cli start --data ~/data.json --disable-routes route1 route2 folder1
 $ mockoon-cli start --data ~/data.json --disable-routes=*
 $ mockoon-cli start --data ~/data.json --disable-routes "*"
 $ mockoon-cli start --data ~/data.json --public-base-url https://api.example.com
+$ mockoon-cli start --data cloud://def01727-aeb7-4cf1-9172-e0c38f22b224 --token mkn_sk_1234567890abcdef
 ```
 
 #### Admin API
