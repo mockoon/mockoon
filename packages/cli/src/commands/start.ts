@@ -129,7 +129,7 @@ export default class Start extends Command {
     }),
     token: Flags.string({
       char: 'k',
-      description: 'Mockoon cloud authentication token',
+      description: 'Mockoon cloud access token',
       env: 'MOCKOON_CLOUD_TOKEN'
     })
   };

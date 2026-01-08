@@ -53,7 +53,7 @@ export const SharedConfig = (options: {
     appAuthURL: `${options.websiteURL}app-auth/`,
     loginURL: `${options.websiteURL}login/`,
     accountUrl: `${options.websiteURL}account/subscription/`,
-    accountAuthenticationUrl: `${options.websiteURL}account/authentication/`,
+    accountAuthenticationUrl: `${options.websiteURL}account/access-tokens/`,
     cloudPlansURL: `${options.websiteURL}cloud/`,
     maxPromptLength: 500,
     defaultMaxLogsPerEnvironment: defaultMaxTransactionLogs,
