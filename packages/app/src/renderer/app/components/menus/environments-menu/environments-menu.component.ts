@@ -221,6 +221,24 @@ export class EnvironmentsMenuComponent implements OnInit, OnDestroy {
         this.uiService.openModal('deploy', environmentUuid);
       }
     },
+    {
+      label: 'Self-host with CLI',
+      icon: 'code',
+      twoSteps: false,
+      disabled$: () =>
+        this.store
+          .select('user')
+          .pipe(
+            map(
+              (user) => !user || user?.plan === 'FREE' || user?.plan === 'SOLO'
+            )
+          ),
+      disabledLabel$: () =>
+        of('Self-host with CLI (Team and Enterprise plans only)'),
+      action: ({ environmentUuid }: dropdownMenuPayload) => {
+        this.uiService.openModal('selfHostingInstructions', environmentUuid);
+      }
+    },
     this.copyConfigurationDropdownMenuItems,
     ...(this.isWeb
       ? []

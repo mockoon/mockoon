@@ -1,0 +1,171 @@
+{
+  "uuid": "d2548266-cce9-4997-90e2-273ea6dd39eb",
+  "lastMigration": 33,
+  "name": "Cloud api",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 5003,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "a76a4c05-6f5a-42e4-a168-db7c4f1cb78b",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "environments/:uuid",
+      "responses": [
+        {
+          "uuid": "03fb8d0e-791a-4260-9bdc-d0f918bde725",
+          "body": "{}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "params",
+              "modifier": "uuid",
+              "value": "test-env-uuid-123",
+              "invert": true,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "e4fe1439-d7a4-4723-b015-e4e016409bf9",
+          "body": "{\r\n  \"uuid\": \"70d8639e-ef20-4d52-9749-c47d9ffc5c67\",\r\n  \"lastMigration\": 33,\r\n  \"name\": \"mock1\",\r\n  \"endpointPrefix\": \"api\",\r\n  \"latency\": 0,\r\n  \"port\": 3010,\r\n  \"routes\": [\r\n    {\r\n      \"uuid\": \"61ec2669-447e-4b55-a22b-2a1fda1e8da3\",\r\n      \"documentation\": \"\",\r\n      \"method\": \"get\",\r\n      \"endpoint\": \"test\",\r\n      \"responses\": [\r\n        {\r\n          \"uuid\": \"88b0679d-7a00-4875-8d29-e66eece1b539\",\r\n          \"body\": \"mock-content-1\",\r\n          \"latency\": 0,\r\n          \"statusCode\": 200,\r\n          \"label\": \"\",\r\n          \"headers\": [{ \"key\": \"\", \"value\": \"\" }],\r\n          \"filePath\": \"\",\r\n          \"sendFileAsBody\": false,\r\n          \"rules\": [],\r\n          \"rulesOperator\": \"OR\",\r\n          \"disableTemplating\": false,\r\n          \"fallbackTo404\": false,\r\n          \"default\": true,\r\n          \"databucketID\": \"\",\r\n          \"bodyType\": \"INLINE\",\r\n          \"crudKey\": \"id\",\r\n          \"callbacks\": []\r\n        }\r\n      ],\r\n      \"responseMode\": null,\r\n      \"type\": \"http\",\r\n      \"streamingMode\": null,\r\n      \"streamingInterval\": 0\r\n    }\r\n  ],\r\n  \"proxyMode\": false,\r\n  \"proxyHost\": \"\",\r\n  \"cors\": true,\r\n  \"headers\": [{ \"key\": \"Content-Type\", \"value\": \"application/json\" }],\r\n  \"proxyReqHeaders\": [],\r\n  \"proxyResHeaders\": [],\r\n  \"proxyRemovePrefix\": false,\r\n  \"hostname\": \"\",\r\n  \"tlsOptions\": {\r\n    \"enabled\": false,\r\n    \"type\": \"CERT\",\r\n    \"pfxPath\": \"\",\r\n    \"certPath\": \"\",\r\n    \"keyPath\": \"\",\r\n    \"caPath\": \"\",\r\n    \"passphrase\": \"\"\r\n  },\r\n  \"data\": [],\r\n  \"folders\": [],\r\n  \"rootChildren\": [\r\n    { \"type\": \"route\", \"uuid\": \"61ec2669-447e-4b55-a22b-2a1fda1e8da3\" }\r\n  ],\r\n  \"callbacks\": []\r\n}\r\n",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "ed5706c0-bb77-45a7-a55a-8c5952adbb27",
+      "type": "http",
+      "documentation": "",
+      "method": "all",
+      "endpoint": "*",
+      "responses": [
+        {
+          "uuid": "0d2d36c6-e29b-42d6-8c94-0cb65e80ab8f",
+          "body": "{}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "",
+              "invert": false,
+              "operator": "null"
+            },
+            {
+              "target": "header",
+              "modifier": "Authorization",
+              "value": "Bearer valid-token-12345",
+              "invert": true,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": "FALLBACK",
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "ed5706c0-bb77-45a7-a55a-8c5952adbb27"
+    },
+    {
+      "type": "route",
+      "uuid": "a76a4c05-6f5a-42e4-a168-db7c4f1cb78b"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    },
+    {
+      "key": "Access-Control-Allow-Origin",
+      "value": "*"
+    },
+    {
+      "key": "Access-Control-Allow-Methods",
+      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+    },
+    {
+      "key": "Access-Control-Allow-Headers",
+      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [],
+  "callbacks": []
+}

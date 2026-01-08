@@ -27,13 +27,15 @@
       "type": "node",
       "request": "launch",
       "name": "CLI",
-      "program": "${workspaceFolder}/packages/cli/bin/run",
+      "program": "${workspaceFolder}/packages/cli/bin/dev",
       "args": [
         "start",
         "-d",
-        "./packages/cli/test/data/envs/mock1.json",
-        "-l",
-        "unknownhost"
+        "cloud://1ef98be6-7f6c-4814-9ff8-a379ff27463b",
+        "--token",
+        "TOKEN",
+        "--port",
+        "3001"
       ]
     },
     {

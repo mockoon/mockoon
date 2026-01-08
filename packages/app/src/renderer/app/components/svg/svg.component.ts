@@ -14,7 +14,7 @@ import {
  * - icon font was increasing the loading time and icons were invisible for some seconds (or displaying the icon name instead)
  *
  * Add a new icon:
- * - download the SVG from https://fonts.google.com/icons?selected=Material+Icons
+ * - download the SVG from https://fonts.google.com/icons?selected=Material+Icons (material icons not symbols!)
  * - copy the svg content and add it to the html template with a ngSwitchCase
  * - add the new name to the type below
  *

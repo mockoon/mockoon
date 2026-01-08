@@ -7,6 +7,7 @@ import {
   repairRefs
 } from '@mockoon/commons';
 import { promises as fs } from 'fs';
+import { Config } from '../config';
 import { CLIMessages } from '../constants/cli-messages.constants';
 import { confirm } from './utils';
 
@@ -62,22 +63,48 @@ const migrateAndValidateEnvironment = async (
 };
 
 /**
- * Load a file from the filesystem or a URL.
+ * Load a file from the filesystem or a URL. If a cloud URL is provided,
+ * it will fetch the environment from the API.
  * If parse is true, it will also parse the file content as JSON.
  *
  * @param filePath - path or URL to the file
  * @param parse - set to false to return raw file content
+ * @param token - optional token for authenticating cloud requests
  * @returns
  */
 export const loadFile = async <T extends boolean>(
   filePath: string,
-  parse: T
+  parse: T,
+  token?: string
 ): Promise<T extends true ? any : string> => {
   try {
     let data: any;
 
     if (filePath.startsWith('http')) {
       data = await (await fetch(filePath)).text();
+    } else if (filePath.startsWith(Config.cloudScheme)) {
+      const environmentId = filePath.replace(Config.cloudScheme, '');
+      const response = await fetch(`${Config.cloudApiUrl}/${environmentId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        let message: string;
+
+        if (response.status === 401 || response.status === 403) {
+          message = `Failed to load cloud environment ${environmentId}: unauthorized access (invalid or expired token, or insufficient permissions).`;
+        } else if (response.status === 404) {
+          message = `Failed to load cloud environment ${environmentId}: environment not found or you do not have access to it.`;
+        } else {
+          message = `Failed to load cloud environment ${environmentId}: ${response.status} ${response.statusText}`;
+        }
+
+        throw new Error(message);
+      }
+
+      data = await response.text();
     } else {
       data = await fs.readFile(filePath, { encoding: 'utf-8' });
     }
@@ -88,7 +115,9 @@ export const loadFile = async <T extends boolean>(
 
     return data;
   } catch (error: unknown) {
-    throw new Error((error as Error).message);
+    throw new Error(
+      `could not load file ${filePath}: ${(error as Error).message}`
+    );
   }
 };
 
@@ -104,10 +133,11 @@ export const parseDataFile = async (
     hostname?: string;
     proxy?: 'enabled' | 'disabled';
   } = { port: undefined, hostname: undefined },
-  repair = false
+  repair = false,
+  token?: string
 ): Promise<{ originalPath: string; environment: Environment }> => {
   const openAPIConverter = new OpenApiConverter();
-  const data = await loadFile(filePath, false);
+  const data = await loadFile(filePath, false, token);
   let errorMessage = `${CLIMessages.DATA_INVALID}:`;
   let environment: Environment | null = null;
 

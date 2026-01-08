@@ -16,6 +16,7 @@ import { EditorModalComponent } from 'src/renderer/app/components/modals/editor-
 import { FeedbackModalComponent } from 'src/renderer/app/components/modals/feedback-modal/feedback-modal.component';
 import { ManageInstancesModalComponent } from 'src/renderer/app/components/modals/manage-instances-modal/manage-instances-modal.component';
 import { OpenapiImportModalComponent } from 'src/renderer/app/components/modals/openapi-import-modal/openapi-import-modal.component';
+import { SelfHostingInstructionsModalComponent } from 'src/renderer/app/components/modals/self-hosting-instructions-modal/self-hosting-instructions-modal.component';
 import { SettingsModalComponent } from 'src/renderer/app/components/modals/settings-modal/settings-modal.component';
 import { TemplatesModalComponent } from 'src/renderer/app/components/modals/templates-modal/templates-modal.component';
 import { WelcomeModalComponent } from 'src/renderer/app/components/modals/welcome-modal/welcome-modal.component';
@@ -63,14 +64,25 @@ type ModalNames =
   | 'deploy'
   | 'editor'
   | 'manageInstances'
-  | 'openApiImport';
+  | 'openApiImport'
+  | 'selfHostingInstructions';
 type ModalWithPayload = Extract<
   ModalNames,
-  'deploy' | 'editor' | 'manageInstances' | 'confirm' | 'openApiImport'
+  | 'deploy'
+  | 'editor'
+  | 'manageInstances'
+  | 'confirm'
+  | 'openApiImport'
+  | 'selfHostingInstructions'
 >;
 type ModalWithoutPayload = Exclude<
   ModalNames,
-  'deploy' | 'editor' | 'manageInstances' | 'confirm' | 'openApiImport'
+  | 'deploy'
+  | 'editor'
+  | 'manageInstances'
+  | 'confirm'
+  | 'openApiImport'
+  | 'selfHostingInstructions'
 >;
 
 @Injectable({ providedIn: 'root' })
@@ -84,7 +96,8 @@ export class UIService {
     editor: new BehaviorSubject<EditorModalPayload>(null),
     manageInstances: new BehaviorSubject<ManageInstancesModalPayload>(null),
     confirm: new BehaviorSubject<ConfirmModalPayload>(null),
-    openApiImport: new BehaviorSubject<OpenApiImportModalPayload>(null)
+    openApiImport: new BehaviorSubject<OpenApiImportModalPayload>(null),
+    selfHostingInstructions: new BehaviorSubject<string>(null)
   };
   private modals: Record<
     ModalNames,
@@ -159,6 +172,10 @@ export class UIService {
     manageInstances: {
       component: ManageInstancesModalComponent,
       options: commonConfigs.large
+    },
+    selfHostingInstructions: {
+      component: SelfHostingInstructionsModalComponent,
+      options: commonConfigs.large
     }
   };
   private modalsInstances: Record<ModalNames, NgbModalRef> = {
@@ -175,7 +192,8 @@ export class UIService {
     deploy: null,
     editor: null,
     openApiImport: null,
-    manageInstances: null
+    manageInstances: null,
+    selfHostingInstructions: null
   };
 
   /**
@@ -222,7 +240,10 @@ export class UIService {
 
   public openModal(modalName: 'editor', payload: EditorModalPayload): void;
   public openModal(modalName: 'confirm', payload: ConfirmModalPayload): void;
-  public openModal(modalName: 'deploy', payload: string): void;
+  public openModal(
+    modalName: 'deploy' | 'selfHostingInstructions',
+    payload: string
+  ): void;
   public openModal(
     modalName: 'manageInstances',
     payload: ManageInstancesModalPayload

@@ -126,6 +126,11 @@ export default class Start extends Command {
     'polling-interval': Flags.integer({
       description: 'Local files watch polling interval in milliseconds',
       default: 2000
+    }),
+    token: Flags.string({
+      char: 'k',
+      description: 'Mockoon cloud authentication token',
+      env: 'MOCKOON_CLOUD_TOKEN'
     })
   };
 
@@ -142,6 +147,16 @@ export default class Start extends Command {
         'Invalid Faker.js locale. See documentation for supported locales (https://github.com/mockoon/mockoon/blob/main/packages/cli/README.md#fakerjs-options).'
       );
     }
+    if (
+      userFlags.data.some(
+        (dataFilePath) =>
+          dataFilePath.startsWith(Config.cloudScheme) && !userFlags.token
+      )
+    ) {
+      this.error(
+        'A token is required to load cloud environments. Use the --token flag or set the MOCKOON_CLOUD_TOKEN environment variable.'
+      );
+    }
 
     try {
       for (const [index, dataFilePath] of userFlags.data.entries()) {
@@ -152,7 +167,8 @@ export default class Start extends Command {
             hostname: userFlags.hostname[index],
             proxy: userFlags.proxy as 'enabled' | 'disabled'
           },
-          userFlags.repair
+          userFlags.repair,
+          userFlags.token
         );
         const server = this.createServer({
           environment: parsedEnvironment.environment,
@@ -200,7 +216,8 @@ export default class Start extends Command {
                   hostname: userFlags.hostname[index],
                   proxy: userFlags.proxy as 'enabled' | 'disabled'
                 },
-                userFlags.repair
+                userFlags.repair,
+                userFlags.token
               );
 
               server.stop();
