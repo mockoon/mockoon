@@ -10,7 +10,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint",
-    "test": "glob -c \"node --import tsx --test-concurrency 1 --test\" \"./test/specs/**/*.test.ts\"",
+    "test": "glob-bin -c \"node --import tsx --test-concurrency 1 --test\" \"./test/specs/**/*.test.ts\"",
     "build": "tsc -p tsconfig-build.json && tsc -p tsconfig-build-cjs.json",
     "build:watch": "concurrently \"tsc -p tsconfig-build.json --watch --preserveWatchOutput\" \"tsc -p tsconfig-build-cjs.json --watch --preserveWatchOutput\""
   },
@@ -54,13 +54,13 @@
     "tslib": "2.8.1",
     "typed-emitter": "2.1.0",
     "winston": "3.19.0",
-    "ws": "8.18.3",
+    "ws": "8.19.0",
     "xml-js": "1.6.11"
   },
   "devDependencies": {
     "@types/busboy": "1.5.4",
     "@types/cookie-parser": "1.4.10",
-    "@types/express": "5.0.5",
+    "@types/express": "4.17.25",
     "@types/mime-types": "3.0.1",
     "@types/object-path": "0.11.4",
     "@types/qs": "6.14.0",

@@ -10,7 +10,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint",
-    "test": "glob -c \"node --import tsx --test-concurrency 1 --test\" \"./test/specs/**/*.test.ts\"",
+    "test": "glob-bin -c \"node --import tsx --test-concurrency 1 --test\" \"./test/specs/**/*.test.ts\"",
     "build": "tsc -p tsconfig-build.json && tsc -p tsconfig-build-cjs.json"
   },
   "main": "./dist/cjs/index.js",

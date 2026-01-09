@@ -1,5 +1,4 @@
 import { Environment } from '@mockoon/commons';
-import fetch from 'node-fetch';
 import { strictEqual } from 'node:assert';
 import { after, before, describe, it } from 'node:test';
 import { MockoonServer } from '../../../../src';
