@@ -73,7 +73,7 @@
     "@angular/common": "20.3.15",
     "@angular/compiler": "20.3.15",
     "@angular/compiler-cli": "20.3.15",
-    "@angular/core": "20.3.15",
+    "@angular/core": "20.3.16",
     "@angular/fire": "20.0.1",
     "@angular/forms": "20.3.15",
     "@angular/localize": "20.3.15",
