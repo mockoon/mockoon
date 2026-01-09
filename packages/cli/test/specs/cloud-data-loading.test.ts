@@ -15,13 +15,17 @@ describe('Cloud data loading', () => {
   let mockServer: MockoonServer;
 
   before(async () => {
-    mockServer = new MockoonServer(mockEnvironmentData);
-
-    mockServer.start();
-
-    mockServer.on('error', (err) => {
-      // eslint-disable-next-line no-console
-      console.error('Mock server error:', err);
+    mockServer = new MockoonServer(mockEnvironmentData, {
+      enableAdminApi: false
+    });
+    await new Promise((resolve, reject) => {
+      mockServer.on('started', () => {
+        resolve(true);
+      });
+      mockServer.on('error', (error) => {
+        reject(error);
+      });
+      mockServer.start();
     });
   });
 

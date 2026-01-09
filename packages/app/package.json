@@ -64,7 +64,7 @@
     "electron-json-storage": "4.6.0",
     "electron-window-state": "5.0.3",
     "semver": "7.7.3",
-    "socket.io-client": "4.8.1"
+    "socket.io-client": "4.8.3"
   },
   "devDependencies": {
     "@angular/animations": "20.3.15",
@@ -92,8 +92,8 @@
     "brace": "0.11.1",
     "date-fns": "4.1.0",
     "electron": "38.7.2",
-    "electron-builder": "26.1.0",
-    "firebase": "12.6.0",
+    "electron-builder": "26.4.0",
+    "firebase": "12.7.0",
     "joi": "18.0.2",
     "ngx-markdown": "20.1.0",
     "ngx-mask": "20.0.3",
@@ -106,7 +106,7 @@
     "webpack": "5.104.1",
     "webpack-cli": "6.0.1",
     "webpack-node-externals": "3.0.0",
-    "ws": "8.18.3",
+    "ws": "8.19.0",
     "zone.js": "~0.15.0"
   }
 }
