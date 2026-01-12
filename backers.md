@@ -54,6 +54,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - [0xhybrid](https://github.com/0xhybrid)
 - Adam Recvlohe
 - Adialix
+- [affiliate.fm](https://affiliate.fm/)
 - Andres Saa
 - Andrey Kozlov
 - [Anthony Critelli](https://github.com/acritelli)
