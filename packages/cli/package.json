@@ -13,7 +13,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint",
-    "test": "glob -c \"node --import tsx --test-concurrency 1 --test\" \"./test/specs/**/*.test.ts\"",
+    "test": "glob-bin -c \"node --import tsx --test-concurrency 1 --test\" \"./test/specs/**/*.test.ts\"",
     "build": "rm -rf dist && tsc -b tsconfig-build.json && oclif manifest"
   },
   "main": "./dist/index.js",
@@ -55,9 +55,9 @@
   },
   "devDependencies": {
     "@types/mustache": "4.2.6",
-    "eslint-config-oclif": "6.0.122",
+    "eslint-config-oclif": "6.0.130",
     "eslint-config-oclif-typescript": "3.1.14",
-    "oclif": "4.22.54"
+    "oclif": "4.22.65"
   },
   "engines": {
     "node": ">=18"
