@@ -4,7 +4,7 @@ export const IPCMainListenerChannels = [
   'APP_LOGS',
   'APP_QUIT',
   'APP_HIDE_WINDOW',
-  'APP_UPDATE_ENVIRONMENT',
+  'APP_UPDATE_ENVIRONMENTS',
   'APP_WRITE_CLIPBOARD',
   'APP_OPEN_FILE',
   'APP_SHOW_FILE',

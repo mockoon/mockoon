@@ -56,6 +56,7 @@ export class ResponseRulesInterpreter {
   /**
    * Choose the route response depending on the first fulfilled rule.
    * If no rule has been fulfilled get the first route response.
+   * If in FALLBACK mode, return null if no rule is fulfilled.
    */
   public chooseResponse(
     requestNumber: number,

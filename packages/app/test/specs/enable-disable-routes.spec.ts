@@ -54,7 +54,6 @@ describe('Enable/disable routes', () => {
   });
 
   it('should call disabled route', async () => {
-    await environments.restart();
     await http.assertCallWithPort(getAnswerCall[1], 3000);
   });
 
@@ -72,7 +71,6 @@ describe('Enable/disable routes', () => {
   });
 
   it('should call reenabled route', async () => {
-    await environments.restart();
     await http.assertCallWithPort(getAnswerCall[0], 3000);
   });
 });

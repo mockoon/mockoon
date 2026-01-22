@@ -84,18 +84,6 @@ export const DesktopMessages: Record<
     log: false,
     toastType: 'error'
   }),
-  ROUTE_CREATION_ERROR: (messageParams) => ({
-    message: `Error while creating the route: ${messageParams?.error?.message}`,
-    log: false,
-    showToast: true,
-    toastType: 'error'
-  }),
-  ROUTE_CREATION_ERROR_REGEX: (messageParams) => ({
-    message: `Error while creating the route, regex path is invalid: ${messageParams?.error?.message}`,
-    log: false,
-    showToast: true,
-    toastType: 'error'
-  }),
   ROUTE_SERVING_ERROR: (messageParams) => ({
     message: `Error while serving the content: ${messageParams?.error?.message}`,
     log: false,

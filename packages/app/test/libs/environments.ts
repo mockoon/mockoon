@@ -112,7 +112,7 @@ class Environments {
       DropdownMenuEnvironmentActions.CLOSE
     );
 
-    await browser.pause(500);
+    await browser.pause(1000);
   }
 
   public async duplicate(index: number) {

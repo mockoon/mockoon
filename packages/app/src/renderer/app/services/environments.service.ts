@@ -133,7 +133,6 @@ import {
   updateCallbackAction,
   updateDatabucketAction,
   updateEnvironmentAction,
-  updateEnvironmentStatusAction,
   updateFolderAction,
   updateRouteAction,
   updateRouteResponseAction,
@@ -328,7 +327,7 @@ export class EnvironmentsService {
           this.serverService.updateServerEnvironment(modifiedEnvironments);
         } else {
           this.mainApiService.send(
-            'APP_UPDATE_ENVIRONMENT',
+            'APP_UPDATE_ENVIRONMENTS',
             modifiedEnvironments
           );
         }
@@ -1658,21 +1657,6 @@ export class EnvironmentsService {
       }
 
       this.store.update(updateSettingsAction({ disabledRoutes }));
-
-      const environmentsStatus = this.store.get('environmentsStatus');
-      const activeEnvironmentStatus =
-        environmentsStatus[activeEnvironment.uuid];
-
-      if (activeEnvironmentStatus.running) {
-        this.store.update(
-          updateEnvironmentStatusAction(
-            {
-              needRestart: true
-            },
-            activeEnvironment.uuid
-          )
-        );
-      }
     }
   }
 

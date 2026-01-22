@@ -67,8 +67,6 @@ export const listenServerEvents = function (
         message = format(ServerMessages[errorCode], environment.hostname);
         break;
       case 'REQUEST_BODY_PARSE':
-      case 'ROUTE_CREATION_ERROR':
-      case 'ROUTE_CREATION_ERROR_REGEX':
       case 'ROUTE_SERVING_ERROR':
       case 'ROUTE_FILE_SERVING_ERROR':
       case 'UNKNOWN_SERVER_ERROR':
@@ -96,13 +94,6 @@ export const listenServerEvents = function (
     }
 
     logger.error(message, { ...errorMeta, ...payload });
-  });
-
-  server.on('creating-proxy', () => {
-    logger.info(
-      format(ServerMessages.SERVER_CREATING_PROXY, environment.proxyHost),
-      { ...defaultLogMeta }
-    );
   });
 
   server.on('transaction-complete', (transaction: Transaction) => {

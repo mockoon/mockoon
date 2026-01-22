@@ -1,8 +1,6 @@
 import {
-  DataBucket,
   Environment,
   FolderChild,
-  Route,
   addCallbackMutator,
   addDatabucketMutator,
   addFolderMutator,
@@ -375,7 +373,6 @@ export const environmentReducer = (
       newState = {
         ...state,
         environments: newEnvironments,
-        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid),
         duplicatedRoutes: {
           ...state.duplicatedRoutes,
           [action.environmentUuid]: listDuplicatedRouteUuids(newEnvironment)
@@ -724,13 +721,8 @@ export const environmentReducer = (
     case ActionTypes.UPDATE_ENVIRONMENT: {
       const propertiesNeedingRestart: (keyof Environment)[] = [
         'port',
-        'endpointPrefix',
-        'proxyMode',
-        'proxyHost',
-        'proxyRemovePrefix',
         'tlsOptions',
-        'hostname',
-        'cors'
+        'hostname'
       ];
 
       newState = {
@@ -982,7 +974,6 @@ export const environmentReducer = (
         activeRouteUUID: newActiveRouteUUID,
         activeRouteResponseUUID: newActiveRouteResponseUUID,
         activeTab: newActiveTab,
-        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid),
         duplicatedRoutes: {
           ...state.duplicatedRoutes,
           [action.environmentUuid]: listDuplicatedRouteUuids(newEnvironment)
@@ -1131,7 +1122,6 @@ export const environmentReducer = (
         ...state,
         ...uiUpdate,
         environments: newEnvironments,
-        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid),
         duplicatedRoutes: {
           ...state.duplicatedRoutes,
           [action.environmentUuid]: listDuplicatedRouteUuids(newEnvironment)
@@ -1141,13 +1131,6 @@ export const environmentReducer = (
     }
 
     case ActionTypes.UPDATE_ROUTE: {
-      const propertiesNeedingRestart: (keyof Route)[] = [
-        'endpoint',
-        'method',
-        'streamingMode',
-        'streamingInterval'
-      ];
-
       let newEnvironment: Environment;
 
       const newEnvironments = state.environments.map((environment) => {
@@ -1167,11 +1150,6 @@ export const environmentReducer = (
       newState = {
         ...state,
         environments: newEnvironments,
-        environmentsStatus: markEnvStatusRestart(
-          state,
-          action.environmentUuid,
-          ArrayContainsObjectKey(action.properties, propertiesNeedingRestart)
-        ),
         duplicatedRoutes:
           action.properties &&
           (action.properties.endpoint ||
@@ -1297,8 +1275,7 @@ export const environmentReducer = (
           }
 
           return environment;
-        }),
-        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid)
+        })
       };
       break;
     }
@@ -1320,8 +1297,7 @@ export const environmentReducer = (
 
       newState = {
         ...state,
-        environments: newEnvironments,
-        environmentsStatus: markEnvStatusRestart(state, action.environmentUuid)
+        environments: newEnvironments
       };
 
       if (state.activeDatabucketUUID === action.databucketUuid) {
@@ -1336,8 +1312,6 @@ export const environmentReducer = (
     }
 
     case ActionTypes.UPDATE_DATABUCKET: {
-      const propertiesNeedingRestart: (keyof DataBucket)[] = ['name', 'value'];
-
       newState = {
         ...state,
         environments: state.environments.map((environment) => {
@@ -1350,12 +1324,7 @@ export const environmentReducer = (
           }
 
           return environment;
-        }),
-        environmentsStatus: markEnvStatusRestart(
-          state,
-          action.environmentUuid,
-          ArrayContainsObjectKey(action.properties, propertiesNeedingRestart)
-        )
+        })
       };
       break;
     }
@@ -1592,10 +1561,6 @@ export const environmentReducer = (
         activeEnvironmentUUID: action.targetEnvironmentUUID,
         activeTab: 'RESPONSE',
         activeView: 'ENV_ROUTES',
-        environmentsStatus: markEnvStatusRestart(
-          state,
-          action.targetEnvironmentUUID
-        ),
         duplicatedRoutes: {
           ...state.duplicatedRoutes,
           [action.targetEnvironmentUUID]:
@@ -1654,10 +1619,6 @@ export const environmentReducer = (
         activeDatabucketUUID: action.databucket.uuid,
         activeEnvironmentUUID: action.targetEnvironmentUUID,
         activeView: 'ENV_DATABUCKETS',
-        environmentsStatus: markEnvStatusRestart(
-          state,
-          action.targetEnvironmentUUID
-        ),
         filters: {
           ...state.filters,
           routes: '',

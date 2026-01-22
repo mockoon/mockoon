@@ -55,7 +55,6 @@ describe('Environment logs recording', () => {
     await navigation.assertHeaderValue('ENV_LOGS', 'Logs 1');
     await navigation.assertActiveTab('ENV_LOGS');
     await environments.assertActiveMenuEntryText('Empty 2');
-    await environments.assertNeedsRestart();
   });
 
   it('should verify a route was created in second environment', async () => {
@@ -66,7 +65,6 @@ describe('Environment logs recording', () => {
     await environments.assertActiveMenuEntryText('Empty 2');
 
     await environments.select(1);
-    await environments.assertNeedsRestart();
   });
 
   it('should verify only one route was created in first environment', async () => {
@@ -76,6 +74,5 @@ describe('Environment logs recording', () => {
     await routes.assertMenuEntryText(1, '/test1');
 
     await environments.assertActiveMenuEntryText('Empty');
-    await environments.assertNeedsRestart();
   });
 });
