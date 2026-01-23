@@ -62,11 +62,11 @@ Mockoon is proudly **independent** and **open-source**, maintained without exter
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
  
-  <a href="https://www.lambdatest.com/">
+  <a href="https://www.testmu.ai/">
       <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/lambdatest.png">
-      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/lambdatest.png">
-      <img src="https://mockoon.com/images/sponsors/light/lambdatest.png" alt="Lambdatest logo" />
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/testmuai.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/testmuai.png">
+      <img src="https://mockoon.com/images/sponsors/light/testmuai.png" alt="TestMu AI logo" />
       </picture>
   </a>
 </div>

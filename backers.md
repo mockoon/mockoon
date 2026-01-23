@@ -31,11 +31,11 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
  
-  <a href="https://www.lambdatest.com/">
+  <a href="https://www.testmu.ai/">
       <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/lambdatest.png">
-      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/lambdatest.png">
-      <img src="https://mockoon.com/images/sponsors/light/lambdatest.png" alt="Lambdatest logo" />
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/testmuai.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/testmuai.png">
+      <img src="https://mockoon.com/images/sponsors/light/testmuai.png" alt="TestMu AI logo" />
       </picture>
   </a>
 </div>
@@ -83,7 +83,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - [John Michael Luy](https://github.com/jmluy)
 - Jonatan Gonzalez
 - Kelly Farris
-- [Lambdatest](https://www.lambdatest.com/)
+- [TestMu AI](https://www.testmu.ai/)
 - [Localazy](https://localazy.com/register?ref=a9CiDC61gOac-azO)
 - [mallowigi](https://github.com/mallowigi)
 - [Matus Benko](https://github.com/PrimaMateria)
