@@ -10,7 +10,10 @@ import {
   fullTextSearch,
   getValueFromPath,
   isSafeJSONPath,
-  ToBase64
+  ToBase64,
+  ToBase64URL,
+  FromBase64,
+  FromBase64URL
 } from '../../src/libs/utils';
 
 describe('Utils', () => {
@@ -31,6 +34,30 @@ describe('Utils', () => {
 
     afterEach(() => {
       (global.btoa as unknown) = undefined;
+    });
+  });
+
+  describe('toBase64URL', () => {
+    it('should return string converted to base64url', () => {
+      const base64url = ToBase64URL('subjects?_d=1');
+
+      strictEqual(base64url, 'c3ViamVjdHM_X2Q9MQ');
+    });
+  });
+
+  describe('fromBase64', () => {
+    it('should return string converted from base64', () => {
+      const text = FromBase64('dGV4dA==');
+
+      strictEqual(text, 'text');
+    });
+  });
+
+  describe('fromBase64URL', () => {
+    it('should return string converted from base64url', () => {
+      const text = FromBase64URL('c3ViamVjdHM_X2Q9MQ');
+
+      strictEqual(text, 'subjects?_d=1');
     });
   });
 
