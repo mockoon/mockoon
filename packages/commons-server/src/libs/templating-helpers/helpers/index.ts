@@ -15,6 +15,8 @@ import add from './add';
 import array from './array';
 import base64 from './base64';
 import base64Decode from './base64Decode';
+import base64url from './base64url';
+import base64urlDecode from './base64urlDecode';
 import boolean from './boolean';
 import caseFunc from './case';
 import ceil from './ceil';
@@ -102,6 +104,8 @@ export const Helpers = {
   array,
   base64,
   base64Decode,
+  base64url,
+  base64urlDecode,
   boolean,
   case: caseFunc,
   ceil,

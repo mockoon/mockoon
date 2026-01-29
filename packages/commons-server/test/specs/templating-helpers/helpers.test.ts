@@ -1637,7 +1637,7 @@ describe('Template parser', () => {
     });
   });
 
-  describe('Helper: base64', () => {
+  describe('Helper: base64Decode', () => {
     it('should decode a string from base64', () => {
       const parseResult = TemplateParser({
         shouldOmitDataHelper: false,
@@ -1679,6 +1679,62 @@ describe('Template parser', () => {
         envVarsPrefix: ''
       });
       strictEqual(parseResult, 'abcdefghijklmnopqrstuvwxyz1234567890');
+    });
+  });
+
+  describe('Helper: base64url', () => {
+    it('should encode string to base64url', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{base64url 'subjects?_d=1'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'c3ViamVjdHM_X2Q9MQ');
+    });
+
+    it('should encode block to base64url', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{#base64url}}subjects?_d=1{{/base64url}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'c3ViamVjdHM_X2Q9MQ');
+    });
+  });
+
+  describe('Helper: base64urlDecode', () => {
+    it('should decode a string from base64url', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{base64urlDecode 'c3ViamVjdHM_X2Q9MQ'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'subjects?_d=1');
+    });
+
+    it('should decode block from base64url', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{#base64urlDecode}}c3ViamVjdHM_X2Q9MQ{{/base64urlDecode}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, 'subjects?_d=1');
     });
   });
 

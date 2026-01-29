@@ -253,12 +253,28 @@ export const ToBase64 = (text: string): string =>
   Buffer.from(text, 'utf-8').toString('base64');
 
 /**
+ * Convert a string to base64url
+ *
+ * @param text
+ */
+export const ToBase64URL = (text: string): string =>
+  Buffer.from(text, 'utf-8').toString('base64url');
+
+/**
  * Convert base64 to a string
  *
  * @param base64
  */
 export const FromBase64 = (base64: string): string =>
   Buffer.from(base64, 'base64').toString('utf-8');
+
+/**
+ * Convert base64url to a string
+ *
+ * @param base64url
+ */
+export const FromBase64URL = (base64url: string): string =>
+  Buffer.from(base64url, 'base64url').toString('utf-8');
 
 /**
  * Extract the string value from a SafeString
