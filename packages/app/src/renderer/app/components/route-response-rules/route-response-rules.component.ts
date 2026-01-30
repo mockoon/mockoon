@@ -26,13 +26,24 @@ import {
   RouteResponse,
   RulesDisablingResponseModes
 } from '@mockoon/commons';
-import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import { NgbTooltip, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject } from 'rxjs';
-import { filter, takeUntil, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
+import {
+  headerNames,
+  headerValues
+} from 'src/renderer/app/constants/routes.constants';
 import { Texts } from 'src/renderer/app/constants/texts.constant';
 import { DraggableDirective } from 'src/renderer/app/directives/draggable.directive';
 import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directive';
@@ -59,6 +70,7 @@ import { Store } from 'src/renderer/app/stores/store';
     DropzoneDirective,
     NgClass,
     CustomSelectComponent,
+    NgbTypeahead,
     NgbTooltip,
     SvgComponent,
     AsyncPipe
@@ -153,6 +165,8 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   ];
   public deleteRuleRequested$ = new TimedBoolean();
   public texts = Texts;
+  public headerNamesSearch = this.buildSearch(headerNames);
+  public headerValuesSearch = this.buildSearch(headerValues);
   private listenToChanges = true;
   private destroy$ = new Subject<void>();
 
@@ -229,6 +243,26 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     if (confirmValue.enabled && ruleIndex === confirmValue.payload) {
       this.rules.removeAt(ruleIndex);
     }
+  }
+
+  /**
+   * Return contextualized observables for the typeahead directive
+   *
+   * @param list
+   */
+  public buildSearch(list: string[]) {
+    return (text$: Observable<string>) =>
+      text$.pipe(
+        debounceTime(100),
+        distinctUntilChanged(),
+        map((term) =>
+          term.length < 1
+            ? []
+            : list
+                .filter((v) => v.toLowerCase().includes(term.toLowerCase()))
+                .slice(0, 10)
+        )
+      );
   }
 
   /**
