@@ -67,6 +67,11 @@
                     ? true
                     : null
                 "
+                [ngbTypeahead]="
+                  form.get(['rules', ruleIndex, 'target']).value === 'header'
+                    ? headerNamesSearch
+                    : null
+                "
               />
             </div>
             <app-toggle
@@ -104,6 +109,11 @@
                 form.get(['rules', ruleIndex, 'operator']).value ===
                   'empty_array'
                   ? true
+                  : null
+              "
+              [ngbTypeahead]="
+                form.get(['rules', ruleIndex, 'target']).value === 'header'
+                  ? headerValuesSearch
                   : null
               "
             />
