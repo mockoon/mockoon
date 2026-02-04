@@ -87,7 +87,7 @@
     "eslint-plugin-prettier": "5.5.4",
     "glob": "13.0.0",
     "glob-bin": "1.0.0",
-    "prettier": "3.7.4",
+    "prettier": "3.8.1",
     "prettier-plugin-organize-imports": "4.3.0",
     "tsx": "4.21.0",
     "typescript": "5.9.3",
