@@ -2,7 +2,7 @@
 
 Mockoon thrives on community contributions, and there are many ways to get involved! You can report bugs, open issues, submit pull requests, or suggest new features. All contributions are appreciated. However, it's important to note that Mockoon's core promise is to remain easy to use, and after years of development, it is mostly feature-complete.
 
-While we’re always open to enhancing the application, we strive to balance adding new features with maintaining simplicity and ensuring long-term maintainability. For this reason, not every feature suggestion will be implemented—especially if it falls outside Mockoon’s scope, introduces unnecessary complexity (particularly in terms of user experience), or lacks strong community interest.
+While we're always open to enhancing the application, we strive to balance adding new features with maintaining simplicity and ensuring long-term maintainability. For this reason, not every feature suggestion will be implemented—especially if it falls outside Mockoon's scope, introduces unnecessary complexity (particularly in terms of user experience), or lacks strong community interest.
 
 That said, we value your input and welcome open discussions! 🙂
 
@@ -17,8 +17,8 @@ What **we recommend before contributing**:
 
 - Take some time to understand the application's existing features and limitations by reading the [documentation](https://mockoon.com/docs/latest/).
 - Search through [Mockoon's GitHub issues](https://github.com/mockoon/mockoon/issues) to see if your bug report or feature request has already been addressed, implemented, or declined.
-- If you’re uncertain whether a feature fits Mockoon’s scope or if an issue is indeed a bug, [start a discussion first](https://github.com/mockoon/mockoon/discussions). This helps clarify ideas before creating an issue or working on a pull request.
-- If you’re planning to contribute a new feature, please open an issue to discuss it with the maintainers. This ensures alignment with the project’s goals and gives the community a chance to provide feedback.
+- If you're uncertain whether a feature fits Mockoon's scope or if an issue is indeed a bug, [start a discussion first](https://github.com/mockoon/mockoon/discussions). This helps clarify ideas before creating an issue or working on a pull request.
+- If you're planning to contribute a new feature, please open an issue to discuss it with the maintainers. This ensures alignment with the project's goals and gives the community a chance to provide feedback.
 
 You can discuss all things related to Mockoon and ask for help on the [official community](https://github.com/mockoon/mockoon/discussions).
 
@@ -41,6 +41,18 @@ We recommend the following workflow:
 - Check for **opened unassigned** issues or open a new one (after searching for closed issues).
 - If you are not the issue creator, comment on the issue and request to work on it so it can be assigned to you.
 - After discussing the implementation, the issue will be assigned to you by a maintainer. As a rule, the assignee is the person working on the issue.
+
+## AI use
+
+AI assistants are allowed and can be powerful tools. However, we expect a human in the loop at all times. Since we are humans maintaining this project, we value clear, authentic communication, especially during code reviews and when feedback is provided.
+
+We expect contributors to:
+
+- Disclose if they are using AI tools to generate code or text.
+- Be able to explain their code and the rationale behind a fix or feature.
+- Verify the quality and correctness of the AI-generated content.
+
+If an interaction feels automated, one-way, or if a contributor cannot demonstrate a clear understanding of their submission, we reserve the right to refuse the contribution.
 
 ## Monorepo
 
