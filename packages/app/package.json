@@ -93,7 +93,7 @@
     "date-fns": "4.1.0",
     "electron": "39.2.7",
     "electron-builder": "26.1.0",
-    "firebase": "12.7.0",
+    "firebase": "12.8.0",
     "joi": "18.0.2",
     "ngx-markdown": "20.1.0",
     "ngx-mask": "20.0.3",
