@@ -37,7 +37,8 @@ export const SettingsDefault: Settings = {
   enableRandomLatency: false,
   recentLocalEnvironments: [],
   displayLogsIsoTimestamp: false,
-  deployPreferredRegion: null
+  deployPreferredRegion: null,
+  commandPaletteRecentCommands: []
 };
 
 export const SettingsSchema = Joi.object<Settings, true>({
@@ -163,6 +164,10 @@ export const SettingsSchema = Joi.object<Settings, true>({
       DeployRegions.SA
     )
     .failover(SettingsDefault.deployPreferredRegion)
+    .required(),
+  commandPaletteRecentCommands: Joi.array()
+    .items(Joi.string(), Joi.any().strip())
+    .failover(SettingsDefault.commandPaletteRecentCommands)
     .required()
 })
   .failover(SettingsDefault)

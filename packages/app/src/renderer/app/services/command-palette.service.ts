@@ -10,6 +10,7 @@ import {
 } from 'src/renderer/app/models/command-palette.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { TourService } from 'src/renderer/app/services/tour.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { clearLogsAction } from 'src/renderer/app/stores/actions';
@@ -23,49 +24,86 @@ export class CommandPaletteService {
   private store = inject(Store);
   private tourService = inject(TourService);
   private mainApiService = inject(MainApiService);
+  private settingsService = inject(SettingsService);
 
   private scoreCache: Record<string, ScoreAndPositions> = {};
 
   public filterEntries(search$: Observable<string>) {
     return search$.pipe(
-      map((search) =>
-        search.length < 1
-          ? this.generateCommands()
-          : this.generateCommands().map((command) => {
-              const cacheKey = `${command.label}-${search}`;
-              let scoreAndPos: ScoreAndPositions;
+      map((search) => {
+        const allCommands = this.generateCommands();
+        const recentCommands = this.getRecentCommands(allCommands);
 
-              if (this.scoreCache[cacheKey]) {
-                scoreAndPos = this.scoreCache[cacheKey];
-              } else {
-                scoreAndPos = this.scoreFuzzy(search, command.label);
-                this.scoreCache[cacheKey] = scoreAndPos;
-              }
+        return [...recentCommands, ...allCommands].map((command) => {
+          if (search.length < 1) {
+            return { ...command, score: 1 };
+          }
 
-              if (Array.isArray(scoreAndPos)) {
-                return {
-                  ...command,
-                  labelDelimited: this.highlightMatches(
-                    command.label,
-                    scoreAndPos[1]
-                  ),
-                  score: scoreAndPos[0]
-                };
-              }
+          const cacheKey = `${command.label}-${search}`;
+          let scoreAndPos: ScoreAndPositions;
 
-              // if it's not an array there is only a score and no positions
-              return {
-                ...command,
-                score: scoreAndPos
-              };
-            })
-      ),
+          if (this.scoreCache[cacheKey]) {
+            scoreAndPos = this.scoreCache[cacheKey];
+          } else {
+            scoreAndPos = this.scoreFuzzy(search, command.label);
+            this.scoreCache[cacheKey] = scoreAndPos;
+          }
+
+          if (Array.isArray(scoreAndPos)) {
+            return {
+              ...command,
+              labelDelimited: this.highlightMatches(
+                command.label,
+                scoreAndPos[1]
+              ),
+              score: scoreAndPos[0]
+            };
+          }
+
+          // if it's not an array there is only a score and no positions
+          return {
+            ...command,
+            score: scoreAndPos
+          };
+        });
+      }),
       map((scoredCommands) =>
         scoredCommands
           .filter((command) => command.score > 0 && command.enabled)
-          .sort((a, b) => b.score - a.score)
+          .sort((a, b) => {
+            if (a.recent !== b.recent) {
+              return a.recent ? -1 : 1;
+            }
+
+            if (a.score !== b.score) {
+              return b.score - a.score;
+            }
+
+            return 0;
+          })
       )
     );
+  }
+
+  public recordUsage(commandId: string) {
+    const recentCommands = [
+      ...this.store.get('settings').commandPaletteRecentCommands
+    ];
+    const existingIndex = recentCommands.indexOf(commandId);
+
+    if (existingIndex !== -1) {
+      recentCommands.splice(existingIndex, 1);
+    }
+
+    recentCommands.unshift(commandId);
+
+    if (recentCommands.length > 10) {
+      recentCommands.pop();
+    }
+
+    this.settingsService.updateSettings({
+      commandPaletteRecentCommands: recentCommands
+    });
   }
 
   private ctrlOrCmd$(shortcuts: string[]) {
@@ -276,6 +314,16 @@ export class CommandPaletteService {
     });
 
     return highlightedText;
+  }
+
+  private getRecentCommands(allCommands: Commands): Commands {
+    const recentCommandIds =
+      this.store.get('settings').commandPaletteRecentCommands;
+
+    return recentCommandIds
+      .map((id) => allCommands.find((command) => command.id === id))
+      .filter((command) => !!command && command.enabled)
+      .map((command) => ({ ...command, recent: true }));
   }
 
   /**

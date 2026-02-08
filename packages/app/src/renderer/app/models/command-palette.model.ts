@@ -10,6 +10,7 @@ export type Command = {
   action: () => void;
   score: number;
   enabled: boolean;
+  recent?: boolean;
 };
 
 export type Commands = Command[];
