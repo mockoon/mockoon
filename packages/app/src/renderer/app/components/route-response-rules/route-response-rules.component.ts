@@ -27,7 +27,7 @@ import {
   RulesDisablingResponseModes
 } from '@mockoon/commons';
 import { NgbTooltip, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subject, of } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
