@@ -165,7 +165,10 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   ];
   public deleteRuleRequested$ = new TimedBoolean();
   public texts = Texts;
-  private searchers = new Map<string, (text$: Observable<string>) => Observable<readonly any[]>>();
+  private searchers = new Map<
+    string,
+    (text$: Observable<string>) => Observable<readonly any[]>
+  >();
   private listenToChanges = true;
   private destroy$ = new Subject<void>();
 
@@ -254,20 +257,18 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
     const memoKey = `${list === headerNames ? 'names' : 'values'}-${target}`;
 
     if (!this.searchers.has(memoKey)) {
-      this.searchers.set(
-        memoKey,
-        (text$: Observable<string>) =>
-          text$.pipe(
-            debounceTime(100),
-            distinctUntilChanged(),
-            map((term) =>
-              term.length < 1 || target !== 'header'
-                ? []
-                : list
-                    .filter((v) => v.toLowerCase().includes(term.toLowerCase()))
-                    .slice(0, 10)
-            )
+      this.searchers.set(memoKey, (text$: Observable<string>) =>
+        text$.pipe(
+          debounceTime(100),
+          distinctUntilChanged(),
+          map((term) =>
+            term.length < 1 || target !== 'header'
+              ? []
+              : list
+                  .filter((v) => v.toLowerCase().includes(term.toLowerCase()))
+                  .slice(0, 10)
           )
+        )
       );
     }
 
