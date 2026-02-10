@@ -27,7 +27,7 @@ import {
   RulesDisablingResponseModes
 } from '@mockoon/commons';
 import { NgbTooltip, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -165,8 +165,7 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   ];
   public deleteRuleRequested$ = new TimedBoolean();
   public texts = Texts;
-  public headerNamesSearch = this.buildSearch(headerNames);
-  public headerValuesSearch = this.buildSearch(headerValues);
+  private searchers = new Map<string, (text$: Observable<string>) => Observable<readonly any[]>>();
   private listenToChanges = true;
   private destroy$ = new Subject<void>();
 
@@ -246,23 +245,41 @@ export class RouteResponseRulesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Return contextualized observables for the typeahead directive
+   * Return contextualized observables for the typeahead directive.
+   * Memoizes the search function based on the list and target to ensure stable references.
    *
    * @param list
    */
-  public buildSearch(list: string[]) {
-    return (text$: Observable<string>) =>
-      text$.pipe(
-        debounceTime(100),
-        distinctUntilChanged(),
-        map((term) =>
-          term.length < 1
-            ? []
-            : list
-                .filter((v) => v.toLowerCase().includes(term.toLowerCase()))
-                .slice(0, 10)
-        )
+  public buildSearch(list: string[], target: string) {
+    const memoKey = `${list === headerNames ? 'names' : 'values'}-${target}`;
+
+    if (!this.searchers.has(memoKey)) {
+      this.searchers.set(
+        memoKey,
+        (text$: Observable<string>) =>
+          text$.pipe(
+            debounceTime(100),
+            distinctUntilChanged(),
+            map((term) =>
+              term.length < 1 || target !== 'header'
+                ? []
+                : list
+                    .filter((v) => v.toLowerCase().includes(term.toLowerCase()))
+                    .slice(0, 10)
+            )
+          )
       );
+    }
+
+    return this.searchers.get(memoKey);
+  }
+
+  public headerNamesSearch(target: string) {
+    return this.buildSearch(headerNames, target);
+  }
+
+  public headerValuesSearch(target: string) {
+    return this.buildSearch(headerValues, target);
   }
 
   /**

@@ -68,9 +68,9 @@
                     : null
                 "
                 [ngbTypeahead]="
-                  form.get(['rules', ruleIndex, 'target']).value === 'header'
-                    ? headerNamesSearch
-                    : null
+                  headerNamesSearch(
+                    form.get(['rules', ruleIndex, 'target']).value
+                  )
                 "
               />
             </div>
@@ -112,9 +112,9 @@
                   : null
               "
               [ngbTypeahead]="
-                form.get(['rules', ruleIndex, 'target']).value === 'header'
-                  ? headerValuesSearch
-                  : null
+                headerValuesSearch(
+                  form.get(['rules', ruleIndex, 'target']).value
+                )
               "
             />
 
