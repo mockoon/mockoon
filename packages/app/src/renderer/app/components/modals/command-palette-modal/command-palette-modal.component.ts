@@ -162,6 +162,7 @@ export class CommandPaletteModalComponent implements OnInit, OnDestroy {
       command = this.commands[this.focusedItemIndex$.getValue()];
     }
 
+    this.commandPaletteService.recordUsage(command.id);
     command.action();
     this.uiService.closeModal('commandPalette');
   }

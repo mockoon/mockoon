@@ -20,11 +20,19 @@
   @defer {
     @let commands = commands$ | async;
 
-    @for (command of commands; track command.id; let commandIndex = $index) {
+    @for (
+      command of commands;
+      track command.id + (command.recent ? '-recent' : '');
+      let commandIndex = $index
+    ) {
+      @if (command.recent && commandIndex === 0) {
+        <div class="list-group-item message message-md py-1 fw-bold">Recent</div>
+      }
+
       <button
         #commandElement
         role="option"
-        id="{{ command.id }}"
+        id="{{ command.id }}{{ command.recent ? '-recent' : '' }}"
         type="button"
         class="list-group-item list-group-item-action py-2 d-flex"
         [ngClass]="{ active: commandIndex === focusedItemIndex }"
@@ -35,6 +43,10 @@
           <span class="ms-auto" [innerHTML]="command.shortcut$ | async"></span>
         }
       </button>
+
+      @if (command.recent && !commands[commandIndex + 1]?.recent) {
+        <div class="list-group-item message message-md py-1 fw-bold">Other Commands</div>
+      }
     } @empty {
       <div class="list-group-item message message-md">No matching results</div>
     }
