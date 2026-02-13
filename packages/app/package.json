@@ -68,8 +68,8 @@
   },
   "devDependencies": {
     "@angular/animations": "20.3.16",
-    "@angular/build": "20.3.14",
-    "@angular/cli": "20.3.14",
+    "@angular/build": "20.3.15",
+    "@angular/cli": "20.3.15",
     "@angular/common": "20.3.16",
     "@angular/compiler": "20.3.16",
     "@angular/compiler-cli": "20.3.16",
