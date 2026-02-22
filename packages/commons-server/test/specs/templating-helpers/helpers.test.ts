@@ -930,6 +930,113 @@ describe('Template parser', () => {
     });
   });
 
+  describe('Helper: replace', () => {
+    it('should replace the first occurrence of a string', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{replace 'foo foo' 'foo' 'bar'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+
+      strictEqual(parseResult, 'bar foo');
+    });
+
+    it('should return input unchanged if search is not found', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{replace 'foo foo' 'baz' 'bar'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+
+      strictEqual(parseResult, 'foo foo');
+    });
+
+    it('should return input unchanged if search is empty', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{replace 'foo foo' '' 'bar'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+
+      strictEqual(parseResult, 'foo foo');
+    });
+
+    it('should be compatible with other helpers (header)', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{replace (header 'Authorization') 'Bearer ' ''}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {
+          headers: { authorization: 'Bearer mytoken' },
+          get: function (headerName: string) {
+            return this.headers[headerName.toLowerCase()];
+          }
+        } as any,
+        envVarsPrefix: ''
+      });
+
+      strictEqual(parseResult, 'mytoken');
+    });
+  });
+
+  describe('Helper: replaceAll', () => {
+    it('should replace all occurrences of a string', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{replaceAll 'foo foo' 'foo' 'bar'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+
+      strictEqual(parseResult, 'bar bar');
+    });
+
+    it('should return input unchanged if search is not found', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{replaceAll 'foo foo' 'baz' 'bar'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+
+      strictEqual(parseResult, 'foo foo');
+    });
+
+    it('should return input unchanged if search is empty', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{replaceAll 'foo foo' '' 'bar'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+
+      strictEqual(parseResult, 'foo foo');
+    });
+  });
+
   describe('Helper: split', () => {
     it('should split a string using spaces as separator', () => {
       const parseResult = TemplateParser({

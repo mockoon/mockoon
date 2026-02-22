@@ -81,6 +81,16 @@ export const helpersAutocompletions = [
   { caption: 'getEnvVar', value: "{{getEnvVar 'varname'}}", meta: '' },
   { caption: 'includes', value: '{{includes string search}}', meta: '' },
   { caption: 'substr', value: '{{substr string startIndex length}}', meta: '' },
+  {
+    caption: 'replace',
+    value: "{{replace 'input' 'search' 'replacement'}}",
+    meta: ''
+  },
+  {
+    caption: 'replaceAll',
+    value: "{{replaceAll 'input' 'search' 'replacement'}}",
+    meta: ''
+  },
   { caption: 'lowercase', value: '{{lowercase string}}', meta: '' },
   { caption: 'uppercase', value: '{{uppercase string}}', meta: '' },
   { caption: 'split', value: '{{split string}}', meta: '' },
