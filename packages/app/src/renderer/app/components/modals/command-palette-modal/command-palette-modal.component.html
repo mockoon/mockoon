@@ -26,7 +26,7 @@
       let commandIndex = $index
     ) {
       @if (command.recent && commandIndex === 0) {
-        <div class="list-group-item message message-md py-1 fw-bold">Recent</div>
+        <div class="list-group-item list-group-header">Recent</div>
       }
 
       <button
@@ -45,7 +45,7 @@
       </button>
 
       @if (command.recent && !commands[commandIndex + 1]?.recent) {
-        <div class="list-group-item message message-md py-1 fw-bold">Other Commands</div>
+        <div class="list-group-item list-group-header">Other Commands</div>
       }
     } @empty {
       <div class="list-group-item message message-md">No matching results</div>

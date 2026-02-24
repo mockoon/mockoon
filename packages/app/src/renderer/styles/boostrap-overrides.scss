@@ -226,6 +226,12 @@ a:focus {
 .list-group-item {
   outline: none;
 }
+.list-group-header {
+  padding: 10px 10px 5px 10px;
+  color: $gray-600;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+}
 
 // inline code
 code {
