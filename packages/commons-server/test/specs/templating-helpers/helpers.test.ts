@@ -973,6 +973,20 @@ describe('Template parser', () => {
       strictEqual(parseResult, 'foo foo');
     });
 
+    it('should return empty string if parameters are missing', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{replace 'foo foo' 'foo'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+
+      strictEqual(parseResult, '');
+    });
+
     it('should be compatible with other helpers (header)', () => {
       const parseResult = TemplateParser({
         shouldOmitDataHelper: false,
@@ -1034,6 +1048,20 @@ describe('Template parser', () => {
       });
 
       strictEqual(parseResult, 'foo foo');
+    });
+
+    it('should return empty string if parameters are missing', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{replaceAll 'foo foo' 'foo'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+
+      strictEqual(parseResult, '');
     });
   });
 

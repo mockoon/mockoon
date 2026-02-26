@@ -1,36 +1,33 @@
-import { HelperOptions, SafeString } from 'handlebars';
-import { escapeRegExp } from '../../utils';
+import { escapeRegExp, fromSafeString } from '../../utils';
 
-const replaceAll = function (
-  input: string | SafeString | HelperOptions,
-  search: string | SafeString | HelperOptions,
-  replacement: string | SafeString | HelperOptions
-) {
-  const inputStr =
-    (typeof input === 'object' && !(input instanceof SafeString)) ||
-    input === undefined
-      ? ''
-      : input.toString();
+/**
+ * Replace all occurrences of a string with another string
+ *
+ * @param args
+ * @returns
+ */
+const replaceAll = function (...args: any[]) {
+  const parameters = args.slice(0, -1);
 
-  const searchStr =
-    (typeof search === 'object' && !(search instanceof SafeString)) ||
-    search === undefined
-      ? ''
-      : search.toString();
-
-  const replacementStr =
-    (typeof replacement === 'object' && !(replacement instanceof SafeString)) ||
-    replacement === undefined
-      ? ''
-      : replacement.toString();
-
-  if (searchStr === '') {
-    return inputStr;
+  if (parameters.length < 3) {
+    return '';
   }
 
-  const regex = new RegExp(escapeRegExp(searchStr), 'g');
+  const input = fromSafeString(parameters[0]);
+  const search = fromSafeString(parameters[1]);
+  const replacement = fromSafeString(parameters[2]);
 
-  return inputStr.replace(regex, replacementStr);
+  if (typeof input !== 'string' || typeof search !== 'string' || typeof replacement !== 'string') {
+    return '';
+  }
+
+  if (search === '') {
+    return input;
+  }
+
+  const regex = new RegExp(escapeRegExp(search), 'g');
+
+  return input.replace(regex, replacement);
 };
 
 export default replaceAll;
