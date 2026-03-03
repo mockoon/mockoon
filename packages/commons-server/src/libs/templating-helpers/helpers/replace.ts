@@ -17,7 +17,11 @@ const replace = function (...args: any[]) {
   const search = fromSafeString(parameters[1]);
   const replacement = fromSafeString(parameters[2]);
 
-  if (typeof input !== 'string' || typeof search !== 'string' || typeof replacement !== 'string') {
+  if (
+    typeof input !== 'string' ||
+    typeof search !== 'string' ||
+    typeof replacement !== 'string'
+  ) {
     return '';
   }
 
