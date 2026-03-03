@@ -78,6 +78,8 @@ import parseInt from './parseInt';
 import phone from './phone';
 import postcode from './postcode';
 import repeat from './repeat';
+import replace from './replace';
+import replaceAll from './replaceAll';
 import reverse from './reverse';
 import round from './round';
 import setVar from './setVar';
@@ -170,6 +172,8 @@ export const Helpers = {
   phone,
   postcode,
   repeat,
+  replace,
+  replaceAll,
   reverse,
   round,
   setVar,
