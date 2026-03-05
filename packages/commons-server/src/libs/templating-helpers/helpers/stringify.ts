@@ -12,7 +12,17 @@ const stringify = function (data: unknown, options: HelperOptions) {
       data = fromSafeString(data);
     }
 
-    return JSON.stringify(data, null, 2);
+    return JSON.stringify(
+      data,
+      (_, value) => {
+        if (value instanceof SafeString) {
+          return fromSafeString(value);
+        }
+
+        return value;
+      },
+      2
+    );
   } else {
     return data;
   }

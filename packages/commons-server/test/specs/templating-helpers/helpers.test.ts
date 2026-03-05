@@ -2836,6 +2836,27 @@ describe('Template parser', () => {
       });
       strictEqual(parseResult, '{"result": "{\\"myarr\\":[1,2,3]}" }');
     });
+
+    it('should output objects as string, and support safestrings nested in objects', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: `{{{
+          stringify (object
+            foo = 'abc'
+            bar = (base64 'abc')
+          )
+        }}}`,
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+
+      const parsedResult = JSON.parse(parseResult);
+      strictEqual(parsedResult.foo, 'abc');
+      strictEqual(parsedResult.bar, 'YWJj');
+    });
   });
 
   describe('Helper: jsonParse', () => {
