@@ -1,6 +1,7 @@
 export const ServerMessages = {
   PORT_ALREADY_USED: 'Port %d is already in use',
   PORT_INVALID: 'Port %d is invalid or access is denied',
+  INVALID_ROUTE_PATH: 'Invalid route path: %s',
   HOSTNAME_UNKNOWN: 'Unknown hostname/address provided: %s',
   HOSTNAME_UNAVAILABLE: 'Provided hostname/address is not available: %s',
   REQUEST_BODY_PARSE:
@@ -18,7 +19,6 @@ export const ServerMessages = {
   SERVER_STOPPED: 'Server stopped',
   CALLBACK_FILE_ERROR: 'Error while attaching file to callback request: %s',
   CALLBACK_ERROR: 'Error while executing callback: %s',
-
   WS_UNKNOWN_ROUTE: 'No matching route found for websocket: %s',
   WS_UNSUPPORTED_CONTENT: 'Unsupported content received from websocket: %s',
   WS_SERVING_ERROR: 'Web socket serving error: %s'

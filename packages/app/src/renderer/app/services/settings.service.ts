@@ -5,11 +5,10 @@ import {
   ReorderAction,
   moveItemAtTarget
 } from '@mockoon/commons';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
-  filter,
   mergeMap,
   pairwise,
   tap
@@ -96,14 +95,13 @@ export class SettingsService {
    */
   public saveSettings(): Observable<void> {
     return this.store.select('settings').pipe(
-      filter((settings) => !!settings),
       debounceTime(500),
       distinctUntilChanged(IsEqual<Settings>),
       pairwise(),
-      tap(([_previousSettings, currentSettings]) => {
+      tap(([previousSettings, currentSettings]) => {
         if (
           !Config.isWeb &&
-          currentSettings.disabledRoutes !== _previousSettings?.disabledRoutes
+          currentSettings?.disabledRoutes !== previousSettings?.disabledRoutes
         ) {
           this.mainApiService.send(
             'APP_UPDATE_DISABLED_ROUTES',
@@ -114,10 +112,12 @@ export class SettingsService {
         this.storageService.initiateSaving();
       }),
       mergeMap(([_previousSettings, currentSettings]) =>
-        this.storageService.saveSettings(
-          currentSettings,
-          currentSettings.storagePrettyPrint
-        )
+        currentSettings
+          ? this.storageService.saveSettings(
+              currentSettings,
+              currentSettings.storagePrettyPrint
+            )
+          : of(true)
       )
     );
   }

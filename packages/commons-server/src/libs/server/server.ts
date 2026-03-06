@@ -29,6 +29,7 @@ import {
   generateUUID,
   getLatency,
   pathMatch,
+  pathMatchErrorBuilder,
   preparePath,
   routesFromFolder,
   stringIncludesArrayItems
@@ -697,7 +698,24 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           const originalPath = paths.original;
 
           if (route.type === RouteType.HTTP) {
-            const routeUrlMatchResult = pathMatch(routePath)(request.path);
+            let routeUrlMatchResult;
+
+            try {
+              routeUrlMatchResult = pathMatch(routePath)(request.path);
+            } catch (error: any) {
+              if (error instanceof Error) {
+                this.emit(
+                  'error',
+                  ServerErrorCodes.INVALID_ROUTE_PATH,
+                  pathMatchErrorBuilder(error),
+                  {
+                    routePath,
+                    routeUuid: route.uuid
+                  }
+                );
+              }
+              continue;
+            }
 
             if (
               routeUrlMatchResult &&
@@ -738,9 +756,24 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             const crudRoutes = crudRoutesBuilder(routePath);
 
             for (const crudRoute of crudRoutes) {
-              const crudUrlMatchResult = pathMatch(crudRoute.path)(
-                request.path
-              );
+              let crudUrlMatchResult;
+
+              try {
+                crudUrlMatchResult = pathMatch(crudRoute.path)(request.path);
+              } catch (error: any) {
+                if (error instanceof Error) {
+                  this.emit(
+                    'error',
+                    ServerErrorCodes.INVALID_ROUTE_PATH,
+                    pathMatchErrorBuilder(error),
+                    {
+                      routePath: crudRoute.path,
+                      routeUuid: route.uuid
+                    }
+                  );
+                }
+                continue;
+              }
 
               if (
                 crudUrlMatchResult &&
@@ -862,7 +895,26 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     }
 
     for (const wsServer of this.webSocketServers) {
-      if (pathMatch(wsServer.path)(urlParsed.pathname || '')) {
+      let pathMatchResult;
+
+      try {
+        pathMatchResult = pathMatch(wsServer.path)(urlParsed.pathname || '');
+      } catch (error: any) {
+        if (error instanceof Error) {
+          this.emit(
+            'error',
+            ServerErrorCodes.INVALID_ROUTE_PATH,
+            pathMatchErrorBuilder(error),
+            {
+              routePath: wsServer.path,
+              routeUuid: wsServer.routeUuid
+            }
+          );
+        }
+        continue;
+      }
+
+      if (pathMatchResult) {
         wsServer.instance.handleUpgrade(req, socket, head, (client) => {
           wsServer.instance.emit('connection', client, req);
         });

@@ -500,3 +500,17 @@ export const preparePath = (endpointPrefix: string, endpoint: string) => {
 export const pathMatch = (path: string) => {
   return match(path);
 };
+
+export const pathMatchErrorBuilder = (error: unknown) => {
+  if (error instanceof Error) {
+    return {
+      ...error,
+      message: `Invalid route path: ${error.message.split(';')[0]}`
+    };
+  }
+
+  return {
+    name: 'Error',
+    message: 'Invalid route path'
+  };
+};

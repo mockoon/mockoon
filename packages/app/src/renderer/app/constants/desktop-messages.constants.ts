@@ -66,6 +66,8 @@ export const DesktopMessages: Record<
     toastType: 'error'
   }),
   ROUTE_NO_LONGER_EXISTS: null,
+  // system log is enough, and UI is already displaying a warning
+  INVALID_ROUTE_PATH: null,
   HOSTNAME_UNKNOWN: (messageParams) => ({
     message: `Unknown hostname/address provided: ${messageParams.hostname}}`,
     showToast: true,

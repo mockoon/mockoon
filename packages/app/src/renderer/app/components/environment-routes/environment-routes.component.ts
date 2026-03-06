@@ -36,6 +36,7 @@ import {
   StreamingMode,
   express5PathConvert,
   pathMatch,
+  pathMatchErrorBuilder,
   stringIncludesArrayItems
 } from '@mockoon/commons';
 import {
@@ -529,7 +530,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
           // try patch matching but after converting the path to express 5 syntax
           pathMatch(express5PathConvert(activeRoute.endpoint));
         } catch (error) {
-          return `Unsupported route path: ${error.message.split(';')[0]}`;
+          return pathMatchErrorBuilder(error).message;
         }
 
         if (activeRoute.endpoint) {

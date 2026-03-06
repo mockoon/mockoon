@@ -76,6 +76,7 @@ export const listenServerEvents = function (
       case 'WS_SERVING_ERROR':
       case 'WS_UNKNOWN_ROUTE':
       case 'WS_UNSUPPORTED_CONTENT':
+      case 'INVALID_ROUTE_PATH':
         message = format(ServerMessages[errorCode], error?.message || '');
         break;
       case 'CERT_FILE_NOT_FOUND':
