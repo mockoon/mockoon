@@ -34,6 +34,8 @@ import {
   RulesDisablingResponseModes,
   RulesNotUsingDefaultResponse,
   StreamingMode,
+  express5PathConvert,
+  pathMatch,
   stringIncludesArrayItems
 } from '@mockoon/commons';
 import {
@@ -166,6 +168,7 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   public buildResponseLabel = buildResponseLabel;
   public effectiveContentType$: Observable<string>;
   public defaultResponseTooltip$: Observable<string>;
+  public routeHasErrors$: Observable<string>;
   public environmentsStatus$: Observable<EnvironmentsStatuses>;
   public activeTab$: Observable<TabsNameType>;
   public deleteCurrentRouteResponseRequested$ = new TimedBoolean();
@@ -500,6 +503,46 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
 
     this.initForms();
     this.initFormValues();
+
+    this.defaultResponseTooltip$ = this.activeRoute$.pipe(
+      filter((activeRoute) => !!activeRoute),
+      distinctUntilChanged(),
+      map((activeRoute) => {
+        if (
+          activeRoute.responseMode === ResponseMode.SEQUENTIAL ||
+          activeRoute.responseMode === ResponseMode.RANDOM
+        ) {
+          return 'Default response disabled by random or sequential responses';
+        } else if (activeRoute.responseMode === ResponseMode.DISABLE_RULES) {
+          return 'Default response always served as rules are disabled';
+        }
+
+        return 'Default response served if no rule matches';
+      })
+    );
+
+    this.routeHasErrors$ = this.activeRoute$.pipe(
+      filter((activeRoute) => !!activeRoute),
+      distinctUntilChanged(),
+      map((activeRoute: Route) => {
+        try {
+          // try patch matching but after converting the path to express 5 syntax
+          pathMatch(express5PathConvert(activeRoute.endpoint));
+        } catch (error) {
+          return `Unsupported route path: ${error.message.split(';')[0]}`;
+        }
+
+        if (activeRoute.endpoint) {
+          const queryStringMatch = activeRoute.endpoint.match(/\?.*=/gi);
+
+          if (queryStringMatch && queryStringMatch.length > 0) {
+            return 'Route cannot be declared with query parameters, please add them when you call the route';
+          }
+        }
+
+        return null;
+      })
+    );
   }
 
   ngOnDestroy() {
@@ -579,21 +622,6 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Check if route has query params
-   */
-  public routeHasQueryParams(): boolean {
-    const endpoint = this.store.getActiveRoute().endpoint;
-
-    if (endpoint) {
-      const queryStringMatch = endpoint.match(/\?.*=/gi);
-
-      return queryStringMatch && queryStringMatch.length > 0;
-    }
-
-    return false;
-  }
-
-  /**
    * If the body is set and the Content-Type is application/json, then prettify the JSON.
    */
   public formatBody() {
@@ -655,24 +683,6 @@ export class EnvironmentRoutesComponent implements OnInit, OnDestroy {
       streamingMode: [RouteDefault.streamingMode],
       streamingInterval: [RouteDefault.streamingInterval]
     });
-
-    this.defaultResponseTooltip$ = this.activeRouteForm
-      .get('responseMode')
-      .valueChanges.pipe(
-        startWith(RouteDefault.responseMode),
-        map((responseMode: ResponseMode) => {
-          if (
-            responseMode === ResponseMode.SEQUENTIAL ||
-            responseMode === ResponseMode.RANDOM
-          ) {
-            return 'Default response disabled by random or sequential responses';
-          } else if (responseMode === ResponseMode.DISABLE_RULES) {
-            return 'Default response always served as rules are disabled';
-          }
-
-          return 'Default response served if no rule matches';
-        })
-      );
 
     // send new activeRouteForm values to the store, one by one
     merge(

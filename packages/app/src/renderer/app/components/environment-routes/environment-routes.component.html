@@ -1,3 +1,5 @@
+@let routeHasErrors = routeHasErrors$ | async;
+
 <ng-container
   *ngIf="{
     activeRouteResponse: activeRouteResponse$ | async,
@@ -71,9 +73,9 @@
               }
 
               <span
-                *ngIf="routeHasQueryParams()"
+                *ngIf="routeHasErrors"
                 class="input-group-text text-warning"
-                ngbTooltip="Route cannot be declared with query parameters, please add them when you call the route"
+                [ngbTooltip]="routeHasErrors"
               >
                 <app-svg icon="warning"></app-svg>
               </span>

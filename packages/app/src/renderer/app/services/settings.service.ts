@@ -90,6 +90,7 @@ export class SettingsService {
 
   /**
    * Subscribe to initiate saving settings changes
+   * Propagate the disabled routes to the server if they are updated (desktop local envs only)
    *
    * @returns
    */
@@ -98,11 +99,25 @@ export class SettingsService {
       filter((settings) => !!settings),
       debounceTime(500),
       distinctUntilChanged(IsEqual<Settings>),
-      tap(() => {
+      pairwise(),
+      tap(([_previousSettings, currentSettings]) => {
+        if (
+          !Config.isWeb &&
+          currentSettings.disabledRoutes !== _previousSettings?.disabledRoutes
+        ) {
+          this.mainApiService.send(
+            'APP_UPDATE_DISABLED_ROUTES',
+            currentSettings.disabledRoutes
+          );
+        }
+
         this.storageService.initiateSaving();
       }),
-      mergeMap((settings) =>
-        this.storageService.saveSettings(settings, settings.storagePrettyPrint)
+      mergeMap(([_previousSettings, currentSettings]) =>
+        this.storageService.saveSettings(
+          currentSettings,
+          currentSettings.storagePrettyPrint
+        )
       )
     );
   }

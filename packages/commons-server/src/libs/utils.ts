@@ -1,7 +1,6 @@
 import { search } from '@jmespath-community/jmespath';
 import {
   Callback,
-  dedupSlashes,
   Header,
   InFlightRequest,
   InvokedCallback,
@@ -360,99 +359,6 @@ export const convertPathToArray = (str: string): string | string[] => {
   }
 
   return str;
-};
-
-/**
- * Converts Express <=4 route syntax to a path-to-regexp v8 compatible syntax.
- *
- * This primarily addresses:
- * - unnamed wildcards (*) now requiring a name
- * - optional params using ? now requiring braces
- * - repeating params using +/* now requiring wildcard syntax
- * - optional literal characters/groups using ? now requiring braces
- * - parentheses grouping now using braces
- *
- * @param path
- * @returns
- */
-export const express5PathConvert = (path: string): string => {
-  let convertedPath = path;
-  let wildcardIndex = 0;
-
-  // Express 4: /test/* => path-to-regexp v8: /test/*wildcard0
-  convertedPath = convertedPath.replace(
-    /(^|\/)\*(?![A-Za-z0-9_"])/g,
-    (_match, prefix: string) => `${prefix}*wildcard${wildcardIndex++}`
-  );
-
-  // /ab(cd)?e => /ab{cd}e (parentheses with optional)
-  convertedPath = convertedPath.replace(
-    /\(([^)]+)\)\?/g,
-    (_match, group: string) => `{${group}}`
-  );
-
-  // /ab(cd)e => /ab{cd}e (parentheses without optional, still need braces)
-  convertedPath = convertedPath.replace(
-    /\(([^)]+)\)/g,
-    (_match, group: string) => `{${group}}`
-  );
-
-  // /users/:id? => /users{/:id}
-  // /file/:file.:ext? => /file/:file{.:ext}
-  convertedPath = convertedPath.replace(
-    /([/.~-]):([A-Za-z_$][A-Za-z0-9_$]*)\?/g,
-    (_match, separator: string, parameterName: string) =>
-      `{${separator}:${parameterName}}`
-  );
-
-  // /files/:path+ => /files/*path
-  // Process parameter patterns BEFORE literal character patterns to avoid false matches
-  convertedPath = convertedPath.replace(
-    /:([A-Za-z_$][A-Za-z0-9_$]*)\+/g,
-    (_match, parameterName: string) => `*${parameterName}`
-  );
-
-  // /files/:path* => /files{/*path}
-  convertedPath = convertedPath.replace(
-    /\/:([A-Za-z_$][A-Za-z0-9_$]*)\*/g,
-    (_match, parameterName: string) => `{/*${parameterName}}`
-  );
-
-  // /ab?cd => /a{b}cd (optional literal character)
-  // After parameter patterns to avoid matching colons in params
-  convertedPath = convertedPath.replace(
-    /([a-zA-Z0-9_])\?/g,
-    (_match, char: string) => `{${char}}`
-  );
-
-  // /ab+cd => /ab{b}cd (one or more becomes optional for simplicity)
-  // Note: path-to-regexp v8 doesn't support "one or more" for literals
-  // Converting to optional is a compromise - ideally update route definitions
-  // After parameter patterns to avoid matching plus in :path+ patterns
-  convertedPath = convertedPath.replace(
-    /([a-zA-Z0-9_])\+/g,
-    (_match, char: string) => `${char}{${char}}`
-  );
-
-  return convertedPath;
-};
-
-/**
- * Prepare a path for express: add a leading slash, deduplicate slashes and replace spaces with %20
- *
- * @param endpointPrefix
- * @param endpoint
- * @returns
- */
-export const preparePath = (endpointPrefix: string, endpoint: string) => {
-  const preparedPath = dedupSlashes(
-    `/${endpointPrefix}/${endpoint.replace(/ /g, '%20')}`
-  );
-
-  return {
-    preparedPath: express5PathConvert(preparedPath),
-    original: preparedPath
-  };
 };
 
 /**

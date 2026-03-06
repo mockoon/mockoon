@@ -100,6 +100,10 @@ export interface MainAPIModel {
     data: { type: 'error' | 'info'; message: string; payload?: any }
   ): void;
   send(channel: 'APP_UPDATE_ENVIRONMENTS', environments: Environments): void;
+  send(
+    channel: 'APP_UPDATE_DISABLED_ROUTES',
+    disabledRoutes: Record<string, string[]>
+  ): void;
   send(channel: 'APP_ZOOM', action: 'IN' | 'OUT' | 'RESET'): void;
 
   receive(

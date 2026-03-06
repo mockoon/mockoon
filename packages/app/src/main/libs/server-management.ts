@@ -33,6 +33,18 @@ export class ServerInstance {
     });
   };
 
+  public static updateDisabledRoutes = (
+    disabledRoutes: Record<string, string[]>
+  ) => {
+    Object.keys(disabledRoutes).forEach((environmentUuid) => {
+      if (ServerInstance.instances[environmentUuid]?.mockoonServer) {
+        ServerInstance.instances[
+          environmentUuid
+        ].mockoonServer.updateDisabledRoutes(disabledRoutes[environmentUuid]);
+      }
+    });
+  };
+
   public static stop(environmentUuid: string) {
     ServerInstance.instances[environmentUuid]?.mockoonServer?.stop();
   }

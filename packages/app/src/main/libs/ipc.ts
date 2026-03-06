@@ -137,6 +137,13 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     ServerInstance.updateEnvironments(environments);
   });
 
+  ipcMain.on(
+    'APP_UPDATE_DISABLED_ROUTES',
+    (event, disabledRoutes: Record<string, string[]>) => {
+      ServerInstance.updateDisabledRoutes(disabledRoutes);
+    }
+  );
+
   ipcMain.on('APP_APPLY_UPDATE', () => {
     applyUpdate();
   });

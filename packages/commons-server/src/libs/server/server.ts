@@ -28,6 +28,7 @@ import {
   deterministicStringify,
   generateUUID,
   getLatency,
+  preparePath,
   routesFromFolder,
   stringIncludesArrayItems
 } from '@mockoon/commons';
@@ -70,7 +71,6 @@ import {
   isBodySupportingMethod,
   isValidStatusCode,
   mimeTypeLookup,
-  preparePath,
   resolvePathFromEnvironment
 } from '../utils';
 import { createAdminEndpoint } from './admin-api';
@@ -130,7 +130,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     maxFileSize: 10 * 1024 * 1024 // 10MB
   };
   private transactionLogs: Transaction[] = [];
-  private effectiveRouteList: Route[] = [];
+  private effectiveRestRoutes: Route[] = [];
+  private effectiveWebSocketRoutes: Route[] = [];
 
   constructor(
     private environment: Environment,
@@ -144,7 +145,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       envVarsPrefix: options.envVarsPrefix ?? defaultEnvironmentVariablesPrefix
     };
 
-    this.computeEffectiveRouteList();
+    this.computeEffectiveRestRoutes();
+    this.computeEffectiveWebSocketRoutes();
   }
 
   /**
@@ -152,14 +154,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    */
   public start(): void {
     const requestListener = this.createRequestListener();
-
-    const webSocketRoutes = routesFromFolder(
-      this.environment.rootChildren,
-      this.environment.folders,
-      this.environment.routes,
-      this.options.disabledRoutes,
-      [RouteType.WS]
-    );
 
     // create https or http server instance
     if (this.environment.tlsOptions.enabled && !this.options.disableTls) {
@@ -209,7 +203,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     this.serverInstance.on('request', requestListener);
 
-    this.createWebsocketRoutes(webSocketRoutes);
+    this.createWebsocketRoutes();
 
     try {
       this.serverInstance.listen(
@@ -351,15 +345,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   public updateEnvironment(environment: Environment): void {
     const previousDataBuckets = this.environment.data;
 
-    // Store current WebSocket routes before updating the environment
-    const previousWsRoutes = routesFromFolder(
-      this.environment.rootChildren,
-      this.environment.folders,
-      this.environment.routes,
-      this.options.disabledRoutes,
-      [RouteType.WS]
-    );
-
     this.environment = environment;
 
     regenerateDatabuckets(
@@ -374,20 +359,18 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       }
     );
 
-    // Get the new WebSocket routes and regenerate them
-    const newWsRoutes = routesFromFolder(
-      environment.rootChildren,
-      environment.folders,
-      environment.routes,
-      this.options.disabledRoutes,
-      [RouteType.WS]
-    );
+    this.computeEffectiveRestRoutes();
+    this.regenerateWebSocketRoutes();
+  }
 
-    if (previousWsRoutes.length > 0 || newWsRoutes.length > 0) {
-      this.regenerateWebSocketRoutes(previousWsRoutes, newWsRoutes);
-    }
+  /**
+   * Method to update the list of disabled routes without restarting the server.
+   */
+  public updateDisabledRoutes(disabledRoutes: string[]): void {
+    this.options.disabledRoutes = disabledRoutes;
 
-    this.computeEffectiveRouteList();
+    this.computeEffectiveRestRoutes();
+    this.regenerateWebSocketRoutes();
   }
 
   /**
@@ -704,7 +687,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           null;
         let matchingRoutePath = '';
 
-        routesLoop: for (const route of this.effectiveRouteList) {
+        routesLoop: for (const route of this.effectiveRestRoutes) {
           // Get original path for logging/transactions
           const paths = preparePath(
             this.environment.endpointPrefix,
@@ -820,11 +803,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   /**
    * Creates websocket routes from the given set of routes.
    *
-   * @param wsRoutes
    */
-  private createWebsocketRoutes(wsRoutes: Route[]) {
-    if (wsRoutes.length > 0) {
-      wsRoutes.forEach((wsRoute) => {
+  private createWebsocketRoutes() {
+    if (this.effectiveWebSocketRoutes.length > 0) {
+      this.effectiveWebSocketRoutes.forEach((wsRoute) => {
         this.createWebsocketRoute(wsRoute);
       });
 
@@ -2318,8 +2300,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   /**
    * List the routes from the environment, folders and disabled routes
    */
-  private computeEffectiveRouteList() {
-    this.effectiveRouteList = routesFromFolder(
+  private computeEffectiveRestRoutes() {
+    this.effectiveRestRoutes = routesFromFolder(
       this.environment.rootChildren,
       this.environment.folders,
       this.environment.routes,
@@ -2329,15 +2311,32 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   }
 
   /**
+   * List the WebSocket routes from the environment, folders and disabled routes
+   *
+   * @returns
+   */
+  private computeEffectiveWebSocketRoutes() {
+    this.effectiveWebSocketRoutes = routesFromFolder(
+      this.environment.rootChildren,
+      this.environment.folders,
+      this.environment.routes,
+      this.options.disabledRoutes,
+      [RouteType.WS]
+    );
+
+    return this.effectiveWebSocketRoutes;
+  }
+
+  /**
    * Regenerates WebSocket routes by detecting changes and stopping/starting servers accordingly.
    *
    * @param previousWsRoutes Previous set of WebSocket routes
    * @param newWsRoutes New set of WebSocket routes
    */
-  private regenerateWebSocketRoutes = (
-    previousWsRoutes: Route[],
-    newWsRoutes: Route[]
-  ): void => {
+  private regenerateWebSocketRoutes = () => {
+    const previousWsRoutes = this.effectiveWebSocketRoutes;
+    const newWsRoutes = this.computeEffectiveWebSocketRoutes();
+
     // If there are no more WebSocket routes, stop listening to upgrade events
     if (previousWsRoutes.length > 0 && newWsRoutes.length === 0) {
       this.serverInstance.removeListener(
@@ -2362,18 +2361,18 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     // Handle new and modified routes
     newWsRoutes.forEach((newWsRoute) => {
-      const existingRoute = previousWsRoutes.find(
+      const existingWsRoute = previousWsRoutes.find(
         (previousWsRoute) => previousWsRoute.uuid === newWsRoute.uuid
       );
 
       if (
-        existingRoute &&
-        deterministicStringify(existingRoute) !==
+        existingWsRoute &&
+        deterministicStringify(existingWsRoute) !==
           deterministicStringify(newWsRoute)
       ) {
-        this.closeWsServer(existingRoute);
+        this.closeWsServer(existingWsRoute);
         this.createWebsocketRoute(newWsRoute);
-      } else if (!existingRoute) {
+      } else if (!existingWsRoute) {
         // New route: create a WebSocket server
         this.createWebsocketRoute(newWsRoute);
       }
