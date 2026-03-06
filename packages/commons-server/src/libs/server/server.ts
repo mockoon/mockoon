@@ -28,6 +28,7 @@ import {
   deterministicStringify,
   generateUUID,
   getLatency,
+  pathMatch,
   preparePath,
   routesFromFolder,
   stringIncludesArrayItems
@@ -48,7 +49,6 @@ import {
 import killable from 'killable';
 import { AddressInfo, isIPv6 } from 'node:net';
 import { basename, extname, isAbsolute, resolve } from 'path';
-import { match as pathMatch } from 'path-to-regexp';
 import { parse as qsParse } from 'qs';
 import rangeParser from 'range-parser';
 import { Readable } from 'stream';
