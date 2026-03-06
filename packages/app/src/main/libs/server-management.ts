@@ -23,18 +23,12 @@ export class ServerInstance {
     this.start();
   }
 
-  public static updateEnvironments = (
-    environments: Environments,
-    disabledRoutes: Record<string, string[]>
-  ) => {
+  public static updateEnvironments = (environments: Environments) => {
     environments.forEach((environment) => {
       if (ServerInstance.instances[environment.uuid]?.mockoonServer) {
         ServerInstance.instances[
           environment.uuid
-        ].mockoonServer.updateEnvironment(
-          environment,
-          disabledRoutes[environment.uuid]
-        );
+        ].mockoonServer.updateEnvironment(environment);
       }
     });
   };

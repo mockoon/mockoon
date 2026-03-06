@@ -348,10 +348,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    *
    * @param environment
    */
-  public updateEnvironment(
-    environment: Environment,
-    disabledRoutes?: string[]
-  ): void {
+  public updateEnvironment(environment: Environment): void {
     const previousDataBuckets = this.environment.data;
 
     // Store current WebSocket routes before updating the environment
@@ -376,10 +373,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         this.emitProcessedDatabuckets();
       }
     );
-
-    if (disabledRoutes) {
-      this.options.disabledRoutes = disabledRoutes;
-    }
 
     // Get the new WebSocket routes and regenerate them
     const newWsRoutes = routesFromFolder(
