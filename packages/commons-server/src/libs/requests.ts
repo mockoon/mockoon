@@ -1,7 +1,6 @@
+import { CloneObject, pathMatch, preparePath, Route } from '@mockoon/commons';
 import { Request } from 'express';
 import { IncomingMessage } from 'http';
-
-import { CloneObject, pathMatch, Route } from '@mockoon/commons';
 import { parse as parseUrl } from 'url';
 import { parseRequestMessage, parseWebSocketMessage } from './utils';
 
@@ -104,9 +103,7 @@ export const fromWsRequest = (
 
   let pathParams = {};
   const urlPathMatchFn = pathMatch(
-    originalRoute.endpoint.startsWith('/')
-      ? originalRoute.endpoint
-      : '/' + originalRoute.endpoint
+    preparePath('', originalRoute.endpoint).preparedPath
   );
   const result = urlPathMatchFn(location.pathname || '');
   if (result) {

@@ -852,8 +852,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     this.webSocketServers.push({
       instance: webSocketServer,
-      path: preparePath(this.environment.endpointPrefix, wsRoute.endpoint)
-        .preparedPath,
+      path: wsRoute.endpoint,
       routeUuid: wsRoute.uuid
     });
 
@@ -888,10 +887,13 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     }
 
     for (const wsServer of this.webSocketServers) {
+      const paths = preparePath(this.environment.endpointPrefix, wsServer.path);
       let pathMatchResult;
 
       try {
-        pathMatchResult = pathMatch(wsServer.path)(urlParsed.pathname || '');
+        pathMatchResult = pathMatch(paths.preparedPath)(
+          urlParsed.pathname || ''
+        );
       } catch (error: any) {
         if (error instanceof Error) {
           this.emit(
@@ -899,7 +901,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             ServerErrorCodes.INVALID_ROUTE_PATH,
             pathMatchErrorBuilder(error),
             {
-              routePath: wsServer.path,
+              routePath: paths.original,
               routeUuid: wsServer.routeUuid
             }
           );
@@ -908,6 +910,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       }
 
       if (pathMatchResult) {
+        req.params = pathMatchResult.params as Record<string, string>;
+
         wsServer.instance.handleUpgrade(req, socket, head, (client) => {
           wsServer.instance.emit('connection', client, req);
         });
