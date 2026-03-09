@@ -672,13 +672,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * @param server - server on which attach routes
    */
   private createRestRoutes(server: Application) {
-    if (
-      !this.environment.rootChildren ||
-      this.environment.rootChildren.length < 1
-    ) {
-      return;
-    }
-
     server.all(
       '*',
       (request: Request, response: Response, next: NextFunction) => {
