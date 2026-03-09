@@ -422,15 +422,15 @@ export const express5PathConvert = (path: string): string => {
     (_match, prefix: string) => `${prefix}*wildcard${wildcardIndex++}`
   );
 
-  // /ab(cd)?e => /ab{cd}e (parentheses with optional)
+  // /ab(cd)?e => /ab{cd}e (parentheses with optional, excluding escaped \()
   convertedPath = convertedPath.replace(
-    /\(([^)]+)\)\?/g,
+    /(?<!\\)\(([^)]+)\)\?/g,
     (_match, group: string) => `{${group}}`
   );
 
-  // /ab(cd)e => /ab{cd}e (parentheses without optional, still need braces)
+  // /ab(cd)e => /ab{cd}e (parentheses without optional, still need braces, excluding escaped \()
   convertedPath = convertedPath.replace(
-    /\(([^)]+)\)/g,
+    /(?<!\\)\(([^)]+)\)/g,
     (_match, group: string) => `{${group}}`
   );
 
@@ -455,19 +455,19 @@ export const express5PathConvert = (path: string): string => {
     (_match, parameterName: string) => `{/*${parameterName}}`
   );
 
-  // /ab?cd => /a{b}cd (optional literal character)
+  // /ab?cd => /a{b}cd (optional literal character, excluding escaped)
   // After parameter patterns to avoid matching colons in params
   convertedPath = convertedPath.replace(
-    /([a-zA-Z0-9_])\?/g,
+    /(?<!\\)([a-zA-Z0-9_])\?/g,
     (_match, char: string) => `{${char}}`
   );
 
-  // /ab+cd => /ab{b}cd (one or more becomes optional for simplicity)
+  // /ab+cd => /ab{b}cd (one or more becomes optional for simplicity, excluding escaped)
   // Note: path-to-regexp v8 doesn't support "one or more" for literals
   // Converting to optional is a compromise - ideally update route definitions
   // After parameter patterns to avoid matching plus in :path+ patterns
   convertedPath = convertedPath.replace(
-    /([a-zA-Z0-9_])\+/g,
+    /(?<!\\)([a-zA-Z0-9_])\+/g,
     (_match, char: string) => `${char}{${char}}`
   );
 

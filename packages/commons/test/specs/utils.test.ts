@@ -56,4 +56,109 @@ describe('express5PathConvert', () => {
       '/path/*wildcard0/file{.:ext}/*id'
     );
   });
+
+  // Escaped characters - should not be converted
+  it('should preserve escaped parentheses', () => {
+    strictEqual(
+      express5PathConvert('/path/\\(literal\\)'),
+      '/path/\\(literal\\)'
+    );
+  });
+
+  it('should preserve escaped opening parenthesis', () => {
+    strictEqual(express5PathConvert('/path/\\(test'), '/path/\\(test');
+  });
+
+  it('should preserve escaped closing parenthesis', () => {
+    strictEqual(express5PathConvert('/path/test\\)'), '/path/test\\)');
+  });
+
+  it('should convert non-escaped parentheses while preserving escaped ones', () => {
+    strictEqual(
+      express5PathConvert('/path/(group)\\(literal\\)'),
+      '/path/{group}\\(literal\\)'
+    );
+  });
+
+  it('should preserve escaped optional character', () => {
+    strictEqual(express5PathConvert('/path/file\\?'), '/path/file\\?');
+  });
+
+  it('should preserve escaped plus character', () => {
+    strictEqual(express5PathConvert('/path/file\\+'), '/path/file\\+');
+  });
+
+  it('should convert unescaped optional while preserving escaped in same path', () => {
+    strictEqual(express5PathConvert('/a?b/c\\?d'), '/{a}b/c\\?d');
+  });
+
+  it('should handle escaped characters mixed with real patterns', () => {
+    strictEqual(
+      express5PathConvert('/api\\?v1/:id?/file.:ext?'),
+      '/api\\?v1{/:id}/file{.:ext}'
+    );
+  });
+
+  it('should handle multiple escaped sequences', () => {
+    strictEqual(
+      express5PathConvert('/\\(group1\\)/:id/\\(group2\\)'),
+      '/\\(group1\\)/:id/\\(group2\\)'
+    );
+  });
+
+  it('should convert optional in parentheses while preserving escaped parens', () => {
+    strictEqual(
+      express5PathConvert('/prefix(suffix)?/\\(literal\\)'),
+      '/prefix{suffix}/\\(literal\\)'
+    );
+  });
+
+  it('should handle nested patterns with wildcards', () => {
+    strictEqual(
+      express5PathConvert('/api/*/resources/:id'),
+      '/api/*wildcard0/resources/:id'
+    );
+  });
+
+  it('should handle multiple optional extensions', () => {
+    strictEqual(
+      express5PathConvert('/file/:name.:ext1?.:ext2?'),
+      '/file/:name{.:ext1}{.:ext2}'
+    );
+  });
+
+  it('should handle wildcards with parameters', () => {
+    strictEqual(
+      express5PathConvert('/*/uploads/:id'),
+      '/*wildcard0/uploads/:id'
+    );
+  });
+
+  it('should not convert escaped wildcard prefix', () => {
+    strictEqual(
+      express5PathConvert('/path/\\*notawildcard'),
+      '/path/\\*notawildcard'
+    );
+  });
+
+  it('should convert wildcard after slash while preserving escaped', () => {
+    strictEqual(
+      express5PathConvert('/path/*/\\*literal'),
+      '/path/*wildcard0/\\*literal'
+    );
+  });
+
+  it('should handle complex real-world pattern', () => {
+    strictEqual(
+      express5PathConvert('/api/v:version?/users/:userId/files/:fileId?'),
+      '/api/v:versio{n}/users/:userId/files{/:fileId}'
+    );
+  });
+
+  it('should handle pattern with all special characters', () => {
+    strictEqual(
+      express5PathConvert('/api(v2)?/users/:id+/file.:ext?/*'),
+      '/api{v2}/users/*id/file{.:ext}/*wildcard0'
+    );
+  });
 });
