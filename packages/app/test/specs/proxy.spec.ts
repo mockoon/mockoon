@@ -193,7 +193,6 @@ describe('Proxy (with TLS and proxy headers)', () => {
 
   it('should click on mock button and check that route was added', async () => {
     await environmentsLogs.clickMockButton(1);
-    await environments.restart();
     await routes.assertCount(1);
   });
 
@@ -239,7 +238,6 @@ describe('Proxy (with TLS and proxy headers)', () => {
       'endpointPrefix',
       'targetprefix'
     );
-    await environments.restart();
 
     await environments.select(4);
     await navigation.switchView('ENV_PROXY');
@@ -247,7 +245,6 @@ describe('Proxy (with TLS and proxy headers)', () => {
       'proxyHost',
       'https://127.0.0.1:3000/targetprefix'
     );
-    await environments.restart();
 
     await http.assertCallWithPort(getDoublePrefixedAnswerCall, 3003);
   });
@@ -258,9 +255,9 @@ describe('Proxy (with TLS and proxy headers)', () => {
     await http.assertCallWithPort(get404CallWithParentheses, 3001);
     await environmentsLogs.clickMockButton(1);
     await routes.assertPath('test\\(data\\)');
+    await utils.waitForAutosave();
 
     // make sure that the call is not proxied anymore
-    await environments.restart();
     await navigation.switchView('ENV_LOGS');
     await http.assertCallWithPort(get404CallWithParentheses, 3001);
     await environmentsLogs.assertLogMenuIcon(1, 'PROXY', true);

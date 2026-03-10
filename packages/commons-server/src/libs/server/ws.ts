@@ -8,7 +8,7 @@ import {
 } from '@mockoon/commons';
 import { readFile } from 'fs';
 import TypedEventEmitter from 'typed-emitter';
-import { RawData, WebSocket } from 'ws';
+import { RawData, WebSocket, WebSocketServer } from 'ws';
 import { ServerRequest } from '../requests';
 import { ResponseRulesInterpreter } from '../response-rules-interpreter';
 
@@ -27,6 +27,15 @@ export type ServerContext = {
   globalVariables: Record<string, any>;
   envVarPrefix: string;
   publicBaseUrl?: string;
+};
+
+/**
+ * Represents a WebSocket server instance with its route information
+ */
+export type WebSocketServerInstance = {
+  instance: WebSocketServer;
+  path: string;
+  routeUuid: string;
 };
 
 /**

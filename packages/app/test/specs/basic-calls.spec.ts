@@ -3,6 +3,7 @@ import environmentsSettings from '../libs/environments-settings';
 import http from '../libs/http';
 import { HttpCall } from '../libs/models';
 import navigation from '../libs/navigation';
+import utils from '../libs/utils';
 
 const testCases: HttpCall[] = [
   {
@@ -15,8 +16,8 @@ const testCases: HttpCall[] = [
     }
   },
   {
-    description: 'Call GET /abc/testvar/ac/1234',
-    path: '/abc/testvar/ac/1234',
+    description: 'Call GET /abc/testvar/ac',
+    path: '/abc/testvar/ac',
     method: 'GET',
     testedResponse: {
       status: 200,
@@ -24,8 +25,8 @@ const testCases: HttpCall[] = [
     }
   },
   {
-    description: 'Call GET /ac/hello/abc/0',
-    path: '/ac/hello/abc/0',
+    description: 'Call GET /ac/hello/abc',
+    path: '/ac/hello/abc',
     method: 'GET',
     testedResponse: {
       status: 200,
@@ -69,13 +70,13 @@ describe('Basic endpoint calls with prefix', () => {
   it('should call endpoint successfully with simple prefix', async () => {
     await navigation.switchView('ENV_SETTINGS');
     await environmentsSettings.setSettingValue('endpointPrefix', 'api');
-    await environments.restart();
+    await utils.waitForAutosave();
     await http.assertCall(prefixTestCase);
   });
 
   it('should call endpoint successfully with prefix with a trailing slash', async () => {
     await environmentsSettings.setSettingValue('endpointPrefix', 'api/');
-    await environments.restart();
+    await utils.waitForAutosave();
     await http.assertCall(prefixTestCase);
   });
 });

@@ -66,6 +66,8 @@ export const DesktopMessages: Record<
     toastType: 'error'
   }),
   ROUTE_NO_LONGER_EXISTS: null,
+  // system log is enough, and UI is already displaying a warning
+  INVALID_ROUTE_PATH: null,
   HOSTNAME_UNKNOWN: (messageParams) => ({
     message: `Unknown hostname/address provided: ${messageParams.hostname}}`,
     showToast: true,
@@ -82,18 +84,6 @@ export const DesktopMessages: Record<
     message: `Certificate file not found: ${messageParams?.error?.message}`,
     showToast: true,
     log: false,
-    toastType: 'error'
-  }),
-  ROUTE_CREATION_ERROR: (messageParams) => ({
-    message: `Error while creating the route: ${messageParams?.error?.message}`,
-    log: false,
-    showToast: true,
-    toastType: 'error'
-  }),
-  ROUTE_CREATION_ERROR_REGEX: (messageParams) => ({
-    message: `Error while creating the route, regex path is invalid: ${messageParams?.error?.message}`,
-    log: false,
-    showToast: true,
     toastType: 'error'
   }),
   ROUTE_SERVING_ERROR: (messageParams) => ({

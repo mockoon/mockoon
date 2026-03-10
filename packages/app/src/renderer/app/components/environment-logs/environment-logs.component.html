@@ -268,7 +268,12 @@
                     </span>
                   </div>
                 }
-                @if (selectedLog.route && !selectedLog.proxied) {
+                @if (
+                  selectedLog.routeUUID &&
+                  selectedLog.routeResponseUUID &&
+                  selectedLog.route &&
+                  !selectedLog.proxied
+                ) {
                   <div
                     class="environment-logs-content-item d-flex align-items-start"
                   >

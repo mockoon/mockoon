@@ -5,6 +5,8 @@ declare namespace Express {
     body: any;
     rawBody: Buffer;
     stringBody: string;
+    // store the route path matched by the wildcard route
+    effectiveRoute: string;
   }
   export interface Response {
     body: any;
@@ -22,6 +24,8 @@ declare module 'http' {
     body: any;
     rawBody: Buffer;
     stringBody: string;
+    // store the route path matched by the wildcard route
+    effectiveRoute: string;
   }
   export interface ServerResponse {
     body: any;

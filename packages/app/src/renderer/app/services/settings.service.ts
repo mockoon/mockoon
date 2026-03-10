@@ -12,6 +12,7 @@ import {
   filter,
   mergeMap,
   pairwise,
+  startWith,
   tap
 } from 'rxjs/operators';
 import { gt as semverGt } from 'semver';
@@ -90,19 +91,36 @@ export class SettingsService {
 
   /**
    * Subscribe to initiate saving settings changes
+   * Propagate the disabled routes to the server if they are updated (desktop local envs only)
    *
    * @returns
    */
   public saveSettings(): Observable<void> {
     return this.store.select('settings').pipe(
-      filter((settings) => !!settings),
+      filter((settings): settings is Settings => !!settings),
       debounceTime(500),
       distinctUntilChanged(IsEqual<Settings>),
-      tap(() => {
+      startWith<Settings | null>(null),
+      pairwise(),
+      tap(([previousSettings, currentSettings]) => {
+        if (
+          !Config.isWeb &&
+          previousSettings &&
+          currentSettings.disabledRoutes !== previousSettings.disabledRoutes
+        ) {
+          this.mainApiService.send(
+            'APP_UPDATE_DISABLED_ROUTES',
+            currentSettings.disabledRoutes
+          );
+        }
+
         this.storageService.initiateSaving();
       }),
-      mergeMap((settings) =>
-        this.storageService.saveSettings(settings, settings.storagePrettyPrint)
+      mergeMap(([_previousSettings, currentSettings]) =>
+        this.storageService.saveSettings(
+          currentSettings,
+          currentSettings.storagePrettyPrint
+        )
       )
     );
   }

@@ -6,14 +6,14 @@ import { afterEach, describe, it } from 'node:test';
 import { major } from 'semver';
 import {
   DecompressBody,
+  FromBase64,
+  FromBase64URL,
   fromSafeString,
   fullTextSearch,
   getValueFromPath,
   isSafeJSONPath,
   ToBase64,
-  ToBase64URL,
-  FromBase64,
-  FromBase64URL
+  ToBase64URL
 } from '../../src/libs/utils';
 
 describe('Utils', () => {

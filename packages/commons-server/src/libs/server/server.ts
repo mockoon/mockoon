@@ -25,8 +25,12 @@ import {
   dedupSlashes,
   defaultEnvironmentVariablesPrefix,
   defaultMaxTransactionLogs,
+  deterministicStringify,
   generateUUID,
   getLatency,
+  pathMatch,
+  pathMatchErrorBuilder,
+  preparePath,
   routesFromFolder,
   stringIncludesArrayItems
 } from '@mockoon/commons';
@@ -46,7 +50,6 @@ import {
 import killable from 'killable';
 import { AddressInfo, isIPv6 } from 'node:net';
 import { basename, extname, isAbsolute, resolve } from 'path';
-import { match } from 'path-to-regexp';
 import { parse as qsParse } from 'qs';
 import rangeParser from 'range-parser';
 import { Readable } from 'stream';
@@ -62,7 +65,6 @@ import { SetFakerLocale, SetFakerSeed } from '../faker';
 import { ServerRequest, fromExpressRequest, fromWsRequest } from '../requests';
 import { ResponseRulesInterpreter } from '../response-rules-interpreter';
 import { TemplateParser } from '../template-parser';
-import { requestHelperNames } from '../templating-helpers/request-helpers';
 import {
   CreateCallbackInvocation,
   CreateInFlightRequest,
@@ -70,14 +72,19 @@ import {
   isBodySupportingMethod,
   isValidStatusCode,
   mimeTypeLookup,
-  preparePath,
   resolvePathFromEnvironment
 } from '../utils';
 import { createAdminEndpoint } from './admin-api';
 import { databucketActions } from './crud';
 import {
+  generateDatabuckets,
+  generateRequestDatabuckets,
+  regenerateDatabuckets
+} from './data-buckets';
+import {
   BroadcastContext,
   DelegatedBroadcastHandler,
+  WebSocketServerInstance,
   getSafeStreamingInterval,
   isWebSocketOpen,
   messageToString,
@@ -105,7 +112,7 @@ import {
  */
 export class MockoonServer extends (EventEmitter as new () => TypedEmitter<ServerEvents>) {
   private serverInstance: httpServer | httpsServer;
-  private webSocketServers: { instance: WebSocketServer; path: string }[] = [];
+  private webSocketServers: WebSocketServerInstance[] = [];
   private tlsOptions: SecureContextOptions = {};
   private processedDatabuckets: ProcessedDatabucket[] = [];
   // store the request number for each route
@@ -124,6 +131,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     maxFileSize: 10 * 1024 * 1024 // 10MB
   };
   private transactionLogs: Transaction[] = [];
+  private effectiveRestRoutes: Route[] = [];
+  private effectiveWebSocketRoutes: Route[] = [];
 
   constructor(
     private environment: Environment,
@@ -136,6 +145,9 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       ...options,
       envVarsPrefix: options.envVarsPrefix ?? defaultEnvironmentVariablesPrefix
     };
+
+    this.computeEffectiveRestRoutes();
+    this.computeEffectiveWebSocketRoutes();
   }
 
   /**
@@ -143,14 +155,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    */
   public start(): void {
     const requestListener = this.createRequestListener();
-
-    const webSocketRoutes = routesFromFolder(
-      this.environment.rootChildren,
-      this.environment.folders,
-      this.environment.routes,
-      this.options.disabledRoutes,
-      [RouteType.WS]
-    );
 
     // create https or http server instance
     if (this.environment.tlsOptions.enabled && !this.options.disableTls) {
@@ -200,9 +204,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     this.serverInstance.on('request', requestListener);
 
-    if (webSocketRoutes.length > 0) {
-      this.createWSRoutes(webSocketRoutes);
-    }
+    this.createWebsocketRoutes();
 
     try {
       this.serverInstance.listen(
@@ -222,13 +224,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * Kill the server
    */
   public stop(): void {
-    if (this.webSocketServers.length > 0) {
-      this.webSocketServers.forEach((webSocketServer) => {
-        webSocketServer.instance.close();
-      });
-    }
-
-    BroadcastContext.getInstance().closeAll();
+    this.closeWsServers();
 
     if (this.serverInstance) {
       this.serverInstance.kill(() => {
@@ -278,7 +274,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         getDataBuckets: () => this.processedDatabuckets,
         purgeDataBuckets: () => {
           this.processedDatabuckets = [];
-          this.generateDatabuckets(this.environment);
+          generateDatabuckets(
+            this.environment,
+            this.processedDatabuckets,
+            this.globalVariables,
+            this.options,
+            () => {
+              this.emitProcessedDatabuckets();
+            }
+          );
         },
         getLogs: () => this.transactionLogs,
         purgeLogs: () => {
@@ -286,13 +290,21 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         },
         envVarsPrefix: this.options.envVarsPrefix,
         updateEnvironment: (environment: Environment) => {
-          this.environment = environment;
+          this.updateEnvironment(environment);
         }
       });
     }
 
     // process databuckets after admin endpoint creation to properly catch the databucket processed event
-    this.generateDatabuckets(this.environment);
+    generateDatabuckets(
+      this.environment,
+      this.processedDatabuckets,
+      this.globalVariables,
+      this.options,
+      () => {
+        this.emitProcessedDatabuckets();
+      }
+    );
 
     app.use(this.emitEvent);
     app.use(this.delayResponse);
@@ -301,7 +313,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     app.use(this.logRequest);
     app.use(this.setResponseHeaders);
 
-    this.setRoutes(app);
+    this.createRestRoutes(app);
     this.setCors(app);
     this.enableProxy(app);
     app.use(this.errorHandler);
@@ -323,12 +335,43 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   }
 
   /**
-   * Method that can be used to update the server's environment
+   * Method that can be used to update the server's environment and
+   * the disabled routes.
+   *
+   * It will recompute the effective route list to be used later during
+   * request handling.
    *
    * @param environment
    */
   public updateEnvironment(environment: Environment): void {
+    const previousDataBuckets = this.environment.data;
+
     this.environment = environment;
+
+    regenerateDatabuckets(
+      previousDataBuckets,
+      environment.data,
+      this.processedDatabuckets,
+      environment,
+      this.globalVariables,
+      this.options,
+      () => {
+        this.emitProcessedDatabuckets();
+      }
+    );
+
+    this.computeEffectiveRestRoutes();
+    this.regenerateWebSocketRoutes();
+  }
+
+  /**
+   * Method to update the list of disabled routes without restarting the server.
+   */
+  public updateDisabledRoutes(disabledRoutes: string[]): void {
+    this.options.disabledRoutes = disabledRoutes;
+
+    this.computeEffectiveRestRoutes();
+    this.regenerateWebSocketRoutes();
   }
 
   /**
@@ -619,112 +662,271 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   };
 
   /**
-   * Generate an environment routes and attach to running server
+   * Create a wildcard REST route that will handle all HTTP routes
+   * We do it this way to be able to support dynamic route additions / deletions
+   *
+   * Note on performances: the path matching is done at runtime using path-to-regexp.
+   * We tested the overhead of not caching the matchers with up to 10 000 routes, and it is
+   * negligible (some extra milliseconds). We will reevaluate if any performance issue arises.
    *
    * @param server - server on which attach routes
    */
-  private setRoutes(server: Application) {
-    if (
-      !this.environment.rootChildren ||
-      this.environment.rootChildren.length < 1
-    ) {
-      return;
-    }
+  private createRestRoutes(server: Application) {
+    server.all(
+      '*',
+      (request: Request, response: Response, next: NextFunction) => {
+        let matchingRoute: Route | null = null;
+        let matchingRouteResponse: RouteResponse | null = null;
+        let crudId: ReturnType<typeof crudRoutesBuilder>[number]['id'] | null =
+          null;
+        let matchingRoutePath = '';
 
-    const routes = routesFromFolder(
-      this.environment.rootChildren,
-      this.environment.folders,
-      this.environment.routes,
-      this.options.disabledRoutes,
-      [RouteType.HTTP, RouteType.CRUD]
-    );
+        routesLoop: for (const route of this.effectiveRestRoutes) {
+          // Get original path for logging/transactions
+          const paths = preparePath(
+            this.environment.endpointPrefix,
+            route.endpoint
+          );
+          const routePath = paths.preparedPath;
+          const originalPath = paths.original;
 
-    routes.forEach((declaredRoute: Route) => {
-      const routePath = preparePath(
-        this.environment.endpointPrefix,
-        declaredRoute.endpoint
-      );
+          if (route.type === RouteType.HTTP) {
+            let routeUrlMatchResult;
 
-      try {
-        this.requestNumbers[declaredRoute.uuid] = 1;
+            try {
+              routeUrlMatchResult = pathMatch(routePath)(request.path);
+            } catch (error: any) {
+              if (error instanceof Error) {
+                this.emit(
+                  'error',
+                  ServerErrorCodes.INVALID_ROUTE_PATH,
+                  pathMatchErrorBuilder(error),
+                  {
+                    routePath,
+                    routeUuid: route.uuid
+                  }
+                );
+              }
+              continue;
+            }
 
-        if (declaredRoute.type === RouteType.CRUD) {
-          this.createCRUDRoute(server, declaredRoute, routePath);
-        } else if (declaredRoute.type === RouteType.HTTP) {
-          this.createRESTRoute(server, declaredRoute, routePath);
+            if (
+              routeUrlMatchResult &&
+              (route.method === 'all' ||
+                route.method.toLowerCase() === request.method.toLowerCase())
+            ) {
+              if (!this.requestNumbers[route.uuid]) {
+                this.requestNumbers[route.uuid] = 1;
+              }
+
+              request.params = routeUrlMatchResult.params as Record<
+                string,
+                string
+              >;
+
+              // Evaluate response rules inside the loop to support FALLBACK mode
+              const triggeredRouteResponse = new ResponseRulesInterpreter(
+                route.responses,
+                fromExpressRequest(request),
+                route.responseMode,
+                this.environment,
+                this.processedDatabuckets,
+                this.globalVariables,
+                this.options.envVarsPrefix,
+                this.options.publicBaseUrl
+              ).chooseResponse(this.requestNumbers[route.uuid]);
+
+              // null response means no rule matched in FALLBACK mode, try next route
+              if (triggeredRouteResponse) {
+                matchingRoute = route;
+                matchingRouteResponse = triggeredRouteResponse;
+                matchingRoutePath = originalPath;
+                break routesLoop;
+              }
+              // Continue to next route if null (FALLBACK mode)
+            }
+          } else if (route.type === RouteType.CRUD) {
+            const crudRoutes = crudRoutesBuilder(routePath);
+
+            for (const crudRoute of crudRoutes) {
+              let crudUrlMatchResult;
+
+              try {
+                crudUrlMatchResult = pathMatch(crudRoute.path)(request.path);
+              } catch (error: any) {
+                if (error instanceof Error) {
+                  this.emit(
+                    'error',
+                    ServerErrorCodes.INVALID_ROUTE_PATH,
+                    pathMatchErrorBuilder(error),
+                    {
+                      routePath: crudRoute.path,
+                      routeUuid: route.uuid
+                    }
+                  );
+                }
+                continue;
+              }
+
+              if (
+                crudUrlMatchResult &&
+                crudRoute.method.toLowerCase() === request.method.toLowerCase()
+              ) {
+                if (!this.requestNumbers[route.uuid]) {
+                  this.requestNumbers[route.uuid] = 1;
+                }
+                request.params = crudUrlMatchResult.params as Record<
+                  string,
+                  string
+                >;
+
+                // Evaluate response rules inside the loop to support FALLBACK mode
+                const triggeredRouteResponse = new ResponseRulesInterpreter(
+                  route.responses,
+                  fromExpressRequest(request),
+                  route.responseMode,
+                  this.environment,
+                  this.processedDatabuckets,
+                  this.globalVariables,
+                  this.options.envVarsPrefix,
+                  this.options.publicBaseUrl
+                ).chooseResponse(this.requestNumbers[route.uuid]);
+
+                // null response means no rule matched in FALLBACK mode, try next route
+                if (triggeredRouteResponse) {
+                  matchingRoute = route;
+                  matchingRouteResponse = triggeredRouteResponse;
+                  crudId = crudRoute.id;
+                  matchingRoutePath = originalPath;
+                  break routesLoop;
+                }
+                // Continue to next route if null (FALLBACK mode)
+              }
+            }
+          }
         }
-      } catch (error: any) {
-        let errorCode = ServerErrorCodes.ROUTE_CREATION_ERROR;
 
-        // if invalid regex defined
-        if (error.message.indexOf('Invalid regular expression') > -1) {
-          errorCode = ServerErrorCodes.ROUTE_CREATION_ERROR_REGEX;
+        if (matchingRoute && matchingRouteResponse) {
+          request.effectiveRoute = matchingRoutePath;
+
+          this.routeHandler(
+            matchingRoute,
+            matchingRouteResponse,
+            request,
+            response,
+            crudId
+          );
+
+          return;
         }
 
-        this.emit('error', errorCode, error, {
-          routePath: declaredRoute.endpoint,
-          routeUUID: declaredRoute.uuid
-        });
+        // if no route matched, go to next middleware (global error handler, or proxy)
+        next();
       }
-    });
+    );
   }
 
   /**
    * Creates websocket routes from the given set of routes.
    *
-   * @param wsRoutes
    */
-  private createWSRoutes(wsRoutes: Route[]) {
-    wsRoutes.forEach((wsRoute) => {
-      const webSocketServer = new WebSocket.Server({
-        noServer: true
+  private createWebsocketRoutes() {
+    if (this.effectiveWebSocketRoutes.length > 0) {
+      this.effectiveWebSocketRoutes.forEach((wsRoute) => {
+        this.createWebsocketRoute(wsRoute);
       });
 
-      this.webSocketServers.push({
-        instance: webSocketServer,
-        path: preparePath(this.environment.endpointPrefix, wsRoute.endpoint)
-      });
+      this.registerWebSocketUpgradeHandler();
+    }
+  }
 
-      webSocketServer.on(
-        'connection',
-        this.createWebSocketConnectionHandler(webSocketServer, wsRoute)
-      );
+  /**
+   * Creates a single websocket route and adds it to the servers array.
+   *
+   * @param wsRoute
+   */
+  private createWebsocketRoute(wsRoute: Route) {
+    const webSocketServer = new WebSocket.Server({
+      noServer: true
     });
 
-    this.serverInstance.on('upgrade', (req, socket, head) => {
-      const urlParsed = parseUrl(req.url || '', true);
+    this.webSocketServers.push({
+      instance: webSocketServer,
+      path: wsRoute.endpoint,
+      routeUuid: wsRoute.uuid
+    });
 
-      // check if the request is a websocket upgrade request
-      if (req.headers.upgrade !== 'websocket') {
-        socket.write(`HTTP/${req.httpVersion} 400 Bad Request\r\n`);
-        socket.write('Content-Type: text/html\r\n');
-        socket.write('Content-length: 72\r\n\r\n');
-        socket.write(
-          'Invalid WebSocket upgrade request: "Upgrade: websocket" header not found'
+    webSocketServer.on(
+      'connection',
+      this.createWebSocketConnectionHandler(webSocketServer, wsRoute)
+    );
+  }
+
+  /**
+   * Registers the upgrade event handler for WebSocket connections.
+   * This is attached to the server instance only once.
+   */
+  private registerWebSocketUpgradeHandler() {
+    this.serverInstance.on('upgrade', this.webSocketUpgradeHandler);
+  }
+
+  private webSocketUpgradeHandler = (req, socket, head) => {
+    const urlParsed = parseUrl(req.url || '', true);
+
+    // check if the request is a websocket upgrade request
+    if (req.headers.upgrade !== 'websocket') {
+      socket.write(`HTTP/${req.httpVersion} 400 Bad Request\r\n`);
+      socket.write('Content-Type: text/html\r\n');
+      socket.write('Content-length: 72\r\n\r\n');
+      socket.write(
+        'Invalid WebSocket upgrade request: "Upgrade: websocket" header not found'
+      );
+      socket.destroy();
+
+      return;
+    }
+
+    for (const wsServer of this.webSocketServers) {
+      const paths = preparePath(this.environment.endpointPrefix, wsServer.path);
+      let pathMatchResult;
+
+      try {
+        pathMatchResult = pathMatch(paths.preparedPath)(
+          urlParsed.pathname || ''
         );
-        socket.destroy();
+      } catch (error: any) {
+        if (error instanceof Error) {
+          this.emit(
+            'error',
+            ServerErrorCodes.INVALID_ROUTE_PATH,
+            pathMatchErrorBuilder(error),
+            {
+              routePath: paths.original,
+              routeUuid: wsServer.routeUuid
+            }
+          );
+        }
+        continue;
+      }
+
+      if (pathMatchResult) {
+        req.params = pathMatchResult.params as Record<string, string>;
+
+        wsServer.instance.handleUpgrade(req, socket, head, (client) => {
+          wsServer.instance.emit('connection', client, req);
+        });
 
         return;
       }
+    }
 
-      for (const wsServer of this.webSocketServers) {
-        if (match(wsServer.path)(urlParsed.pathname || '')) {
-          wsServer.instance.handleUpgrade(req, socket, head, (client) => {
-            wsServer.instance.emit('connection', client, req);
-          });
-
-          return;
-        }
-      }
-
-      // if no route is matched (loop didn't return), close the connection
-      socket.write(`HTTP/${req.httpVersion} 404 Not Found\r\n`);
-      socket.write('Content-Type: text/html\r\n');
-      socket.write('Content-length: 38\r\n\r\n');
-      socket.write('No WebSocket route found for this path');
-      socket.destroy();
-    });
-  }
+    // if no route is matched (loop didn't return), close the connection
+    socket.write(`HTTP/${req.httpVersion} 404 Not Found\r\n`);
+    socket.write('Content-Type: text/html\r\n');
+    socket.write('Content-length: 38\r\n\r\n');
+    socket.write('No WebSocket route found for this path');
+    socket.destroy();
+  };
 
   /**
    * Creates a handler for a web socket connection received, if only any
@@ -1123,177 +1325,122 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     });
   }
 
-  /**
-   * Create a regular REST route (GET, POST, etc.)
-   *
-   * @param server
-   * @param route
-   * @param routePath
-   */
-  private createRESTRoute(
-    server: Application,
+  private routeHandler(
     route: Route,
-    routePath: string
+    triggeredRouteResponse: RouteResponse,
+    request: Request,
+    response: Response,
+    crudId?: ReturnType<typeof crudRoutesBuilder>[number]['id'] | null
   ) {
-    server[route.method](routePath, this.createRouteHandler(route));
-  }
+    generateRequestDatabuckets(
+      route,
+      this.environment,
+      request,
+      this.processedDatabuckets,
+      this.globalVariables,
+      this.options,
+      () => {
+        this.emitProcessedDatabuckets();
+      }
+    );
 
-  /**
-   * Create a CRUD route: GET, POST, PUT, PATCH, DELETE
-   *
-   * @param server
-   * @param route
-   * @param routePath
-   */
-  private createCRUDRoute(
-    server: Application,
-    route: Route,
-    routePath: string
-  ) {
-    const crudRoutes = crudRoutesBuilder(routePath);
+    this.requestNumbers[route.uuid] += 1;
 
-    for (const crudRoute of crudRoutes) {
-      server[crudRoute.method](
-        crudRoute.path,
-        this.createRouteHandler(route, crudRoute.id)
-      );
+    // save route and response UUIDs for logs (only in desktop app)
+    if (route.uuid && triggeredRouteResponse.uuid) {
+      response.routeUUID = route.uuid;
+      response.routeResponseUUID = triggeredRouteResponse.uuid;
     }
-  }
 
-  private createRouteHandler(
-    route: Route,
-    crudId?: ReturnType<typeof crudRoutesBuilder>[number]['id']
-  ) {
-    return (request: Request, response: Response, next: NextFunction) => {
-      this.generateRequestDatabuckets(route, this.environment, request);
+    const latency = getLatency(
+      triggeredRouteResponse.latency,
+      this.options.enableRandomLatency
+    );
 
-      // refresh environment data to get route changes that do not require a restart (headers, body, etc)
-      const currentRoute = this.getRefreshedRoute(route);
-
-      if (!currentRoute) {
-        this.emit('error', ServerErrorCodes.ROUTE_NO_LONGER_EXISTS, null, {
-          routePath: route.endpoint,
-          routeUUID: route.uuid
-        });
-
-        this.sendError(response, ServerMessages.ROUTE_NO_LONGER_EXISTS, 404);
-
-        return;
-      }
-
-      const enabledRouteResponse = new ResponseRulesInterpreter(
-        currentRoute.responses,
-        fromExpressRequest(request),
-        currentRoute.responseMode,
+    // add route latency if any
+    setTimeout(() => {
+      const contentType = GetRouteResponseContentType(
         this.environment,
-        this.processedDatabuckets,
-        this.globalVariables,
-        this.options.envVarsPrefix,
-        this.options.publicBaseUrl
-      ).chooseResponse(this.requestNumbers[route.uuid]);
-
-      if (!enabledRouteResponse) {
-        return next();
-      }
-
-      this.requestNumbers[route.uuid] += 1;
-
-      // save route and response UUIDs for logs (only in desktop app)
-      if (route.uuid && enabledRouteResponse.uuid) {
-        response.routeUUID = route.uuid;
-        response.routeResponseUUID = enabledRouteResponse.uuid;
-      }
-
-      const latency = getLatency(
-        enabledRouteResponse.latency,
-        this.options.enableRandomLatency
+        triggeredRouteResponse
       );
+      const routeContentType = GetContentType(triggeredRouteResponse.headers);
 
-      // add route latency if any
-      setTimeout(() => {
-        const contentType = GetRouteResponseContentType(
-          this.environment,
-          enabledRouteResponse
+      // set http code
+      response.status(triggeredRouteResponse.statusCode);
+
+      this.setHeaders(triggeredRouteResponse.headers, response, request);
+
+      // send the file
+      if (
+        triggeredRouteResponse.bodyType === BodyTypes.FILE &&
+        triggeredRouteResponse.filePath
+      ) {
+        this.sendFile(
+          route,
+          triggeredRouteResponse,
+          routeContentType,
+          request,
+          response
         );
-        const routeContentType = GetContentType(enabledRouteResponse.headers);
 
-        // set http code
-        response.status(enabledRouteResponse.statusCode);
+        // serve inline body or databucket
+      } else {
+        let templateParse = true;
 
-        this.setHeaders(enabledRouteResponse.headers, response, request);
+        if (contentType.includes('application/json')) {
+          response.set('Content-Type', 'application/json');
+        }
 
-        // send the file
+        // serve inline body as default
+        let content: any = triggeredRouteResponse.body;
+
         if (
-          enabledRouteResponse.bodyType === BodyTypes.FILE &&
-          enabledRouteResponse.filePath
+          triggeredRouteResponse.bodyType === BodyTypes.DATABUCKET &&
+          triggeredRouteResponse.databucketID
         ) {
-          this.sendFile(
-            route,
-            enabledRouteResponse,
-            routeContentType,
-            request,
-            response
+          // databuckets are parsed at the server start or beginning of first request execution (no need to parse templating again)
+          templateParse = false;
+
+          const servedDatabucket = this.processedDatabuckets.find(
+            (processedDatabucket) =>
+              processedDatabucket.id === triggeredRouteResponse.databucketID
           );
 
-          // serve inline body or databucket
-        } else {
-          let templateParse = true;
+          if (servedDatabucket) {
+            content = servedDatabucket.value;
 
-          if (contentType.includes('application/json')) {
-            response.set('Content-Type', 'application/json');
-          }
+            if (route.type === RouteType.CRUD && crudId) {
+              content = databucketActions(
+                crudId,
+                servedDatabucket,
+                request,
+                response,
+                route.responses[0].crudKey
+              );
+            }
 
-          // serve inline body as default
-          let content: any = enabledRouteResponse.body;
-
-          if (
-            enabledRouteResponse.bodyType === BodyTypes.DATABUCKET &&
-            enabledRouteResponse.databucketID
-          ) {
-            // databuckets are parsed at the server start or beginning of first request execution (no need to parse templating again)
-            templateParse = false;
-
-            const servedDatabucket = this.processedDatabuckets.find(
-              (processedDatabucket) =>
-                processedDatabucket.id === enabledRouteResponse.databucketID
-            );
-
-            if (servedDatabucket) {
-              content = servedDatabucket.value;
-
-              if (route.type === RouteType.CRUD && crudId) {
-                content = databucketActions(
-                  crudId,
-                  servedDatabucket,
-                  request,
-                  response,
-                  currentRoute.responses[0].crudKey
-                );
-              }
-
-              // if returned content is an array or object we need to stringify it for some values (array, object, booleans and numbers (bool and nb because expressjs cannot serve this as is))
-              if (
-                Array.isArray(content) ||
-                typeof content === 'object' ||
-                typeof content === 'boolean' ||
-                typeof content === 'number'
-              ) {
-                content = JSON.stringify(content);
-              }
+            // if returned content is an array or object we need to stringify it for some values (array, object, booleans and numbers (bool and nb because expressjs cannot serve this as is))
+            if (
+              Array.isArray(content) ||
+              typeof content === 'object' ||
+              typeof content === 'boolean' ||
+              typeof content === 'number'
+            ) {
+              content = JSON.stringify(content);
             }
           }
-
-          this.serveBody(
-            content || '',
-            route,
-            enabledRouteResponse,
-            request,
-            response,
-            templateParse
-          );
         }
-      }, latency);
-    };
+
+        this.serveBody(
+          content || '',
+          route,
+          triggeredRouteResponse,
+          request,
+          response,
+          templateParse
+        );
+      }
+    }, latency);
   }
 
   private executeCallbacks(
@@ -1734,8 +1881,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * @param server - express instance
    */
   private setCors(server: Application) {
-    if (this.environment.cors) {
-      server.options('/*', (req, res) => {
+    server.options('/*', (req, res, next) => {
+      if (this.environment.cors) {
         // override default CORS headers with environment's headers
         this.setHeaders(
           [...CORSHeaders, ...this.environment.headers],
@@ -1744,8 +1891,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         );
 
         res.status(200).end();
-      });
-    }
+      } else {
+        next();
+      }
+    });
   }
 
   /**
@@ -1756,78 +1905,81 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * @param server - server on which to launch the proxy
    */
   private enableProxy(server: Application) {
-    if (
-      this.environment.proxyMode &&
-      this.environment.proxyHost &&
-      IsValidURL(this.environment.proxyHost)
-    ) {
-      this.emit('creating-proxy');
+    const proxyInstance = createProxyMiddleware({
+      router: () => this.environment.proxyHost,
+      cookieDomainRewrite: { '*': '' },
+      target: this.environment.proxyHost,
+      secure: false,
+      changeOrigin: true,
+      pathRewrite: (path) => {
+        if (
+          this.environment.proxyRemovePrefix === true &&
+          this.environment.endpointPrefix.length > 0
+        ) {
+          const regExp = new RegExp(`^/${this.environment.endpointPrefix}`);
 
-      server.use(
-        createProxyMiddleware({
-          cookieDomainRewrite: { '*': '' },
-          target: this.environment.proxyHost,
-          secure: false,
-          changeOrigin: true,
-          pathRewrite: (path) => {
-            if (
-              this.environment.proxyRemovePrefix === true &&
-              this.environment.endpointPrefix.length > 0
-            ) {
-              const regExp = new RegExp(`^/${this.environment.endpointPrefix}`);
+          return path.replace(regExp, '');
+        }
 
-              return path.replace(regExp, '');
-            }
+        return path;
+      },
+      ssl: { ...this.tlsOptions, agent: false },
+      on: {
+        proxyReq: (proxyReq, request) => {
+          request.proxied = true;
 
-            return path;
-          },
-          ssl: { ...this.tlsOptions, agent: false },
-          on: {
-            proxyReq: (proxyReq, request) => {
-              request.proxied = true;
+          this.setHeaders(
+            this.environment.proxyReqHeaders,
+            proxyReq,
+            request as Request
+          );
 
-              this.setHeaders(
-                this.environment.proxyReqHeaders,
-                proxyReq,
-                request as Request
-              );
-
-              // re-stream the body (intercepted by body parser method)
-              if (request.rawBody) {
-                proxyReq.write(request.rawBody);
-              }
-            },
-            proxyRes: (proxyRes, request, response) => {
-              const buffers: Buffer[] = [];
-              proxyRes.on('data', (chunk) => {
-                buffers.push(chunk);
-              });
-              proxyRes.on('end', () => {
-                response.body = Buffer.concat(buffers);
-              });
-
-              this.setHeaders(
-                this.environment.proxyResHeaders,
-                proxyRes,
-                request as Request
-              );
-            },
-            error: (error, request, response) => {
-              this.emit('error', ServerErrorCodes.PROXY_ERROR, error);
-
-              this.sendError(
-                response as Response,
-                `${format(
-                  ServerMessages.PROXY_ERROR,
-                  this.environment.proxyHost
-                )} ${request.url}: ${error}`,
-                504
-              );
-            }
+          // re-stream the body (intercepted by body parser method)
+          if (request.rawBody) {
+            proxyReq.write(request.rawBody);
           }
-        })
-      );
-    }
+        },
+        proxyRes: (proxyRes, request, response) => {
+          const buffers: Buffer[] = [];
+          proxyRes.on('data', (chunk) => {
+            buffers.push(chunk);
+          });
+          proxyRes.on('end', () => {
+            response.body = Buffer.concat(buffers);
+          });
+
+          this.setHeaders(
+            this.environment.proxyResHeaders,
+            proxyRes,
+            request as Request
+          );
+        },
+        error: (error, request, response) => {
+          this.emit('error', ServerErrorCodes.PROXY_ERROR, error);
+
+          this.sendError(
+            response as Response,
+            `${format(
+              ServerMessages.PROXY_ERROR,
+              this.environment.proxyHost
+            )} ${request.url}: ${error}`,
+            504
+          );
+        }
+      }
+    });
+
+    server.use((req, res, next) => {
+      if (
+        this.environment.proxyMode &&
+        this.environment.proxyHost &&
+        IsValidURL(this.environment.proxyHost)
+      ) {
+        proxyInstance(req, res, next);
+      } else {
+        next();
+      }
+    });
   }
 
   /**
@@ -2097,289 +2249,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   }
 
   /**
-   * Parse all databuckets in the environment and set their parsed value to true except if they contain request helpers
-   * @param environment
-   */
-  private generateDatabuckets(environment: Environment) {
-    if (environment.data.length > 0) {
-      environment.data.forEach((databucket) => {
-        let newProcessedDatabucket: ProcessedDatabucket;
-
-        if (
-          new RegExp(
-            `{{2,3}[#(~\\s\\w ]*((?<![\\w])${requestHelperNames.join('|')})[)} ~]+`
-          ).exec(databucket.value)
-        ) {
-          // a request helper was found
-          newProcessedDatabucket = {
-            uuid: databucket.uuid,
-            id: databucket.id,
-            name: databucket.name,
-            value: databucket.value,
-            parsed: false,
-            validJson: false
-          };
-        } else {
-          let templateParsedContent;
-
-          try {
-            templateParsedContent = TemplateParser({
-              shouldOmitDataHelper: false,
-              content: databucket.value,
-              environment,
-              processedDatabuckets: this.processedDatabuckets,
-              globalVariables: this.globalVariables,
-              envVarsPrefix: this.options.envVarsPrefix,
-              publicBaseUrl: this.options.publicBaseUrl
-            });
-
-            const JSONParsedContent = JSON.parse(templateParsedContent);
-
-            newProcessedDatabucket = {
-              uuid: databucket.uuid,
-              id: databucket.id,
-              name: databucket.name,
-              value: JSONParsedContent,
-              parsed: true,
-              validJson: true
-            };
-          } catch (error: any) {
-            if (error instanceof SyntaxError) {
-              newProcessedDatabucket = {
-                uuid: databucket.uuid,
-                id: databucket.id,
-                name: databucket.name,
-                value: templateParsedContent,
-                parsed: true,
-                validJson: false
-              };
-            } else {
-              newProcessedDatabucket = {
-                uuid: databucket.uuid,
-                id: databucket.id,
-                name: databucket.name,
-                value: error.message,
-                parsed: true,
-                validJson: false
-              };
-            }
-          }
-        }
-        this.processedDatabuckets.push(newProcessedDatabucket);
-      });
-
-      this.emitProcessedDatabuckets();
-    }
-  }
-
-  /**
-   * Returns list of matched databucket ids in the given text.
-   *
-   * @param data text to be searched for possible databucket ids
-   */
-  private extractDatabucketIdsFromString(text?: string): string[] {
-    const matches = text?.matchAll(
-      new RegExp('data(?:Raw)? +[\'|"]{1}([^(\'|")]*)', 'g')
-    );
-
-    return [...(matches ?? [])].map((mtc) => mtc[1]);
-  }
-
-  /**
-   * Find and returns all unique databucket ids specified in callbacks
-   * of the given response.
-   * To achieve null safety, this will always return an empty set if no callbacks
-   * have been defined.
-   *
-   * @param response
-   * @param environment
-   */
-  private findDatabucketIdsInCallbacks(
-    response: RouteResponse,
-    environment: Environment
-  ): string[] {
-    let dataBucketIds: string[] = [];
-
-    if (response.callbacks && response.callbacks.length > 0) {
-      for (const invocation of response.callbacks) {
-        const callback = environment.callbacks.find(
-          (envCallback) => envCallback.uuid === invocation.uuid
-        );
-
-        if (!callback) {
-          continue;
-        }
-
-        dataBucketIds = [
-          ...dataBucketIds,
-          ...this.extractDatabucketIdsFromString(callback.uri),
-          ...this.extractDatabucketIdsFromString(callback.body),
-          ...this.extractDatabucketIdsFromString(callback.filePath),
-          ...this.findDatabucketIdsInHeaders(callback.headers)
-        ];
-
-        if (callback.databucketID) {
-          dataBucketIds.push(callback.databucketID);
-        }
-      }
-    }
-
-    return dataBucketIds;
-  }
-
-  /**
-   * Find data buckets referenced in the provided headers
-   *
-   * @param headers
-   */
-  private findDatabucketIdsInHeaders(headers: Header[]): string[] {
-    return headers.reduce<string[]>(
-      (acc, header) => [
-        ...acc,
-        ...this.extractDatabucketIdsFromString(header.value)
-      ],
-      []
-    );
-  }
-
-  /**
-   * Find databucket ids in the rules target and value of the given response
-   *
-   * @param response
-   */
-  private findDatabucketIdsInRules(response: RouteResponse): string[] {
-    let dataBucketIds: string[] = [];
-
-    response.rules.forEach((rule) => {
-      const splitRules = rule.modifier.split('.');
-      if (rule.target === 'data_bucket') {
-        dataBucketIds = [
-          ...dataBucketIds,
-          // split by dots, take first section, or second if first is a dollar
-          splitRules[0].startsWith('$') ? splitRules[1] : splitRules[0],
-          ...this.extractDatabucketIdsFromString(rule.value)
-        ];
-      }
-    });
-
-    return dataBucketIds;
-  }
-
-  /**
-   * Generate the databuckets that were not parsed at the server start
-   *
-   * @param route
-   * @param environment
-   * @param request
-   */
-  private generateRequestDatabuckets(
-    route: Route,
-    environment: Environment,
-    request: Request
-  ) {
-    // do not continue if all the buckets were previously parsed
-    if (
-      !this.processedDatabuckets.some(
-        (processedDatabucket) => !processedDatabucket.parsed
-      )
-    ) {
-      return;
-    }
-
-    let databucketIdsToParse = new Set<string>();
-
-    // find databucket ids in environment headers
-    this.findDatabucketIdsInHeaders(environment.headers).forEach(
-      (dataBucketId) => databucketIdsToParse.add(dataBucketId)
-    );
-
-    route.responses.forEach((response) => {
-      // capture databucket ids in body and relevant callback definitions
-      [
-        ...this.findDatabucketIdsInHeaders(response.headers),
-        ...this.extractDatabucketIdsFromString(response.body),
-        ...this.extractDatabucketIdsFromString(response.filePath),
-        ...this.findDatabucketIdsInCallbacks(response, environment),
-        ...this.findDatabucketIdsInRules(response)
-      ].forEach((dataBucketId) => databucketIdsToParse.add(dataBucketId));
-
-      if (response.databucketID) {
-        databucketIdsToParse.add(response.databucketID);
-      }
-    });
-
-    // capture databucket ids in found databuckets to allow for nested databucket parsing
-    let nestedDatabucketIds: string[] = [];
-
-    environment.data.forEach((databucket) => {
-      if (
-        databucketIdsToParse.has(databucket.id) ||
-        [...databucketIdsToParse.keys()].some((id) =>
-          databucket.name.toLowerCase().includes(id.toLowerCase())
-        )
-      ) {
-        nestedDatabucketIds = [
-          ...this.extractDatabucketIdsFromString(databucket.value)
-        ];
-      }
-    });
-
-    // add nested databucket ids at the beginning of the set to ensure they are parsed first
-    databucketIdsToParse = new Set([
-      ...nestedDatabucketIds,
-      ...databucketIdsToParse
-    ]);
-
-    if (databucketIdsToParse.size > 0) {
-      let targetDatabucket: ProcessedDatabucket | undefined;
-
-      for (const databucketIdToParse of databucketIdsToParse) {
-        targetDatabucket = this.processedDatabuckets.find(
-          (databucket) =>
-            databucket.id === databucketIdToParse ||
-            databucket.name
-              .toLowerCase()
-              .includes(databucketIdToParse.toLowerCase())
-        );
-
-        if (targetDatabucket && !targetDatabucket?.parsed) {
-          let content = targetDatabucket.value;
-
-          try {
-            content = TemplateParser({
-              shouldOmitDataHelper: false,
-              content: targetDatabucket.value,
-              environment,
-              processedDatabuckets: this.processedDatabuckets,
-              globalVariables: this.globalVariables,
-              request: fromExpressRequest(request),
-              envVarsPrefix: this.options.envVarsPrefix,
-              publicBaseUrl: this.options.publicBaseUrl
-            });
-
-            const JSONParsedcontent = JSON.parse(content);
-
-            targetDatabucket.value = JSONParsedcontent;
-            targetDatabucket.parsed = true;
-            targetDatabucket.validJson = true;
-          } catch (error: any) {
-            if (error instanceof SyntaxError) {
-              targetDatabucket.value = content;
-            } else {
-              targetDatabucket.value = error.message;
-            }
-
-            targetDatabucket.parsed = true;
-            targetDatabucket.validJson = false;
-          }
-        }
-      }
-
-      this.emitProcessedDatabuckets();
-    }
-  }
-
-  /**
    * Emit an event with the processed databuckets.
    * Remove the value from the processed databuckets to avoid sending
    * too much data to the client.
@@ -2475,5 +2344,125 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     }
 
     return resolvedPath;
+  }
+
+  /**
+   * List the routes from the environment, folders and disabled routes
+   */
+  private computeEffectiveRestRoutes() {
+    this.effectiveRestRoutes = routesFromFolder(
+      this.environment.rootChildren,
+      this.environment.folders,
+      this.environment.routes,
+      this.options.disabledRoutes,
+      [RouteType.HTTP, RouteType.CRUD]
+    );
+  }
+
+  /**
+   * List the WebSocket routes from the environment, folders and disabled routes
+   *
+   * @returns
+   */
+  private computeEffectiveWebSocketRoutes() {
+    this.effectiveWebSocketRoutes = routesFromFolder(
+      this.environment.rootChildren,
+      this.environment.folders,
+      this.environment.routes,
+      this.options.disabledRoutes,
+      [RouteType.WS]
+    );
+
+    return this.effectiveWebSocketRoutes;
+  }
+
+  /**
+   * Regenerates WebSocket routes by detecting changes and stopping/starting servers accordingly.
+   *
+   * @param previousWsRoutes Previous set of WebSocket routes
+   * @param newWsRoutes New set of WebSocket routes
+   */
+  private regenerateWebSocketRoutes = () => {
+    const previousWsRoutes = this.effectiveWebSocketRoutes;
+    const newWsRoutes = this.computeEffectiveWebSocketRoutes();
+
+    // If there are no more WebSocket routes, stop listening to upgrade events
+    if (previousWsRoutes.length > 0 && newWsRoutes.length === 0) {
+      this.serverInstance.removeListener(
+        'upgrade',
+        this.webSocketUpgradeHandler
+      );
+
+      BroadcastContext.getInstance().closeAll();
+    } else if (previousWsRoutes.length === 0 && newWsRoutes.length > 0) {
+      // start listening to upgrade events if there are new WebSocket routes
+      this.serverInstance.on('upgrade', this.webSocketUpgradeHandler);
+    }
+
+    // Handle deleted routes
+    previousWsRoutes.forEach((previousWsRoute) => {
+      if (
+        !newWsRoutes.some((newRoute) => newRoute.uuid === previousWsRoute.uuid)
+      ) {
+        this.closeWsServer(previousWsRoute);
+      }
+    });
+
+    // Handle new and modified routes
+    newWsRoutes.forEach((newWsRoute) => {
+      const existingWsRoute = previousWsRoutes.find(
+        (previousWsRoute) => previousWsRoute.uuid === newWsRoute.uuid
+      );
+
+      if (
+        existingWsRoute &&
+        deterministicStringify(existingWsRoute) !==
+          deterministicStringify(newWsRoute)
+      ) {
+        this.closeWsServer(existingWsRoute);
+        this.createWebsocketRoute(newWsRoute);
+      } else if (!existingWsRoute) {
+        // New route: create a WebSocket server
+        this.createWebsocketRoute(newWsRoute);
+      }
+    });
+  };
+
+  /**
+   * Close the WebSocket server associated with the provided route.
+   * Also, close all client connections as close() does not do it by default
+   *
+   * @param route
+   */
+  private closeWsServer(route: Route) {
+    const serverIndex = this.webSocketServers.findIndex(
+      (wsServer) => wsServer.routeUuid === route.uuid
+    );
+
+    if (serverIndex !== -1) {
+      this.webSocketServers[serverIndex].instance.clients.forEach((client) => {
+        client.terminate();
+      });
+      this.webSocketServers[serverIndex].instance.close();
+      BroadcastContext.getInstance().closeRoute(route);
+      this.webSocketServers.splice(serverIndex, 1);
+    }
+  }
+
+  /**
+   * Close all WebSocket servers and client connections. Used when stopping the server or when
+   * all WebSocket routes are deleted.
+   */
+  private closeWsServers() {
+    if (this.webSocketServers.length > 0) {
+      this.webSocketServers.forEach((webSocketServer) => {
+        webSocketServer.instance.clients.forEach((client) => {
+          client.terminate();
+        });
+        webSocketServer.instance.close();
+      });
+    }
+
+    BroadcastContext.getInstance().closeAll();
   }
 }

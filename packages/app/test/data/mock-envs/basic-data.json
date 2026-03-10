@@ -9,7 +9,7 @@
     {
       "uuid": "dd07b407-df1f-4393-83f2-7a832fdd6f99",
       "method": "get",
-      "endpoint": "*/:var/a(b)?c/[0-9]{1,5}",
+      "endpoint": "*/:var/a(b)?c",
       "documentation": "Test documentation",
       "responses": [
         {

@@ -1,7 +1,6 @@
 import { search } from '@jmespath-community/jmespath';
 import {
   Callback,
-  dedupSlashes,
   Header,
   InFlightRequest,
   InvokedCallback,
@@ -219,7 +218,7 @@ export function CreateTransaction(
     request: {
       method: request.method.toLowerCase() as keyof typeof Methods,
       urlPath: requestUrl.pathname,
-      route: request.route ? request.route.path : null,
+      route: request.effectiveRoute ? request.effectiveRoute : null,
       params: request.params
         ? Object.keys(request.params).map((paramName) => ({
             name: paramName,
@@ -361,16 +360,6 @@ export const convertPathToArray = (str: string): string | string[] => {
 
   return str;
 };
-
-/**
- * Prepare a path for express: add a leading slash, deduplicate slashes and replace spaces with %20
- *
- * @param endpointPrefix
- * @param endpoint
- * @returns
- */
-export const preparePath = (endpointPrefix: string, endpoint: string) =>
-  dedupSlashes(`/${endpointPrefix}/${endpoint.replace(/ /g, '%20')}`);
 
 /**
  * Escape special characters in a string to be used in a regex

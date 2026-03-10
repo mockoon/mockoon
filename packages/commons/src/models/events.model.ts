@@ -16,7 +16,6 @@ export type ServerEvents = {
     payload?: any
   ) => void;
   stopped: () => void;
-  'creating-proxy': () => void;
   started: () => void;
   'entering-request': () => void;
   'callback-invoked': (callback: InvokedCallback) => void;
