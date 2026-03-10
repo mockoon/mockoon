@@ -255,6 +255,7 @@ describe('Proxy (with TLS and proxy headers)', () => {
     await http.assertCallWithPort(get404CallWithParentheses, 3001);
     await environmentsLogs.clickMockButton(1);
     await routes.assertPath('test\\(data\\)');
+    await utils.waitForAutosave();
 
     // make sure that the call is not proxied anymore
     await navigation.switchView('ENV_LOGS');
