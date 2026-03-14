@@ -71,7 +71,7 @@
     "@angular/build": "20.3.14",
     "@angular/cli": "20.3.14",
     "@angular/common": "20.3.16",
-    "@angular/compiler": "20.3.16",
+    "@angular/compiler": "20.3.18",
     "@angular/compiler-cli": "20.3.16",
     "@angular/core": "20.3.16",
     "@angular/fire": "20.0.1",
