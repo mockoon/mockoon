@@ -1,13 +1,12 @@
-import { AsyncPipe, NgClass, NgIf } from '@angular/common';
+import { AsyncPipe, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   HostListener,
-  OnDestroy,
-  OnInit,
-  input,
-  inject
+  inject,
+  input
 } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -15,7 +14,7 @@ import {
   UntypedFormControl
 } from '@angular/forms';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subject, debounceTime, from, takeUntil, tap } from 'rxjs';
+import { Observable, debounceTime, from, switchMap, tap } from 'rxjs';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
@@ -31,7 +30,6 @@ import { Store } from 'src/renderer/app/stores/store';
   templateUrl: 'filter.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgClass,
     FormsModule,
     ReactiveFormsModule,
     FocusOnEventDirective,
@@ -41,21 +39,17 @@ import { Store } from 'src/renderer/app/stores/store';
     AsyncPipe
   ]
 })
-export class FilterComponent implements OnInit, OnDestroy {
+export class FilterComponent {
   private store = inject(Store);
   private formBuilder = inject(UntypedFormBuilder);
   private eventsService = inject(EventsService);
   private uiService = inject(UIService);
   private mainApiService = inject(MainApiService);
-
   public readonly filterName = input.required<keyof StoreType['filters']>();
   public readonly focusableInput = input.required<FocusableInputs>();
-  public readonly classes = input<string>(undefined);
-
   public filter: UntypedFormControl;
   public os: string;
   public os$: Observable<string>;
-  private destroy$ = new Subject<void>();
 
   @HostListener('keydown', ['$event'])
   public escapeFilterInput(event: KeyboardEvent) {
@@ -86,7 +80,7 @@ export class FilterComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit() {
+  constructor() {
     this.os$ = from(this.mainApiService.invoke('APP_GET_OS')).pipe(
       tap((os) => {
         this.os = os;
@@ -99,24 +93,19 @@ export class FilterComponent implements OnInit, OnDestroy {
         tap((search) =>
           this.store.update(updateFilterAction(this.filterName(), search))
         ),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed()
       )
       .subscribe();
 
-    this.store
-      .selectFilter(this.filterName())
+    toObservable(this.filterName)
       .pipe(
+        switchMap((filter) => this.store.selectFilter(filter)),
         tap((search) => {
           this.filter.patchValue(search, { emitEvent: false });
         }),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed()
       )
       .subscribe();
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
   }
 
   public clearFilter() {

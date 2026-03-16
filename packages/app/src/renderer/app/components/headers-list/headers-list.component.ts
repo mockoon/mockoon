@@ -1,14 +1,14 @@
-import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
-  OnDestroy,
   OnInit,
   Output,
   inject
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -18,13 +18,12 @@ import {
 } from '@angular/forms';
 import { Callback, Environment, Header, RouteResponse } from '@mockoon/commons';
 import { NgbTooltip, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
   filter,
   map,
-  takeUntil,
   tap
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
@@ -46,14 +45,13 @@ import { Store } from 'src/renderer/app/stores/store';
     FormsModule,
     ReactiveFormsModule,
     NgFor,
-    NgClass,
     NgbTypeahead,
     NgbTooltip,
     SvgComponent,
     AsyncPipe
   ]
 })
-export class HeadersListComponent implements OnInit, OnDestroy {
+export class HeadersListComponent implements OnInit {
   private formBuilder = inject(UntypedFormBuilder);
   private store = inject(Store);
 
@@ -77,25 +75,15 @@ export class HeadersListComponent implements OnInit, OnDestroy {
   public headerValuesSearch = this.buildSearch(headerValues);
   public deleteHeaderRequested$ = new TimedBoolean();
   private listenToChanges = true;
-  private destroy$ = new Subject<void>();
 
   public get headers() {
     return this.form.get('headers') as UntypedFormArray;
   }
 
-  ngOnInit() {
+  constructor() {
     this.form = this.formBuilder.group({
       headers: this.formBuilder.array([])
     });
-
-    // initialize the form depending on the env/route response headers
-    this.dataSubject$ = this.activeDataSubject$.pipe(
-      filter((dataSubject) => !!dataSubject),
-      this.store.distinctUUIDOrForce(),
-      tap((dataSubject) => {
-        this.replaceHeaders(dataSubject[this.headersPropertyName], false);
-      })
-    );
 
     // subscribe to changes and send new headers values to the store
     this.form.valueChanges
@@ -104,14 +92,20 @@ export class HeadersListComponent implements OnInit, OnDestroy {
         tap((formValue) => {
           this.headersUpdated.emit(formValue.headers);
         }),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed()
       )
       .subscribe();
   }
 
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
+  ngOnInit() {
+    // initialize the form depending on the env/route response headers
+    this.dataSubject$ = this.activeDataSubject$.pipe(
+      filter((dataSubject) => !!dataSubject),
+      this.store.distinctUUIDOrForce(),
+      tap((dataSubject) => {
+        this.replaceHeaders(dataSubject[this.headersPropertyName], false);
+      })
+    );
   }
 
   /**

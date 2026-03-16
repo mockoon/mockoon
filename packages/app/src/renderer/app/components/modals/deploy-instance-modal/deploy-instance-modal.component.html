@@ -39,7 +39,7 @@
           <app-svg
             icon="info"
             ngbTooltip="Customize the subdomain of your instance (e.g. {subdomain}.mockoon.app). Leave empty to use a random subdomain. Only letters, numbers, and dashes are allowed."
-          ></app-svg>
+          />
         </div>
         <div class="input-group-text text-warning">
           <small>
@@ -56,7 +56,7 @@
               !optionsForm.get('subdomain').errors &&
               !subdomainCheckInProgress
             ) {
-              <app-svg icon="check" size="12" class="text-success"></app-svg>
+              <app-svg icon="check" size="12" class="text-success" />
             }
           </small>
         </div>
@@ -71,12 +71,12 @@
           formControlName="visibility"
           [items]="visibilityToggle"
           [uncheckable]="false"
-        ></app-toggle>
+        />
         <div class="input-group-text">
           <app-svg
             icon="info"
             ngbTooltip="Public instances are accessible by anyone with the URL. Private instances are only accessible using a token. The instance's admin API is always protected by a token."
-          ></app-svg>
+          />
         </div>
       </div>
     </div>
@@ -91,13 +91,13 @@
             [enableCustomInput]="false"
             [items]="remoteConfig?.regions"
             dropdownId="deploy-region"
-          ></app-custom-select>
+          />
 
           <div class="input-group-text">
             <app-svg
               icon="info"
               ngbTooltip="The region where your instance will be deployed. After the deployment, the region cannot be changed unless you stop the instance and deploy it again."
-            ></app-svg>
+            />
           </div>
         </div>
       </div>
@@ -106,9 +106,8 @@
   @if (stopInstanceRequested()) {
     <div>
       <p class="mb-0">
-        <app-svg icon="warning" class="text-warning me-2"></app-svg>After
-        stopping an instance, restarting it may assign a different server and
-        URL.
+        <app-svg icon="warning" class="text-warning me-2" />After stopping an
+        instance, restarting it may assign a different server and URL.
       </p>
     </div>
   }
@@ -118,7 +117,7 @@
     <div class="col-6 d-flex align-items-center">
       <p
         class="mb-0"
-        [ngClass]="{
+        [class]="{
           'text-warning':
             user?.deployInstancesQuotaUsed >= user?.deployInstancesQuota
         }"
@@ -133,14 +132,14 @@
         target="_blank"
       >
         My account
-        <app-svg icon="open_in_new" class="ps-1" size="12"></app-svg>
+        <app-svg icon="open_in_new" class="ps-1" size="12" />
       </a>
     </div>
   }
   <div class="ms-auto d-flex align-items-center">
     @if (deployInProgress || subdomainCheckInProgress) {
       <div class="d-inline-block me-2">
-        <app-spinner></app-spinner>
+        <app-spinner />
       </div>
     }
 
@@ -163,7 +162,7 @@
         [disabled]="deployInProgress || subdomainCheckInProgress"
       >
         @if (stopInstanceRequested()) {
-          <app-svg icon="warning" class="text-warning"></app-svg> Confirm
+          <app-svg icon="warning" class="text-warning" /> Confirm
         } @else {
           Stop
         }

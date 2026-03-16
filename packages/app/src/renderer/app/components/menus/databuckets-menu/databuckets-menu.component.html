@@ -14,14 +14,14 @@
           (click)="addDatabucket()"
           ngbTooltip="Add data"
         >
-          <app-svg icon="add_box"></app-svg>
+          <app-svg icon="add_box" />
         </button>
       </div>
       <div class="flex-grow-1">
         <app-filter
           filterName="databuckets"
           [focusableInput]="focusableInputs.DATABUCKET_FILTER"
-        ></app-filter>
+        />
       </div>
     </div>
 
@@ -41,7 +41,7 @@
         >
           <a
             class="nav-link d-flex pe-0 hover-parent"
-            [ngClass]="{
+            [class]="{
               active: activeDatabucket?.uuid === databucket.uuid
             }"
             appScrollWhenActive
@@ -52,7 +52,7 @@
               @if (settings) {
                 <div
                   class="nav-link-label databucket-path"
-                  [ngClass]="{
+                  [class]="{
                     'text-truncate': settings.truncateRouteName,
                     'text-break': !settings.truncateRouteName
                   }"
@@ -71,7 +71,7 @@
                 >
                 <app-svg
                   class="me-2 databucket-processed-status"
-                  [ngClass]="{
+                  [class]="{
                     'text-muted':
                       !processedDatabuckets[databucket.uuid]?.parsed,
                     'text-success':
@@ -92,7 +92,7 @@
                         ? 'Not parsed yet (request helpers detected)'
                         : 'Not parsed yet (server is not running)'
                   "
-                ></app-svg>
+                />
 
                 <span class="text-truncate">{{
                   databucket.documentation
@@ -108,7 +108,7 @@
                 }"
                 [iconFaded]="true"
                 [noYPadding]="true"
-              ></app-dropdown-menu>
+              />
             </div>
           </a>
         </li>

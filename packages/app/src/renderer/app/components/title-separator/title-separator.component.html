@@ -1,20 +1,20 @@
-<div class="title-separator has-icon" [ngClass]="{ 'is-first': isFirst }">
+<div class="title-separator has-icon" [class]="{ 'is-first': isFirst }">
   <div
     class="title-separator-icon"
-    [ngClass]="(iconClasses || '') + (iconClickable ? ' cursor-pointer' : '')"
+    [class]="(iconClasses || '') + (iconClickable ? ' cursor-pointer' : '')"
     [ngbTooltip]="iconTooltip"
     (click)="iconClick()"
   >
-    <app-svg [icon]="icon"></app-svg>
+    <app-svg [icon]="icon" />
   </div>
   <div class="title-separator-text">
     <div>
       {{ heading }}
-      <ng-content select="[heading]"></ng-content>
+      <ng-content select="[heading]" />
     </div>
     <div class="text-truncate">
       {{ subheading }}
-      <ng-content select="[subheading]"></ng-content>
+      <ng-content select="[subheading]" />
     </div>
   </div>
 </div>

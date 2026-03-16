@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -18,7 +17,7 @@ import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
   templateUrl: './title-separator.component.html',
   styleUrls: ['./title-separator.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgClass, NgbTooltip, SvgComponent]
+  imports: [NgbTooltip, SvgComponent]
 })
 export class TitleSeparatorComponent {
   @Input()

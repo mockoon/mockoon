@@ -31,7 +31,7 @@
     <div class="col-auto">
       @if (isWeb) {
         <label id="browseOpenApi" for="importFile" class="btn btn-custom">
-          <app-svg icon="find_in_page" class="me-2"></app-svg>Browse
+          <app-svg icon="find_in_page" class="me-2" />Browse
           <input
             type="file"
             class="form-control visually-hidden"
@@ -47,7 +47,7 @@
           (click)="readFile()"
           [disabled]="taskInProgress()"
         >
-          <app-svg icon="find_in_page" class="me-2"></app-svg>Browse
+          <app-svg icon="find_in_page" class="me-2" />Browse
         </button>
       }
     </div>
@@ -61,7 +61,7 @@
       formControlName="content"
       [options]="defaultEditorConfig.options"
       [mode]="bodyEditorMode"
-    ></app-editor>
+    />
   </div>
   <p class="px-2 pt-2 mb-0 text-muted fst-italic">
     Note: URL references (<code>$ref</code>) will be automatically resolved.
@@ -71,7 +71,7 @@
 <div class="modal-footer">
   @if (taskInProgress()) {
     <div class="d-inline-block me-2">
-      <app-spinner></app-spinner>
+      <app-spinner />
     </div>
   }
   <button

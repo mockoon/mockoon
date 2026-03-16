@@ -21,7 +21,7 @@
   } as data"
 >
   <div class="d-flex h-100">
-    <app-routes-menu class="h-100"></app-routes-menu>
+    <app-routes-menu class="h-100" />
 
     <div class="d-flex flex-column flex-fill mh0">
       <ng-container *ngIf="data.activeRoute; else noActiveRoute">
@@ -38,7 +38,7 @@
               [enableCustomInput]="false"
               [items]="methods"
               dropdownId="methods"
-            ></app-custom-select>
+            />
             <span class="input-group-text">/</span>
             <input
               type="text"
@@ -60,7 +60,7 @@
                 <a
                   class="btn btn-link"
                   ngbTooltip="Open route in browser (GET method only)"
-                  [ngClass]="{
+                  [class]="{
                     'is-primary':
                       !data.environmentsStatus[data.activeEnvironment?.uuid]
                         ?.running || data.activeRoute?.method !== 'get'
@@ -68,7 +68,7 @@
                   href="{{ data.externalLink }}"
                   target="_blank"
                 >
-                  <app-svg icon="open_in_new"></app-svg>
+                  <app-svg icon="open_in_new" />
                 </a>
               }
 
@@ -77,7 +77,7 @@
                 class="input-group-text text-warning"
                 [ngbTooltip]="routeHasErrors"
               >
-                <app-svg icon="warning"></app-svg>
+                <app-svg icon="warning" />
               </span>
             </div>
           </div>
@@ -100,14 +100,14 @@
               prefix="streaming-modes"
               formControlName="streamingMode"
               [items]="streamingModes"
-            ></app-toggle>
+            />
             <div class="input-group">
               <div
                 class="input-group-prepend"
                 ngbTooltip="Streaming interval (ms)"
               >
                 <span class="input-group-text">
-                  <app-svg icon="access_time"></app-svg>
+                  <app-svg icon="access_time" />
                 </span>
               </div>
               <input
@@ -133,7 +133,7 @@
                 id="disabled-rules-warning-message"
                 [ngbTooltip]="texts.MINIMUM_STREAMING_INTERVAL_WARNING"
               >
-                <app-svg icon="warning" class="pe-1"></app-svg>
+                <app-svg icon="warning" class="pe-1" />
               </div>
             </div>
           </div>
@@ -155,7 +155,7 @@
               (click)="addRouteResponse()"
               ngbTooltip="Add response"
             >
-              <app-svg icon="add_box"></app-svg>
+              <app-svg icon="add_box" />
             </button>
 
             <!-- Route responses dropdown -->
@@ -210,7 +210,7 @@
 
               <div
                 class="dropdown-menu route-responses-dropdown-menu dropdown-menu-with-fixed-search"
-                [ngStyle]="{
+                [style]="{
                   'min-width':
                     routeResponsesDropdownElement.getBoundingClientRect()
                       .width + 'px',
@@ -226,7 +226,7 @@
                 <app-filter
                   filterName="routeResponses"
                   [focusableInput]="null"
-                ></app-filter>
+                />
                 <div class="dropdown-menu-content">
                   @for (
                     routeResponse of data.activeRouteResponses;
@@ -235,7 +235,7 @@
                     <button
                       type="button"
                       class="btn dropdown-item d-flex"
-                      [ngClass]="{
+                      [class]="{
                         active:
                           data.activeRouteResponse?.uuid === routeResponse.uuid,
                         'border-bottom-light':
@@ -284,7 +284,7 @@
                           class="px-2 text-primary"
                           ngbTooltip="Response linked to the data bucket for CRUD operations"
                         >
-                          <app-svg icon="data"></app-svg>
+                          <app-svg icon="data" />
                         </span>
                       </ng-container>
                       <ng-container
@@ -297,7 +297,7 @@
                           *ngIf="routeResponse.default"
                           class="px-2"
                           (click)="setDefaultRouteResponse(null, $event)"
-                          [ngClass]="{
+                          [class]="{
                             'text-primary':
                               !rulesNotUsingDefaultResponse.includes(
                                 data.activeRoute?.responseMode
@@ -308,7 +308,7 @@
                           }"
                           [ngbTooltip]="data.defaultResponseTooltip"
                         >
-                          <app-svg icon="flag"></app-svg>
+                          <app-svg icon="flag" />
                         </span>
                         <span
                           *ngIf="!routeResponse.default"
@@ -318,7 +318,7 @@
                           class="text-muted px-2"
                           ngbTooltip="Make route response as default"
                         >
-                          <app-svg icon="outlined_flag"></app-svg>
+                          <app-svg icon="outlined_flag" />
                         </span>
                       </ng-container>
                     </button>
@@ -337,7 +337,7 @@
                   : responseModes
               "
               appTourStep="tour-route-response-modes"
-            ></app-toggle>
+            />
           </div>
 
           <div *ngIf="data.activeRouteResponse" class="d-flex p-2">
@@ -346,7 +346,7 @@
               <li class="nav-item">
                 <a
                   class="nav-link"
-                  [ngClass]="{ active: data.activeTab === 'RESPONSE' }"
+                  [class]="{ active: data.activeTab === 'RESPONSE' }"
                   (click)="setActiveTab('RESPONSE')"
                   >{{
                     data.activeRoute?.type === 'http' ||
@@ -360,7 +360,7 @@
               <li class="nav-item" *ngIf="data.activeRoute.type !== 'ws'">
                 <a
                   class="nav-link d-flex align-items-center"
-                  [ngClass]="{ active: data.activeTab === 'HEADERS' }"
+                  [class]="{ active: data.activeTab === 'HEADERS' }"
                   (click)="setActiveTab('HEADERS')"
                 >
                   Headers
@@ -384,7 +384,7 @@
               >
                 <a
                   class="nav-link d-flex align-items-center"
-                  [ngClass]="{ active: data.activeTab === 'RULES' }"
+                  [class]="{ active: data.activeTab === 'RULES' }"
                   (click)="setActiveTab('RULES')"
                 >
                   <app-svg
@@ -397,7 +397,7 @@
                     id="disabled-rules-warning-icon"
                     icon="warning"
                     class="text-warning pe-2"
-                  ></app-svg>
+                  />
                   Rules
                   <span
                     *ngIf="data.activeRouteResponse?.rules.length"
@@ -417,7 +417,7 @@
               >
                 <a
                   class="nav-link d-flex align-items-center"
-                  [ngClass]="{ active: data.activeTab === 'CALLBACKS' }"
+                  [class]="{ active: data.activeTab === 'CALLBACKS' }"
                   (click)="setActiveTab('CALLBACKS')"
                 >
                   Callbacks
@@ -439,7 +439,7 @@
               >
                 <a
                   class="nav-link"
-                  [ngClass]="{ active: data.activeTab === 'SETTINGS' }"
+                  [class]="{ active: data.activeTab === 'SETTINGS' }"
                   (click)="setActiveTab('SETTINGS')"
                   >Settings</a
                 >
@@ -454,8 +454,8 @@
               (click)="duplicateRouteResponse()"
             >
               <span ngbTooltip="Duplicate response">
-                <app-svg icon="content_copy"></app-svg
-              ></span>
+                <app-svg icon="content_copy" />
+              </span>
             </button>
 
             <!-- Response delete button: show anywhere if http and more than one response, or only after the first response if on a crud route -->
@@ -477,14 +477,16 @@
                   data.deleteCurrentRouteResponseRequested?.enabled === false
                 "
                 ngbTooltip="Delete response"
-                ><app-svg icon="delete"></app-svg
-              ></span>
+              >
+                <app-svg icon="delete" />
+              </span>
               <span
                 *ngIf="data.deleteCurrentRouteResponseRequested?.enabled"
                 class="text-danger"
                 ngbTooltip="Confirm deletion"
-                ><app-svg icon="delete"></app-svg
-              ></span>
+              >
+                <app-svg icon="delete" />
+              </span>
             </button>
           </div>
         </div>
@@ -502,7 +504,7 @@
               <!-- http: status code + latency, crud: databucket id + latency (if default response), otherwise same as http -->
               <div class="mt-3 mx-2">
                 <div
-                  [ngClass]="{
+                  [class]="{
                     'route-responses-http':
                       data.activeRoute?.type === 'http' ||
                       (data.activeRoute?.type === 'crud' &&
@@ -528,7 +530,7 @@
                     placeholderClasses="text-warning"
                     [clearable]="false"
                     [defaultClearValue]="''"
-                  ></app-custom-select>
+                  />
 
                   <div
                     *ngIf="
@@ -559,14 +561,13 @@
                     [hasCategory]="true"
                     [validation]="statusCodeValidation"
                     dropdownId="status-code"
-                  >
-                  </app-custom-select>
+                  />
 
                   <span
                     class="input-group-text"
                     ngbTooltip="Response latency (ms)"
                   >
-                    <app-svg icon="access_time"></app-svg>
+                    <app-svg icon="access_time" />
                   </span>
                   <input
                     type="number"
@@ -610,7 +611,7 @@
                     label="Body"
                     [items]="bodyType$ | async"
                     [uncheckable]="false"
-                  ></app-toggle>
+                  />
                 </div>
 
                 <!-- body editor -->
@@ -626,8 +627,7 @@
                           [mode]="data.bodyEditorConfig?.mode"
                           [uuid]="data.activeRouteResponse?.uuid"
                           formControlName="body"
-                        >
-                        </app-editor>
+                        />
                       </div>
                       <div>
                         <button
@@ -662,7 +662,7 @@
                       class="btn btn-custom"
                       ngbTooltip="Clear"
                     >
-                      <app-svg icon="clear"></app-svg>
+                      <app-svg icon="clear" />
                     </button>
 
                     <!-- File options dropdown -->
@@ -674,7 +674,7 @@
                           filePath: data.activeRouteResponse?.filePath,
                           environmentUuid: data.activeEnvironment?.uuid
                         }"
-                      ></app-dropdown-menu>
+                      />
                     </div>
                   </div>
 
@@ -721,7 +721,7 @@
                       placeholder="Select a databucket"
                       [clearable]="true"
                       [defaultClearValue]="''"
-                    ></app-custom-select>
+                    />
                   </div>
                 </ng-container>
               </ng-container>
@@ -741,7 +741,7 @@
                 headersPropertyName="headers"
                 (headersUpdated)="routeHeadersUpdated($event)"
                 (headerAdded)="scrollToBottom(routeHeadersContainer)"
-              ></app-headers-list>
+              />
             </div>
           </ng-container>
 
@@ -752,11 +752,8 @@
               #routeResponseRulesContainer
             >
               <app-route-response-rules
-                [activeRouteResponse$]="activeRouteResponse$"
-                [activeRoute$]="activeRoute$"
                 (ruleAdded)="scrollToBottom(routeResponseRulesContainer)"
-              >
-              </app-route-response-rules>
+              />
             </div>
           </ng-container>
 
@@ -767,11 +764,8 @@
               #routeCallbacksContainer
             >
               <app-route-callbacks
-                [activeRouteResponse$]="activeRouteResponse$"
-                [activeRoute$]="activeRoute$"
                 (callbackAdded)="scrollToBottom(routeCallbacksContainer)"
-              >
-              </app-route-callbacks>
+              />
             </div>
           </ng-container>
 
@@ -800,7 +794,7 @@
                     icon="info"
                     ngbTooltip="Helpers like {{ '{' + '{' }}body{{ '}' + '}' }}
         won't be interpreted and file content will be directly streamed (better performances)"
-                  ></app-svg>
+                  />
                 </div>
               </div>
               <div
@@ -824,7 +818,7 @@
                   <app-svg
                     icon="info"
                     ngbTooltip="This will also fallback to use Body content that is present in the editor"
-                  ></app-svg>
+                  />
                 </div>
               </div>
             </div>
@@ -863,7 +857,7 @@
                   [ngbTooltip]="lastLogTooltip"
                   tooltipClass="text-start"
                 >
-                  <app-svg icon="warning"></app-svg>
+                  <app-svg icon="warning" />
                 </span>
                 <ng-template #lastLogTooltip>
                   <div class="text-left">

@@ -2,7 +2,7 @@
 @let activeDatabucket = activeDatabucket$ | async;
 
 <div class="d-flex h-100">
-  <app-databuckets-menu class="h-100"></app-databuckets-menu>
+  <app-databuckets-menu class="h-100" />
 
   <div class="d-flex flex-column flex-fill mh0">
     @if (activeDatabucket) {
@@ -39,8 +39,7 @@
             mode="json"
             [uuid]="activeDatabucket.uuid"
             formControlName="value"
-          >
-          </app-editor>
+          />
         </div>
 
         <div
@@ -57,7 +56,7 @@
           <button
             id="databucket-processed-status"
             class="btn btn-link btn-icon pe-0"
-            [ngClass]="{
+            [class]="{
               'text-muted':
                 !processedDatabuckets[activeDatabucket.uuid]?.parsed,
               'text-success':
@@ -87,7 +86,7 @@
                 )
             "
           >
-            <small class="p-0"><app-svg icon="data"></app-svg></small>
+            <small class="p-0"><app-svg icon="data" /></small>
           </button>
         </div>
       </ng-container>

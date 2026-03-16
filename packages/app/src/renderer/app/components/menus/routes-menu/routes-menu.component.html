@@ -18,25 +18,25 @@
         type="button"
         ngbDropdownToggle
       >
-        <app-svg icon="add_box"></app-svg>
+        <app-svg icon="add_box" />
       </button>
       <div class="dropdown-menu" id="routes-add-dropdown-menu" ngbDropdownMenu>
         <button class="btn dropdown-item" (click)="addCRUDRouteTemplate()">
-          <app-svg icon="magic" class="me-1"></app-svg> Assistants and templates
+          <app-svg icon="magic" class="me-1" /> Assistants and templates
         </button>
         <button class="btn dropdown-item" (click)="addCRUDRoute()">
-          <app-svg icon="endpoints" class="me-1"></app-svg> CRUD route
+          <app-svg icon="endpoints" class="me-1" /> CRUD route
         </button>
         <button class="btn dropdown-item" (click)="addHTTPRoute()">
-          <app-svg icon="endpoint" class="me-1"></app-svg> HTTP route
+          <app-svg icon="endpoint" class="me-1" /> HTTP route
         </button>
         @if (!isActiveEnvironmentCloud) {
           <button class="btn dropdown-item" (click)="addWebSocketRoute()">
-            <app-svg icon="websocket" class="me-1"></app-svg> WebSocket
+            <app-svg icon="websocket" class="me-1" /> WebSocket
           </button>
         }
         <button class="btn dropdown-item" (click)="addFolder()">
-          <app-svg icon="folder" class="me-1"></app-svg> Folder
+          <app-svg icon="folder" class="me-1" /> Folder
         </button>
       </div>
     </div>
@@ -45,7 +45,7 @@
       <app-filter
         filterName="routes"
         [focusableInput]="focusableInputs.ROUTE_FILTER"
-      ></app-filter>
+      />
     </div>
   </div>
 
@@ -59,8 +59,7 @@
           [ngTemplateOutletContext]="{
             folder: rootFolder
           }"
-        >
-        </ng-container>
+        />
       </ul>
     }
 
@@ -83,8 +82,7 @@
                 parentChainId === undefined ? ['root'] : parentChainId,
               level: level === undefined ? 0 : level
             }"
-          >
-          </ng-container>
+          />
         } @else if (child.type === 'route') {
           <ng-container
             [ngTemplateOutlet]="routeItemTemplate"
@@ -96,7 +94,7 @@
                 parentChainId === undefined ? ['root'] : parentChainId,
               level: level === undefined ? 0 : level
             }"
-          ></ng-container>
+          />
         }
       }
     </ng-template>
@@ -111,7 +109,7 @@
     >
       <li
         class="nav-item"
-        [ngClass]="{ 'd-none': routesFilter }"
+        [class]="{ 'd-none': routesFilter }"
         appDraggable
         appDropzone
         dragContainer="routes"
@@ -125,9 +123,8 @@
         <!-- Calculate padding of 2 rem + 0.5 (gap between the folder icon and folder name) -->
         <a
           class="nav-link d-flex pe-0 hover-parent"
-          [ngStyle]="{
-            'padding-left.rem':
-              routesFilter || !level ? undefined : level * 2 + 0.5
+          [style]="{
+            'padding-left': `${routesFilter || !level ? undefined : level * 2 + 0.5}rem`
           }"
           appScrollWhenActive
           [formGroup]="folderForm"
@@ -140,17 +137,17 @@
                   ? 'folder'
                   : 'folder_open'
               "
-            ></app-svg>
+            />
           </div>
           <app-editable-element
-            [ngClass]="{
+            [class]="{
               'text-truncate': settings.truncateRouteName,
               'text-break': !settings.truncateRouteName
             }"
             [text]="folder.name"
             formControlName="name"
             (editChange)="editFolder(folder, $event)"
-          ></app-editable-element>
+          />
           <div class="ms-auto">
             <app-dropdown-menu
               [idPrefix]="'folder-' + folder.uuid"
@@ -161,7 +158,7 @@
               }"
               [iconFaded]="true"
               [noYPadding]="true"
-            ></app-dropdown-menu>
+            />
           </div>
         </a>
       </li>
@@ -169,14 +166,14 @@
       <!-- Display sub items if folder is not collapsed or if a search is in progress -->
       @if (!collapsedFolders.includes(folder.uuid) || routesFilter) {
         @if (folder.children.length === 0) {
-          <li class="nav-item" [ngClass]="{ 'd-none': routesFilter }">
+          <li class="nav-item" [class]="{ 'd-none': routesFilter }">
             <!-- Calculate padding of 2 rem + 0.5 (gap between the folder icon and folder name) -->
             <a
               class="nav-link disabled"
-              [ngStyle]="{
-                'padding-left.rem': routesFilter
-                  ? undefined
-                  : (level + 1) * 2 + 0.5
+              [style]="{
+                'padding-left': `${
+                  routesFilter ? undefined : (level + 1) * 2 + 0.5
+                }rem`
               }"
               >Folder is empty</a
             >
@@ -191,8 +188,7 @@
               parentChainId: parentChainId.concat(folder.uuid),
               level: level + 1
             }"
-          >
-          </ng-container>
+          />
         }
       }
     </ng-template>
@@ -208,7 +204,7 @@
     >
       <li
         class="nav-item"
-        [ngClass]="{ 'd-none': isHidden$ | async }"
+        [class]="{ 'd-none': isHidden$ | async }"
         appDraggable
         appDropzone
         dragContainer="routes"
@@ -222,11 +218,10 @@
         <!-- Calculate padding of 2 rem + 0.5 (gap between the folder icon and folder name) -->
         <a
           class="nav-link d-flex pe-0 hover-parent"
-          [ngStyle]="{
-            'padding-left.rem':
-              routesFilter || !level ? undefined : level * 2 + 0.5
+          [style]="{
+            'padding-left': `${routesFilter || !level ? undefined : level * 2 + 0.5}rem`
           }"
-          [ngClass]="{
+          [class]="{
             active: activeRoute?.uuid === route.uuid,
             'route-disabled': disabledRoutes.includes(route.uuid)
           }"
@@ -237,7 +232,7 @@
           <div class="d-flex flex-column mw0">
             <div
               class="nav-link-label"
-              [ngClass]="{
+              [class]="{
                 'text-truncate': settings.truncateRouteName,
                 'text-break': !settings.truncateRouteName
               }"
@@ -270,28 +265,28 @@
                   icon="shuffle"
                   size="14"
                   ngbTooltip="Random response mode activated"
-                ></app-svg>
+                />
               } @else if (route.responseMode === ResponseMode.SEQUENTIAL) {
                 <app-svg
                   class="text-primary me-2"
                   icon="repeat"
                   size="14"
                   ngbTooltip="Sequential response mode activated"
-                ></app-svg>
+                />
               } @else if (route.responseMode === ResponseMode.DISABLE_RULES) {
                 <app-svg
                   class="text-warning me-2"
                   icon="rule"
                   size="14"
                   ngbTooltip="Disabled rules mode activated"
-                ></app-svg>
+                />
               } @else if (route.responseMode === ResponseMode.FALLBACK) {
                 <app-svg
                   class="text-primary me-2"
                   icon="low_priority"
                   size="14"
                   ngbTooltip="Fallback mode activated"
-                ></app-svg>
+                />
               }
 
               @if (duplicatedRoutes[activeEnvironment.uuid]?.has(route.uuid)) {
@@ -300,7 +295,7 @@
                   icon="warning"
                   size="12"
                   ngbTooltip="Route is duplicated (same endpoint and method)"
-                ></app-svg>
+                />
               }
 
               <span class="text-truncate">
@@ -324,7 +319,7 @@
               }"
               [iconFaded]="true"
               [noYPadding]="true"
-            ></app-dropdown-menu>
+            />
           </div>
         </a>
       </li>

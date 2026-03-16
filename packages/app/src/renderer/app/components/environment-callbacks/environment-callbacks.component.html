@@ -9,7 +9,7 @@
 @let hasCallbacks = hasCallbacks$ | async;
 
 <div class="d-flex h-100">
-  <app-callbacks-menu class="h-100"></app-callbacks-menu>
+  <app-callbacks-menu class="h-100" />
 
   <div class="d-flex flex-column flex-fill mh0">
     @if (activeCallback) {
@@ -18,7 +18,7 @@
           <li class="nav-item">
             <a
               class="nav-link"
-              [ngClass]="{ active: activeTab === 'SPEC' }"
+              [class]="{ active: activeTab === 'SPEC' }"
               (click)="setActiveTab('SPEC')"
               >Definition</a
             >
@@ -26,7 +26,7 @@
           <li class="nav-item">
             <a
               class="nav-link d-flex align-items-center"
-              [ngClass]="{ active: activeTab === 'USAGE' }"
+              [class]="{ active: activeTab === 'USAGE' }"
               (click)="setActiveTab('USAGE')"
             >
               Usage
@@ -71,7 +71,7 @@
               [enableCustomInput]="false"
               [items]="callbackMethods"
               dropdownId="cbmethods"
-            ></app-custom-select>
+            />
 
             <div class="col-10 ps-2">
               <input
@@ -91,7 +91,7 @@
               <li class="nav-item">
                 <a
                   class="nav-link"
-                  [ngClass]="{ active: activeSpecTab === 'BODY' }"
+                  [class]="{ active: activeSpecTab === 'BODY' }"
                   (click)="setActiveSpecTab('BODY')"
                   >Body</a
                 >
@@ -99,7 +99,7 @@
               <li class="nav-item">
                 <a
                   class="nav-link"
-                  [ngClass]="{ active: activeSpecTab === 'HEADERS' }"
+                  [class]="{ active: activeSpecTab === 'HEADERS' }"
                   (click)="setActiveSpecTab('HEADERS')"
                   >Headers</a
                 >
@@ -120,8 +120,7 @@
                 headersPropertyName="headers"
                 (headersUpdated)="headersUpdated($event)"
                 (headerAdded)="scrollToBottom(responseCallbackHeadersContainer)"
-              >
-              </app-headers-list>
+              />
             </div>
           } @else if (activeSpecTab === 'BODY') {
             <!-- Editor -->
@@ -144,7 +143,7 @@
                     label="Body"
                     [items]="bodyType$ | async"
                     [uncheckable]="false"
-                  ></app-toggle>
+                  />
                 </div>
 
                 @if (activeCallback?.bodyType === 'INLINE') {
@@ -155,8 +154,7 @@
                       mode="json"
                       [uuid]="activeCallback?.uuid"
                       formControlName="body"
-                    >
-                    </app-editor>
+                    />
                   </div>
                 }
 
@@ -177,7 +175,7 @@
                         class="btn btn-custom"
                         ngbTooltip="Clear"
                       >
-                        <app-svg icon="clear"></app-svg>
+                        <app-svg icon="clear" />
                       </button>
                     }
                     <!-- File options dropdown -->
@@ -189,7 +187,7 @@
                           filePath: activeCallback?.filePath,
                           environmentUuid: activeEnvironment?.uuid
                         }"
-                      ></app-dropdown-menu>
+                      />
                     </div>
                   </div>
 
@@ -228,7 +226,7 @@
                       placeholder="Select a databucket"
                       [clearable]="true"
                       [defaultClearValue]="''"
-                    ></app-custom-select>
+                    />
                   </div>
                 }
               </div>

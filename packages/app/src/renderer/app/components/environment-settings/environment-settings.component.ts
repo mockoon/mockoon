@@ -1,11 +1,6 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-  inject
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -14,8 +9,8 @@ import {
 } from '@angular/forms';
 import { Environment, EnvironmentDefault } from '@mockoon/commons';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subject, combineLatest, merge } from 'rxjs';
-import { filter, map, takeUntil, tap } from 'rxjs/operators';
+import { Observable, combineLatest, merge } from 'rxjs';
+import { filter, map, tap } from 'rxjs/operators';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TitleSeparatorComponent } from 'src/renderer/app/components/title-separator/title-separator.component';
 import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
@@ -44,12 +39,11 @@ import { Config } from 'src/renderer/config';
     AsyncPipe
   ]
 })
-export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
+export class EnvironmentSettingsComponent {
   private formBuilder = inject(UntypedFormBuilder);
   private environmentsService = inject(EnvironmentsService);
   private store = inject(Store);
   private dialogsService = inject(DialogsService);
-
   public activeEnvironment$: Observable<Environment>;
   public instanceUrl$: Observable<string>;
   public activeEnvironmentForm: UntypedFormGroup;
@@ -66,9 +60,8 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
     }
   ];
   public isWeb = Config.isWeb;
-  private destroy$ = new Subject<void>();
 
-  ngOnInit() {
+  constructor() {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.instanceUrl$ = combineLatest([
       this.activeEnvironment$,
@@ -85,37 +78,7 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
         return this.isWeb ? urls.webUrl : urls.localUrl;
       })
     );
-    this.initForms();
-    this.initFormValues();
-  }
 
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
-  }
-
-  /**
-   * Open file browsing dialog
-   */
-  public browseFiles(target: string) {
-    this.dialogsService
-      .showOpenDialog('Choose a file', null, false)
-      .pipe(
-        tap((filePaths) => {
-          if (filePaths[0]) {
-            this.activeEnvironmentForm
-              .get(['tlsOptions', target])
-              .setValue(filePaths[0]);
-          }
-        })
-      )
-      .subscribe();
-  }
-
-  /**
-   * Init active environment form and subscribe to changes
-   */
-  private initForms() {
     this.tlsOptionsFormGroup = this.formBuilder.group({
       enabled: [EnvironmentDefault.tlsOptions.enabled],
       type: [EnvironmentDefault.tlsOptions.type],
@@ -150,15 +113,10 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
         tap((newProperty) => {
           this.environmentsService.updateActiveEnvironment(newProperty);
         }),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed()
       )
       .subscribe();
-  }
 
-  /**
-   * Listen to stores to init form values
-   */
-  private initFormValues() {
     // subscribe to active environment changes to reset the form
     this.activeEnvironment$
       .pipe(
@@ -178,7 +136,25 @@ export class EnvironmentSettingsComponent implements OnInit, OnDestroy {
             { emitEvent: false }
           );
         }),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed()
+      )
+      .subscribe();
+  }
+
+  /**
+   * Open file browsing dialog
+   */
+  public browseFiles(target: string) {
+    this.dialogsService
+      .showOpenDialog('Choose a file', null, false)
+      .pipe(
+        tap((filePaths) => {
+          if (filePaths[0]) {
+            this.activeEnvironmentForm
+              .get(['tlsOptions', target])
+              .setValue(filePaths[0]);
+          }
+        })
       )
       .subscribe();
   }
