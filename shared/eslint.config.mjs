@@ -107,6 +107,7 @@ export const configs = [
       ],
       '@typescript-eslint/prefer-regexp-exec': 'off',
       '@typescript-eslint/adjacent-overload-signatures': 'off',
+      'preserve-caught-error': 'off',
       'arrow-body-style': 'error',
       curly: 'error',
       eqeqeq: ['error', 'smart'],

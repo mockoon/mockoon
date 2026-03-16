@@ -22,17 +22,8 @@ export const MarkedOptionsFactory = (): MarkedOptions => {
 
   renderer.hr = () => '<hr class="my-5">';
 
-  renderer.heading = function ({ text, depth, tokens }) {
-    let hasVertBar = false;
-
-    if (text.includes('|')) {
-      hasVertBar = true;
-      text = text.replace('|', '');
-    }
-
-    return `<h${depth} class="mt-5 mb-4">${
-      hasVertBar ? '<span class="text-primary pe-2">|</span>' : ''
-    }${this.parser.parseInline(tokens)}</h${depth}>`;
+  renderer.heading = function ({ depth, tokens }) {
+    return `<h${depth} class="mt-5 mb-4">${this.parser.parseInline(tokens)}</h${depth}>`;
   };
 
   return {

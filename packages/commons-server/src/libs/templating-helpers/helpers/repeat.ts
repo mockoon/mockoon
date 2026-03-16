@@ -3,7 +3,7 @@ import { EOL } from 'os';
 
 const repeat = function (...args: any[]) {
   let content = '';
-  let count = 0;
+  let count: number;
   const options = args[args.length - 1];
   const data = { ...options.data };
 
@@ -30,7 +30,7 @@ const repeat = function (...args: any[]) {
     if (options.hash.comma !== false) {
       // Trim any whitespace left by handlebars and add a comma if it doesn't already exist,
       // also trim any trailing commas that might be at the end of the loop
-      content = content.trimRight();
+      content = content.trimEnd();
       if (i < count - 1 && !content.endsWith(',')) {
         content += ',';
       } else if (i === count - 1 && content.endsWith(',')) {
