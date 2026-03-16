@@ -235,7 +235,7 @@ export const getFirstRouteAndResponseUUIDs = (
 ): { routeUUID: string | null; routeResponseUUID: string | null } => {
   let routeUUID = null;
   let routeResponseUUID = null;
-  let route: Route | null = null;
+  let route: Route;
 
   if (!environment || environment.routes.length === 0) {
     return { routeUUID, routeResponseUUID };
