@@ -44,11 +44,11 @@
     "express": "4.22.1",
     "handlebars": "4.7.8",
     "http-proxy-middleware": "3.0.5",
-    "jsonpath-plus": "10.3.0",
+    "jsonpath-plus": "10.4.0",
     "killable": "1.0.1",
     "mime-types": "2.1.35",
     "object-path": "0.11.8",
-    "qs": "6.14.1",
+    "qs": "6.15.0",
     "range-parser": "1.2.1",
     "tslib": "2.8.1",
     "typed-emitter": "2.1.0",
@@ -62,9 +62,9 @@
     "@types/express": "4.17.25",
     "@types/mime-types": "3.0.1",
     "@types/object-path": "0.11.4",
-    "@types/qs": "6.14.0",
+    "@types/qs": "6.15.0",
     "@types/semver": "7.7.1",
     "@types/ws": "8.18.1",
-    "semver": "7.7.3"
+    "semver": "7.7.4"
   }
 }
