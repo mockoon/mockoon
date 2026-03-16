@@ -26,9 +26,9 @@ export const setPaths = () => {
   }
 
   // set data folder when is portable mode
-  if (process.env.PORTABLE_EXECUTABLE_DIR) {
+  if (process.env['PORTABLE_EXECUTABLE_DIR']) {
     const portableDataDir = pathJoin(
-      process.env.PORTABLE_EXECUTABLE_DIR,
+      process.env['PORTABLE_EXECUTABLE_DIR'],
       'mockoon-data'
     );
 
@@ -39,8 +39,12 @@ export const setPaths = () => {
   }
 
   // set data folder when inside a snap package (default folder get wiped on snap updates)
-  if (process.platform === 'linux' && process.env.SNAP) {
-    app.setPath('userData', pathJoin(process.env.SNAP_USER_COMMON));
+  if (
+    process.platform === 'linux' &&
+    process.env['SNAP'] &&
+    process.env['SNAP_USER_COMMON']
+  ) {
+    app.setPath('userData', pathJoin(process.env['SNAP_USER_COMMON']));
     app.setAppLogsPath();
 
     return;

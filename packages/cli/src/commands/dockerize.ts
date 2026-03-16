@@ -12,16 +12,16 @@ import {
 import { DOCKER_TEMPLATE } from '../constants/docker.constants';
 
 export default class Dockerize extends Command {
-  public static description =
+  public static override description =
     'Copy (or download) all the provided data files locally and create a Dockerfile to build a self-contained image of one or more mock API';
 
-  public static examples = [
+  public static override examples = [
     '$ mockoon-cli dockerize --data ~/data.json --output ./folder/Dockerfile',
     '$ mockoon-cli dockerize --data ~/data1.json ~/data2.json --output ./folder/Dockerfile',
     '$ mockoon-cli dockerize --data https://file-server/data.json --output ./folder/Dockerfile'
   ];
 
-  public static flags = {
+  public static override flags = {
     ...commonFlags,
     ...logTransactionFlag,
     port: Flags.integer({

@@ -12,7 +12,7 @@ const dirName = '.mockoon-cli';
  */
 const cloudScheme = 'cloud://';
 const cloudApiUrl =
-  process.env.NODE_ENV === 'production'
+  process.env['NODE_ENV'] === 'production'
     ? 'https://api.mockoon.com/environments'
     : 'http://localhost:5003/environments';
 

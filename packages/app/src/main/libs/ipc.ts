@@ -225,7 +225,7 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     options.defaultPath = getDialogDefaultPath();
 
     if (IS_TESTING) {
-      return { filePaths: [dialogMocks.open.pop()] };
+      return { filePaths: [dialogMocks['open'].pop()] };
     } else {
       return await dialog.showOpenDialog(mainWindow, options);
     }
@@ -240,7 +240,7 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     }
 
     if (IS_TESTING) {
-      return { filePath: dialogMocks.save.pop() };
+      return { filePath: dialogMocks['save'].pop() };
     } else {
       return await dialog.showSaveDialog(mainWindow, options);
     }

@@ -33,19 +33,19 @@ export class LoggerService {
       return;
     }
 
-    if (messageParams?.error) {
+    if (messageParams?.['error']) {
       messageParams = {
         ...messageParams,
         error: {
-          message: messageParams.error.message,
-          code: messageParams.error.code,
-          stack: messageParams.error.stack
+          message: messageParams['error'].message,
+          code: messageParams['error'].code,
+          stack: messageParams['error'].stack
         }
       };
 
       // Strip IPC error prefix
-      if (messageParams?.error?.message) {
-        messageParams.error.message = messageParams.error.message.replace(
+      if (messageParams?.['error']?.message) {
+        messageParams['error'].message = messageParams['error'].message.replace(
           /Error invoking remote method '[A-Z_]+': /,
           ''
         );

@@ -16,7 +16,7 @@ export const ResponseHelpers = function (response: Response) {
         code = parseInt(parameters[0], 10);
 
         if (isValidStatusCode(code)) {
-          response.locals.statusCode = code;
+          response.locals['statusCode'] = code;
         }
         // Invalid status codes are silently ignored, letting the route's default status code be used
       }

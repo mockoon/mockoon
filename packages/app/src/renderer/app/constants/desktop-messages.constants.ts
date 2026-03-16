@@ -37,10 +37,10 @@ export const DesktopMessages: Record<
   }),
   UNKNOWN_ERROR: (messageParams) => {
     const errorInfo =
-      typeof messageParams.error === 'string'
-        ? messageParams.error
-        : `${messageParams?.error?.message || ''} - ${
-            messageParams?.error?.stack || ''
+      typeof messageParams['error'] === 'string'
+        ? messageParams['error']
+        : `${messageParams?.['error']?.message || ''} - ${
+            messageParams?.['error']?.stack || ''
           }`;
 
     return {
@@ -50,7 +50,7 @@ export const DesktopMessages: Record<
     };
   },
   PORT_ALREADY_USED: (messageParams) => {
-    const message = `Port ${messageParams.port} is already in use`;
+    const message = `Port ${messageParams['port']} is already in use`;
 
     return {
       message,
@@ -60,7 +60,7 @@ export const DesktopMessages: Record<
     };
   },
   PORT_INVALID: (messageParams) => ({
-    message: `Port ${messageParams.port} is invalid or access is denied`,
+    message: `Port ${messageParams['port']} is invalid or access is denied`,
     showToast: true,
     log: false,
     toastType: 'error'
@@ -69,7 +69,7 @@ export const DesktopMessages: Record<
   // system log is enough, and UI is already displaying a warning
   INVALID_ROUTE_PATH: null,
   HOSTNAME_UNKNOWN: (messageParams) => ({
-    message: `Unknown hostname/address provided: ${messageParams.hostname}}`,
+    message: `Unknown hostname/address provided: ${messageParams['hostname']}`,
     showToast: true,
     log: false,
     toastType: 'error'
@@ -81,71 +81,71 @@ export const DesktopMessages: Record<
     toastType: 'error'
   }),
   CERT_FILE_NOT_FOUND: (messageParams) => ({
-    message: `Certificate file not found: ${messageParams?.error?.message}`,
+    message: `Certificate file not found: ${messageParams?.['error']?.message}`,
     showToast: true,
     log: false,
     toastType: 'error'
   }),
   ROUTE_SERVING_ERROR: (messageParams) => ({
-    message: `Error while serving the content: ${messageParams?.error?.message}`,
+    message: `Error while serving the content: ${messageParams?.['error']?.message}`,
     log: false,
     showToast: true,
     toastType: 'warning'
   }),
   ROUTE_FILE_SERVING_ERROR: (messageParams) => ({
-    message: `Error while serving the file content: ${messageParams?.error?.message}`,
+    message: `Error while serving the file content: ${messageParams?.['error']?.message}`,
     log: false,
     showToast: true,
     toastType: 'warning'
   }),
   UNKNOWN_SERVER_ERROR: (messageParams) => ({
-    message: `An unknown server error occurred: ${messageParams?.error?.message}`,
+    message: `An unknown server error occurred: ${messageParams?.['error']?.message}`,
     log: false,
     showToast: true,
     toastType: 'error'
   }),
   EXPORT_SUCCESS: (messageParams) => ({
-    message: `Environment ${messageParams.environmentName} has been successfully exported`,
+    message: `Environment ${messageParams['environmentName']} has been successfully exported`,
     log: false,
     showToast: true,
     toastType: 'success'
   }),
   OPENAPI_EXPORT_SUCCESS: (messageParams) => ({
-    message: `Environment ${messageParams.environmentName} has been successfully exported to OpenAPI v3 format`,
+    message: `Environment ${messageParams['environmentName']} has been successfully exported to OpenAPI v3 format`,
     log: false,
     showToast: true,
     toastType: 'success'
   }),
   OPENAPI_EXPORT_ERROR: (messageParams) => ({
-    message: `Error while exporting environment to OpenAPI v3 format: ${messageParams?.error?.message}`,
+    message: `Error while exporting environment to OpenAPI v3 format: ${messageParams?.['error']?.message}`,
     log: true,
     logPayload: {
-      environmentUUID: messageParams.environmentUUID,
-      environmentName: messageParams.environmentName
+      environmentUUID: messageParams['environmentUUID'],
+      environmentName: messageParams['environmentName']
     },
     showToast: true,
     toastType: 'error'
   }),
   OPENAPI_IMPORT_SUCCESS: (messageParams) => ({
-    message: `Environment "${messageParams.environmentName}" has been successfully imported`,
+    message: `Environment "${messageParams['environmentName']}" has been successfully imported`,
     showToast: true,
     log: false,
     toastType: 'success'
   }),
   OPENAPI_IMPORT_URL_ERROR: (messageParams) => ({
-    message: `Error while loading file from URL: ${messageParams?.error?.message}`,
+    message: `Error while loading file from URL: ${messageParams?.['error']?.message}`,
     showToast: true,
     log: true,
     toastType: 'error'
   }),
   OPENAPI_IMPORT_ERROR: (messageParams) => ({
-    message: `Error while importing environment from OpenAPI format: ${messageParams?.error?.message}`,
+    message: `Error while importing environment from OpenAPI format: ${messageParams?.['error']?.message}`,
     showToast: true,
     log: true,
     toastType: 'error'
   }),
   OPENAPI_IMPORT_READ_ERROR: (messageParams) => ({
-    message: `Error while reading the OpenAPI specification file: ${messageParams?.error?.message}`,
+    message: `Error while reading the OpenAPI specification file: ${messageParams?.['error']?.message}`,
     showToast: true,
     log: true,
     toastType: 'error'
@@ -157,14 +157,14 @@ export const DesktopMessages: Record<
     toastType: 'success'
   }),
   COPY_ENVIRONMENT_CLIPBOARD_ERROR: (messageParams) => ({
-    message: `An error occurred while copying the environment to the clipboard: ${messageParams?.error?.message}`,
+    message: `An error occurred while copying the environment to the clipboard: ${messageParams?.['error']?.message}`,
     showToast: true,
     log: true,
-    logPayload: { environmentUUID: messageParams.environmentUUID },
+    logPayload: { environmentUUID: messageParams['environmentUUID'] },
     toastType: 'error'
   }),
   COPY_ROUTE_CLIPBOARD: (messageParams) => ({
-    message: `Copying route ${messageParams.routeUUID} to the clipboard`,
+    message: `Copying route ${messageParams['routeUUID']} to the clipboard`,
     log: true,
     showToast: false
   }),
@@ -175,31 +175,31 @@ export const DesktopMessages: Record<
     toastType: 'success'
   }),
   COPY_ROUTE_CLIPBOARD_ERROR: (messageParams) => ({
-    message: `An error occurred while copying the route to the clipboard: ${messageParams?.error?.message}`,
+    message: `An error occurred while copying the route to the clipboard: ${messageParams?.['error']?.message}`,
     log: true,
-    logPayload: { routeUUID: messageParams.routeUUID },
+    logPayload: { routeUUID: messageParams['routeUUID'] },
     showToast: true,
     toastType: 'error'
   }),
   NEW_ENVIRONMENT_FROM_URL: (messageParams) => ({
-    message: `Importing environment from URL: ${messageParams.url}`,
+    message: `Importing environment from URL: ${messageParams['url']}`,
     log: true,
     showToast: false
   }),
   NEW_ENVIRONMENT_CLIPBOARD_ERROR: (messageParams) => ({
-    message: `Error while loading environment from clipboard: ${messageParams?.error?.message}`,
+    message: `Error while loading environment from clipboard: ${messageParams?.['error']?.message}`,
     log: true,
     showToast: true,
     toastType: 'error'
   }),
   NEW_ENVIRONMENT_URL_ERROR: (messageParams) => ({
-    message: `Error while loading environment from URL: ${messageParams?.error?.message}`,
+    message: `Error while loading environment from URL: ${messageParams?.['error']?.message}`,
     log: true,
     showToast: true,
     toastType: 'error'
   }),
   NEW_ROUTE_CLIPBOARD_ERROR: (messageParams) => ({
-    message: `Error while loading route from clipboard: ${messageParams?.error?.message}`,
+    message: `Error while loading route from clipboard: ${messageParams?.['error']?.message}`,
     log: true,
     showToast: true,
     toastType: 'error'
@@ -225,7 +225,7 @@ export const DesktopMessages: Record<
   }),
   ENVIRONMENT_MORE_RECENT_VERSION: (messageParams) => ({
     message: `Environment "${
-      messageParams.environmentName || messageParams.environmentUUID
+      messageParams['environmentName'] || messageParams['environmentUUID']
     }" was created with a more recent version of Mockoon. Please upgrade.`,
     log: true,
     loggerMessage:
@@ -242,7 +242,7 @@ export const DesktopMessages: Record<
   }),
   ENVIRONMENT_MIGRATION_FAILED: (messageParams) => ({
     message: `Migration of environment "${
-      messageParams.environmentName || messageParams.environmentUUID
+      messageParams['environmentName'] || messageParams['environmentUUID']
     }" failed. The environment was automatically repaired and migrated to the latest version.`,
     log: true,
     loggerMessage:
@@ -252,30 +252,30 @@ export const DesktopMessages: Record<
     toastType: 'warning'
   }),
   STORAGE_LOAD_ERROR: (messageParams) => ({
-    message: `Error while loading ${messageParams.path}. Please restart the application.`,
-    loggerMessage: `Error while loading ${messageParams.path}: ${
-      messageParams?.error?.code || ''
-    } ${messageParams?.error?.message || ''}`,
+    message: `Error while loading ${messageParams['path']}. Please restart the application.`,
+    loggerMessage: `Error while loading ${messageParams['path']}: ${
+      messageParams?.['error']?.code || ''
+    } ${messageParams?.['error']?.message || ''}`,
     log: true,
     showToast: true,
     toastType: 'error'
   }),
   STORAGE_SAVE_ERROR: (messageParams) => ({
-    message: `Error while saving ${messageParams.path}. If the problem persists please restart the application.`,
-    loggerMessage: `Error while saving ${messageParams.path}: ${
-      messageParams?.error?.code || ''
-    } ${messageParams?.error?.message || ''}`,
+    message: `Error while saving ${messageParams['path']}. If the problem persists please restart the application.`,
+    loggerMessage: `Error while saving ${messageParams['path']}: ${
+      messageParams?.['error']?.code || ''
+    } ${messageParams?.['error']?.message || ''}`,
     log: true,
     showToast: true,
     toastType: 'error'
   }),
   MIGRATING_ENVIRONMENT: (messageParams) => ({
-    message: `Migrating environment ${messageParams.environmentUUID} starting at ${messageParams.migrationStartId}`,
+    message: `Migrating environment ${messageParams['environmentUUID']} starting at ${messageParams['migrationStartId']}`,
     log: true,
-    loggerMessage: `Migrating environment starting at ${messageParams.migrationStartId}`,
+    loggerMessage: `Migrating environment starting at ${messageParams['migrationStartId']}`,
     logPayload: {
-      environmentUUID: messageParams.environmentUUID,
-      environmentName: messageParams.environmentName
+      environmentUUID: messageParams['environmentUUID'],
+      environmentName: messageParams['environmentName']
     },
     showToast: false
   }),
@@ -300,34 +300,34 @@ export const DesktopMessages: Record<
     showToast: true
   }),
   CLOUD_ENVIRONMENT_CONVERTED: (messageParams) => ({
-    message: `Environment "${messageParams.name}" was not present on the server and was converted to a local environment.`,
+    message: `Environment "${messageParams['name']}" was not present on the server and was converted to a local environment.`,
     log: true,
-    loggerMessage: `Environment "${messageParams.name}" was not present on the server and was converted to a local environment.`,
+    loggerMessage: `Environment "${messageParams['name']}" was not present on the server and was converted to a local environment.`,
     logPayload: messageParams,
     toastType: 'success',
     showToast: true
   }),
   CLOUD_ENVIRONMENT_DELETED: (messageParams) => ({
-    message: `Environment "${messageParams.name}" was not present on the server and was deleted.`,
+    message: `Environment "${messageParams['name']}" was not present on the server and was deleted.`,
     log: true,
     logPayload: messageParams,
     toastType: 'success',
     showToast: true
   }),
   CLOUD_SYNC_QUOTA_EXCEEDED: (messageParams) => ({
-    message: `Your cloud account has exceeded its synchronization quota (${messageParams.quota}). Please upgrade your plan or delete environments to free up space.`,
+    message: `Your cloud account has exceeded its synchronization quota (${messageParams['quota']}). Please upgrade your plan or delete environments to free up space.`,
     log: false,
     toastType: 'warning',
     showToast: true
   }),
   CLOUD_ENVIRONMENT_TOO_LARGE: (messageParams) => ({
-    message: `Your environment is too large to be saved on the cloud (max size: ${messageParams.maxSize / 1e6}MB). Please reduce its size.`,
+    message: `Your environment is too large to be saved on the cloud (max size: ${messageParams['maxSize'] / 1e6}MB). Please reduce its size.`,
     log: false,
     toastType: 'warning',
     showToast: true
   }),
   CLOUD_DEPLOY_QUOTA_EXCEEDED: (messageParams) => ({
-    message: `Your cloud account has exceeded its deployments quota (${messageParams.quota}). Please upgrade your plan or delete deployments.`,
+    message: `Your cloud account has exceeded its deployments quota (${messageParams['quota']}). Please upgrade your plan or delete deployments.`,
     log: false,
     toastType: 'warning',
     showToast: true

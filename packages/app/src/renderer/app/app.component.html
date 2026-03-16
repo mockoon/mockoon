@@ -1,18 +1,23 @@
+@let toasts = toasts$ | async;
+@let activeEnvironment = activeEnvironment$ | async;
+@let activeView = activeView$ | async;
+
 <div class="toasts-container">
-  <ngb-toast
-    *ngFor="let toast of toasts$ | async"
-    [class]="'toast-' + toast.type"
-    [autohide]="true"
-    [delay]="5000"
-    (hide)="removeToast(toast.UUID)"
-    (click)="removeToast(toast.UUID)"
-  >
-    {{ toast.message }}
-  </ngb-toast>
+  @for (toast of toasts; track $index) {
+    <ngb-toast
+      [class]="'toast-' + toast.type"
+      [autohide]="true"
+      [delay]="5000"
+      (hide)="removeToast(toast.UUID)"
+      (click)="removeToast(toast.UUID)"
+    >
+      {{ toast.message }}
+    </ngb-toast>
+  }
 </div>
 
 <!-- Page container -->
-<div class="d-flex flex-column h-100" @mainFadeIn>
+<div class="d-flex flex-column h-100 animation-fade-in">
   <!-- Main container (minus footer) -->
   <div class="d-flex flex-fill mh0">
     <app-environments-menu class="h-100" />
@@ -22,54 +27,41 @@
       <!-- Header: env name +start / env port + prefix -->
       <app-header />
 
-      <div
-        *ngIf="
-          activeEnvironment$ | async as activeEnvironment;
-          else noActiveEnvironment
-        "
-        class="main-content flex-fill mh0 h-100"
-      >
-        <ng-container [ngSwitch]="activeView$ | async">
-          <app-environment-routes *ngSwitchCase="'ENV_ROUTES'" class="h-100" />
-
-          <app-environment-databuckets
-            *ngSwitchCase="'ENV_DATABUCKETS'"
-            class="h-100"
-          />
-
-          <app-environment-callbacks
-            *ngSwitchCase="'ENV_CALLBACKS'"
-            class="h-100"
-          />
-
-          <app-environment-headers
-            *ngSwitchCase="'ENV_HEADERS'"
-            class="h-100"
-          />
-
-          <app-environment-logs
-            *ngSwitchCase="'ENV_LOGS'"
-            class="h-100 d-flex flex-column"
-          />
-
-          <app-environment-proxy *ngSwitchCase="'ENV_PROXY'" class="h-100" />
-
-          <app-environment-settings
-            *ngSwitchCase="'ENV_SETTINGS'"
-            class="h-100"
-          />
-        </ng-container>
-      </div>
+      @if (activeEnvironment) {
+        <div class="main-content flex-fill mh0 h-100">
+          @switch (activeView) {
+            @case ('ENV_ROUTES') {
+              <app-environment-routes class="h-100" />
+            }
+            @case ('ENV_DATABUCKETS') {
+              <app-environment-databuckets class="h-100" />
+            }
+            @case ('ENV_CALLBACKS') {
+              <app-environment-callbacks class="h-100" />
+            }
+            @case ('ENV_HEADERS') {
+              <app-environment-headers class="h-100" />
+            }
+            @case ('ENV_LOGS') {
+              <app-environment-logs class="h-100 d-flex flex-column" />
+            }
+            @case ('ENV_PROXY') {
+              <app-environment-proxy class="h-100" />
+            }
+            @case ('ENV_SETTINGS') {
+              <app-environment-settings class="h-100" />
+            }
+          }
+        </div>
+      } @else {
+        <div class="flex-fill main-content">
+          <p class="message mt-4">No environment opened</p>
+        </div>
+      }
     </div>
   </div>
 
   <app-footer />
 </div>
-
-<ng-template #noActiveEnvironment>
-  <div class="flex-fill main-content">
-    <p class="message mt-4">No environment opened</p>
-  </div>
-</ng-template>
 
 <app-tour />

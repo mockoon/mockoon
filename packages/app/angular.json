@@ -39,7 +39,8 @@
               "brace/mode/html.js",
               "brace/mode/json.js",
               "brace/mode/text.js",
-              "brace/mode/xml.js"
+              "brace/mode/xml.js",
+              "path-to-regexp"
             ],
             "assets": ["src/renderer/assets"],
             "styles": ["src/renderer/styles/styles.scss"],
@@ -51,7 +52,6 @@
               "includePaths": ["./node_modules"],
               "sass": {
                 "silenceDeprecations": [
-                  "mixed-decls",
                   "color-functions",
                   "global-builtin",
                   "import"

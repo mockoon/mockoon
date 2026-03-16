@@ -44,12 +44,14 @@
         <div class="input-group-text text-warning">
           <small>
             @if (
-              optionsForm.get('subdomain').errors?.minlength ||
-              optionsForm.get('subdomain').errors?.maxlength ||
-              optionsForm.get('subdomain').errors?.pattern
+              optionsForm.get('subdomain').errors?.['minlength'] ||
+              optionsForm.get('subdomain').errors?.['maxlength'] ||
+              optionsForm.get('subdomain').errors?.['pattern']
             ) {
               5 to 50 characters, a-z, 0-9 and - (not at the beginning or end)
-            } @else if (optionsForm.get('subdomain').errors?.subdomainTaken) {
+            } @else if (
+              optionsForm.get('subdomain').errors?.['subdomainTaken']
+            ) {
               This subdomain is not available
             } @else if (
               optionsForm.get('subdomain').value &&

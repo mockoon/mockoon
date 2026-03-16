@@ -3,15 +3,15 @@ import { promises as fs } from 'fs';
 import { parseDataFile } from '../libs/data';
 
 export default class Import extends Command {
-  public static description =
+  public static override description =
     'Import a Swagger v2/OpenAPI v3 specification file (YAML or JSON)';
 
-  public static examples = [
+  public static override examples = [
     '$ mockoon-cli import --input ~/data.json --output ./output.json',
     '$ mockoon-cli import --input ~/data.json --output ./output.json --prettify'
   ];
 
-  public static flags = {
+  public static override flags = {
     input: Flags.string({
       char: 'i',
       description: 'Path or URL to your Swagger v2/OpenAPI v3 file',

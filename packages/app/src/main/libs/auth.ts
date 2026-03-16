@@ -5,7 +5,7 @@ import { Config } from 'src/main/config';
 import { getMainWindow } from 'src/main/libs/main-window';
 import { parse as urlParse } from 'url';
 
-let server: Server = null;
+let server: Server;
 
 /**
  * Start a server to listen for the auth callback from the website
@@ -32,11 +32,11 @@ export const startAuthCallbackServer = async () => {
       return;
     }
 
-    const { query } = urlParse(req.url, true);
+    const { query } = urlParse(req.url ?? '', true);
 
     // Send the token to the renderer process
-    if (query.token) {
-      getMainWindow().webContents.send('APP_AUTH_CALLBACK', query.token);
+    if (query['token']) {
+      getMainWindow().webContents.send('APP_AUTH_CALLBACK', query['token']);
     }
   });
 

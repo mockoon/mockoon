@@ -28,7 +28,7 @@ export class ServerInstance {
       if (ServerInstance.instances[environment.uuid]?.mockoonServer) {
         ServerInstance.instances[
           environment.uuid
-        ].mockoonServer.updateEnvironment(environment);
+        ]?.mockoonServer?.updateEnvironment(environment);
       }
     });
   };
@@ -40,7 +40,7 @@ export class ServerInstance {
       if (ServerInstance.instances[environmentUuid]?.mockoonServer) {
         ServerInstance.instances[
           environmentUuid
-        ].mockoonServer.updateDisabledRoutes(disabledRoutes[environmentUuid]);
+        ]?.mockoonServer?.updateDisabledRoutes(disabledRoutes[environmentUuid]);
       }
     });
   };

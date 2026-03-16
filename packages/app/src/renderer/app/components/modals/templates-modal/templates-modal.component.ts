@@ -1,4 +1,3 @@
-import { animate, style, transition, trigger } from '@angular/animations';
 import {
   AsyncPipe,
   NgFor,
@@ -73,14 +72,6 @@ import { Config } from 'src/renderer/config';
   templateUrl: './templates-modal.component.html',
   styleUrls: ['./templates-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    trigger('fade', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('1s ease-in', style({ opacity: 1 }))
-      ])
-    ])
-  ],
   imports: [
     NgIf,
     SvgComponent,

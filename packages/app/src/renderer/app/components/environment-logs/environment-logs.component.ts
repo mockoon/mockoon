@@ -75,6 +75,7 @@ type logsDropdownMenuPayload = { logUuid: string };
   templateUrl: 'environment-logs.component.html',
   styleUrls: ['environment-logs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [DatePipe],
   imports: [
     NgbTooltip,
     SvgComponent,

@@ -1,13 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { User } from '@mockoon/cloud';
 import {
   Auth,
-  authState,
-  idToken,
+  User as FirebaseUser,
+  getAuth,
+  onAuthStateChanged,
+  onIdTokenChanged,
   reload,
   signInWithCustomToken
-} from '@angular/fire/auth';
-import { User } from '@mockoon/cloud';
+} from 'firebase/auth';
 import {
   catchError,
   combineLatest,
@@ -16,6 +18,7 @@ import {
   filter,
   from,
   mergeMap,
+  Observable,
   of,
   switchMap,
   take,
@@ -42,8 +45,21 @@ export class UserService {
   private loggerService = inject(LoggerService);
 
   private isWeb = Config.isWeb;
-  private auth: Auth = inject(Auth);
-  private idToken$ = idToken(this.auth);
+  private auth: Auth = getAuth();
+  private idToken$ = new Observable<FirebaseUser | null>((subscriber) =>
+    onIdTokenChanged(
+      this.auth,
+      (user) => subscriber.next(user),
+      (error) => subscriber.error(error)
+    )
+  );
+  private authState$ = new Observable<FirebaseUser | null>((subscriber) =>
+    onAuthStateChanged(
+      this.auth,
+      (user) => subscriber.next(user),
+      (error) => subscriber.error(error)
+    )
+  );
   private lastUserRefresh = 0;
 
   /**
@@ -200,10 +216,7 @@ export class UserService {
    * @returns
    */
   public webAuthHandler() {
-    return combineLatest([
-      authState(this.auth),
-      this.store.select('settings')
-    ]).pipe(
+    return combineLatest([this.authState$, this.store.select('settings')]).pipe(
       take(1),
       tap(([user, settings]) => {
         if (!user && settings.welcomeShown) {
