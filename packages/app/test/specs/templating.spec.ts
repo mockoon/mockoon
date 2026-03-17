@@ -138,6 +138,17 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
         }
       },
       {
+        description: 'Root level string (content-type with uppercase letters)',
+        path: '/bodyjson-rootlvl',
+        method: 'POST',
+        headers: { 'Content-Type': 'Application/Json' },
+        body: { property1: 'stringcontent' },
+        testedResponse: {
+          status: 200,
+          body: 'stringcontent'
+        }
+      },
+      {
         description: 'Root level number',
         path: '/bodyjson-rootlvl',
         method: 'POST',

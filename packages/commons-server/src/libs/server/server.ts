@@ -593,8 +593,9 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     next: NextFunction
   ) => {
     // Parse body as a raw string and JSON/form if applicable
-    const requestContentType: string | undefined =
-      request.header('Content-Type');
+    const requestContentType: string | undefined = request
+      .header('Content-Type')
+      ?.toLowerCase();
 
     // body was already parsed (e.g. by firebase), 'data' event will not be emitted (⚠️ request.body will always be an empty object in Firebase Functions, we have to check rawBody too)
     if (!!request.body && request.rawBody) {
