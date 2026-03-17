@@ -26,9 +26,9 @@ import { parseDataFile } from '../libs/data';
 import { getDirname, transformEnvironmentName } from '../libs/utils';
 
 export default class Start extends Command {
-  public static description = 'Start one or more mock API';
+  public static override description = 'Start one or more mock API';
 
-  public static examples = [
+  public static override examples = [
     '$ mockoon-cli start --data ~/data.json',
     '$ mockoon-cli start --data ~/data.json --watch',
     '$ mockoon-cli start --data ~/data1.json ~/data2.json --port 3000 3001 --hostname 127.0.0.1 192.168.1.1',
@@ -38,7 +38,7 @@ export default class Start extends Command {
     '$ mockoon-cli start --data ~/data.json --enable-random-latency'
   ];
 
-  public static flags = {
+  public static override flags = {
     ...commonFlags,
     ...logTransactionFlag,
     hostname: Flags.string({

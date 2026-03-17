@@ -10,7 +10,7 @@ import { finished } from 'stream/promises';
 import { ReadableStream } from 'stream/web';
 
 let updateAvailableVersion: string;
-const isNotPortable = !process.env.PORTABLE_EXECUTABLE_DIR;
+const isNotPortable = !process.env['PORTABLE_EXECUTABLE_DIR'];
 
 /**
  * Tell the renderer that an update is available.

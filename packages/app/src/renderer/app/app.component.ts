@@ -1,11 +1,4 @@
-import { animate, style, transition, trigger } from '@angular/animations';
-import {
-  AsyncPipe,
-  NgFor,
-  NgIf,
-  NgSwitch,
-  NgSwitchCase
-} from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -53,13 +46,9 @@ import { environment } from 'src/renderer/environments/environment';
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgFor,
     NgbToast,
     EnvironmentsMenuComponent,
     HeaderComponent,
-    NgIf,
-    NgSwitch,
-    NgSwitchCase,
     EnvironmentRoutesComponent,
     EnvironmentDatabucketsComponent,
     EnvironmentCallbacksComponent,
@@ -70,15 +59,6 @@ import { environment } from 'src/renderer/environments/environment';
     FooterComponent,
     TourComponent,
     AsyncPipe
-  ],
-  animations: [
-    // fade in animation for the main app component
-    trigger('mainFadeIn', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('200ms ease-in', style({ opacity: 1 }))
-      ])
-    ])
   ]
 })
 export class AppComponent implements OnInit {

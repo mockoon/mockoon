@@ -41,8 +41,8 @@ export const createAdminEndpoint = (
   const events = new Sse({
     getInitialEvents: (request: Request) => {
       const maxLogs =
-        typeof request.query.maxlogs === 'string'
-          ? parseInt(request.query.maxlogs, 10)
+        typeof request.query['maxlogs'] === 'string'
+          ? parseInt(request.query['maxlogs'], 10)
           : undefined;
       const logs = getLogs();
       const limitedLogs =
@@ -296,9 +296,13 @@ export const createAdminEndpoint = (
    */
   const getLogsHandler = (req: Request, res: Response) => {
     const page =
-      typeof req.query.page === 'string' ? parseInt(req.query.page, 10) : 1;
+      typeof req.query['page'] === 'string'
+        ? parseInt(req.query['page'], 10)
+        : 1;
     const limit =
-      typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : 10;
+      typeof req.query['limit'] === 'string'
+        ? parseInt(req.query['limit'], 10)
+        : 10;
     const logs = getLogs();
     const start = (page - 1) * limit;
 

@@ -230,7 +230,7 @@ $status-code-colors:
 
   &:hover,
   &.dragging {
-    animation-name: fadeIn;
+    animation-name: separatorFadeIn;
     animation-duration: 100ms;
     animation-fill-mode: forwards;
   }

@@ -6,14 +6,12 @@
     "declaration": false,
     "strict": false,
     "strictNullChecks": false,
-    "module": "es2020",
-    "emitDecoratorMetadata": true,
+    "module": "preserve",
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "target": "ES2022",
-    "esModuleInterop": true,
     "lib": ["es2022", "dom"],
-    "useDefineForClassFields": false
+    "moduleResolution": "bundler"
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true,

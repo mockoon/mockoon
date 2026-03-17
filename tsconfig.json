@@ -13,10 +13,10 @@
     "noImplicitReturns": true,
     "allowSyntheticDefaultImports": true,
     "typeRoots": ["node_modules/@types"],
-    "importHelpers": true
-  },
-  "angularCompilerOptions": {
-    "strictInjectionParameters": true,
-    "strictTemplates": true
+    "importHelpers": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "isolatedModules": true,
+    "useDefineForClassFields": false,
+    "noImplicitOverride": true
   }
 }

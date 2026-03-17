@@ -29,9 +29,9 @@ const findItemIndex = (
         return false;
       }
 
-      return getPath(value, routeCrudKey).toString() === request.params.id;
+      return getPath(value, routeCrudKey).toString() === request.params['id'];
     } else {
-      let indexParam = parseInt(request.params.id, 10);
+      let indexParam = parseInt(request.params['id'], 10);
       indexParam = isNaN(indexParam) ? 0 : indexParam;
 
       return indexParam === index;
@@ -62,23 +62,25 @@ export const databucketActions = (
       responseBody = databucket.value;
 
       const search =
-        typeof request.query.search === 'string' && request.query.search
-          ? request.query.search
+        typeof request.query['search'] === 'string' && request.query['search']
+          ? request.query['search']
           : null;
       const limit =
-        typeof request.query.limit === 'string'
-          ? parseInt(request.query.limit, 10) || 10
+        typeof request.query['limit'] === 'string'
+          ? parseInt(request.query['limit'], 10) || 10
           : 10;
       const page =
-        typeof request.query.page === 'string'
-          ? parseInt(request.query.page, 10) || 1
+        typeof request.query['page'] === 'string'
+          ? parseInt(request.query['page'], 10) || 1
           : 1;
       const sort =
-        typeof request.query.sort === 'string' ? request.query.sort : null;
+        typeof request.query['sort'] === 'string'
+          ? request.query['sort']
+          : null;
       const order =
-        typeof request.query.order === 'string'
-          ? ['asc', 'desc'].includes(request.query.order)
-            ? request.query.order
+        typeof request.query['order'] === 'string'
+          ? ['asc', 'desc'].includes(request.query['order'])
+            ? request.query['order']
             : 'asc'
           : 'asc';
       const filters = parseFilters(request.query);
@@ -116,8 +118,8 @@ export const databucketActions = (
         }
 
         if (
-          request.query.limit !== undefined ||
-          request.query.page !== undefined
+          request.query['limit'] !== undefined ||
+          request.query['page'] !== undefined
         ) {
           responseBody = responseBody.slice((page - 1) * limit, page * limit);
         }

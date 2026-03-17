@@ -5,14 +5,15 @@ import { loadFile } from '../libs/data';
 import { terminalColors } from '../libs/utils';
 
 export default class Validate extends Command {
-  public static description = 'Validate a Mockoon environment JSON file';
+  public static override description =
+    'Validate a Mockoon environment JSON file';
 
-  public static examples = [
+  public static override examples = [
     '$ mockoon-cli validate --data ~/data1.json ~/data2.json',
     '$ mockoon-cli validate --data https://file-server/data.json'
   ];
 
-  public static flags = {
+  public static override flags = {
     ...commonFlags
   };
 

@@ -2271,10 +2271,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    */
   private applyResponseLocals(response: Response) {
     if (
-      response.locals.statusCode !== undefined &&
-      isValidStatusCode(response.locals.statusCode)
+      response.locals['statusCode'] !== undefined &&
+      isValidStatusCode(response.locals['statusCode'])
     ) {
-      response.status(response.locals.statusCode);
+      response.status(response.locals['statusCode']);
     }
   }
 

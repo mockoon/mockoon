@@ -4,15 +4,15 @@ import { promises as fs } from 'fs';
 import { parseDataFile } from '../libs/data';
 
 export default class Export extends Command {
-  public static description =
+  public static override description =
     'Export a mock API to an OpenAPI v3 specification file (JSON)';
 
-  public static examples = [
+  public static override examples = [
     '$ mockoon-cli export --input ~/data.json --output ./output.json',
     '$ mockoon-cli export --input ~/data.json --output ./output.json --format JSON --prettify'
   ];
 
-  public static flags = {
+  public static override flags = {
     input: Flags.string({
       char: 'i',
       description: 'Path or URL to your Mockoon data file',
