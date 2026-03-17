@@ -3122,17 +3122,30 @@ describe('Template parser', () => {
       strictEqual(parseResult, '');
     });
 
-    it('should return empty string if first param is not an array', () => {
+    it('should return the value if only one param is provided', () => {
       const parseResult = TemplateParser({
         shouldOmitDataHelper: false,
-        content: '{{oneOf true}}',
+        content: '{{oneOf "only"}}',
         environment: {} as any,
         processedDatabuckets: [],
         globalVariables: {},
         request: {} as any,
         envVarsPrefix: ''
       });
-      strictEqual(parseResult, '');
+      strictEqual(parseResult, 'only');
+    });
+
+    it('should return one of the provided variadic params', () => {
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: "{{oneOf 'one' 'two' 'three'}}",
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: {} as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(['one', 'two', 'three'].includes(parseResult), true);
     });
 
     it('should return a stringified object if choses from array of object and stringify is true', () => {
