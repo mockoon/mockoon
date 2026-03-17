@@ -26,7 +26,7 @@ export type EnvironmentLogOrigin = 'local' | 'cloud';
 
 export type EnvironmentLog = {
   origin: EnvironmentLogOrigin;
-  UUID: string;
+  uuid: string;
   routeUUID: string;
   routeResponseUUID?: string;
   timestampMs: number;

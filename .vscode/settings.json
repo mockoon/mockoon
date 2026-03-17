@@ -5,5 +5,6 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.organizeImports": "always"
-  }
+  },
+  "angular.enable-strict-mode-prompt": false
 }

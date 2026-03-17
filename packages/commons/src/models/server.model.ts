@@ -50,7 +50,7 @@ export type InFlightRequest = {
     code?: any;
     message?: string;
   };
-  requestId: string;
+  uuid: string;
   routeUUID: string;
 };
 
@@ -82,6 +82,7 @@ export type Transaction = {
   // environment's route response UUID to which the transaction belongs
   routeResponseUUID: string;
   timestampMs: number;
+  uuid: string;
 };
 
 export type ServerOptions = {

@@ -77,7 +77,7 @@ export class DataService {
   ): EnvironmentLog {
     return {
       origin,
-      UUID: request.requestId,
+      uuid: request.uuid,
       routeUUID: request.routeUUID,
       timestampMs: Date.now(),
       method: request.request.method as EnvironmentLog['method'],
@@ -85,7 +85,7 @@ export class DataService {
       route: request.request.route,
       protocol: 'ws',
       request: {
-        isInvalidJson: false, // TODO Isuru
+        isInvalidJson: false,
         query: request.request.query,
         body: request.request.body,
         bodyUnformatted: request.request.body,
@@ -146,7 +146,7 @@ export class DataService {
 
     return {
       origin,
-      UUID: generateUUID(),
+      uuid: transaction.uuid,
       routeUUID: transaction.routeUUID,
       routeResponseUUID: transaction.routeResponseUUID,
       timestampMs: transaction.timestampMs,

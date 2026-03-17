@@ -253,7 +253,7 @@ export class Store {
           store.environmentsLogs[store.activeEnvironmentUUID].length > 0
             ? store.environmentsLogs[store.activeEnvironmentUUID].find(
                 (environmentLog) =>
-                  environmentLog.UUID ===
+                  environmentLog.uuid ===
                   store.activeEnvironmentLogsUUID[store.activeEnvironmentUUID]
               )
             : null

@@ -952,15 +952,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         return;
       }
 
-      const websocketId = generateUUID();
+      const websocketUuid = generateUUID();
       const baseErrorMeta = {
-        websocketId,
+        websocketUuid: websocketUuid,
         routeUUID: route.uuid,
         routePath: route.endpoint
       };
 
       const inflightRequest = CreateInFlightRequest(
-        websocketId,
+        websocketUuid,
         request,
         route
       );

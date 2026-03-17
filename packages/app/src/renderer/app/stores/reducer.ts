@@ -1399,10 +1399,12 @@ export const environmentReducer = (
     }
 
     case ActionTypes.LOG_REQUEST: {
-      // do not process if the timestamp is already in the logs
+      // dedup by uuid or timestamp (in case of logs coming without a uuid)
       if (
         state.environmentsLogs[action.environmentUUID]?.some(
-          (log) => log.timestampMs === action.logItem.timestampMs
+          (log) =>
+            (action.logItem.uuid != null && log.uuid === action.logItem.uuid) ||
+            log.timestampMs === action.logItem.timestampMs
         )
       ) {
         return state;
@@ -1431,7 +1433,7 @@ export const environmentReducer = (
       // when receiving the first log, immediately select it
       if (newEnvironmentsLogs[action.environmentUUID].length === 1) {
         newActiveEnvironmentLogsUUID[action.environmentUUID] =
-          action.logItem.UUID;
+          action.logItem.uuid;
       }
 
       newState = {

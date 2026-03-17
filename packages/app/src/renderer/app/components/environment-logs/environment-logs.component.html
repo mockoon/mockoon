@@ -69,14 +69,14 @@
     />
     @if (environmentLogs?.length) {
       <ul class="nav flex-column menu-list">
-        @for (log of environmentLogs; track log.UUID) {
+        @for (log of environmentLogs; track log.uuid) {
           <li class="nav-item">
             <a
               class="nav-link d-flex pe-0 hover-parent"
               [class]="{
-                active: log.UUID === selectedLog?.UUID
+                active: log.uuid === selectedLog?.uuid
               }"
-              (click)="selectLog(log.UUID)"
+              (click)="selectLog(log.uuid)"
             >
               <div class="d-flex flex-column mw0">
                 <div
@@ -162,9 +162,9 @@
               </div>
               <div class="ms-auto ps-2 d-flex align-items-start">
                 <app-dropdown-menu
-                  [idPrefix]="'logs-' + log.UUID"
+                  [idPrefix]="'logs-' + log.uuid"
                   [items]="dropdownMenuItems"
-                  [payload]="{ logUuid: log.UUID }"
+                  [payload]="{ logUuid: log.uuid }"
                   [iconFaded]="true"
                   [noYPadding]="true"
                 />
@@ -421,7 +421,7 @@
                     [options]="editorConfigs?.request?.options"
                     [mode]="editorConfigs?.request?.mode"
                     [readOnly]="true"
-                    [uuid]="selectedLog?.UUID + '-request'"
+                    [uuid]="selectedLog?.uuid + '-request'"
                     [text]="selectedLog?.request?.body"
                   />
                 </div>
@@ -532,7 +532,7 @@
                       [options]="editorConfigs?.response?.options"
                       [mode]="editorConfigs?.response?.mode"
                       [readOnly]="true"
-                      [uuid]="selectedLog?.UUID + '-response'"
+                      [uuid]="selectedLog?.uuid + '-response'"
                       [text]="selectedLog?.response?.body"
                     />
                   </div>
