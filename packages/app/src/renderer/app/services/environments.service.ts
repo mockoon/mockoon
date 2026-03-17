@@ -2041,13 +2041,13 @@ export class EnvironmentsService {
    */
   public createRouteFromLog(
     environmentUuid: string,
-    logUUID: string,
+    logUuid: string,
     force = false
   ) {
     const environmentsLogs = this.store.get('environmentsLogs');
     const targetEnvironment = this.store.getEnvironmentByUUID(environmentUuid);
     const log = environmentsLogs[environmentUuid].find(
-      (environmentLog) => environmentLog.UUID === logUUID
+      (environmentLog) => environmentLog.uuid === logUuid
     );
 
     if (log) {
@@ -2352,7 +2352,7 @@ export class EnvironmentsService {
         ) {
           this.createRouteFromLog(
             serverTransactionPayload.environmentUUID,
-            formattedLog.UUID
+            formattedLog.uuid
           );
         }
       })
@@ -2525,7 +2525,7 @@ export class EnvironmentsService {
     const environmentsLogs = this.store.get('environmentsLogs');
     const activeEnvironment = this.store.getActiveEnvironment();
     const log = environmentsLogs[environmentUuid].find(
-      (environmentLog) => environmentLog.UUID === logUuid
+      (environmentLog) => environmentLog.uuid === logUuid
     );
     const hostname = activeEnvironment.hostname || 'localhost';
     const headers = log.request.headers;

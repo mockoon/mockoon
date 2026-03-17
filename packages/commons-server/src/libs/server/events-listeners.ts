@@ -144,7 +144,7 @@ export const listenServerEvents = function (
   server.on('ws-new-connection', (inflightRequest: InFlightRequest) => {
     const logMeta: { inflightRequest: InFlightRequest } = {
       ...defaultLogMeta,
-      websocketId: inflightRequest.requestId,
+      websocketUuid: inflightRequest.uuid,
       url: inflightRequest.request.urlPath,
       routeUUID: inflightRequest.routeUUID
     };
@@ -167,7 +167,7 @@ export const listenServerEvents = function (
       const logMeta: { inflightRequest: InFlightRequest; messageData: string } =
         {
           ...defaultLogMeta,
-          websocketId: inflightRequest.requestId,
+          websocketUuid: inflightRequest.uuid,
           url: inflightRequest.request.urlPath,
           routeUUID: inflightRequest.routeUUID
         };
@@ -193,7 +193,7 @@ export const listenServerEvents = function (
     (request: InFlightRequest, code: number, reason?: string | null) => {
       const logMeta: { inflightRequest: InFlightRequest } = {
         ...defaultLogMeta,
-        websocketId: request.requestId,
+        websocketUuid: request.uuid,
         code,
         reason
       };

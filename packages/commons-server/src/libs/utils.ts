@@ -1,6 +1,7 @@
 import { search } from '@jmespath-community/jmespath';
 import {
   Callback,
+  generateUUID,
   Header,
   InFlightRequest,
   InvokedCallback,
@@ -164,19 +165,19 @@ export function CreateCallbackInvocation(
 /**
  * Creates in-flight request object.
  *
- * @param requestId
+ * @param requestUuid
  * @param request
  * @param route
  */
 export function CreateInFlightRequest(
-  requestId: string,
+  requestUuid: string,
   request: IncomingMessage,
   route: Route
 ): InFlightRequest {
   const parsedUrl = parseUrl(request.url || '', true);
 
   return {
-    requestId,
+    uuid: requestUuid,
     routeUUID: route.uuid,
     request: {
       method: (request.method as keyof typeof Methods) || 'get',
@@ -239,7 +240,8 @@ export function CreateTransaction(
     routeResponseUUID: response.routeResponseUUID,
     routeUUID: response.routeUUID,
     proxied: request.proxied || false,
-    timestampMs: Date.now()
+    timestampMs: Date.now(),
+    uuid: generateUUID()
   };
 }
 
