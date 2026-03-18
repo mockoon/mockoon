@@ -81,25 +81,25 @@ export const DesktopMessages: Record<
     toastType: 'error'
   }),
   CERT_FILE_NOT_FOUND: (messageParams) => ({
-    message: `Certificate file not found: ${messageParams?.['error']?.message}`,
+    message: `Certificate file not found: ${messageParams?.['error']?.['message']}`,
     showToast: true,
     log: false,
     toastType: 'error'
   }),
   ROUTE_SERVING_ERROR: (messageParams) => ({
-    message: `Error while serving the content: ${messageParams?.['error']?.message}`,
+    message: `Error while serving the content: ${messageParams?.['error']?.['message']}`,
     log: false,
     showToast: true,
     toastType: 'warning'
   }),
   ROUTE_FILE_SERVING_ERROR: (messageParams) => ({
-    message: `Error while serving the file content: ${messageParams?.['error']?.message}`,
+    message: `Error while serving the file content: ${messageParams?.['error']?.['message']}`,
     log: false,
     showToast: true,
     toastType: 'warning'
   }),
   UNKNOWN_SERVER_ERROR: (messageParams) => ({
-    message: `An unknown server error occurred: ${messageParams?.['error']?.message}`,
+    message: `An unknown server error occurred: ${messageParams?.['error']?.['message']}`,
     log: false,
     showToast: true,
     toastType: 'error'
@@ -117,7 +117,7 @@ export const DesktopMessages: Record<
     toastType: 'success'
   }),
   OPENAPI_EXPORT_ERROR: (messageParams) => ({
-    message: `Error while exporting environment to OpenAPI v3 format: ${messageParams?.['error']?.message}`,
+    message: `Error while exporting environment to OpenAPI v3 format: ${messageParams?.['error']?.['message']}`,
     log: true,
     logPayload: {
       environmentUUID: messageParams['environmentUUID'],
@@ -132,20 +132,26 @@ export const DesktopMessages: Record<
     log: false,
     toastType: 'success'
   }),
+  OPENAPI_REIMPORT_SUCCESS: (messageParams) => ({
+    message: `OpenAPI specification reimported into "${messageParams['environmentName']}": ${messageParams['addedRoutes']} new route${messageParams['addedRoutes'] > 1 ? 's' : ''} added, ${messageParams['skippedRoutes']} skipped`,
+    showToast: true,
+    log: false,
+    toastType: 'success'
+  }),
   OPENAPI_IMPORT_URL_ERROR: (messageParams) => ({
-    message: `Error while loading file from URL: ${messageParams?.['error']?.message}`,
+    message: `Error while loading file from URL: ${messageParams?.['error']?.['message']}`,
     showToast: true,
     log: true,
     toastType: 'error'
   }),
   OPENAPI_IMPORT_ERROR: (messageParams) => ({
-    message: `Error while importing environment from OpenAPI format: ${messageParams?.['error']?.message}`,
+    message: `Error while importing environment from OpenAPI format: ${messageParams?.['error']?.['message']}`,
     showToast: true,
     log: true,
     toastType: 'error'
   }),
   OPENAPI_IMPORT_READ_ERROR: (messageParams) => ({
-    message: `Error while reading the OpenAPI specification file: ${messageParams?.['error']?.message}`,
+    message: `Error while reading the OpenAPI specification file: ${messageParams?.['error']?.['message']}`,
     showToast: true,
     log: true,
     toastType: 'error'
@@ -157,7 +163,7 @@ export const DesktopMessages: Record<
     toastType: 'success'
   }),
   COPY_ENVIRONMENT_CLIPBOARD_ERROR: (messageParams) => ({
-    message: `An error occurred while copying the environment to the clipboard: ${messageParams?.['error']?.message}`,
+    message: `An error occurred while copying the environment to the clipboard: ${messageParams?.['error']?.['message']}`,
     showToast: true,
     log: true,
     logPayload: { environmentUUID: messageParams['environmentUUID'] },
@@ -175,7 +181,7 @@ export const DesktopMessages: Record<
     toastType: 'success'
   }),
   COPY_ROUTE_CLIPBOARD_ERROR: (messageParams) => ({
-    message: `An error occurred while copying the route to the clipboard: ${messageParams?.['error']?.message}`,
+    message: `An error occurred while copying the route to the clipboard: ${messageParams?.['error']?.['message']}`,
     log: true,
     logPayload: { routeUUID: messageParams['routeUUID'] },
     showToast: true,
@@ -187,19 +193,19 @@ export const DesktopMessages: Record<
     showToast: false
   }),
   NEW_ENVIRONMENT_CLIPBOARD_ERROR: (messageParams) => ({
-    message: `Error while loading environment from clipboard: ${messageParams?.['error']?.message}`,
+    message: `Error while loading environment from clipboard: ${messageParams?.['error']?.['message']}`,
     log: true,
     showToast: true,
     toastType: 'error'
   }),
   NEW_ENVIRONMENT_URL_ERROR: (messageParams) => ({
-    message: `Error while loading environment from URL: ${messageParams?.['error']?.message}`,
+    message: `Error while loading environment from URL: ${messageParams?.['error']?.['message']}`,
     log: true,
     showToast: true,
     toastType: 'error'
   }),
   NEW_ROUTE_CLIPBOARD_ERROR: (messageParams) => ({
-    message: `Error while loading route from clipboard: ${messageParams?.['error']?.message}`,
+    message: `Error while loading route from clipboard: ${messageParams?.['error']?.['message']}`,
     log: true,
     showToast: true,
     toastType: 'error'

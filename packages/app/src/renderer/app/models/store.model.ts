@@ -17,6 +17,7 @@ import {
   ActiveEnvironmentsLogUUIDs,
   EnvironmentLogs
 } from 'src/renderer/app/models/environment-logs.model';
+import { OpenApiReimportPlan } from 'src/renderer/app/models/openapi.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
 import { Settings } from 'src/shared/models/settings.model';
 
@@ -118,4 +119,7 @@ export type StoreType = {
   >;
   feedback: string;
   remoteConfig: RemoteConfigData;
+  openApiImport: {
+    reimportPlan: OpenApiReimportPlan;
+  };
 };

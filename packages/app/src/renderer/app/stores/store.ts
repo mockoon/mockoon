@@ -79,7 +79,10 @@ export const storeDefaultState: StoreType = {
   deployInstances: [],
   processedDatabuckets: {},
   feedback: '',
-  remoteConfig: null
+  remoteConfig: null,
+  openApiImport: {
+    reimportPlan: null
+  }
 };
 
 @Injectable({ providedIn: 'root' })
