@@ -1697,6 +1697,14 @@ export const environmentReducer = (
       break;
     }
 
+    case ActionTypes.UPDATE_OPENAPI_IMPORT: {
+      newState = {
+        ...state,
+        openApiImport: { ...state.openApiImport, ...action.properties }
+      };
+      break;
+    }
+
     default:
       newState = state;
       break;

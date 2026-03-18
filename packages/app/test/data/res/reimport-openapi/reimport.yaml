@@ -1,0 +1,16 @@
+openapi: 3.0.0
+info:
+  title: Reimport E2E Updated
+  version: 1.0.0
+paths:
+  /items:
+    get:
+      responses:
+        "200":
+          description: ok
+        "404":
+          description: not found
+    post:
+      responses:
+        "201":
+          description: created

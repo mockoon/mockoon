@@ -734,7 +734,10 @@ export class CommandPaletteService {
         id: 'IMPORT_CLOUD_OPENAPI',
         label: 'New cloud environment from OpenAPI/Swagger',
         action: () => {
-          this.uiService.openModal('openApiImport', { cloud: true });
+          this.uiService.openModal('openApiImport', {
+            mode: 'import',
+            cloud: true
+          });
         },
         score: 1,
         enabled: isSyncConnected
@@ -952,7 +955,10 @@ export class CommandPaletteService {
           id: 'IMPORT_LOCAL_OPENAPI',
           label: 'New local environment from OpenAPI/Swagger',
           action: () => {
-            this.uiService.openModal('openApiImport', { cloud: false });
+            this.uiService.openModal('openApiImport', {
+              mode: 'import',
+              cloud: false
+            });
           },
           score: 1,
           enabled: true

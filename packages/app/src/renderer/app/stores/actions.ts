@@ -95,7 +95,8 @@ export const enum ActionTypes {
   FULL_REORDER_ENTITIES = 'FULL_REORDER_ENTITIES',
   UPDATE_PROCESSED_DATABUCKETS = 'UPDATE_PROCESSED_DATABUCKETS',
   UPDATE_FEEDBACK = 'UPDATE_FEEDBACK',
-  UPDATE_REMOTE_CONFIG = 'UPDATE_REMOTE_CONFIG'
+  UPDATE_REMOTE_CONFIG = 'UPDATE_REMOTE_CONFIG',
+  UPDATE_OPENAPI_IMPORT = 'UPDATE_OPENAPI_IMPORT'
 }
 
 /**
@@ -1021,6 +1022,14 @@ export const updateRemoteConfigAction = (
     properties
   }) as const;
 
+export const updateOpenApiImportAction = (
+  properties: Partial<StoreType['openApiImport']>
+) =>
+  ({
+    type: ActionTypes.UPDATE_OPENAPI_IMPORT,
+    properties
+  }) as const;
+
 export type Actions =
   | ReturnType<typeof convertEnvironmentToLocalAction>
   | ReturnType<typeof updateUserAction>
@@ -1083,4 +1092,5 @@ export type Actions =
   | ReturnType<typeof duplicateCallbackToAnotherEnvironmentAction>
   | ReturnType<typeof updateProcessedDatabucketsAction>
   | ReturnType<typeof updateFeedbackAction>
-  | ReturnType<typeof updateRemoteConfigAction>;
+  | ReturnType<typeof updateRemoteConfigAction>
+  | ReturnType<typeof updateOpenApiImportAction>;

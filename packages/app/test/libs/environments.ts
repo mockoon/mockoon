@@ -122,6 +122,13 @@ class Environments {
     );
   }
 
+  public async reimportFromOpenApi(index: number) {
+    await utils.dropdownMenuClick(
+      `.environments-menu div:first-of-type .nav-item:nth-child(${index}) .nav-link`,
+      DropdownMenuEnvironmentActions.REIMPORT_OPENAPI
+    );
+  }
+
   public async start(): Promise<void> {
     await this.startBtn.click();
     await utils.closeTooltip();

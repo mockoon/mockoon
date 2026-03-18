@@ -68,6 +68,7 @@ import { CurlCommandBuilder } from 'src/renderer/app/libs/curl-command-builder.l
 import {
   HumanizeText,
   environmentHasRoute,
+  isRouteDuplicates,
   triggerBrowserDownload
 } from 'src/renderer/app/libs/utils.lib';
 import {
@@ -79,6 +80,7 @@ import {
 import { DataSubject } from 'src/renderer/app/models/data.model';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import { MessageCodes } from 'src/renderer/app/models/messages.model';
+import { OpenApiReimportPlan } from 'src/renderer/app/models/openapi.model';
 import {
   EnvironmentLogsTabsNameType,
   TabsNameType,
@@ -676,6 +678,143 @@ export class EnvironmentsService {
     }
 
     return EMPTY;
+  }
+
+  /**
+   * Build a dry-run plan for an OpenAPI reimport.
+   *
+   * @param environmentUuid
+   * @param spec
+   */
+  public planOpenAPIReimport(
+    environmentUuid: string,
+    spec: string
+  ): Observable<OpenApiReimportPlan> {
+    const targetEnvironment = this.store.getEnvironmentByUUID(environmentUuid);
+
+    if (!targetEnvironment) {
+      return throwError(() => new Error('Target environment not found'));
+    }
+
+    const converter = new OpenApiConverter();
+
+    return from(converter.convertFromOpenAPI(spec)).pipe(
+      map((environment) => {
+        const importedRoutes = environment?.routes ?? [];
+        const routesToAdd = importedRoutes.filter(
+          (route) => !environmentHasRoute(targetEnvironment, route)
+        );
+        let newResponsesCount = 0;
+
+        const responsesToAdd = importedRoutes
+          .filter((route) => environmentHasRoute(targetEnvironment, route))
+          .flatMap((importedRoute) => {
+            const existingRoute = targetEnvironment.routes.find((envRoute) =>
+              isRouteDuplicates(envRoute, importedRoute)
+            );
+
+            if (!existingRoute) {
+              return [];
+            }
+
+            const existingStatusCodes = new Set(
+              existingRoute.responses.map((r) => r.statusCode)
+            );
+            const newResponses = importedRoute.responses.filter(
+              (r) => !existingStatusCodes.has(r.statusCode)
+            );
+
+            if (newResponses.length === 0) {
+              return [];
+            }
+
+            newResponsesCount = newResponsesCount + newResponses.length;
+
+            return [
+              {
+                existingRouteUuid: existingRoute.uuid,
+                method: existingRoute.method,
+                endpoint: existingRoute.endpoint,
+                newResponses
+              }
+            ];
+          });
+
+        return {
+          environmentName: targetEnvironment.name,
+          routesToAdd,
+          counts: {
+            newRoutes: routesToAdd.length,
+            newResponses: newResponsesCount,
+            skippedRoutes: importedRoutes.length - routesToAdd.length
+          },
+          responsesToAdd
+        };
+      })
+    );
+  }
+
+  /**
+   * Reimport an OpenAPI specification into an existing environment.
+   * Only missing routes are added in the first version.
+   *
+   * @param environmentUuid
+   * @param spec
+   */
+  public reimportOpenAPIRoutes(
+    environmentUuid: string,
+    reimportPlan: OpenApiReimportPlan,
+    filteredRouteUuids: Record<string, boolean>
+  ) {
+    const targetEnvironment = this.store.getEnvironmentByUUID(environmentUuid);
+
+    if (!targetEnvironment) {
+      return;
+    }
+
+    let addedRoutesCount = 0;
+    let addedResponsesCount = 0;
+
+    if (reimportPlan) {
+      reimportPlan.routesToAdd.forEach((route) => {
+        if (!filteredRouteUuids[route.uuid]) {
+          return;
+        }
+
+        this.store.update(
+          addRouteAction(environmentUuid, route, 'root', false)
+        );
+        addedRoutesCount++;
+      });
+
+      reimportPlan.responsesToAdd.forEach(
+        ({ existingRouteUuid, newResponses }) => {
+          newResponses.forEach((response) => {
+            if (!filteredRouteUuids[response.uuid]) {
+              return;
+            }
+
+            this.store.update(
+              addRouteResponseAction(
+                environmentUuid,
+                existingRouteUuid,
+                response,
+                false
+              )
+            );
+            addedResponsesCount++;
+          });
+        }
+      );
+
+      this.loggerService.logMessage('info', 'OPENAPI_REIMPORT_SUCCESS', {
+        environmentUuid,
+        environmentName: targetEnvironment.name,
+        addedRoutes: addedRoutesCount,
+        addedResponses: addedResponsesCount,
+        skippedRoutes: reimportPlan.counts.skippedRoutes
+      });
+    }
   }
 
   /**
