@@ -81,7 +81,6 @@ type ModalWithoutPayload = Exclude<
   | 'editor'
   | 'manageInstances'
   | 'confirm'
-  | 'openApiImport'
   | 'selfHostingInstructions'
 >;
 
@@ -103,7 +102,9 @@ export class UIService {
     ModalNames,
     {
       component: any;
-      options: NgbModalOptions;
+      options:
+        | NgbModalOptions
+        | ((payload: OpenApiImportModalPayload) => NgbModalOptions);
     }
   > = {
     commandPalette: {
@@ -167,7 +168,10 @@ export class UIService {
     },
     openApiImport: {
       component: OpenapiImportModalComponent,
-      options: commonConfigs.large
+      options: (payload: OpenApiImportModalPayload) =>
+        payload.mode === 'reimport'
+          ? commonConfigs.extraLarge
+          : commonConfigs.large
     },
     manageInstances: {
       component: ManageInstancesModalComponent,
@@ -277,7 +281,9 @@ export class UIService {
 
     this.modalsInstances[modalName] = this.ngbModal.open(
       this.modals[modalName].component,
-      this.modals[modalName].options
+      typeof this.modals[modalName].options === 'function'
+        ? this.modals[modalName].options(payload as OpenApiImportModalPayload)
+        : this.modals[modalName].options
     );
 
     this.modalsInstances[modalName].hidden.subscribe(() => {

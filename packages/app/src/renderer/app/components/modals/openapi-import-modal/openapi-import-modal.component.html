@@ -1,72 +1,195 @@
 @let modalPayload = modalPayload$ | async;
 @let bodyEditorMode = bodyEditorMode$ | async;
+@let reimportPreview = reimportPreview$ | async;
+@let previewPlan = getPreviewPlan(reimportPreview);
 
 <div class="modal-header">
   <h4 class="modal-title">
-    OpenAPI specification import
+    @if (modalPayload?.mode === 'import') {
+      OpenAPI specification import
+    } @else if (modalPayload?.mode === 'reimport') {
+      OpenAPI specification reimport
+    }
     <br />
     <small class="text-muted h6">
-      Import an OpenAPI v2 or v3 specification from a URL, a file or by pasting
-      its content.
+      @if (modalPayload?.mode === 'import') {
+        Import an OpenAPI v2 or v3 specification from a URL, a file or by
+        pasting its content.
+      } @else if (modalPayload?.mode === 'reimport') {
+        Reimport an OpenAPI v2 or v3 specification into the current mock API.
+        Only missing endpoints will be created.
+      }
     </small>
   </h4>
 </div>
-<div class="modal-body" [formGroup]="importForm">
-  <div class="d-flex align-items-center mb-3">
-    <div class="col">
-      <div class="input-group align-items-center">
-        <label for="importUrl" class="col-form-label pe-2">URL</label>
+<div class="modal-body openapi-modal-body" [formGroup]="importForm">
+  <div class="d-flex mh0 h-100 gap-4">
+    <div
+      class="d-flex flex-column mh0"
+      [class]="{
+        'w-50': modalPayload?.mode === 'reimport',
+        'flex-fill': modalPayload?.mode !== 'reimport'
+      }"
+    >
+      <div class="d-flex align-items-center mb-3">
         <div class="col">
-          <input
-            type="text"
-            id="importUrl"
-            class="form-control me-2"
-            placeholder="Paste the OpenAPI spec URL"
-            formControlName="url"
-          />
+          <div class="input-group align-items-center">
+            <label for="importUrl" class="col-form-label pe-2">URL</label>
+            <div class="col">
+              <input
+                type="text"
+                id="importUrl"
+                class="form-control me-2"
+                placeholder="Paste the OpenAPI spec URL"
+                formControlName="url"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="col-auto fw-bold mx-2"><label>OR</label></div>
+        <div class="col-auto">
+          @if (isWeb) {
+            <label id="browseOpenApi" for="importFile" class="btn btn-custom">
+              <app-svg icon="find_in_page" class="me-2" />Browse
+              <input
+                type="file"
+                class="form-control visually-hidden"
+                id="importFile"
+                (change)="onFileSelected($event)"
+              />
+            </label>
+          } @else {
+            <button
+              id="browseOpenApi"
+              type="button"
+              class="btn btn-custom"
+              (click)="readFile()"
+              [disabled]="taskInProgress()"
+            >
+              <app-svg icon="find_in_page" class="me-2" />Browse
+            </button>
+          }
         </div>
       </div>
+      <label for="importUrl" class="form-label mb-3">
+        Or paste the OpenAPI specification content below:
+      </label>
+      <div class="editor flex-fill mh0">
+        <app-editor
+          class="h-100 mh0"
+          formControlName="content"
+          [options]="defaultEditorConfig.options"
+          [mode]="bodyEditorMode"
+        />
+      </div>
+      <p class="px-2 pt-2 mb-0 text-muted fst-italic">
+        Note: URL references (<code>$ref</code>) will be automatically resolved.
+        File references are not supported.
+      </p>
     </div>
-    <div class="col-auto fw-bold mx-2"><label>OR</label></div>
-    <div class="col-auto">
-      @if (isWeb) {
-        <label id="browseOpenApi" for="importFile" class="btn btn-custom">
-          <app-svg icon="find_in_page" class="me-2" />Browse
-          <input
-            type="file"
-            class="form-control visually-hidden"
-            id="importFile"
-            (change)="onFileSelected($event)"
-          />
-        </label>
-      } @else {
-        <button
-          id="browseOpenApi"
-          type="button"
-          class="btn btn-custom"
-          (click)="readFile()"
-          [disabled]="taskInProgress()"
-        >
-          <app-svg icon="find_in_page" class="me-2" />Browse
-        </button>
-      }
-    </div>
+
+    @if (modalPayload?.mode === 'reimport') {
+      <div class="d-flex flex-column w-50">
+        <fieldset class="flex-fill d-flex flex-column mh0">
+          <legend>Preview</legend>
+
+          @if (reimportPreview?.status === 'idle') {
+            <p class="mb-0 text-muted">
+              Paste or load an OpenAPI specification to preview which new routes
+              will be created.
+            </p>
+          } @else if (reimportPreview?.status === 'loading') {
+            <div class="d-flex align-items-center text-muted">
+              <app-spinner class="me-2" />Building reimport preview...
+            </div>
+          } @else if (reimportPreview?.status === 'error') {
+            <p class="mb-0 text-danger">
+              {{ reimportPreview['error'] }}
+            </p>
+          } @else if (previewPlan) {
+            <p class="mb-2">
+              {{ previewPlan.routesToAdd.length }} new route(s) will be added to
+              "{{ previewPlan.environmentName }}".
+              {{ previewPlan.counts.skippedRoutes }} existing route(s) will be
+              skipped.
+              @if (previewPlan.counts.newResponses > 0) {
+                {{ previewPlan.counts.newResponses }} new response(s) detected
+                on existing routes.
+              }
+            </p>
+            <div class="flex-fill overflow-auto mh0">
+              @if (previewPlan.routesToAdd.length > 0) {
+                <p class="text-muted">Routes to add</p>
+                <ul class="mb-0 ps-3">
+                  @for (
+                    route of previewPlan.routesToAdd;
+                    track route.uuid;
+                    let routeIndex = $index
+                  ) {
+                    <li class="list-unstyled">
+                      <input
+                        type="checkbox"
+                        class="form-check-input me-2 flex-shrink-0"
+                        [formField]="choiceForm?.[route.uuid]"
+                      />
+                      <span
+                        class="color-method-{{
+                          previewPlan.routesToAdd[routeIndex].method | lowercase
+                        }} me-2"
+                      >
+                        {{
+                          previewPlan.routesToAdd[routeIndex].method | uppercase
+                        }} </span
+                      >/{{ previewPlan.routesToAdd[routeIndex].endpoint }}
+                    </li>
+                  }
+                </ul>
+              }
+
+              @if (previewPlan.counts.newResponses > 0) {
+                <p class="text-muted mt-3">New responses for existing routes</p>
+
+                <ul class="mb-0 ps-3">
+                  @for (
+                    routeEntry of previewPlan.responsesToAdd;
+                    track routeEntry.existingRouteUuid
+                  ) {
+                    <li class="list-unstyled mb-1">
+                      <span
+                        class="color-method-{{
+                          routeEntry.method | lowercase
+                        }} me-1"
+                      >
+                        {{ routeEntry.method | uppercase }} </span
+                      >/{{ routeEntry.endpoint }}
+                      <ul class="ps-3 mb-0">
+                        @for (
+                          response of routeEntry.newResponses;
+                          track response.uuid
+                        ) {
+                          <li class="list-unstyled">
+                            <input
+                              type="checkbox"
+                              class="form-check-input me-2 flex-shrink-0"
+                              [formField]="choiceForm?.[response.uuid]"
+                            />
+                            {{ response.statusCode }}
+                            @if (response.label) {
+                              – {{ response.label }}
+                            }
+                          </li>
+                        }
+                      </ul>
+                    </li>
+                  }
+                </ul>
+              }
+            </div>
+          }
+        </fieldset>
+      </div>
+    }
   </div>
-  <label for="importUrl" class="form-label mb-3">
-    Or paste the OpenAPI specification content below:
-  </label>
-  <div class="editor">
-    <app-editor
-      class="h-100"
-      formControlName="content"
-      [options]="defaultEditorConfig.options"
-      [mode]="bodyEditorMode"
-    />
-  </div>
-  <p class="px-2 pt-2 mb-0 text-muted fst-italic">
-    Note: URL references (<code>$ref</code>) will be automatically resolved.
-    File references are not supported.
-  </p>
 </div>
 <div class="modal-footer">
   @if (taskInProgress()) {
@@ -78,10 +201,19 @@
     type="button"
     id="importOpenApi"
     class="btn btn-primary me-2"
-    (click)="import(modalPayload.cloud)"
-    [disabled]="taskInProgress() || importForm.get('content').invalid"
+    (click)="submit(modalPayload)"
+    [disabled]="
+      taskInProgress() ||
+      importForm.get('content').invalid ||
+      !modalPayload ||
+      (modalPayload.mode === 'reimport' && reimportPreview?.status !== 'ready')
+    "
   >
-    Import
+    @if (modalPayload?.mode === 'import') {
+      Import
+    } @else if (modalPayload?.mode === 'reimport') {
+      Reimport
+    }
   </button>
   <button type="button" class="btn btn-secondary modal-close" (click)="close()">
     Cancel

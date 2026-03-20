@@ -7,9 +7,11 @@ export enum DropdownMenuEnvironmentActions {
   DUPLICATE_TO_CLOUD = 1,
   DUPLICATE = 2,
   COPY_JSON = 3,
-  SHOW_FOLDER = 4,
-  MOVE_FOLDER = 5,
-  CLOSE = 6
+  REIMPORT_OPENAPI = 4,
+  // separator = 5
+  SHOW_FOLDER = 6,
+  MOVE_FOLDER = 7,
+  CLOSE = 8
 }
 
 export enum DropdownMenuDatabucketActions {
