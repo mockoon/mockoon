@@ -37,7 +37,8 @@ import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import {
   DropdownMenuComponent,
   DropdownMenuElement,
-  DropdownMenuItem
+  DropdownMenuItem,
+  DropdownMenuSeparator
 } from 'src/renderer/app/components/dropdown-menu/dropdown-menu.component';
 import { EditableElementComponent } from 'src/renderer/app/components/editable-element/editable-element.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
@@ -169,9 +170,25 @@ export class EnvironmentsMenuComponent {
     }
   };
 
-  public localEnvironmentDropdownMenuItems: DropdownMenuItem[] = [
+  public localEnvironmentDropdownMenuItems: (
+    | DropdownMenuItem
+    | DropdownMenuSeparator
+  )[] = [
     ...this.commonDropdownMenuItems,
     this.copyConfigurationDropdownMenuItems,
+    {
+      label: 'Reimport from OpenAPI/Swagger',
+      icon: 'description',
+      twoSteps: false,
+      action: ({ environmentUuid }: dropdownMenuPayload) => {
+        this.uiService.openModal('openApiImport', {
+          cloud: false,
+          mode: 'reimport',
+          environmentUuid
+        });
+      }
+    },
+    { separator: true },
     {
       label: 'Show data file in explorer/finder',
       icon: 'folder',
@@ -199,7 +216,10 @@ export class EnvironmentsMenuComponent {
       }
     }
   ];
-  public cloudEnvironmentDropdownMenuItems: DropdownMenuItem[] = [
+  public cloudEnvironmentDropdownMenuItems: (
+    | DropdownMenuItem
+    | DropdownMenuSeparator
+  )[] = [
     ...this.commonDropdownMenuItems,
     {
       label: this.isWeb ? 'Manage deployment' : 'Deploy to the cloud',
@@ -232,9 +252,22 @@ export class EnvironmentsMenuComponent {
       }
     },
     this.copyConfigurationDropdownMenuItems,
+    {
+      label: 'Reimport from OpenAPI/Swagger',
+      icon: 'description',
+      twoSteps: false,
+      action: ({ environmentUuid }: dropdownMenuPayload) => {
+        this.uiService.openModal('openApiImport', {
+          cloud: true,
+          mode: 'reimport',
+          environmentUuid
+        });
+      }
+    },
     ...(this.isWeb
       ? []
       : [
+          { separator: true },
           {
             label: 'Show local backup data file in explorer/finder',
             icon: 'folder',
@@ -313,7 +346,10 @@ export class EnvironmentsMenuComponent {
       icon: 'description',
       twoSteps: false,
       action: () => {
-        this.uiService.openModal('openApiImport', { cloud: true });
+        this.uiService.openModal('openApiImport', {
+          mode: 'import',
+          cloud: true
+        });
       },
       disabled$: () => this.isOfflineOrQuotaReached$
     }
@@ -351,7 +387,10 @@ export class EnvironmentsMenuComponent {
       icon: 'description',
       twoSteps: false,
       action: () => {
-        this.uiService.openModal('openApiImport', { cloud: false });
+        this.uiService.openModal('openApiImport', {
+          mode: 'import',
+          cloud: false
+        });
       }
     },
     {

@@ -36,6 +36,10 @@ export type ManageInstancesModalPayload = {
   refresh: boolean;
 };
 
+export type OpenApiImportMode = 'import' | 'reimport';
+
 export type OpenApiImportModalPayload = {
   cloud: boolean;
+  mode: OpenApiImportMode;
+  environmentUuid?: string;
 };

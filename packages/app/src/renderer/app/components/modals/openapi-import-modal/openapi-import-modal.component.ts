@@ -1,10 +1,10 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, LowerCasePipe, UpperCasePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
-  signal,
-  inject
+  inject,
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -14,15 +14,19 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
+import { form, FormField } from '@angular/forms/signals';
 import { OpenApiConverter } from '@mockoon/commons';
 import {
   catchError,
+  combineLatest,
+  debounceTime,
   EMPTY,
   filter,
   finalize,
   from,
   map,
   Observable,
+  of,
   startWith,
   switchMap,
   tap
@@ -31,12 +35,16 @@ import { EditorComponent } from 'src/renderer/app/components/editor/editor.compo
 import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
+import { OpenApiReimportPreviewState } from 'src/renderer/app/models/openapi.model';
+import { OpenApiImportModalPayload } from 'src/renderer/app/models/ui.model';
 import { DataService } from 'src/renderer/app/services/data.service';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
+import { updateOpenApiImportAction } from 'src/renderer/app/stores/actions';
+import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
 @Component({
@@ -50,7 +58,10 @@ import { Config } from 'src/renderer/config';
     ReactiveFormsModule,
     SpinnerComponent,
     SvgComponent,
-    AsyncPipe
+    AsyncPipe,
+    UpperCasePipe,
+    LowerCasePipe,
+    FormField
   ]
 })
 export class OpenapiImportModalComponent {
@@ -61,6 +72,7 @@ export class OpenapiImportModalComponent {
   private dialogsService = inject(DialogsService);
   private mainApiService = inject(MainApiService);
   private dataService = inject(DataService);
+  private store = inject(Store);
 
   public defaultEditorConfig = {
     ...defaultEditorOptions,
@@ -73,6 +85,66 @@ export class OpenapiImportModalComponent {
   });
   public taskInProgress = signal(false);
   public modalPayload$ = this.uiService.getModalPayload$('openApiImport');
+  public reimportPreview$: Observable<OpenApiReimportPreviewState> =
+    combineLatest([
+      this.modalPayload$,
+      this.importForm
+        .get('content')
+        .valueChanges.pipe(
+          startWith(this.importForm.get('content').value),
+          debounceTime(250)
+        )
+    ]).pipe(
+      switchMap(([modalPayload, content]) => {
+        if (
+          !this.isReimport(modalPayload) ||
+          !modalPayload?.environmentUuid ||
+          !content?.trim()
+        ) {
+          return of<OpenApiReimportPreviewState>({ status: 'idle' });
+        }
+
+        return this.environmentsService
+          .planOpenAPIReimport(modalPayload.environmentUuid, content)
+          .pipe(
+            tap((reimportPlan) => {
+              this.store.update(
+                updateOpenApiImportAction({
+                  reimportPlan
+                })
+              );
+              this.choiceForm().value.set(
+                [
+                  ...reimportPlan.routesToAdd.map((route) => route.uuid),
+                  ...reimportPlan.responsesToAdd.flatMap(({ newResponses }) =>
+                    newResponses.map((r) => r.uuid)
+                  )
+                ].reduce(
+                  (choices, uuid) => {
+                    choices[uuid] = true;
+
+                    return choices;
+                  },
+                  {} as Record<string, boolean>
+                )
+              );
+            }),
+            map((reimportPlan) => {
+              return {
+                status: 'ready',
+                plan: reimportPlan
+              } as OpenApiReimportPreviewState;
+            }),
+            startWith({ status: 'loading' } as OpenApiReimportPreviewState),
+            catchError((error) => {
+              return of<OpenApiReimportPreviewState>({
+                status: 'error',
+                error: error?.message || 'Unable to build preview'
+              });
+            })
+          );
+      })
+    );
   public bodyEditorMode$ = this.importForm.get('content').valueChanges.pipe(
     startWith(defaultEditorOptions.mode),
     map((content) => {
@@ -85,6 +157,7 @@ export class OpenapiImportModalComponent {
     })
   );
   public isWeb = Config.isWeb;
+  public choiceForm = form(signal<Record<string, boolean>>({}));
 
   constructor() {
     this.importForm
@@ -198,8 +271,13 @@ export class OpenapiImportModalComponent {
             environmentName: environment.name
           });
 
-          this.taskInProgress.set(false);
+          this.store.update(
+            updateOpenApiImportAction({
+              reimportPlan: null
+            })
+          );
 
+          this.taskInProgress.set(false);
           this.close();
         }),
         catchError((error) => {
@@ -213,6 +291,24 @@ export class OpenapiImportModalComponent {
         })
       )
       .subscribe();
+  }
+
+  public submit(modalPayload: OpenApiImportModalPayload | null) {
+    if (!modalPayload) {
+      return;
+    }
+
+    if (this.isReimport(modalPayload)) {
+      this.reimport(modalPayload.environmentUuid);
+
+      return;
+    }
+
+    this.import(modalPayload.cloud);
+  }
+
+  public getPreviewPlan(reimportPreview: OpenApiReimportPreviewState | null) {
+    return reimportPreview?.status === 'ready' ? reimportPreview.plan : null;
   }
 
   /**
@@ -262,7 +358,38 @@ export class OpenapiImportModalComponent {
     this.importForm.get('file').setValue(file);
   }
 
+  private reimport(environmentUuid?: string) {
+    if (!environmentUuid) {
+      return;
+    }
+
+    this.taskInProgress.set(true);
+
+    this.environmentsService.reimportOpenAPIRoutes(
+      environmentUuid,
+      this.store.get('openApiImport').reimportPlan,
+      this.choiceForm().value()
+    );
+
+    this.store.update(
+      updateOpenApiImportAction({
+        reimportPlan: null
+      })
+    );
+    this.taskInProgress.set(false);
+    this.close();
+  }
+
+  private isReimport(modalPayload: OpenApiImportModalPayload | null) {
+    return (modalPayload?.mode ?? 'import') === 'reimport';
+  }
+
   public close() {
     this.uiService.closeModal('openApiImport');
+    this.store.update(
+      updateOpenApiImportAction({
+        reimportPlan: null
+      })
+    );
   }
 }
