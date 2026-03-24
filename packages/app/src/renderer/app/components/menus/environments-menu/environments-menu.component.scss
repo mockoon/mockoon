@@ -9,3 +9,10 @@
 
   position: relative; // we need this for the resize-column
 }
+
+.cloud-offline-banner {
+  color: $orange-200;
+  background-color: rgba($orange, 0.12);
+  border-top: 1px solid rgba($orange, 0.35);
+  border-bottom: 1px solid rgba($orange, 0.35);
+}

@@ -105,6 +105,7 @@ export type StoreType = {
   callbackSettings: CallbackSettings;
   sync: {
     status: boolean;
+    lastDisconnectedAt: number | null;
     presence: SyncPresence;
     offlineReason: string | null;
     alert: string | null;

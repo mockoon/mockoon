@@ -6,8 +6,19 @@
   <ng-container *ngFor="let item of items">
     <!-- Single toggle mode (checkbox, boolean) -->
     <ng-container *ngIf="items.length === 1">
+      @let idLabel = (item.label | uppercase) ?? 'checkbox';
+
+      <input
+        id="{{ prefix }}-{{ idLabel }}-input"
+        class="btn-check"
+        type="checkbox"
+        [formControl]="control"
+        autocomplete="off"
+        [checked]="control.value === true"
+      />
       <label
-        id="{{ prefix }}-{{ item.label | uppercase }}"
+        id="{{ prefix }}-{{ idLabel }}"
+        for="{{ prefix }}-{{ idLabel }}-input"
         class="btn btn-custom px-2 d-flex align-items-center"
         [class]="{
           'btn-primary': control.value === true,
@@ -22,13 +33,6 @@
             : ''
         "
       >
-        <input
-          class="btn-check"
-          type="checkbox"
-          [formControl]="control"
-          autocomplete="off"
-          [checked]="control.value === true"
-        />
         <app-svg
           *ngIf="item.icon"
           [icon]="item.icon"
@@ -40,8 +44,18 @@
 
     <!-- Multi toggle mode (radio buttons, uncheckable) -->
     <ng-container *ngIf="items.length > 1">
+      <input
+        id="{{ prefix }}-{{ item.value }}-input"
+        class="btn-check"
+        type="radio"
+        [formControl]="control"
+        [value]="item.value"
+        autocomplete="off"
+        [checked]="item.value === control.value"
+      />
       <label
         id="{{ prefix }}-{{ item.value }}"
+        for="{{ prefix }}-{{ item.value }}-input"
         class="btn btn-custom px-2 d-flex align-items-center"
         [class]="{
           'btn-primary': item.value === control.value,
@@ -57,14 +71,6 @@
         "
         (click)="itemClick(item, $event)"
       >
-        <input
-          class="btn-check"
-          type="radio"
-          [formControl]="control"
-          [value]="item.value"
-          autocomplete="off"
-          [checked]="item.value === control.value"
-        />
         <app-svg
           *ngIf="item.icon"
           [icon]="item.icon"

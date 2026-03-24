@@ -58,6 +58,17 @@ export class EnvironmentDatabucketsComponent {
     Record<string, ProcessedDatabucketWithoutValue>
   >;
   public scrollToBottom = this.uiService.scrollToBottom;
+  public isActiveEnvironmentEditable$ = this.store
+    .selectIsActiveEnvironmentEditable()
+    .pipe(
+      tap((isEditable) => {
+        if (isEditable) {
+          this.activeDatabucketForm.enable({ emitEvent: false });
+        } else {
+          this.activeDatabucketForm.disable({ emitEvent: false });
+        }
+      })
+    );
 
   constructor() {
     this.hasDatabuckets$ = this.store.selectActiveEnvironment().pipe(

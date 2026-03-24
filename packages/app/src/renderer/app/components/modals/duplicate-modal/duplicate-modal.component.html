@@ -1,18 +1,22 @@
+@let environments = environments$ | async;
+
 <div class="modal-header">
   <h3 class="modal-title">
     Choose target environment
     <br />
     <small class="text-muted h6">
       Copy the
-      <ng-container *ngIf="entityInformation.subject === 'route'">
-        route
-      </ng-container>
-      <ng-container *ngIf="entityInformation.subject === 'databucket'">
-        data bucket
-      </ng-container>
-      <ng-container *ngIf="entityInformation.subject === 'callback'">
-        callback
-      </ng-container>
+      @switch (entityInformation.subject) {
+        @case ('route') {
+          route
+        }
+        @case ('databucket') {
+          data bucket
+        }
+        @case ('callback') {
+          callback
+        }
+      }
       <code>{{ entityInformation.displayName }}</code>
       to:
     </small>
@@ -21,7 +25,7 @@
 
 <div class="modal-body p-0">
   <div class="list-group list-group-flush">
-    <ng-container *ngFor="let environment of environments$ | async">
+    @for (environment of environments; track environment.uuid) {
       <button
         class="list-group-item list-group-item-action"
         type="button"
@@ -34,7 +38,7 @@
           }}
         </div>
       </button>
-    </ng-container>
+    }
   </div>
 </div>
 <div class="modal-footer">

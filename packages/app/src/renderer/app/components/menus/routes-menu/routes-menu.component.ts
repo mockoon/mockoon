@@ -31,7 +31,7 @@ import {
   NgbPopover,
   NgbTooltip
 } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, merge, of } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, merge } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -124,7 +124,15 @@ export class RoutesMenuComponent {
   public disabledRoutes$: Observable<string[]>;
   public collapsedFolders$: Observable<string[]>;
   public routesFilter$: Observable<string>;
-  public dragEnabled = true;
+  public isActiveEnvironmentEditable$ =
+    this.store.selectIsActiveEnvironmentEditable();
+  private manualDragEnabled$ = new BehaviorSubject(true);
+  public dragEnabled$ = combineLatest([
+    this.isActiveEnvironmentEditable$,
+    this.manualDragEnabled$
+  ]).pipe(
+    map(([isEditable, manualDragEnabled]) => isEditable && manualDragEnabled)
+  );
   public focusableInputs = FocusableInputs;
   public folderForm: UntypedFormGroup;
   public menuSize = Config.defaultSecondaryMenuSize;
@@ -136,6 +144,10 @@ export class RoutesMenuComponent {
       label: 'Duplicate',
       icon: 'content_copy',
       twoSteps: false,
+      disabled$: () =>
+        this.store
+          .selectIsActiveEnvironmentEditable()
+          .pipe(map((isEditable) => !isEditable)),
       action: ({ parentId, routeUuid }: routeDropdownMenuPayload) => {
         this.environmentsService.duplicateRoute(parentId, routeUuid);
       }
@@ -203,6 +215,10 @@ export class RoutesMenuComponent {
       confirmIcon: 'error',
       confirmLabel: 'Confirm deletion',
       twoSteps: true,
+      disabled$: () =>
+        this.store
+          .selectIsActiveEnvironmentEditable()
+          .pipe(map((isEditable) => !isEditable)),
       action: ({ routeUuid }: routeDropdownMenuPayload) => {
         this.environmentsService.removeRoute(routeUuid);
       }
@@ -213,6 +229,10 @@ export class RoutesMenuComponent {
       label: 'Add CRUD route',
       icon: 'endpoints',
       twoSteps: false,
+      disabled$: () =>
+        this.store
+          .selectIsActiveEnvironmentEditable()
+          .pipe(map((isEditable) => !isEditable)),
       action: ({ folderUuid }: folderDropdownMenuPayload) => {
         this.environmentsService.addCRUDRoute(folderUuid);
       }
@@ -221,6 +241,10 @@ export class RoutesMenuComponent {
       label: 'Add HTTP route',
       icon: 'endpoint',
       twoSteps: false,
+      disabled$: () =>
+        this.store
+          .selectIsActiveEnvironmentEditable()
+          .pipe(map((isEditable) => !isEditable)),
       action: ({ folderUuid }: folderDropdownMenuPayload) => {
         this.environmentsService.addHTTPRoute(folderUuid);
       }
@@ -229,6 +253,10 @@ export class RoutesMenuComponent {
       label: 'Add folder',
       icon: 'folder',
       twoSteps: false,
+      disabled$: () =>
+        this.store
+          .selectIsActiveEnvironmentEditable()
+          .pipe(map((isEditable) => !isEditable)),
       action: ({ folderUuid }: folderDropdownMenuPayload) => {
         this.environmentsService.addFolder(folderUuid);
       }
@@ -252,8 +280,18 @@ export class RoutesMenuComponent {
       confirmIcon: 'error',
       confirmLabel: 'Confirm deletion',
       disabled$: ({ folder }: folderDropdownMenuPayload) =>
-        of(folder.children.length > 0),
-      disabledLabel$: () => of('Delete folder (not empty)'),
+        this.store
+          .selectIsActiveEnvironmentEditable()
+          .pipe(map((isEditable) => !isEditable || folder.children.length > 0)),
+      disabledLabel$: () =>
+        this.store
+          .selectIsActiveEnvironmentEditable()
+          .pipe(
+            map((isEditable) =>
+              !isEditable ? 'Delete folder' : 'Delete folder (not empty)'
+            )
+          ),
+
       action: ({ folderUuid }: folderDropdownMenuPayload) => {
         this.environmentsService.removeFolder(folderUuid);
       }
@@ -322,6 +360,20 @@ export class RoutesMenuComponent {
             this.folderForm.get('uuid').value,
             newFolderProperties
           );
+        }),
+        takeUntilDestroyed()
+      )
+      .subscribe();
+
+    this.store
+      .selectIsActiveEnvironmentEditable()
+      .pipe(
+        tap((isEditable) => {
+          if (isEditable) {
+            this.folderForm.enable({ emitEvent: false });
+          } else {
+            this.folderForm.disable({ emitEvent: false });
+          }
         }),
         takeUntilDestroyed()
       )
@@ -404,7 +456,7 @@ export class RoutesMenuComponent {
 
   public editFolder(folder: Folder, editing: boolean) {
     if (editing) {
-      this.dragEnabled = false;
+      this.manualDragEnabled$.next(false);
 
       this.folderForm.setValue(
         {
@@ -414,7 +466,7 @@ export class RoutesMenuComponent {
         { emitEvent: false }
       );
     } else {
-      this.dragEnabled = true;
+      this.manualDragEnabled$.next(true);
     }
   }
 

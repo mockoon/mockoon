@@ -8,6 +8,7 @@
 @let selectedLog = activeEnvironmentLog$ | async;
 @let clearEnvironmentLogsRequested = clearEnvironmentLogsRequested$ | async;
 @let isEnvCloud = isEnvCloud$ | async;
+@let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
 
 <div class="environment-logs-header d-flex justify-content-between py-2">
   <div class="d-flex align-items-center">
@@ -18,6 +19,7 @@
         class="btn btn-link btn-icon"
         ngbTooltip="Record"
         (click)="startRecording(activeEnvironmentUUID)"
+        [disabled]="!isActiveEnvironmentEditable"
       >
         <app-svg icon="record" />
       </button>

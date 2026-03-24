@@ -36,7 +36,6 @@ import {
 } from '@mockoon/commons';
 import {
   NgbDropdown,
-  NgbDropdownButtonItem,
   NgbDropdownItem,
   NgbDropdownMenu,
   NgbDropdownToggle,
@@ -126,7 +125,6 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
     NgbDropdownToggle,
     NgbDropdownMenu,
     FilterComponent,
-    NgbDropdownButtonItem,
     NgbDropdownItem,
     DraggableDirective,
     DropzoneDirective,
@@ -338,7 +336,11 @@ export class EnvironmentRoutesComponent {
             })
           )
           .subscribe();
-      }
+      },
+      disabled$: () =>
+        this.store
+          .selectIsActiveEnvironmentEditable()
+          .pipe(map((isEditable) => !isEditable))
     },
     {
       label: 'Show file in explorer/finder',
@@ -361,6 +363,20 @@ export class EnvironmentRoutesComponent {
       }
     }
   ];
+  public isActiveEnvironmentEditable$ = this.store
+    .selectIsActiveEnvironmentEditable()
+    .pipe(
+      tap((isEditable) => {
+        if (isEditable) {
+          this.activeRouteForm.enable({ emitEvent: false });
+          this.activeRouteResponseForm.enable({ emitEvent: false });
+          this.refreshDisabledFields();
+        } else {
+          this.activeRouteForm.disable({ emitEvent: false });
+          this.activeRouteResponseForm.disable({ emitEvent: false });
+        }
+      })
+    );
 
   constructor() {
     this.activeEnvironment$ = this.store.selectActiveEnvironment().pipe(
@@ -595,47 +611,79 @@ export class EnvironmentRoutesComponent {
       .pipe(
         filter((route) => !!route),
         this.store.distinctUUIDOrForce(),
+        tap((activeRoute) => {
+          this.activeRouteForm.patchValue(
+            {
+              documentation: activeRoute.documentation,
+              method: activeRoute.method,
+              endpoint: activeRoute.endpoint,
+              responseMode: activeRoute.responseMode,
+              streamingMode: activeRoute.streamingMode,
+              streamingInterval: activeRoute.streamingInterval
+            },
+            { emitEvent: false }
+          );
+        }),
         takeUntilDestroyed()
       )
-      .subscribe((activeRoute) => {
-        this.activeRouteForm.patchValue(
-          {
-            documentation: activeRoute.documentation,
-            method: activeRoute.method,
-            endpoint: activeRoute.endpoint,
-            responseMode: activeRoute.responseMode,
-            streamingMode: activeRoute.streamingMode,
-            streamingInterval: activeRoute.streamingInterval
-          },
-          { emitEvent: false }
-        );
-      });
+      .subscribe();
     // subscribe to active route response changes to reset the form
     this.activeRouteResponse$
       .pipe(
         filter((routeResponse) => !!routeResponse),
         this.store.distinctUUIDOrForce(),
+        tap((activeRouteResponse) => {
+          this.activeRouteResponseForm.patchValue(
+            {
+              statusCode: activeRouteResponse.statusCode,
+              label: activeRouteResponse.label,
+              latency: activeRouteResponse.latency,
+              bodyType: activeRouteResponse.bodyType,
+              filePath: activeRouteResponse.filePath,
+              databucketID: activeRouteResponse.databucketID,
+              sendFileAsBody: activeRouteResponse.sendFileAsBody,
+              body: activeRouteResponse.body,
+              rules: activeRouteResponse.rules,
+              disableTemplating: activeRouteResponse.disableTemplating,
+              fallbackTo404: activeRouteResponse.fallbackTo404,
+              crudKey: activeRouteResponse.crudKey
+            },
+            { emitEvent: false }
+          );
+        }),
         takeUntilDestroyed()
       )
-      .subscribe((activeRouteResponse) => {
-        this.activeRouteResponseForm.patchValue(
-          {
-            statusCode: activeRouteResponse.statusCode,
-            label: activeRouteResponse.label,
-            latency: activeRouteResponse.latency,
-            bodyType: activeRouteResponse.bodyType,
-            filePath: activeRouteResponse.filePath,
-            databucketID: activeRouteResponse.databucketID,
-            sendFileAsBody: activeRouteResponse.sendFileAsBody,
-            body: activeRouteResponse.body,
-            rules: activeRouteResponse.rules,
-            disableTemplating: activeRouteResponse.disableTemplating,
-            fallbackTo404: activeRouteResponse.fallbackTo404,
-            crudKey: activeRouteResponse.crudKey
-          },
-          { emitEvent: false }
-        );
-      });
+      .subscribe();
+  }
+
+  /**
+   * When the form is fully re-enabled, [attr.disabled] may be reset and
+   * the rules not applied anymore
+   *
+   * (Ideally, we will switch to signal forms where this is not an issue)
+   */
+  private refreshDisabledFields() {
+    const activeRoute = this.store.getActiveRoute();
+
+    if (!activeRoute) {
+      return;
+    }
+
+    if (this.activeRouteForm.get(['streamingMode']).value === null) {
+      this.activeRouteForm
+        .get(['streamingInterval'])
+        .disable({ emitEvent: false });
+    } else {
+      this.activeRouteForm
+        .get(['streamingInterval'])
+        .enable({ emitEvent: false });
+    }
+
+    if (activeRoute.type === RouteType.WS && !!activeRoute.streamingMode) {
+      this.activeRouteResponseForm.get('latency').disable({ emitEvent: false });
+    } else {
+      this.activeRouteResponseForm.get('latency').enable({ emitEvent: false });
+    }
   }
 
   /**

@@ -150,25 +150,37 @@ export class MainApiListenerService {
         this.store.select('environments').pipe(distinctUntilChanged()),
         this.store.selectActiveEnvironment().pipe(distinctUntilChanged()),
         this.store.select('settings').pipe(distinctUntilChanged()),
-        this.store.select('sync').pipe(distinctUntilChanged())
+        this.store.select('sync').pipe(distinctUntilChanged()),
+        this.store
+          .selectIsActiveEnvironmentEditable()
+          .pipe(distinctUntilChanged())
       ])
         .pipe(
-          tap(([environments, activeEnvironment, settings, sync]) => {
-            this.mainApiService.send('APP_UPDATE_MENU_STATE', {
-              cloudEnabled: sync.status,
-              environmentsCount: environments.length,
-              hasActiveEnvironment: !!activeEnvironment,
-              isActiveEnvironmentCloud: activeEnvironment
-                ? !!settings?.environments.find(
-                    (environmentDescriptor) =>
-                      environmentDescriptor.uuid === activeEnvironment.uuid &&
-                      environmentDescriptor.cloud
-                  )
-                : false,
-              activeEnvironmentRoutesCount:
-                activeEnvironment?.routes.length ?? 0
-            });
-          })
+          tap(
+            ([
+              environments,
+              activeEnvironment,
+              settings,
+              sync,
+              isActiveEnvironmentEditable
+            ]) => {
+              this.mainApiService.send('APP_UPDATE_MENU_STATE', {
+                cloudEnabled: sync.status,
+                environmentsCount: environments.length,
+                hasActiveEnvironment: !!activeEnvironment,
+                isActiveEnvironmentCloud: activeEnvironment
+                  ? !!settings?.environments.find(
+                      (environmentDescriptor) =>
+                        environmentDescriptor.uuid === activeEnvironment.uuid &&
+                        environmentDescriptor.cloud
+                    )
+                  : false,
+                activeEnvironmentRoutesCount:
+                  activeEnvironment?.routes.length ?? 0,
+                isActiveEnvironmentEditable
+              });
+            }
+          )
         )
         .subscribe();
     }

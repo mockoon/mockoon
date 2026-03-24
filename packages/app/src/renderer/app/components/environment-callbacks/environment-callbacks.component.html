@@ -7,6 +7,7 @@
 @let activeCallbackUsages = activeCallbackUsages$ | async;
 @let bodyEditorConfig = bodyEditorConfig$ | async;
 @let hasCallbacks = hasCallbacks$ | async;
+@let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
 
 <div class="d-flex h-100">
   <app-callbacks-menu class="h-100" />
@@ -151,6 +152,7 @@
                     <app-editor
                       class="h-100"
                       [options]="bodyEditorConfig?.options"
+                      [readOnly]="!isActiveEnvironmentEditable"
                       mode="json"
                       [uuid]="activeCallback?.uuid"
                       formControlName="body"

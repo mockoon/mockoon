@@ -47,7 +47,6 @@ export class EnvironmentSettingsComponent {
   public activeEnvironment$: Observable<Environment>;
   public instanceUrl$: Observable<string>;
   public activeEnvironmentForm: UntypedFormGroup;
-  public tlsOptionsFormGroup: UntypedFormGroup;
   public Infinity = Infinity;
   public certTypes: ToggleItems = [
     {
@@ -60,6 +59,17 @@ export class EnvironmentSettingsComponent {
     }
   ];
   public isWeb = Config.isWeb;
+  public isActiveEnvironmentEditable$ = this.store
+    .selectIsActiveEnvironmentEditable()
+    .pipe(
+      tap((isEditable) => {
+        if (isEditable) {
+          this.activeEnvironmentForm.enable({ emitEvent: false });
+        } else {
+          this.activeEnvironmentForm.disable({ emitEvent: false });
+        }
+      })
+    );
 
   constructor() {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
@@ -79,23 +89,21 @@ export class EnvironmentSettingsComponent {
       })
     );
 
-    this.tlsOptionsFormGroup = this.formBuilder.group({
-      enabled: [EnvironmentDefault.tlsOptions.enabled],
-      type: [EnvironmentDefault.tlsOptions.type],
-      pfxPath: [EnvironmentDefault.tlsOptions.pfxPath],
-      certPath: [EnvironmentDefault.tlsOptions.certPath],
-      keyPath: [EnvironmentDefault.tlsOptions.keyPath],
-      caPath: [EnvironmentDefault.tlsOptions.caPath],
-      passphrase: [EnvironmentDefault.tlsOptions.passphrase]
-    });
-
     this.activeEnvironmentForm = this.formBuilder.group({
       name: [EnvironmentDefault.name],
       hostname: [EnvironmentDefault.hostname],
       port: [EnvironmentDefault.port],
       endpointPrefix: [EnvironmentDefault.endpointPrefix],
       latency: [EnvironmentDefault.latency],
-      tlsOptions: this.tlsOptionsFormGroup,
+      tlsOptions: this.formBuilder.group({
+        enabled: [EnvironmentDefault.tlsOptions.enabled],
+        type: [EnvironmentDefault.tlsOptions.type],
+        pfxPath: [EnvironmentDefault.tlsOptions.pfxPath],
+        certPath: [EnvironmentDefault.tlsOptions.certPath],
+        keyPath: [EnvironmentDefault.tlsOptions.keyPath],
+        caPath: [EnvironmentDefault.tlsOptions.caPath],
+        passphrase: [EnvironmentDefault.tlsOptions.passphrase]
+      }),
       cors: [EnvironmentDefault.cors]
     });
 

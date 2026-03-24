@@ -50,6 +50,7 @@ export class SvgComponent {
     | 'magic'
     | 'account'
     | 'people'
+    | 'edit_off'
     | 'endpoint'
     | 'endpoints'
     | 'play_arrow'

@@ -1,3 +1,5 @@
+@let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
+
 <ng-container *ngIf="routeResponse$ | async">
   <ng-container [formGroup]="form">
     <div class="rules d-flex">
@@ -33,7 +35,10 @@
             appDraggable
             appDropzone
             dragContainer="route-rules"
-            [dragEnabled]="form.get('rules')['controls'].length > 1"
+            [dragEnabled]="
+              isActiveEnvironmentEditable &&
+              form.get('rules')['controls'].length > 1
+            "
             dragParentId="root"
             [dragIsContainer]="false"
             [dragId]="ruleIndex"
@@ -78,7 +83,7 @@
               class="me-2"
               [uncheckable]="true"
               formControlName="invert"
-              prefix="rule"
+              [prefix]="'rule' + ruleIndex"
               [items]="rulesInvert"
             />
 
@@ -89,7 +94,7 @@
               [items]="responseRuleOperators"
               [dropdownId]="'rules' + ruleIndex + 'operator'"
               [disabledList]="
-                operatorDisablingForTargets[
+                disabledOperatorsPerTarget[
                   form.get(['rules', ruleIndex, 'target']).value
                 ]
               "
@@ -134,6 +139,7 @@
                   : 'Delete'
               "
               (click)="removeRule(ruleIndex)"
+              [disabled]="!isActiveEnvironmentEditable"
             >
               <app-svg icon="delete" />
             </button>
@@ -144,6 +150,7 @@
               ngbTooltip="Reorder"
               type="button"
               class="btn btn-link btn-icon cursor-grab text-muted"
+              [disabled]="!isActiveEnvironmentEditable"
             >
               <app-svg icon="drag_indicator" />
             </button>
@@ -156,6 +163,7 @@
         type="button"
         class="btn btn-link btn-icon add-rule"
         (click)="addRule()"
+        [disabled]="!isActiveEnvironmentEditable"
       >
         <app-svg icon="add_box" class="text-success pe-2" />
         Add rule

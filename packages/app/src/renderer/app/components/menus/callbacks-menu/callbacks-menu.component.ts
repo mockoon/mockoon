@@ -1,10 +1,4 @@
-import {
-  AsyncPipe,
-  LowerCasePipe,
-  NgFor,
-  NgIf,
-  UpperCasePipe
-} from '@angular/common';
+import { AsyncPipe, LowerCasePipe, UpperCasePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -35,7 +29,7 @@ import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directiv
 import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
 import { ScrollWhenActiveDirective } from 'src/renderer/app/directives/scroll-to-active.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
-import { textFilter, trackByUuid } from 'src/renderer/app/libs/utils.lib';
+import { textFilter } from 'src/renderer/app/libs/utils.lib';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
@@ -49,11 +43,9 @@ type dropdownMenuPayload = { callbackUuid: string };
   styleUrls: ['./callbacks-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     NgbTooltip,
     SvgComponent,
     FilterComponent,
-    NgFor,
     DraggableDirective,
     DropzoneDirective,
     ScrollWhenActiveDirective,
@@ -74,12 +66,17 @@ export class CallbacksMenuComponent implements OnInit {
   public callbacksFilter$: Observable<string>;
   public focusableInputs = FocusableInputs;
   public menuSize = Config.defaultSecondaryMenuSize;
-  public trackByUuid = trackByUuid;
+  public isActiveEnvironmentEditable$ =
+    this.store.selectIsActiveEnvironmentEditable();
   public dropdownMenuItems: DropdownMenuItem[] = [
     {
       label: 'Duplicate',
       icon: 'content_copy',
       twoSteps: false,
+      disabled$: () =>
+        this.isActiveEnvironmentEditable$.pipe(
+          map((isEditable) => !isEditable)
+        ),
       action: ({ callbackUuid }: dropdownMenuPayload) => {
         this.environmentsService.duplicateCallback(callbackUuid);
       }
@@ -105,6 +102,10 @@ export class CallbacksMenuComponent implements OnInit {
       twoSteps: true,
       confirmIcon: 'error',
       confirmLabel: 'Confirm deletion',
+      disabled$: () =>
+        this.isActiveEnvironmentEditable$.pipe(
+          map((isEditable) => !isEditable)
+        ),
       action: ({ callbackUuid }: dropdownMenuPayload) => {
         this.environmentsService.removeCallback(callbackUuid);
       }

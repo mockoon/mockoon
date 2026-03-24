@@ -10,12 +10,14 @@ import {
 } from '@mockoon/commons';
 import {
   BehaviorSubject,
+  combineLatest,
   MonoTypeOperatorFunction,
   Observable,
   pipe
 } from 'rxjs';
 import {
   distinctUntilChanged,
+  distinctUntilKeyChanged,
   filter,
   map,
   withLatestFrom
@@ -30,7 +32,7 @@ import {
   EnvironmentStatus,
   StoreType
 } from 'src/renderer/app/models/store.model';
-import { ActionTypes, Actions } from 'src/renderer/app/stores/actions';
+import { Actions, ActionTypes } from 'src/renderer/app/stores/actions';
 import { environmentReducer } from 'src/renderer/app/stores/reducer';
 import { Config } from 'src/renderer/config';
 
@@ -72,6 +74,7 @@ export const storeDefaultState: StoreType = {
   },
   sync: {
     status: false,
+    lastDisconnectedAt: null,
     presence: null,
     offlineReason: null,
     alert: null
@@ -158,6 +161,24 @@ export class Store {
         ? (Config.remoteConfigDefaults as RemoteConfigData)[path]
         : null)
     );
+  }
+
+  /**
+   * Evaluate if an environment is editable.
+   * It is not editable if it's a cloud environment and the sync is disconnected
+   *
+   * @returns
+   */
+  public getIsEnvironmentEditable(environmentUuid: string): boolean {
+    const foundEnvironment = this.store$.value.settings.environments.find(
+      (environment) => environment.uuid === environmentUuid
+    );
+
+    if (!foundEnvironment) {
+      return false;
+    }
+
+    return !(foundEnvironment.cloud && !this.get('sync')?.status);
   }
 
   /**
@@ -372,6 +393,47 @@ export class Store {
   }
 
   /**
+   * Evaluate if cloud is editable (not for a specific environment).
+   * It is not editable if  the sync is disconnected
+   *
+   * @returns
+   */
+  public selectIsCloudEditable(): Observable<boolean> {
+    return this.select('sync').pipe(
+      distinctUntilChanged(),
+      map((sync) => {
+        if (!sync?.status) {
+          return false;
+        }
+
+        return true;
+      })
+    );
+  }
+
+  /**
+   * Evaluate if active environment is editable.
+   * It is not editable if it's a cloud environment and the sync is disconnected
+   *
+   * @returns
+   */
+  public selectIsActiveEnvironmentEditable(): Observable<boolean> {
+    return combineLatest([
+      this.select('sync').pipe(distinctUntilChanged()),
+      this.selectIsActiveEnvCloud()
+    ]).pipe(
+      map(([sync, isActiveEnvCloud]) => {
+        if (isActiveEnvCloud && !sync?.status) {
+          return false;
+        }
+
+        return true;
+      }),
+      distinctUntilChanged()
+    );
+  }
+
+  /**
    * Evaluate if user reached their cloud quota
    *
    * @returns
@@ -553,9 +615,16 @@ export class Store {
    * @returns
    */
   public selectIsActiveEnvCloud(): Observable<boolean> {
-    return this.selectActiveEnvironment().pipe(
-      distinctUntilChanged(),
-      withLatestFrom(this.select('settings')),
+    return combineLatest([
+      this.selectActiveEnvironment().pipe(
+        filter((activeEnvironment) => !!activeEnvironment),
+        distinctUntilKeyChanged('uuid')
+      ),
+      this.select('settings').pipe(
+        filter((settings) => !!settings),
+        distinctUntilChanged()
+      )
+    ]).pipe(
       map(([activeEnvironment, settings]) => {
         const envDescriptor = settings.environments.find(
           (environment) => environment.uuid === activeEnvironment.uuid
@@ -584,6 +653,20 @@ export class Store {
    */
   public getIsActiveEnvLocal(): boolean {
     return !this.getIsActiveEnvCloud();
+  }
+
+  /**
+   * Check if the active environment is editable.
+   * It is not editable if it's a cloud environment and the sync is disconnected.
+   *
+   * @returns
+   */
+  public getIsActiveEnvironmentEditable(): boolean {
+    if (!this.getActiveEnvironment()) {
+      return false;
+    }
+
+    return !(this.getIsActiveEnvCloud() && !this.get('sync')?.status);
   }
 
   /**

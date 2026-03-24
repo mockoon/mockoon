@@ -1,7 +1,7 @@
 <span
   *ngIf="!edit || !editCondition"
   [class]="{
-    'cursor-text': editCondition
+    'cursor-text': editCondition && data.enabled
   }"
   >{{ _text ? _text : '&nbsp;' }}</span
 >

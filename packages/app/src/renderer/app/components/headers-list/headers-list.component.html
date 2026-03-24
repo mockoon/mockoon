@@ -1,4 +1,7 @@
-<ng-container *ngIf="dataSubject$ | async">
+@let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
+@let dataSubject = dataSubject$ | async;
+
+@if (dataSubject) {
   <ng-container [formGroup]="form">
     <ng-container formArrayName="headers">
       <div class="headers-list">
@@ -30,6 +33,7 @@
               *ngIf="deleteHeaderRequested$ | async as deleteHeaderRequested"
               type="button"
               class="btn btn-link btn-icon"
+              [disabled]="!isActiveEnvironmentEditable"
               [class]="{
                 'text-danger':
                   deleteHeaderRequested.enabled === true &&
@@ -53,6 +57,7 @@
         <button
           type="button"
           class="btn btn-link btn-icon mt-2 add-header"
+          [disabled]="!isActiveEnvironmentEditable"
           (click)="addHeader()"
         >
           <app-svg icon="add_box" class="text-success pe-2" />
@@ -62,6 +67,7 @@
           *ngIf="secondaryButton"
           type="button"
           class="btn btn-link btn-icon mt-2 text-primary add-header-secondary"
+          [disabled]="!isActiveEnvironmentEditable"
           (click)="secondaryButtonClicked.emit()"
         >
           {{ secondaryButton }}
@@ -69,4 +75,4 @@
       </div>
     </ng-container>
   </ng-container>
-</ng-container>
+}

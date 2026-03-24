@@ -146,7 +146,11 @@ export class EnvironmentLogsComponent implements OnInit {
           logUuid,
           true
         );
-      }
+      },
+      disabled$: () =>
+        this.store
+          .selectIsActiveEnvironmentEditable()
+          .pipe(map((isEditable) => !isEditable))
     },
     {
       label: () =>
@@ -198,6 +202,8 @@ export class EnvironmentLogsComponent implements OnInit {
       iconSize: 14
     }
   ];
+  public isActiveEnvironmentEditable$ =
+    this.store.selectIsActiveEnvironmentEditable();
 
   ngOnInit() {
     this.logsFilter$ = this.store.selectFilter('logs');

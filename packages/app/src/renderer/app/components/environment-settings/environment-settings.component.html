@@ -1,5 +1,6 @@
 @let instanceUrl = instanceUrl$ | async;
 @let activeEnvironment = activeEnvironment$ | async;
+@let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
 
 @if (activeEnvironment) {
   <div class="d-flex flex-column h-100 p-2" [formGroup]="activeEnvironmentForm">
@@ -131,6 +132,7 @@
               class="btn btn-link"
               ngbTooltip="Browse files"
               (click)="browseFiles('pfxPath')"
+              [disabled]="!isActiveEnvironmentEditable"
             >
               <app-svg icon="find_in_page" />
             </button>
@@ -151,6 +153,7 @@
               class="btn btn-link"
               ngbTooltip="Browse files"
               (click)="browseFiles('certPath')"
+              [disabled]="!isActiveEnvironmentEditable"
             >
               <app-svg icon="find_in_page" />
             </button>
@@ -165,6 +168,7 @@
               class="btn btn-link"
               ngbTooltip="Browse files"
               (click)="browseFiles('keyPath')"
+              [disabled]="!isActiveEnvironmentEditable"
             >
               <app-svg icon="find_in_page" />
             </button>
@@ -185,6 +189,7 @@
             class="btn btn-link"
             ngbTooltip="Browse files"
             (click)="browseFiles('caPath')"
+            [disabled]="!isActiveEnvironmentEditable"
           >
             <app-svg icon="find_in_page" />
           </button>

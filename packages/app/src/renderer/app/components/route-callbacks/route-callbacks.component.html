@@ -1,3 +1,5 @@
+@let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
+
 <ng-container *ngIf="routeResponse$ | async">
   <ng-container [formGroup]="form">
     <div class="callback-list" formArrayName="callbacks">
@@ -71,6 +73,7 @@
               : 'Delete'
           "
           (click)="removeCallback(callbackIndex)"
+          [disabled]="!isActiveEnvironmentEditable"
         >
           <app-svg icon="delete" />
         </button>
@@ -82,6 +85,7 @@
         type="button"
         class="btn btn-link btn-icon add-callback"
         (click)="addCallback(allCallbacks)"
+        [disabled]="!isActiveEnvironmentEditable"
       >
         <app-svg icon="add_box" class="text-success pe-2" />
         Add callback

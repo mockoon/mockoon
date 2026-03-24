@@ -67,6 +67,17 @@ export class RouteCallbacksComponent {
   public Infinity = Infinity;
   public allCallbacks$: Observable<Callback[]>;
   private listenToChanges = true;
+  public isActiveEnvironmentEditable$ = this.store
+    .selectIsActiveEnvironmentEditable()
+    .pipe(
+      tap((isEditable) => {
+        if (isEditable) {
+          this.form.enable({ emitEvent: false });
+        } else {
+          this.form.disable({ emitEvent: false });
+        }
+      })
+    );
 
   public get callbacks() {
     return this.form.get('callbacks') as FormArray;
@@ -159,6 +170,8 @@ export class RouteCallbacksComponent {
   ) {
     this.listenToChanges = listenToChanges;
 
+    // Preserve the current disabled state of the form
+    const isFormDisabled = this.form.disabled;
     this.callbacks.clear();
 
     newCallbacks.forEach((cb) => {
@@ -168,6 +181,11 @@ export class RouteCallbacksComponent {
         } as CallbackInvocation)
       );
     });
+
+    // Reapply the disabled state if necessary
+    if (isFormDisabled) {
+      this.form.disable({ emitEvent: false });
+    }
 
     this.listenToChanges = true;
   }
