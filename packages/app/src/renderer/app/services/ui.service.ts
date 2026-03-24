@@ -175,7 +175,7 @@ export class UIService {
     },
     manageInstances: {
       component: ManageInstancesModalComponent,
-      options: commonConfigs.large
+      options: commonConfigs.extraLarge
     },
     selfHostingInstructions: {
       component: SelfHostingInstructionsModalComponent,

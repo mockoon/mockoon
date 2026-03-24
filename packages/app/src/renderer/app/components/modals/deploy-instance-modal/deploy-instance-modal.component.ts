@@ -82,6 +82,7 @@ export class DeployInstanceModalComponent {
   );
   public user$ = this.store.select('user');
   public accountUrl = Config.accountUrl;
+  public cloudDeploy = Config.docs.cloudDeploy;
   public isWeb = Config.isWeb;
   public stopInstanceRequested = signal(false);
   public optionsForm = this.formBuilder.group({
@@ -96,7 +97,8 @@ export class DeployInstanceModalComponent {
       DeployInstanceVisibility.PRIVATE,
       Validators.required
     ),
-    region: this.formBuilder.control<DeployRegions>(null)
+    region: this.formBuilder.control<DeployRegions>(null),
+    liveUpdate: this.formBuilder.control<boolean>(true)
   });
   public visibilityToggle: ToggleItems = [
     {
@@ -131,7 +133,8 @@ export class DeployInstanceModalComponent {
             this.optionsForm.patchValue({
               subdomain: existingInstance.subdomain,
               visibility: existingInstance.visibility,
-              region: existingInstance.region
+              region: existingInstance.region,
+              liveUpdate: existingInstance.liveUpdate
             });
 
             this.optionsForm.get('region').disable();

@@ -133,7 +133,10 @@ export class DeployService {
    */
   public deploy(
     environmentUuid: string,
-    options: Pick<DeployInstance, 'visibility' | 'subdomain'>,
+    options: Pick<
+      DeployInstance,
+      'visibility' | 'subdomain' | 'region' | 'liveUpdate'
+    >,
     redeploy = false
   ) {
     const environment = this.store.getEnvironmentByUUID(environmentUuid);
@@ -220,10 +223,12 @@ export class DeployService {
       environmentUuid,
       {
         subdomain: existingInstance.subdomain,
-        visibility: existingInstance.visibility
+        visibility: existingInstance.visibility,
+        region: existingInstance.region,
+        liveUpdate: existingInstance.liveUpdate
       },
       true
-    ).pipe(tap());
+    );
   }
 
   /**

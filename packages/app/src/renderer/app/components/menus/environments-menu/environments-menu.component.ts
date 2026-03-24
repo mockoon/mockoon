@@ -216,14 +216,40 @@ export class EnvironmentsMenuComponent {
       }
     }
   ];
+  private hasDeployment$ = (environmentUuid: string) =>
+    this.store.select('deployInstances').pipe(
+      map((deployInstances) => {
+        return deployInstances.find(
+          (instance) => instance.environmentUuid === environmentUuid
+        );
+      })
+    );
   public cloudEnvironmentDropdownMenuItems: (
     | DropdownMenuItem
     | DropdownMenuSeparator
   )[] = [
     ...this.commonDropdownMenuItems,
     {
-      label: this.isWeb ? 'Manage deployment' : 'Deploy to the cloud',
-      icon: this.isWeb ? 'server_settings' : 'backup',
+      label: ({ environmentUuid }: dropdownMenuPayload) =>
+        this.hasDeployment$(environmentUuid).pipe(
+          map((hasDeployment) => {
+            if (hasDeployment) {
+              return 'Manage deployment';
+            }
+
+            return this.isWeb ? 'Deploy' : 'Deploy to the cloud';
+          })
+        ),
+      icon: ({ environmentUuid }: dropdownMenuPayload) =>
+        this.hasDeployment$(environmentUuid).pipe(
+          map((hasDeployment) => {
+            if (hasDeployment) {
+              return 'server_settings';
+            }
+
+            return 'backup';
+          })
+        ),
       twoSteps: false,
       disabled$: () =>
         this.store

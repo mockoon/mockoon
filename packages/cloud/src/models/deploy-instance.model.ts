@@ -26,4 +26,6 @@ export type DeployInstance = {
   name: string;
   apiKey: string;
   region: DeployRegions;
+  // added in v9.6.0, indicates if the instance should be updated in real-time with environment changes using the admin API
+  liveUpdate: boolean;
 };

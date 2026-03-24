@@ -10,10 +10,10 @@ import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 
 export type DropdownMenuItem = {
-  label: string | (() => Observable<string>);
+  label: string | ((payload: any) => Observable<string>);
   // less visible label (for additional information, ⚠️ not really compatible with twoSteps)
   subLabel?: string;
-  icon: string;
+  icon: string | ((payload: any) => Observable<string>);
   // If true, the item will require a confirmation click
   twoSteps: boolean;
   // must be provided if twoSteps is true

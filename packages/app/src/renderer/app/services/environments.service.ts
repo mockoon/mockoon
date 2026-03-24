@@ -325,14 +325,12 @@ export class EnvironmentsService {
         )
       ),
       tap((modifiedEnvironments) => {
-        if (Config.isWeb) {
-          this.serverService.updateServerEnvironment(modifiedEnvironments);
-        } else {
-          this.mainApiService.send(
-            'APP_UPDATE_ENVIRONMENTS',
-            modifiedEnvironments
-          );
-        }
+        this.serverService.updateRemoteServerEnvironments(modifiedEnvironments);
+
+        this.mainApiService.send(
+          'APP_UPDATE_ENVIRONMENTS',
+          modifiedEnvironments
+        );
       }),
       withLatestFrom(
         this.store.select('settings').pipe(filter((settings) => !!settings))
