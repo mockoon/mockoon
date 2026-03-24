@@ -10,11 +10,21 @@
     @if (instanceExists) {
       Manage {{ environment?.name }} deployment<br />
       <small class="text-muted h6">
-        Modify your cloud instance configuration:
+        Modify your cloud instance configuration (<a
+          href="{{ cloudDeploy }}"
+          target="_blank"
+          >documentation</a
+        >):
       </small>
     } @else {
       Deploy {{ environment?.name }}<br />
-      <small class="text-muted h6">Configure your cloud instance:</small>
+      <small class="text-muted h6"
+        >Configure your cloud instance (<a
+          href="{{ cloudDeploy }}"
+          target="_blank"
+          >documentation</a
+        >):</small
+      >
     }
   </h3>
 </div>
@@ -104,6 +114,34 @@
         </div>
       </div>
     }
+
+    <div class="mb-3">
+      <div class="input-group align-items-center">
+        <div class="form-check mb-0">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="deploy-live-update"
+            formControlName="liveUpdate"
+          />
+          <label class="form-check-label" for="deploy-live-update">
+            Live update
+          </label>
+        </div>
+        <div class="input-group-text">
+          <app-svg icon="info" [ngbTooltip]="liveUpdateTooltip" />
+          <ng-template #liveUpdateTooltip>
+            <div>
+              When enabled, changes are pushed in real time to your deployed
+              instance in the background.
+            </div>
+            <div class="mt-2">
+              When disabled, you need to manually re-deploy after each change.
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
   </div>
   @if (stopInstanceRequested()) {
     <div>

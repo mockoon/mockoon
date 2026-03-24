@@ -28,6 +28,7 @@
         <th scope="col">Region</th>
         <th scope="col">URL</th>
         <th scope="col">Visibility</th>
+        <th scope="col">Live Update</th>
         <th scope="col">API key</th>
         <th scope="col"></th>
       </tr>
@@ -101,9 +102,16 @@
               </div>
             </td>
             <td>
+              @if (instance.liveUpdate) {
+                Enabled
+              } @else {
+                Disabled
+              }
+            </td>
+            <td>
               <button
                 type="button"
-                class="btn btn-sm btn-link btn-icon p-0 ms-2"
+                class="btn btn-sm btn-link btn-icon p-0"
                 ngbTooltip="Click to copy the API key. The API key must be used in the Authorization header to access the API when private. The API key is always required to access the admin API."
                 (click)="copyToClipboard(instance.apiKey)"
               >
@@ -124,7 +132,7 @@
           </tr>
         } @empty {
           <tr>
-            <td colspan="6" class="text-center text-muted">
+            <td colspan="7" class="text-center text-muted">
               <div class="d-flex align-items-center justify-content-center">
                 <div class="me-2">No instances deployed.</div>
                 @if (deployEnvList.length > 0) {
@@ -144,7 +152,7 @@
         }
       } @else {
         <tr>
-          <td colspan="6" class="text-center text-muted">
+          <td colspan="7" class="text-center text-muted">
             <a [href]="cloudPlansURL" target="_blank"
               >Subscribe to Mockoon Cloud</a
             >

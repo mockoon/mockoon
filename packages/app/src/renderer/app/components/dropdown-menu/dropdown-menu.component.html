@@ -44,8 +44,12 @@
         } @else if (isItem(item)) {
           @let itemLabel =
             typeof item.label === 'function'
-              ? (item.label() | async)
+              ? (item.label(payload()) | async)
               : item.label;
+          @let itemIcon =
+            typeof item.icon === 'function'
+              ? (item.icon(payload()) | async)
+              : item.icon;
           @let disabled = item.disabled$ && item.disabled$(payload()) | async;
           @let hidden = item.hidden$ && item.hidden$(payload()) | async;
           @let disabledLabel =
@@ -64,7 +68,7 @@
               <span class="text-truncate">
                 @if (item.icon) {
                   <app-svg
-                    [icon]="needConfirm ? item.confirmIcon : item.icon"
+                    [icon]="needConfirm ? item.confirmIcon : itemIcon"
                     class="pe-2"
                   />
                 }

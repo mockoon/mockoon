@@ -16,6 +16,7 @@ import {
   distinctUntilChanged,
   EMPTY,
   filter,
+  finalize,
   from,
   mergeMap,
   Observable,
@@ -50,14 +51,20 @@ export class UserService {
     onIdTokenChanged(
       this.auth,
       (user) => subscriber.next(user),
-      (error) => subscriber.error(error)
+      () => {
+        // Keep listeners alive on transient auth backend issues.
+        subscriber.next(this.auth.currentUser);
+      }
     )
   );
   private authState$ = new Observable<FirebaseUser | null>((subscriber) =>
     onAuthStateChanged(
       this.auth,
       (user) => subscriber.next(user),
-      (error) => subscriber.error(error)
+      () => {
+        // Keep listeners alive on transient auth backend issues.
+        subscriber.next(this.auth.currentUser);
+      }
     )
   );
   private lastUserRefresh = 0;
@@ -85,7 +92,16 @@ export class UserService {
    */
   public authWithToken(token: string) {
     return from(signInWithCustomToken(this.auth, token)).pipe(
-      catchError((error) => throwError(() => new Error(error)))
+      catchError((error) => {
+        if (error?.code === 'auth/network-request-failed') {
+          return from(this.auth.signOut()).pipe(
+            catchError(() => of(null)),
+            switchMap(() => throwError(() => error))
+          );
+        }
+
+        return throwError(() => error);
+      })
     );
   }
 
@@ -175,13 +191,14 @@ export class UserService {
       tap(() => {
         this.uiService.closeModal('auth');
         this.loggerService.logMessage('info', 'LOGIN_SUCCESS');
-
-        this.stopAuthFlow();
       }),
       catchError(() => {
         this.loggerService.logMessage('error', 'LOGIN_ERROR');
 
         return EMPTY;
+      }),
+      finalize(() => {
+        this.stopAuthFlow();
       })
     );
   }

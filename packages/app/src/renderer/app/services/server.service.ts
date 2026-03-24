@@ -125,33 +125,39 @@ export class ServerService {
    * @param environments
    * @returns
    */
-  public updateServerEnvironment(environments: Environment[]) {
+  public updateRemoteServerEnvironments(environments: Environment[]) {
     if (environments.length === 0) {
       return;
     }
 
-    const instance = this.store
+    const instances = this.store
       .get('deployInstances')
-      .find(
-        (deployInstance) =>
-          deployInstance.environmentUuid === environments[0].uuid
+      .filter((deployInstance) =>
+        environments.find(
+          (environment) =>
+            environment.uuid === deployInstance.environmentUuid &&
+            deployInstance.liveUpdate
+        )
       );
 
-    // we may not have the instance yet
-    if (!instance) {
+    if (!instances.length) {
       return;
     }
 
-    this.httpClient
-      .put(
-        `${this.buildRemoteInstanceUrl(instance)}/environment`,
-        environments[0],
-        {
-          headers: { Authorization: `Bearer ${instance.apiKey}` }
-        }
-      )
-      .pipe(catchError(() => EMPTY))
-      .subscribe();
+    instances.forEach((instance) => {
+      this.httpClient
+        .put(
+          `${this.buildRemoteInstanceUrl(instance)}/environment`,
+          environments.find(
+            (environment) => environment.uuid === instance.environmentUuid
+          ),
+          {
+            headers: { Authorization: `Bearer ${instance.apiKey}` }
+          }
+        )
+        .pipe(catchError(() => EMPTY))
+        .subscribe();
+    });
   }
 
   /**

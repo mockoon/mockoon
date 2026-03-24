@@ -33,21 +33,19 @@ export const SharedConfig = (options: {
     changelogMarkdownURL: `${options.websiteURL}desktop-changelogs-markdown/`,
     releasePublicURL: `${options.websiteURL}releases/`,
     docs: {
-      templating: docsUrl + 'templating/overview/',
-      proxy: docsUrl + 'server-configuration/proxy-mode/',
-      cors: docsUrl + 'server-configuration/cors/',
-      https: docsUrl + 'server-configuration/serving-over-tls/',
-      headers: docsUrl + 'response-configuration/response-headers/',
-      rules: docsUrl + 'route-responses/multiple-responses/',
-      hostname: docsUrl + 'server-configuration/listening-hostname/',
-      faq: options.websiteURL + 'faq/',
-      cloudOverview: cloudDocsUrl + 'about/',
-      cloudSync: cloudDocsUrl + 'data-synchronization-team-collaboration/',
-      cloudSyncOffline:
-        cloudDocsUrl +
-        'data-synchronization-team-collaboration/#offline-editing',
-      cloudDeployCliPull:
-        cloudDocsUrl + 'api-mock-cloud-deployments/#self-host-with-the-cli'
+      templating: `${docsUrl}templating/overview/`,
+      proxy: `${docsUrl}server-configuration/proxy-mode/`,
+      cors: `${docsUrl}server-configuration/cors/`,
+      https: `${docsUrl}server-configuration/serving-over-tls/`,
+      headers: `${docsUrl}response-configuration/response-headers/`,
+      rules: `${docsUrl}route-responses/multiple-responses/`,
+      hostname: `${docsUrl}server-configuration/listening-hostname/`,
+      faq: `${options.websiteURL}faq/`,
+      cloudOverview: `${cloudDocsUrl}about/`,
+      cloudDeploy: `${cloudDocsUrl}api-mock-cloud-deployments/`,
+      cloudSync: `${cloudDocsUrl}data-synchronization-team-collaboration/`,
+      cloudSyncOffline: `${cloudDocsUrl}data-synchronization-team-collaboration/#offline-editing`,
+      cloudDeployCliPull: `${cloudDocsUrl}api-mock-cloud-deployments/#self-host-with-the-cli`
     },
     // URLs should not be used directly in desktop app (but there is a redirection for the web app in user service). Instead use the flow methods in the user service
     appAuthURL: `${options.websiteURL}app-auth/`,
