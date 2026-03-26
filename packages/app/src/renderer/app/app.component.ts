@@ -9,7 +9,7 @@ import {
 import { Title } from '@angular/platform-browser';
 import { Environment } from '@mockoon/commons';
 import { NgbToast } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, from, fromEvent, tap } from 'rxjs';
+import { Observable, from, fromEvent, switchMap, tap } from 'rxjs';
 import { EnvironmentCallbacksComponent } from 'src/renderer/app/components/environment-callbacks/environment-callbacks.component';
 import { EnvironmentDatabucketsComponent } from 'src/renderer/app/components/environment-databuckets/environment-databuckets.component';
 import { EnvironmentHeadersComponent } from 'src/renderer/app/components/environment-headers/environment-headers.component';
@@ -161,9 +161,9 @@ export class AppComponent implements OnInit {
     /**
      * Listen to online event to reload user and trigger the Firebase auth state change
      */
-    fromEvent(window, 'online').subscribe(() => {
-      this.userService.reloadUser();
-    });
+    fromEvent(window, 'online')
+      .pipe(switchMap(() => this.userService.reloadUser()))
+      .subscribe();
 
     this.telemetryService.init().subscribe();
 

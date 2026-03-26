@@ -85,7 +85,7 @@ export class TemplatesService {
     this.lastTemplatePrompt$.next(prompt);
 
     return this.userService.getIdToken().pipe(
-      switchMap((idToken) =>
+      switchMap((token) =>
         this.httpClient
           .get<{ data: string }>(`${Config.apiURL}templates/generate`, {
             params: {
@@ -93,7 +93,7 @@ export class TemplatesService {
               type: 'template',
               options: options.join(',')
             },
-            headers: new HttpHeaders().set('Authorization', `Bearer ${idToken}`)
+            headers: new HttpHeaders().set('Authorization', `Bearer ${token}`)
           })
           .pipe(
             map((response) => response.data),
@@ -136,7 +136,7 @@ export class TemplatesService {
     this.lastEndpointPrompt$.next(prompt);
 
     return this.userService.getIdToken().pipe(
-      switchMap((idToken) =>
+      switchMap((token) =>
         this.httpClient
           .get<{ data: Route }>(`${Config.apiURL}templates/generate`, {
             params: {
@@ -144,7 +144,7 @@ export class TemplatesService {
               type: 'endpoint',
               options: options.join(',')
             },
-            headers: new HttpHeaders().set('Authorization', `Bearer ${idToken}`)
+            headers: new HttpHeaders().set('Authorization', `Bearer ${token}`)
           })
           .pipe(
             map((response) => response.data),

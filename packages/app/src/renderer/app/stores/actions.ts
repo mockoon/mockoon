@@ -83,7 +83,6 @@ export const enum ActionTypes {
   SET_ACTIVE_ENVIRONMENT_LOG = 'SET_ACTIVE_ENVIRONMENT_LOG',
   ADD_TOAST = 'ADD_TOAST',
   REMOVE_TOAST = 'REMOVE_TOAST',
-  SET_USER_ID = 'SET_USER_ID',
   UPDATE_SETTINGS = 'UPDATE_SETTINGS',
   UPDATE_SETTINGS_ENVIRONMENT_DESCRIPTOR = 'UPDATE_SETTINGS_ENVIRONMENT_DESCRIPTOR',
   UPDATE_UI_STATE = 'UPDATE_UI_STATE',
@@ -134,9 +133,9 @@ export const updateSyncAction = (properties: Partial<StoreType['sync']>) =>
   }) as const;
 
 /**
- * Update the cloud sync information
+ * Update the deploy instances information
  *
- * @param properties - cloud sync status properties to update
+ * @param instances - deploy instances to update
  */
 export const updateDeployInstancesAction = (instances: DeployInstance[]) =>
   ({

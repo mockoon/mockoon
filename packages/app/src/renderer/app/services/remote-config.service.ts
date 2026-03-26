@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { RemoteConfigData } from '@mockoon/cloud';
 import { EMPTY, from, Observable } from 'rxjs';
-import { catchError, startWith, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, switchMap, tap } from 'rxjs/operators';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { updateRemoteConfigAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
@@ -16,13 +16,12 @@ export class RemoteConfigService {
   private store = inject(Store);
 
   /**
-   * Monitor auth state and update the store.
+   * Monitor auth state and fetch the remote config
    */
   public init() {
-    return this.userService.idTokenChanges().pipe(
-      startWith(null),
-      switchMap(() => this.fetchConfig())
-    );
+    return this.userService
+      .authStateChanges()
+      .pipe(switchMap(() => this.fetchConfig()));
   }
 
   /**
@@ -30,6 +29,7 @@ export class RemoteConfigService {
    */
   public fetchConfig(): Observable<RemoteConfigData> {
     return from(this.userService.getIdToken()).pipe(
+      filter((token) => !!token),
       switchMap((token) => {
         const headers = token
           ? new HttpHeaders().set('Authorization', `Bearer ${token}`)

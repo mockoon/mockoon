@@ -22,7 +22,6 @@ import { HighestMigrationId, generateUUID } from '@mockoon/commons';
 import {
   EMPTY,
   Observable,
-  combineLatest,
   concat,
   debounceTime,
   delay,
@@ -96,13 +95,17 @@ export class SyncService {
       mergeMap(() =>
         merge(
           this.initListeners(),
-          combineLatest([
-            this.store.select('user').pipe(filter((user) => !!user)),
-            this.userService.idTokenChanges().pipe(distinctUntilChanged())
-          ]).pipe(
+          // ⚠️ do not filter the user early as we want to disconnect the socket if the user logs out
+          this.store.select('user').pipe(
+            distinctUntilChanged(),
             // wait a bit before reacting to user changes, to avoid emitting sync status changes too soon and hit a race condition
             delay(500),
-            switchMap(([user, token]) => {
+            switchMap((user) =>
+              this.userService
+                .getIdToken()
+                .pipe(map((token) => ({ user, token })))
+            ),
+            switchMap(({ user, token }) => {
               /**
                * On desktop if a newer version is detected by the sync backend during connection will automatically migrate the environments.
                * Because it means a newer version of the app was manually installed. We can trust this positive action from the user.
@@ -112,21 +115,25 @@ export class SyncService {
                */
               if (
                 Config.isWeb &&
-                user.cloudSyncHighestMajorVersion != null &&
+                user?.cloudSyncHighestMajorVersion != null &&
                 user.cloudSyncHighestMajorVersion < major(Config.appVersion)
               ) {
                 return this.confirmMigration().pipe(
-                  map((allow) => ({ user, token, allow }))
+                  map((allowMigration) => ({
+                    user,
+                    token,
+                    allowMigration
+                  }))
                 );
               }
 
-              return of({ user, token, allow: true });
+              return of({ user, token, allowMigration: true });
             }),
-            tap(({ user, token, allow }) => {
+            tap(({ user, token, allowMigration }) => {
               if (user && user.plan !== Plans.FREE && token) {
                 this.socket.auth = { ...this.socket.auth, token };
 
-                if (allow) {
+                if (allowMigration) {
                   this.socket.connect();
                 }
 
@@ -146,7 +153,9 @@ export class SyncService {
    * Disconnect the socket
    */
   public disconnect() {
-    this.socket.disconnect();
+    if (this.socket) {
+      this.socket.disconnect();
+    }
   }
 
   /**
@@ -232,6 +241,16 @@ export class SyncService {
     );
   }
 
+  /**
+   * Handle disconnections
+   *
+   * Note: the socket io client automatically listens to the offline event.
+   * However, it seems to not work during dev as we use a localhost server.
+   * But it works properly in production
+   *
+   * @param socket
+   * @returns
+   */
   private onDisconnect(socket: Socket) {
     return fromEvent(socket, 'disconnect').pipe(
       tap(() => {
