@@ -36,7 +36,7 @@ export class DeployService {
 
   public init() {
     return this.userService
-      .idTokenChanges()
+      .authStateChanges()
       .pipe(switchMap(() => this.getInstances(true)));
   }
 
@@ -66,7 +66,7 @@ export class DeployService {
         filter((user) => !!user),
         first()
       ),
-      this.userService.getIdToken()
+      this.userService.getIdToken().pipe(filter((token) => !!token))
     ]).pipe(
       switchMap(([user, token]) => {
         if (user?.plan !== Plans.FREE) {
@@ -99,7 +99,7 @@ export class DeployService {
     environmentUuid?: string
   ) {
     return forkJoin([
-      this.userService.getIdToken(),
+      this.userService.getIdToken().pipe(filter((token) => !!token)),
       this.store.selectRemoteConfig('deployUrl').pipe(
         filter((deployUrl) => !!deployUrl),
         first()
@@ -143,7 +143,7 @@ export class DeployService {
     const instances = this.store.get('deployInstances');
 
     return forkJoin([
-      this.userService.getIdToken(),
+      this.userService.getIdToken().pipe(filter((token) => !!token)),
       this.store.selectRemoteConfig('deployUrl').pipe(
         filter((deployUrl) => !!deployUrl),
         first()
@@ -238,7 +238,7 @@ export class DeployService {
    */
   public stop(environmentUuid: string) {
     return forkJoin([
-      this.userService.getIdToken(),
+      this.userService.getIdToken().pipe(filter((token) => !!token)),
       this.store.selectRemoteConfig('deployUrl').pipe(
         filter((deployUrl) => !!deployUrl),
         first()

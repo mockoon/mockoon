@@ -5,7 +5,6 @@ import {
   Auth,
   User as FirebaseUser,
   getAuth,
-  onAuthStateChanged,
   onIdTokenChanged,
   reload,
   signInWithCustomToken
@@ -13,12 +12,10 @@ import {
 import {
   catchError,
   combineLatest,
-  distinctUntilChanged,
   EMPTY,
   filter,
   finalize,
   from,
-  mergeMap,
   Observable,
   of,
   switchMap,
@@ -32,6 +29,7 @@ import { UIService } from 'src/renderer/app/services/ui.service';
 import {
   updateDeployInstancesAction,
   updateFeedbackAction,
+  updateSyncAction,
   updateUserAction
 } from 'src/renderer/app/stores/actions';
 import { Store, storeDefaultState } from 'src/renderer/app/stores/store';
@@ -44,36 +42,39 @@ export class UserService {
   private uiService = inject(UIService);
   private mainApiService = inject(MainApiService);
   private loggerService = inject(LoggerService);
-
   private isWeb = Config.isWeb;
   private auth: Auth = getAuth();
-  private idToken$ = new Observable<FirebaseUser | null>((subscriber) =>
-    onIdTokenChanged(
+  private authState$ = new Observable<FirebaseUser | null>((subscriber) => {
+    const unsubscribe = onIdTokenChanged(
       this.auth,
-      (user) => subscriber.next(user),
-      () => {
-        // Keep listeners alive on transient auth backend issues.
-        subscriber.next(this.auth.currentUser);
-      }
-    )
-  );
-  private authState$ = new Observable<FirebaseUser | null>((subscriber) =>
-    onAuthStateChanged(
-      this.auth,
-      (user) => subscriber.next(user),
-      () => {
-        // Keep listeners alive on transient auth backend issues.
-        subscriber.next(this.auth.currentUser);
-      }
-    )
-  );
+      subscriber.next.bind(subscriber),
+      subscriber.error.bind(subscriber),
+      subscriber.complete.bind(subscriber)
+    );
+
+    return { unsubscribe };
+  });
   private lastUserRefresh = 0;
 
   /**
    * Monitor auth token state and update the store
    */
   public init() {
-    return this.idTokenChanges().pipe(mergeMap(() => this.getUserInfo(true)));
+    return this.authState$.pipe(
+      switchMap((authUser) => {
+        if (authUser) {
+          return this.getUserInfo(true);
+        }
+
+        this.resetUserData();
+
+        return of(null);
+      })
+    );
+  }
+
+  public authStateChanges() {
+    return this.authState$.pipe(filter((user) => !!user));
   }
 
   /**
@@ -81,7 +82,11 @@ export class UserService {
    * Can be used to trigger an authentication after going offline
    */
   public reloadUser() {
-    reload(this.auth.currentUser);
+    if (this.auth?.currentUser) {
+      return from(reload(this.auth.currentUser));
+    }
+
+    return EMPTY;
   }
 
   /**
@@ -126,41 +131,33 @@ export class UserService {
 
     this.lastUserRefresh = now;
 
-    return from(this.auth.currentUser.getIdToken()).pipe(
+    return this.getIdToken().pipe(
       switchMap((token) =>
         this.httpClient.get(`${Config.apiURL}user`, {
           headers: { Authorization: `Bearer ${token}` }
         })
       ),
-      tap((info: User) => {
-        this.store.update(updateUserAction({ ...info }));
+      tap((user: User) => {
+        this.store.update(updateUserAction(user));
       }),
       catchError(() => EMPTY)
     );
   }
 
-  public getIdToken() {
+  /**
+   * Get the current ID token
+   *
+   * @param force
+   * @returns
+   */
+  public getIdToken(force = false): Observable<string | null> {
     if (this.auth?.currentUser) {
-      return from(this.auth.currentUser.getIdToken());
+      return from(this.auth.currentUser.getIdToken(force)).pipe(
+        catchError(() => of(null))
+      );
     }
 
     return of(null);
-  }
-
-  /**
-   * Avoid reacting to empty tokens (also happens when opening multiple web app tabs)
-   *
-   * @returns
-   */
-  public idTokenChanges() {
-    return this.idToken$.pipe(
-      filter((token) => !!token),
-      distinctUntilChanged()
-    );
-  }
-
-  public refreshToken() {
-    return from(this.auth.currentUser.getIdToken(true));
   }
 
   /**
@@ -243,13 +240,17 @@ export class UserService {
     );
   }
 
+  /**
+   * Logout firebase and update the store
+   * In the web app, redirect to the website
+   * after logout
+   *
+   * @returns
+   */
   public logout() {
     return from(this.auth.signOut()).pipe(
       tap(() => {
-        this.store.update(
-          updateDeployInstancesAction(storeDefaultState.deployInstances)
-        );
-        this.store.update(updateUserAction(storeDefaultState.user));
+        this.resetUserData();
 
         if (this.isWeb) {
           window.location.href = Config.websiteURL;
@@ -280,5 +281,13 @@ export class UserService {
         return EMPTY;
       })
     );
+  }
+
+  private resetUserData() {
+    this.store.update(
+      updateDeployInstancesAction(storeDefaultState.deployInstances)
+    );
+    this.store.update(updateUserAction(storeDefaultState.user));
+    this.store.update(updateSyncAction(storeDefaultState.sync));
   }
 }

@@ -363,9 +363,10 @@ export class EnvironmentRoutesComponent {
   ];
 
   constructor() {
-    this.activeEnvironment$ = this.store
-      .selectActiveEnvironment()
-      .pipe(distinctUntilChanged());
+    this.activeEnvironment$ = this.store.selectActiveEnvironment().pipe(
+      filter((activeEnvironment) => !!activeEnvironment),
+      distinctUntilChanged()
+    );
     this.activeRoute$ = this.store.selectActiveRoute();
     this.activeRouteResponses$ = this.activeRoute$.pipe(
       filter((activeRoute) => !!activeRoute),
