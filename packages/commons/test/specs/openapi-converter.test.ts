@@ -109,4 +109,133 @@ describe('OpenAPI converter', () => {
     strictEqual(defaultResponse?.default, true);
     strictEqual(exampleResponse?.default, false);
   });
+
+  it('should keep integer enums typed in generated templates', async () => {
+    const openApiConverter = new OpenApiConverter();
+    const typedEnumSpec = JSON.stringify({
+      openapi: '3.0.0',
+      info: { title: 'typed-enums', version: '1.0.0' },
+      paths: {
+        '/typed-enum': {
+          get: {
+            responses: {
+              200: {
+                description: 'ok',
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'object',
+                      properties: {
+                        myIntegerEnum: {
+                          type: 'integer',
+                          enum: [0, 1, 2, 3]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+
+    const environment =
+      await openApiConverter.convertFromOpenAPI(typedEnumSpec);
+    const route = environment?.routes.find(
+      (currentRoute) => currentRoute.endpoint === 'typed-enum'
+    );
+
+    strictEqual(
+      route?.responses[0].body,
+      '{\n  "myIntegerEnum": {{oneOf 0 1 2 3}}\n}'
+    );
+  });
+
+  it('should keep string enums quoted in generated templates', async () => {
+    const openApiConverter = new OpenApiConverter();
+    const stringEnumSpec = JSON.stringify({
+      openapi: '3.0.0',
+      info: { title: 'string-enums', version: '1.0.0' },
+      paths: {
+        '/string-enum': {
+          get: {
+            responses: {
+              200: {
+                description: 'ok',
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'object',
+                      properties: {
+                        myStringEnum: {
+                          type: 'string',
+                          enum: ['draft', 'published', 'archived']
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+
+    const environment =
+      await openApiConverter.convertFromOpenAPI(stringEnumSpec);
+    const route = environment?.routes.find(
+      (currentRoute) => currentRoute.endpoint === 'string-enum'
+    );
+
+    strictEqual(
+      route?.responses[0].body,
+      "{\n  \"myStringEnum\": \"{{oneOf 'draft' 'published' 'archived'}}\"\n}"
+    );
+  });
+
+  it('should keep boolean enums unquoted in generated templates', async () => {
+    const openApiConverter = new OpenApiConverter();
+    const booleanEnumSpec = JSON.stringify({
+      openapi: '3.0.0',
+      info: { title: 'boolean-enums', version: '1.0.0' },
+      paths: {
+        '/boolean-enum': {
+          get: {
+            responses: {
+              200: {
+                description: 'ok',
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'object',
+                      properties: {
+                        myBooleanEnum: {
+                          type: 'boolean',
+                          enum: [true, false]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+
+    const environment =
+      await openApiConverter.convertFromOpenAPI(booleanEnumSpec);
+    const route = environment?.routes.find(
+      (currentRoute) => currentRoute.endpoint === 'boolean-enum'
+    );
+
+    strictEqual(
+      route?.responses[0].body,
+      '{\n  "myBooleanEnum": {{oneOf true false}}\n}'
+    );
+  });
 });

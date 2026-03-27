@@ -865,7 +865,17 @@ export class OpenApiConverter {
 
       // use enum property if present
       if (schema.enum) {
-        return `{{oneOf (array '${schema.enum.join("' '")}')}}`;
+        const enumValues = schema.enum
+          .map((enumValue) => {
+            if (typeof enumValue === 'string') {
+              return `'${enumValue}'`;
+            }
+
+            return String(enumValue);
+          })
+          .join(' ');
+
+        return `{{oneOf ${enumValues}}}`;
       }
 
       // return example if any
@@ -956,7 +966,7 @@ export class OpenApiConverter {
    */
   private convertJSONSchemaPrimitives(jsonSchema: string) {
     return jsonSchema.replace(
-      /"({{faker '(?:number\.int|number\.float|datatype\.boolean)'(?: max=99999)?}})"/g,
+      /"({{(?:faker '(?:number\.int|number\.float|datatype\.boolean)'(?: max=99999)?|oneOf (?:-?\d+(?:\.\d+)?|true|false|null)(?: (?:-?\d+(?:\.\d+)?|true|false|null))*?)}})"/g,
       '$1'
     );
   }

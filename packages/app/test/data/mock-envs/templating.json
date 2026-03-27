@@ -1133,7 +1133,7 @@
       "responses": [
         {
           "uuid": "6666f159-74d7-4d1d-9f43-c70327e45990",
-          "body": "{{oneOf (array 'testitem1')}}",
+          "body": "{{oneOf 'testitem1'}}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
