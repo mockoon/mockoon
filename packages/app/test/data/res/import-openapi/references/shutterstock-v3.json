@@ -7745,7 +7745,7 @@
       "responses": [
         {
           "uuid": "3badc0ea-3181-4729-a14f-faa2041bac5b",
-          "body": "{\n  \"client_id\": \"\",\n  \"contributor_id\": \"\",\n  \"customer_id\": \"\",\n  \"expires_in\": {{faker 'number.int' max=99999}},\n  \"organization_id\": \"\",\n  \"realm\": \"{{oneOf (array 'customer' 'contributor')}}\",\n  \"scopes\": [\n    \"\"\n  ],\n  \"user_id\": \"\",\n  \"username\": \"\"\n}",
+          "body": "{\n  \"client_id\": \"\",\n  \"contributor_id\": \"\",\n  \"customer_id\": \"\",\n  \"expires_in\": {{faker 'number.int' max=99999}},\n  \"organization_id\": \"\",\n  \"realm\": \"{{oneOf 'customer' 'contributor'}}\",\n  \"scopes\": [\n    \"\"\n  ],\n  \"user_id\": \"\",\n  \"username\": \"\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "OK",
@@ -7877,7 +7877,7 @@
       "responses": [
         {
           "uuid": "ec6d900a-b6e1-4227-8f4e-cb21f0f3b1ff",
-          "body": "{\n  \"data\": [\n    {\n      \"allotment\": {\n        \"downloads_left\": {{faker 'number.int' max=99999}},\n        \"downloads_limit\": {{faker 'number.int' max=99999}},\n        \"end_time\": \"{{faker 'date.recent' 365}}\",\n        \"start_time\": \"{{faker 'date.recent' 365}}\"\n      },\n      \"description\": \"\",\n      \"expiration_time\": \"{{faker 'date.recent' 365}}\",\n      \"formats\": [\n        {\n          \"description\": \"\",\n          \"format\": \"\",\n          \"media_type\": \"{{oneOf (array 'image' 'video' 'audio' 'editorial')}}\",\n          \"min_resolution\": {{faker 'number.int' max=99999}},\n          \"size\": \"\"\n        }\n      ],\n      \"id\": \"\",\n      \"license\": \"\",\n      \"metadata\": {},\n      \"price_per_download\": {\n        \"local_amount\": {{faker 'number.int' max=99999}},\n        \"local_currency\": \"\"\n      }\n    }\n  ],\n  \"errors\": [\n    {\n      \"code\": \"\",\n      \"data\": \"\",\n      \"items\": [\n        {}\n      ],\n      \"message\": \"\",\n      \"path\": \"\"\n    }\n  ],\n  \"message\": \"\",\n  \"page\": {{faker 'number.int' max=99999}},\n  \"per_page\": {{faker 'number.int' max=99999}},\n  \"total_count\": {{faker 'number.int' max=99999}}\n}",
+          "body": "{\n  \"data\": [\n    {\n      \"allotment\": {\n        \"downloads_left\": {{faker 'number.int' max=99999}},\n        \"downloads_limit\": {{faker 'number.int' max=99999}},\n        \"end_time\": \"{{faker 'date.recent' 365}}\",\n        \"start_time\": \"{{faker 'date.recent' 365}}\"\n      },\n      \"description\": \"\",\n      \"expiration_time\": \"{{faker 'date.recent' 365}}\",\n      \"formats\": [\n        {\n          \"description\": \"\",\n          \"format\": \"\",\n          \"media_type\": \"{{oneOf 'image' 'video' 'audio' 'editorial'}}\",\n          \"min_resolution\": {{faker 'number.int' max=99999}},\n          \"size\": \"\"\n        }\n      ],\n      \"id\": \"\",\n      \"license\": \"\",\n      \"metadata\": {},\n      \"price_per_download\": {\n        \"local_amount\": {{faker 'number.int' max=99999}},\n        \"local_currency\": \"\"\n      }\n    }\n  ],\n  \"errors\": [\n    {\n      \"code\": \"\",\n      \"data\": \"\",\n      \"items\": [\n        {}\n      ],\n      \"message\": \"\",\n      \"path\": \"\"\n    }\n  ],\n  \"message\": \"\",\n  \"page\": {{faker 'number.int' max=99999}},\n  \"per_page\": {{faker 'number.int' max=99999}},\n  \"total_count\": {{faker 'number.int' max=99999}}\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "OK",

@@ -137,7 +137,7 @@
       "responses": [
         {
           "uuid": "9de8e507-49e3-4f53-a130-964a5dd25d89",
-          "body": "[\n  {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"category\": {\n      \"id\": {{faker 'number.int' max=99999}},\n      \"name\": \"\"\n    },\n    \"name\": \"doggie\",\n    \"photoUrls\": [\n      \"\"\n    ],\n    \"tags\": [\n      {\n        \"id\": {{faker 'number.int' max=99999}},\n        \"name\": \"\"\n      }\n    ],\n    \"status\": \"{{oneOf (array 'available' 'pending' 'sold')}}\"\n  }\n]",
+          "body": "[\n  {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"category\": {\n      \"id\": {{faker 'number.int' max=99999}},\n      \"name\": \"\"\n    },\n    \"name\": \"doggie\",\n    \"photoUrls\": [\n      \"\"\n    ],\n    \"tags\": [\n      {\n        \"id\": {{faker 'number.int' max=99999}},\n        \"name\": \"\"\n      }\n    ],\n    \"status\": \"{{oneOf 'available' 'pending' 'sold'}}\"\n  }\n]",
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
@@ -197,7 +197,7 @@
       "responses": [
         {
           "uuid": "787f060f-cf76-4c05-90de-4ae47079ce1b",
-          "body": "[\n  {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"category\": {\n      \"id\": {{faker 'number.int' max=99999}},\n      \"name\": \"\"\n    },\n    \"name\": \"doggie\",\n    \"photoUrls\": [\n      \"\"\n    ],\n    \"tags\": [\n      {\n        \"id\": {{faker 'number.int' max=99999}},\n        \"name\": \"\"\n      }\n    ],\n    \"status\": \"{{oneOf (array 'available' 'pending' 'sold')}}\"\n  }\n]",
+          "body": "[\n  {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"category\": {\n      \"id\": {{faker 'number.int' max=99999}},\n      \"name\": \"\"\n    },\n    \"name\": \"doggie\",\n    \"photoUrls\": [\n      \"\"\n    ],\n    \"tags\": [\n      {\n        \"id\": {{faker 'number.int' max=99999}},\n        \"name\": \"\"\n      }\n    ],\n    \"status\": \"{{oneOf 'available' 'pending' 'sold'}}\"\n  }\n]",
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
@@ -257,7 +257,7 @@
       "responses": [
         {
           "uuid": "0c92ffb0-0a5b-49a6-941e-c3cb85469e95",
-          "body": "{\n  \"id\": {{faker 'number.int' max=99999}},\n  \"category\": {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"name\": \"\"\n  },\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"\"\n  ],\n  \"tags\": [\n    {\n      \"id\": {{faker 'number.int' max=99999}},\n      \"name\": \"\"\n    }\n  ],\n  \"status\": \"{{oneOf (array 'available' 'pending' 'sold')}}\"\n}",
+          "body": "{\n  \"id\": {{faker 'number.int' max=99999}},\n  \"category\": {\n    \"id\": {{faker 'number.int' max=99999}},\n    \"name\": \"\"\n  },\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"\"\n  ],\n  \"tags\": [\n    {\n      \"id\": {{faker 'number.int' max=99999}},\n      \"name\": \"\"\n    }\n  ],\n  \"status\": \"{{oneOf 'available' 'pending' 'sold'}}\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
@@ -509,7 +509,7 @@
       "responses": [
         {
           "uuid": "334ea3fc-0c8d-4a07-b253-a51abbc612b9",
-          "body": "{\n  \"id\": {{faker 'number.int' max=99999}},\n  \"petId\": {{faker 'number.int' max=99999}},\n  \"quantity\": {{faker 'number.int' max=99999}},\n  \"shipDate\": \"{{faker 'date.recent' 365}}\",\n  \"status\": \"{{oneOf (array 'placed' 'approved' 'delivered')}}\",\n  \"complete\": {{faker 'datatype.boolean'}}\n}",
+          "body": "{\n  \"id\": {{faker 'number.int' max=99999}},\n  \"petId\": {{faker 'number.int' max=99999}},\n  \"quantity\": {{faker 'number.int' max=99999}},\n  \"shipDate\": \"{{faker 'date.recent' 365}}\",\n  \"status\": \"{{oneOf 'placed' 'approved' 'delivered'}}\",\n  \"complete\": {{faker 'datatype.boolean'}}\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
@@ -569,7 +569,7 @@
       "responses": [
         {
           "uuid": "9909f0cc-6af9-4b5e-aec9-30d02b4b8482",
-          "body": "{\n  \"id\": {{faker 'number.int' max=99999}},\n  \"petId\": {{faker 'number.int' max=99999}},\n  \"quantity\": {{faker 'number.int' max=99999}},\n  \"shipDate\": \"{{faker 'date.recent' 365}}\",\n  \"status\": \"{{oneOf (array 'placed' 'approved' 'delivered')}}\",\n  \"complete\": {{faker 'datatype.boolean'}}\n}",
+          "body": "{\n  \"id\": {{faker 'number.int' max=99999}},\n  \"petId\": {{faker 'number.int' max=99999}},\n  \"quantity\": {{faker 'number.int' max=99999}},\n  \"shipDate\": \"{{faker 'date.recent' 365}}\",\n  \"status\": \"{{oneOf 'placed' 'approved' 'delivered'}}\",\n  \"complete\": {{faker 'datatype.boolean'}}\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "successful operation",
