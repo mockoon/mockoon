@@ -2184,6 +2184,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    */
   private buildTLSOptions(environment: Environment): SecureContextOptions {
     let tlsOptions: SecureContextOptions = {};
+    const tlsType = environment.tlsOptions?.type;
+    const hasPfxConfig = tlsType === 'PFX' && !!environment.tlsOptions?.pfxPath;
+    const hasCertConfig =
+      tlsType === 'CERT' &&
+      !!environment.tlsOptions?.certPath &&
+      !!environment.tlsOptions?.keyPath;
     const processTemplating = (content: string) =>
       TemplateParser({
         content,
@@ -2195,25 +2201,15 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         publicBaseUrl: this.options.publicBaseUrl
       });
 
-    if (
-      environment.tlsOptions?.pfxPath ||
-      (environment.tlsOptions?.certPath && environment.tlsOptions?.keyPath)
-    ) {
-      if (
-        environment.tlsOptions?.type === 'PFX' &&
-        environment.tlsOptions?.pfxPath
-      ) {
+    if (hasPfxConfig || hasCertConfig) {
+      if (hasPfxConfig) {
         tlsOptions.pfx = readFileSync(
           resolvePathFromEnvironment(
             processTemplating(environment.tlsOptions?.pfxPath),
             this.options.environmentDirectory
           )
         );
-      } else if (
-        environment.tlsOptions?.type === 'CERT' &&
-        environment.tlsOptions?.certPath &&
-        environment.tlsOptions?.keyPath
-      ) {
+      } else if (hasCertConfig) {
         tlsOptions.cert = readFileSync(
           resolvePathFromEnvironment(
             processTemplating(environment.tlsOptions?.certPath),
