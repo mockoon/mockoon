@@ -62,4 +62,22 @@ describe('TLS', () => {
   it('should call /answer and verify the custom self-signed cert', async () => {
     await http.assertCallWithPort(getCallCustomCert, 3000);
   });
+
+  it('should ignore PFX values when switching back to CERT and fallback to default cert', async () => {
+    await navigation.switchView('ENV_SETTINGS');
+
+    await $('#cert-types-PFX').click();
+    await $('#env-settings-tls-pfxPath').setValue('./stale.pfx');
+    await environmentsSettings.setSettingValue(
+      'passphrase',
+      'stale-passphrase'
+    );
+
+    await $('#cert-types-CERT').click();
+    await environmentsSettings.clearSettingValue('certPath');
+    await environmentsSettings.clearSettingValue('keyPath');
+
+    await environments.restart();
+    await http.assertCallWithPort(getCallMockoonCert, 3000);
+  });
 });

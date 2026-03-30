@@ -96,7 +96,7 @@ export class EnvironmentsMenuComponent {
   private store = inject(Store);
   private eventsService = inject(EventsService);
   private settingsService = inject(SettingsService);
-  private syncsService = inject(SyncService);
+  private syncService = inject(SyncService);
   private uiService = inject(UIService);
   private userService = inject(UserService);
 
@@ -690,7 +690,7 @@ export class EnvironmentsMenuComponent {
   }
 
   public cloudReconnect() {
-    this.syncsService.reconnect();
+    this.syncService.reconnect();
   }
 
   public login(event: MouseEvent) {

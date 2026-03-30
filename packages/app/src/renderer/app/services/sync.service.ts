@@ -164,7 +164,7 @@ export class SyncService {
   public reconnect() {
     const user = this.store.get('user');
 
-    if (user) {
+    if (user && user.plan !== Plans.FREE) {
       (Config.isWeb &&
       !this.migrationApproval &&
       user.cloudSyncHighestMajorVersion != null &&
