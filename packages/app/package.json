@@ -92,7 +92,7 @@
     "electron": "41.1.0",
     "electron-builder": "26.8.1",
     "firebase": "12.11.0",
-    "joi": "18.1.1",
+    "joi": "18.1.2",
     "ngx-markdown": "21.1.0",
     "ngx-mask": "21.0.1",
     "rxjs": "7.8.2",
