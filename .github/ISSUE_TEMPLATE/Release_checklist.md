@@ -34,6 +34,10 @@ about: Checklist for releases (maintainers use only)
 
 - [ ] Merge release branch on main (publish the changelogs)
 
+**Web app:**
+
+- [ ] Trigger the deployment workflow
+
 **API:**
 
 - [ ] Update desktop latest version in `/releases/desktop/stable.json`
