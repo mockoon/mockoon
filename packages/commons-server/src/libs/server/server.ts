@@ -1370,6 +1370,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       response.status(triggeredRouteResponse.statusCode);
 
       this.setHeaders(triggeredRouteResponse.headers, response, request);
+      this.setRouteMetadataHeaders(route, triggeredRouteResponse, response);
 
       // send the file
       if (
@@ -1442,6 +1443,33 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         );
       }
     }, latency);
+  }
+
+  private setRouteMetadataHeaders(
+    route: Route,
+    triggeredRouteResponse: RouteResponse,
+    response: Response
+  ) {
+    const { original: routeUrl } = preparePath(
+      this.environment.endpointPrefix,
+      route.endpoint
+    );
+    const responseIndex = route.responses.findIndex(
+      (routeResponse) => routeResponse.uuid === triggeredRouteResponse.uuid
+    );
+
+    response.set('x-mockoon-route-url', routeUrl);
+    response.set('x-mockoon-route-method', route.method.toUpperCase());
+    response.set('x-mockoon-route-description', route.documentation || '');
+    response.set('x-mockoon-route-uuid', route.uuid || '');
+    response.set(
+      'x-mockoon-route-response-no',
+      responseIndex >= 0 ? String(responseIndex + 1) : ''
+    );
+    response.set(
+      'x-mockoon-route-response-uuid',
+      triggeredRouteResponse.uuid || ''
+    );
   }
 
   private executeCallbacks(
