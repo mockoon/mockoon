@@ -127,35 +127,35 @@ jobs:
         run: |
           npm run test:desktop:win
 
-  # test-desktop-packaged-mac:
-  #   name: Desktop packaged MacOS - Build and test
-  #   runs-on: macos-latest
-  #   timeout-minutes: 120
+  test-desktop-packaged-mac:
+    name: Desktop packaged MacOS - Build and test
+    runs-on: macos-latest
+    timeout-minutes: 120
 
-  #   needs: [lint, test-libs]
+    needs: [lint, test-libs]
 
-  #   env:
-  #     USE_HARD_LINKS: false
+    env:
+      USE_HARD_LINKS: false
 
-  #   steps:
-  #     - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-  #     - name: Install Node.js
-  #       uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
-  #       with:
-  #         node-version: "24"
-  #         cache: npm
-  #     - name: Install dependencies
-  #       run: npm ci
-  #     - name: Build
-  #       run: |
-  #         npm run build:libs
-  #         npm run build:desktop:ci
-  #         npm run package:desktop:test:mac
-  #     - name: Run tests
-  #       run: |
-  #         export DISPLAY=':99.0'
-  #         Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-  #         npm run test:desktop:mac
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Install Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: |
+          npm run build:libs
+          npm run build:desktop:ci
+          npm run package:desktop:test:mac
+      - name: Run tests
+        run: |
+          export DISPLAY=':99.0'
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          npm run test:desktop:mac
 
   test-desktop-packaged-linux:
     name: Desktop packaged Linux - Build and test
