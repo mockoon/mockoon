@@ -879,12 +879,12 @@ export class OpenApiConverter {
       }
 
       // return example if any
-      if (schema.example) {
+      if (schema.example !== undefined) {
         return schema.example;
       }
 
       // return default value if any
-      if (schema.default) {
+      if (schema.default !== undefined) {
         return schema.default;
       }
 

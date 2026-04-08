@@ -238,4 +238,63 @@ describe('OpenAPI converter', () => {
       '{\n  "myBooleanEnum": {{oneOf true false}}\n}'
     );
   });
+
+  it('should retain boolean values in example and default', async () => {
+    const openApiConverter = new OpenApiConverter();
+    const booleanValueSpec = JSON.stringify({
+      openapi: '3.0.0',
+      info: { title: 'boolean-value', version: '1.0.0' },
+      paths: {
+        '/boolean-value': {
+          get: {
+            responses: {
+              200: {
+                description: 'ok',
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'object',
+                      properties: {
+                        myFalseDefault: {
+                          type: 'boolean',
+                          default: false
+                        },
+                        myTrueDefault: {
+                          type: 'boolean',
+                          default: true
+                        },
+                        myFalseExample: {
+                          type: 'boolean',
+                          example: false
+                        },
+                        myTrueExample: {
+                          type: 'boolean',
+                          example: true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+
+    const environment =
+      await openApiConverter.convertFromOpenAPI(booleanValueSpec);
+    const route = environment?.routes.find(
+      (currentRoute) => currentRoute.endpoint === 'boolean-value'
+    );
+
+    const expectedBody = `{
+  "myFalseDefault": false,
+  "myTrueDefault": true,
+  "myFalseExample": false,
+  "myTrueExample": true
+}`;
+
+    strictEqual(route?.responses[0].body, expectedBody);
+  });
 });
