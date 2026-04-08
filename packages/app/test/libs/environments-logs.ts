@@ -96,9 +96,12 @@ class EnvironmentsLogs {
 
     await $(selector).waitForExist();
     const items = await $$(selector);
-    const itemTexts = await Promise.all(
-      items.map(async (item) => (await item.getText()).trim())
-    );
+    const itemTexts: string[] = [];
+
+    // `$$` returns a WDIO element collection; iterate explicitly for compatibility.
+    for (const item of items) {
+      itemTexts.push((await item.getText()).trim());
+    }
 
     expect(itemTexts).toContain(text);
   }
