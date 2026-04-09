@@ -695,7 +695,7 @@ export class OpenApiConverter {
    */
   private routeParametersReplace(str: string) {
     return str.replace(
-      /{([-\w]+)}/gi,
+      /{([-\\w]+)}/gi,
       (searchValue, replaceValue) => ':' + replaceValue.replaceAll('-', '')
     );
   }
@@ -831,7 +831,7 @@ export class OpenApiConverter {
       number_float: () => "{{faker 'number.float'}}",
       number_double: () => "{{faker 'number.float'}}",
       string: () => '',
-      string_date: () => "{{date '2019' (now) 'yyyy-MM-dd'}}",
+      string_date: () => "{{date '2019' (now) 'yyyy-MM-dd'}}}",
       'string_date-time': () => "{{faker 'date.recent' 365}}",
       string_email: () => "{{faker 'internet.email'}}",
       string_uuid: () => "{{faker 'string.uuid'}}",
@@ -879,12 +879,12 @@ export class OpenApiConverter {
       }
 
       // return example if any
-      if (schema.example) {
+      if (schema.example !== undefined) {
         return schema.example;
       }
 
       // return default value if any
-      if (schema.default) {
+      if (schema.default !== undefined) {
         return schema.default;
       }
 
@@ -966,7 +966,7 @@ export class OpenApiConverter {
    */
   private convertJSONSchemaPrimitives(jsonSchema: string) {
     return jsonSchema.replace(
-      /"({{(?:faker '(?:number\.int|number\.float|datatype\.boolean)'(?: max=99999)?|oneOf (?:-?\d+(?:\.\d+)?|true|false|null)(?: (?:-?\d+(?:\.\d+)?|true|false|null))*?)}})"/g,
+      /\"({{(?:faker '(?:number\.int|number\.float|datatype\.boolean)'(?: max=99999)?|oneOf (?:-?\d+(?:\.\d+)?|true|false|null)(?: (?:-?\d+(?:\.\d+)?|true|false|null))*?)}})\"/g,
       '$1'
     );
   }
