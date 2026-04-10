@@ -40,7 +40,7 @@ We recommend the following workflow:
 
 - Check for **opened unassigned** issues or open a new one (after searching for closed issues).
 - If you are not the issue creator, comment on the issue and request to work on it so it can be assigned to you.
-- After discussing the implementation, the issue will be assigned to you by a maintainer. As a rule, the assignee is the person working on the issue.
+- After discussing the implementation, and making sure it aligns with the project's goals, the issue will be assigned to you by a maintainer. As a rule, the assignee is the person working on the issue.
 
 ## AI use
 
