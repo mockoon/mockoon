@@ -48,6 +48,7 @@
     "package:win": "npm run clean-packages && electron-builder --publish never --config ./build-configs/electron-builder.win.js",
     "package:win:appx": "npm run clean-packages && electron-builder --publish never --config ./build-configs/electron-builder.win-appx.js",
     "package:linux": "npm run clean-packages && electron-builder --publish never --config ./build-configs/electron-builder.linux.js",
+    "package:linux:flathub": "npm run clean-packages && electron-builder --publish never --config ./build-configs/electron-builder.linux.flathub.js --dir",
     "package:mac": "npm run clean-packages && electron-builder --publish never --config ./build-configs/electron-builder.mac.js",
     "package:mac:unsigned": "npm run clean-packages && electron-builder --publish never --config ./build-configs/electron-builder.mac-unsigned.js",
     "package:test:win": "npm run clean-packages && electron-builder --publish never --config ./build-configs/test/electron-builder.win.js --dir",
