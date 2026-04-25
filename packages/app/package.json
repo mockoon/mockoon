@@ -89,7 +89,7 @@
     "bootstrap": "5.3.8",
     "brace": "0.11.1",
     "date-fns": "4.1.0",
-    "electron": "41.1.1",
+    "electron": "41.2.1",
     "electron-builder": "26.1.0",
     "firebase": "12.11.0",
     "joi": "18.1.2",
