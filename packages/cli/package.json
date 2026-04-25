@@ -57,7 +57,7 @@
     "@types/mustache": "4.2.6",
     "eslint-config-oclif": "6.0.154",
     "eslint-config-oclif-typescript": "3.1.14",
-    "oclif": "4.22.96"
+    "oclif": "4.23.0"
   },
   "engines": {
     "node": ">=18"
