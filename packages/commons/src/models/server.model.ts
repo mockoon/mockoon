@@ -137,6 +137,11 @@ export type ServerOptions = {
   enableRandomLatency: boolean;
 
   /**
+   * Add route metadata headers to responses.
+   */
+  enableRouteMetadataHeaders?: boolean;
+
+  /**
    * Max file upload number (multipart/form-data).
    * Set to 0 to disable file uploads. (busboy)
    */

@@ -127,6 +127,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     disableTls: false,
     maxTransactionLogs: defaultMaxTransactionLogs,
     enableRandomLatency: false,
+    enableRouteMetadataHeaders: false,
     maxFileUploads: 10,
     maxFileSize: 10 * 1024 * 1024 // 10MB
   };
@@ -1370,7 +1371,9 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       response.status(triggeredRouteResponse.statusCode);
 
       this.setHeaders(triggeredRouteResponse.headers, response, request);
-      this.setRouteMetadataHeaders(route, triggeredRouteResponse, response);
+      if (this.options.enableRouteMetadataHeaders) {
+        this.setRouteMetadataHeaders(route, triggeredRouteResponse, response);
+      }
 
       // send the file
       if (
@@ -1450,17 +1453,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     triggeredRouteResponse: RouteResponse,
     response: Response
   ) {
-    const { original: routeUrl } = preparePath(
-      this.environment.endpointPrefix,
-      route.endpoint
-    );
     const responseIndex = route.responses.findIndex(
       (routeResponse) => routeResponse.uuid === triggeredRouteResponse.uuid
     );
 
-    response.set('x-mockoon-route-url', routeUrl);
-    response.set('x-mockoon-route-method', route.method.toUpperCase());
-    response.set('x-mockoon-route-description', route.documentation || '');
     response.set('x-mockoon-route-uuid', route.uuid || '');
     response.set(
       'x-mockoon-route-response-no',
