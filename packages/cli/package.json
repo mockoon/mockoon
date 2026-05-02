@@ -47,7 +47,7 @@
   "dependencies": {
     "@mockoon/commons": "9.6.1",
     "@mockoon/commons-server": "9.6.1",
-    "@oclif/core": "4.10.3",
+    "@oclif/core": "4.10.6",
     "@oclif/plugin-help": "6.2.41",
     "chokidar": "4.0.3",
     "mustache": "4.2.0",
