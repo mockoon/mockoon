@@ -161,6 +161,7 @@ The mocks will run by default on the ports and hostnames specified in the files.
 |--proxy | Override the environment's proxy settings (options: 'enabled' or 'disabled')|
 |--public-base-url | Public base URL used to resolve [relative callback URLs](https://mockoon.com/docs/latest/callbacks/overview/#configure-a-callback) and for the [`baseUrl` templating helper](https://mockoon.com/docs/latest/templating/mockoon-request-helpers/#baseurl) (e.g. https://api.example.com or http://localhost:3000). Must include the protocol and port if non-standard.|
 |-k, --token | Access token used to fetch cloud-hosted Mockoon environments (see  [access token documentation](https://mockoon.com/cloud/docs/access-tokens/))|
+|--max-callback-depth | Maximum call stack depth for route responses with callbacks (default: 100)|
 |-h, --help | Show CLI help|
 
 **Examples**:
