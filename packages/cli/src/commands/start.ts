@@ -5,6 +5,7 @@ import {
   ServerErrorCodes,
   ServerOptions,
   defaultEnvironmentVariablesPrefix,
+  defaultMaxCallbackDepth,
   defaultMaxTransactionLogs
 } from '@mockoon/commons';
 import {
@@ -131,6 +132,10 @@ export default class Start extends Command {
       char: 'k',
       description: 'Mockoon cloud access token',
       env: 'MOCKOON_CLOUD_TOKEN'
+    }),
+    'max-callback-depth': Flags.integer({
+      description: `Maximum call stack depth for route responses with callback functions (default: ${defaultMaxCallbackDepth})`,
+      default: defaultMaxCallbackDepth
     })
   };
 
@@ -196,6 +201,7 @@ export default class Start extends Command {
           disableTls: userFlags['disable-tls'],
           maxTransactionLogs: userFlags['max-transaction-logs'],
           enableRandomLatency: userFlags['enable-random-latency'],
+          maxCallbackDepth: userFlags['max-callback-depth'],
           publicBaseUrl: userFlags['public-base-url'][index]
         });
 
@@ -259,6 +265,7 @@ export default class Start extends Command {
       disableTls: parameters.disableTls,
       maxTransactionLogs: parameters.maxTransactionLogs,
       enableRandomLatency: parameters.enableRandomLatency,
+      maxCallbackDepth: parameters.maxCallbackDepth,
       publicBaseUrl: parameters.publicBaseUrl
     });
 
