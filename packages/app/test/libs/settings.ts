@@ -7,7 +7,6 @@ type SettingNames =
   | 'settings-storage-pretty-print'
   | 'settings-storage-file-watcher'
   | 'settings-log-max-count'
-  | 'settings-enable-telemetry'
   | 'settings-faker-locale'
   | 'settings-start-environments-on-load'
   | 'settings-env-vars-prefix'

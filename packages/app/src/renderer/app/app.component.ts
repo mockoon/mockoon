@@ -33,7 +33,6 @@ import { RemoteConfigService } from 'src/renderer/app/services/remote-config.ser
 import { ServerService } from 'src/renderer/app/services/server.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { SyncService } from 'src/renderer/app/services/sync.service';
-import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { TourService } from 'src/renderer/app/services/tour.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -62,7 +61,6 @@ import { environment } from 'src/renderer/environments/environment';
   ]
 })
 export class AppComponent implements OnInit {
-  private telemetryService = inject(TelemetryService);
   private environmentsService = inject(EnvironmentsService);
   private store = inject(Store);
   private toastService = inject(ToastsService);
@@ -100,11 +98,6 @@ export class AppComponent implements OnInit {
         this.deployService.getInstances().subscribe();
       }
     }
-  }
-
-  @HostListener('document:click')
-  public documentClick() {
-    this.telemetryService.sendEvent();
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -164,8 +157,6 @@ export class AppComponent implements OnInit {
     fromEvent(window, 'online')
       .pipe(switchMap(() => this.userService.reloadUser()))
       .subscribe();
-
-    this.telemetryService.init().subscribe();
 
     this.activeEnvironment$ = this.store.selectActiveEnvironment().pipe(
       tap((activeEnvironment) => {
