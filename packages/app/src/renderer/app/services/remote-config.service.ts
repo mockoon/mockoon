@@ -25,7 +25,7 @@ export class RemoteConfigService {
   }
 
   /**
-   * Fetch the remote config
+   * Fetch the remote config only if the user is authenticated
    */
   public fetchConfig(): Observable<RemoteConfigData> {
     return from(this.userService.getIdToken()).pipe(

@@ -35,9 +35,8 @@ describe('Schema validation', () => {
           'unknown',
           { uuid: '', path: '/home/username/file1.json' }
         ],
-        enableTelemetry: true,
         unknown: true
-      } as unknown);
+      } as any);
     });
 
     it('should verify saved properties (missing, invalid, unknown)', async () => {

@@ -26,7 +26,6 @@ import { MessageParams } from 'src/renderer/app/models/messages.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
-import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import {
   updateEnvironmentStatusAction,
   updateProcessedDatabucketsAction
@@ -38,7 +37,6 @@ import { Config } from 'src/renderer/config';
 export class ServerService {
   private store = inject(Store);
   private zone = inject(NgZone);
-  private telemetryService = inject(TelemetryService);
   private eventsService = inject(EventsService);
   private mainApiService = inject(MainApiService);
   private loggerService = inject(LoggerService);
@@ -329,10 +327,6 @@ export class ServerService {
             updateProcessedDatabucketsAction(environmentUuid, null)
           );
         });
-        break;
-
-      case 'entering-request':
-        this.telemetryService.sendEvent();
         break;
 
       case 'ws-new-connection':
