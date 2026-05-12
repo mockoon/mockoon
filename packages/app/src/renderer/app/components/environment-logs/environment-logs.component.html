@@ -256,6 +256,22 @@
                       {{ selectedLog.protocol | uppercase }}
                     </span>
                   </div>
+                  <div class="environment-logs-content-item">
+                    <strong>WebSocket event:</strong>
+                    {{ getWebSocketEventLabel(selectedLog) }}
+                  </div>
+                  @if (getWebSocketCloseCode(selectedLog); as closeCode) {
+                    <div class="environment-logs-content-item">
+                      <strong>Close code:</strong>
+                      {{ closeCode }}
+                    </div>
+                    @if (getWebSocketCloseReason(selectedLog); as closeReason) {
+                      <div class="environment-logs-content-item">
+                        <strong>Close reason:</strong>
+                        {{ closeReason }}
+                      </div>
+                    }
+                  }
                 }
                 @if (selectedLog.protocol !== 'ws') {
                   <div class="environment-logs-content-item">
@@ -412,7 +428,12 @@
                   "
                 />
 
-                Body {{ !selectedLog?.request?.body ? '(none)' : '' }}
+                {{
+                  selectedLog?.websocketEvent?.type === 'message'
+                    ? 'Message'
+                    : 'Body'
+                }}
+                {{ !selectedLog?.request?.body ? '(none)' : '' }}
               </div>
               <div [ngbCollapse]="collapseStates['request.body']">
                 <div class="environment-logs-content-item">

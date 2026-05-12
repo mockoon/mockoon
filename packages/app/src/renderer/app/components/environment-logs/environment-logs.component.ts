@@ -224,7 +224,7 @@ export class EnvironmentLogsComponent implements OnInit {
         if (search) {
           result = result.filter((log) =>
             textFilter(
-              `${log.method} ${log.url} ${log.response.status} ${log.response.statusMessage} ${log.request.query} ${this.datePipe.transform(log.timestampMs, this.dateFormat)} ${log.proxied ? 'proxied' : ''}`,
+              `${log.method} ${log.url} ${log.response.status} ${log.response.statusMessage} ${log.request.query} ${log.request.body} ${log.response.body} ${this.datePipe.transform(log.timestampMs, this.dateFormat)} ${log.proxied ? 'proxied' : ''}`,
               search
             )
           );
@@ -398,5 +398,29 @@ export class EnvironmentLogsComponent implements OnInit {
       log.routeUUID,
       log.routeResponseUUID
     );
+  }
+
+  public getWebSocketEventLabel(log: EnvironmentLog) {
+    if (log.websocketEvent?.type === 'message') {
+      return 'Message received';
+    }
+
+    if (log.websocketEvent?.type === 'closed') {
+      return 'Connection closed';
+    }
+
+    return 'Connection opened';
+  }
+
+  public getWebSocketCloseCode(log: EnvironmentLog) {
+    return log.websocketEvent?.type === 'closed'
+      ? log.websocketEvent.code
+      : null;
+  }
+
+  public getWebSocketCloseReason(log: EnvironmentLog) {
+    return log.websocketEvent?.type === 'closed'
+      ? log.websocketEvent.reason
+      : null;
   }
 }
