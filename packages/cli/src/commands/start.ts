@@ -114,6 +114,11 @@ export default class Start extends Command {
         'Enable random latency from 0 to value specified in the route settings',
       default: false
     }),
+    'enable-route-metadata-headers': Flags.boolean({
+      description:
+        'Add route metadata headers to responses (UUID and response metadata)',
+      default: false
+    }),
     proxy: Flags.string({
       description: "Override the environment's proxy settings",
       options: ['enabled', 'disabled'] as const
@@ -201,6 +206,8 @@ export default class Start extends Command {
           disableTls: userFlags['disable-tls'],
           maxTransactionLogs: userFlags['max-transaction-logs'],
           enableRandomLatency: userFlags['enable-random-latency'],
+          enableRouteMetadataHeaders:
+            userFlags['enable-route-metadata-headers'],
           maxCallbackDepth: userFlags['max-callback-depth'],
           publicBaseUrl: userFlags['public-base-url'][index]
         });
@@ -265,6 +272,7 @@ export default class Start extends Command {
       disableTls: parameters.disableTls,
       maxTransactionLogs: parameters.maxTransactionLogs,
       enableRandomLatency: parameters.enableRandomLatency,
+      enableRouteMetadataHeaders: parameters.enableRouteMetadataHeaders,
       maxCallbackDepth: parameters.maxCallbackDepth,
       publicBaseUrl: parameters.publicBaseUrl
     });

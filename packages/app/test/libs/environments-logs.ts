@@ -87,6 +87,25 @@ class EnvironmentsLogs {
     await utils.assertElementText($(selector), text);
   }
 
+  public async assertLogSectionContains(
+    text: string,
+    tab: 'request' | 'response',
+    sectionIndex: number
+  ) {
+    const selector = `.environment-logs-content-${tab} div:nth-child(${sectionIndex}) div.environment-logs-content-item`;
+
+    await $(selector).waitForExist();
+    const items = await $$(selector);
+    const itemTexts: string[] = [];
+
+    // `$$` returns a WDIO element collection; iterate explicitly for compatibility.
+    for (const item of items) {
+      itemTexts.push((await item.getText()).trim());
+    }
+
+    expect(itemTexts).toContain(text);
+  }
+
   public async assertLogBody(text: string, tab: 'request' | 'response') {
     const selector = `.environment-logs-content-${tab} div:nth-child(${tab === 'request' ? '10' : '6'}) .ace_content`;
 

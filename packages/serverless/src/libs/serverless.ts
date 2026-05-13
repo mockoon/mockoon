@@ -21,7 +21,8 @@ export class MockoonServerless {
     enableAdminApi: true,
     disableTls: false,
     maxTransactionLogs: defaultMaxTransactionLogs,
-    enableRandomLatency: false
+    enableRandomLatency: false,
+    enableRouteMetadataHeaders: false
   };
 
   constructor(
@@ -53,7 +54,8 @@ export class MockoonServerless {
       enableAdminApi: this.options.enableAdminApi,
       disableTls: this.options.disableTls,
       maxTransactionLogs: this.options.maxTransactionLogs,
-      enableRandomLatency: this.options.enableRandomLatency
+      enableRandomLatency: this.options.enableRandomLatency,
+      enableRouteMetadataHeaders: this.options.enableRouteMetadataHeaders
     });
     listenServerEvents(
       server,
