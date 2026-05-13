@@ -1,8 +1,6 @@
 import { DeployRegions } from './deploy-instance.model';
 
 export type RemoteConfigData = {
-  enableTelemetry: boolean;
-  geoipEndpoint?: string;
   cloudSyncUrl?: string;
   deployUrl?: string;
   dataRefreshInterval?: number;

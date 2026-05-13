@@ -5,6 +5,7 @@ import {
   ServerErrorCodes,
   ServerOptions,
   defaultEnvironmentVariablesPrefix,
+  defaultMaxCallbackDepth,
   defaultMaxTransactionLogs
 } from '@mockoon/commons';
 import {
@@ -136,6 +137,10 @@ export default class Start extends Command {
       char: 'k',
       description: 'Mockoon cloud access token',
       env: 'MOCKOON_CLOUD_TOKEN'
+    }),
+    'max-callback-depth': Flags.integer({
+      description: `Maximum call stack depth for route responses with callback functions (default: ${defaultMaxCallbackDepth})`,
+      default: defaultMaxCallbackDepth
     })
   };
 
@@ -203,6 +208,7 @@ export default class Start extends Command {
           enableRandomLatency: userFlags['enable-random-latency'],
           enableRouteMetadataHeaders:
             userFlags['enable-route-metadata-headers'],
+          maxCallbackDepth: userFlags['max-callback-depth'],
           publicBaseUrl: userFlags['public-base-url'][index]
         });
 
@@ -267,6 +273,7 @@ export default class Start extends Command {
       maxTransactionLogs: parameters.maxTransactionLogs,
       enableRandomLatency: parameters.enableRandomLatency,
       enableRouteMetadataHeaders: parameters.enableRouteMetadataHeaders,
+      maxCallbackDepth: parameters.maxCallbackDepth,
       publicBaseUrl: parameters.publicBaseUrl
     });
 

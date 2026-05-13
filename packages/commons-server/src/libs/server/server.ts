@@ -24,6 +24,7 @@ import {
   crudRoutesBuilder,
   dedupSlashes,
   defaultEnvironmentVariablesPrefix,
+  defaultMaxCallbackDepth,
   defaultMaxTransactionLogs,
   deterministicStringify,
   generateUUID,
@@ -129,7 +130,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     enableRandomLatency: false,
     enableRouteMetadataHeaders: false,
     maxFileUploads: 10,
-    maxFileSize: 10 * 1024 * 1024 // 10MB
+    maxFileSize: 10 * 1024 * 1024, // 10MB
+    maxCallbackDepth: defaultMaxCallbackDepth
   };
   private transactionLogs: Transaction[] = [];
   private effectiveRestRoutes: Route[] = [];
@@ -144,7 +146,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     this.options = {
       ...this.options,
       ...options,
-      envVarsPrefix: options.envVarsPrefix ?? defaultEnvironmentVariablesPrefix
+      envVarsPrefix: options.envVarsPrefix ?? defaultEnvironmentVariablesPrefix,
+      maxCallbackDepth: options.maxCallbackDepth ?? defaultMaxCallbackDepth
     };
 
     this.computeEffectiveRestRoutes();
@@ -1473,22 +1476,26 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     request: Request,
     response: Response
   ) {
-    // avoid infinite callback loops by tracking the chain of callback triggers
-    const incomingCallbackChain =
-      request.header('X-Mockoon-Callback-Chain') || '';
-    const callbackChainArray = incomingCallbackChain
-      ? incomingCallbackChain.split(',')
-      : [];
+    // avoid infinite callback loops by capping recursion depth
+    const incomingDepth = parseInt(
+      request.header('X-Mockoon-Callback-Depth') || '0',
+      10
+    );
+    const currentDepth = Number.isFinite(incomingDepth)
+      ? Math.max(0, incomingDepth)
+      : 0;
+    const maxDepth = this.options.maxCallbackDepth ?? defaultMaxCallbackDepth;
 
-    // check if current route response is already in the callback chain
-    if (callbackChainArray.includes(routeResponse.uuid)) {
+    if (currentDepth >= maxDepth) {
       this.emit(
         'error',
         ServerErrorCodes.CALLBACK_ERROR,
-        new Error('Infinite callback loop detected'),
+        new Error(
+          `Max callback depth reached (${maxDepth}). Stopping callback execution to prevent infinite loops.`
+        ),
         {
           routeResponseUUID: routeResponse.uuid,
-          callbackChain: incomingCallbackChain
+          callbackDepth: currentDepth
         }
       );
 
@@ -1520,14 +1527,9 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             publicBaseUrl: this.options.publicBaseUrl
           });
 
-          // build the callback chain by appending current route response UUID
-          const newCallbackChain = [
-            ...callbackChainArray,
-            routeResponse.uuid
-          ].join(',');
-
+          // increment callback depth counter
           const extraHeaders = {
-            'X-Mockoon-Callback-Chain': newCallbackChain
+            'X-Mockoon-Callback-Depth': String(currentDepth + 1)
           };
 
           // detect if relative URL and add current host and protocol

@@ -37,7 +37,6 @@ const config: WebdriverIO.Config = {
           fakerSeed: null,
           lastChangelog: '9999.9.9',
           environments: [],
-          enableTelemetry: true,
           storagePrettyPrint: true,
           startEnvironmentsOnLoad: false,
           logTransactions: false,

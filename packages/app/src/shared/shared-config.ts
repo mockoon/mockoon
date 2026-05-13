@@ -20,9 +20,6 @@ export const SharedConfig = (options: {
   return {
     isWeb: options.isWeb,
     appVersion,
-    telemetry: {
-      sessionDuration: 3_600_000 // 1h
-    },
     remoteConfigDefaults: {
       dataRefreshInterval: 300_000 // 5 minutes
     },

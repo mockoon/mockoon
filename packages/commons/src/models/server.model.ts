@@ -162,4 +162,12 @@ export type ServerOptions = {
    * which is configured in the environment definition.
    */
   publicBaseUrl?: string;
+
+  /**
+   * Maximum callback recursion depth allowed.
+   * Prevents infinite callback loops by capping how many times
+   * callbacks can chain (regardless of which route triggers them).
+   * Default is 100.
+   */
+  maxCallbackDepth?: number;
 };

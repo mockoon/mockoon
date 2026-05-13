@@ -21,7 +21,6 @@ export const SettingsDefault: Settings = {
   environments: [],
   disabledRoutes: {},
   collapsedFolders: {},
-  enableTelemetry: true,
   storagePrettyPrint: true,
   fileWatcherEnabled: FileWatcherOptions.DISABLED,
   dialogWorkingDir: '',
@@ -93,9 +92,6 @@ export const SettingsSchema = Joi.object<Settings, true>({
     )
     .required()
     .failover(SettingsDefault.collapsedFolders),
-  enableTelemetry: Joi.boolean()
-    .failover(SettingsDefault.enableTelemetry)
-    .required(),
   storagePrettyPrint: Joi.boolean()
     .failover(SettingsDefault.storagePrettyPrint)
     .required(),

@@ -53,3 +53,5 @@ export const ParsedBodyMimeTypes = [
   'multipart/form-data',
   ...ParsedXMLBodyMimeTypes
 ];
+
+export const defaultMaxCallbackDepth = 100;

@@ -42,7 +42,6 @@ export class SettingsModalComponent {
   private uiService = inject(UIService);
   public settings$: Observable<Settings>;
   public Infinity = Infinity;
-  public faqUrl = Config.docs.faq;
   public fakerLocales: DropdownItems = FakerLocales;
   public fileWatcherOptions: DropdownItems = [
     { value: FileWatcherOptions.DISABLED, label: 'Disabled' },
@@ -65,7 +64,6 @@ export class SettingsModalComponent {
       fakerSeed: [SettingsDefault.fakerSeed],
       fileWatcherEnabled: [SettingsDefault.fileWatcherEnabled],
       storagePrettyPrint: [SettingsDefault.storagePrettyPrint],
-      enableTelemetry: [SettingsDefault.enableTelemetry],
       startEnvironmentsOnLoad: [SettingsDefault.startEnvironmentsOnLoad],
       logTransactions: [SettingsDefault.logTransactions],
       envVarsPrefix: [SettingsDefault.envVarsPrefix],
@@ -103,7 +101,6 @@ export class SettingsModalComponent {
               fakerSeed: settings.fakerSeed,
               fileWatcherEnabled: settings.fileWatcherEnabled,
               storagePrettyPrint: settings.storagePrettyPrint,
-              enableTelemetry: settings.enableTelemetry,
               startEnvironmentsOnLoad: settings.startEnvironmentsOnLoad,
               logTransactions: settings.logTransactions,
               envVarsPrefix: settings.envVarsPrefix,

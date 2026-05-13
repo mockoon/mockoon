@@ -19,7 +19,6 @@ import { gt as semverGt } from 'semver';
 import { SettingsSchema } from 'src/renderer/app/constants/settings-schema.constants';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { StorageService } from 'src/renderer/app/services/storage.service';
-import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { updateSettingsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
@@ -34,7 +33,6 @@ import {
 export class SettingsService {
   private store = inject(Store);
   private storageService = inject(StorageService);
-  private telemetryService = inject(TelemetryService);
   private uiService = inject(UIService);
   private mainApiService = inject(MainApiService);
 
@@ -68,10 +66,6 @@ export class SettingsService {
   public loadSettings(): Observable<any> {
     return this.storageService.loadSettings().pipe(
       tap((settings: Settings) => {
-        if (!settings) {
-          this.telemetryService.setFirstSession();
-        }
-
         const validatedSchema = SettingsSchema.validate(settings);
         this.updateSettings(validatedSchema.value);
         settings = validatedSchema.value;
