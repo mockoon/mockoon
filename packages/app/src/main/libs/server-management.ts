@@ -77,7 +77,8 @@ export class ServerInstance {
       },
       envVarsPrefix: getSettings().envVarsPrefix,
       maxTransactionLogs: getSettings().maxLogsPerEnvironment,
-      enableRandomLatency: getSettings().enableRandomLatency
+      enableRandomLatency: getSettings().enableRandomLatency,
+      enableRouteMetadataHeaders: true
     });
 
     listenServerEvents(
