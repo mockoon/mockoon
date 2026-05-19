@@ -104,7 +104,7 @@
     "webpack": "5.105.4",
     "webpack-cli": "7.0.2",
     "webpack-node-externals": "3.0.0",
-    "ws": "8.20.0",
+    "ws": "8.20.1",
     "zone.js": "~0.16.1"
   }
 }
