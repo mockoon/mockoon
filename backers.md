@@ -40,11 +40,11 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
  
-  <a href="https://www.testmuai.com/?utm_medium=sponsor&utm_source=mockoon">
+  <a href="https://coderabbit.link/mockoon ">
       <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/testmuai.png">
-      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/testmuai.png">
-      <img src="https://mockoon.com/images/sponsors/light/testmuai.png" alt="TestMu AI logo" />
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/coderabbit.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/coderabbit.png">
+      <img src="https://mockoon.com/images/sponsors/light/coderabbit.png" alt="CodeRabbit logo" />
       </picture>
   </a>
 </div>
@@ -68,11 +68,12 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Andrey Kozlov
 - [Anthony Critelli](https://github.com/acritelli)
 - [Appwrite](https://appwrite.io/)
-- Asopian
+- [Asopian](https://github.com/asopian)
 - Валентин Радчук
 - Barefootdeveloper
 - Buckley Robinson
 - Burak Sinan Karabulut
+- [CodeRabbit](https://coderabbit.link/mockoon)
 - Colin White
 - Cyhung
 - Dwi Satria
@@ -85,6 +86,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - [fl0rian-p](https://github.com/fl0rian-p)
 - François Grémont
 - [GitHub](https://github.blog/2023-04-12-github-accelerator-our-first-cohort-and-whats-next/)
+- [GitHub Secure Open-Source Fund](https://github.com/GitHub-SecureOSS-Fund)
 - Jakub Bartkowiak
 - Jakub Ślusarski
 - Jeremy
@@ -116,6 +118,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Samer Samer
 - Samja666
 - Sander
+- [Santosh Yadav](https://github.com/santoshyadavdev)
 - [ScottMariano](https://github.com/ScottMariano)
 - Sebastián Díaz
 - Serj
