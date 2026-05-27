@@ -341,6 +341,39 @@ export class ServerService {
         }
         break;
 
+      case 'ws-message-received':
+        if (data.inflightRequest && data.websocketMessage !== undefined) {
+          this.zone.run(() => {
+            this.eventsService.serverTransaction$.next({
+              environmentUUID: environmentUuid,
+              inflightRequest: data.inflightRequest,
+              websocketEvent: {
+                type: 'message',
+                message: data.websocketMessage
+              },
+              origin
+            });
+          });
+        }
+        break;
+
+      case 'ws-closed':
+        if (data.inflightRequest && data.websocketCode !== undefined) {
+          this.zone.run(() => {
+            this.eventsService.serverTransaction$.next({
+              environmentUUID: environmentUuid,
+              inflightRequest: data.inflightRequest,
+              websocketEvent: {
+                type: 'closed',
+                code: data.websocketCode,
+                reason: data.websocketReason
+              },
+              origin
+            });
+          });
+        }
+        break;
+
       case 'transaction-complete':
         if (data.transaction) {
           this.zone.run(() => {

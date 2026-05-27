@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { InFlightRequest, Transaction } from '@mockoon/commons';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
-import { EnvironmentLogOrigin } from 'src/renderer/app/models/environment-logs.model';
+import {
+  EnvironmentLogOrigin,
+  EnvironmentLogWebSocketEvent
+} from 'src/renderer/app/models/environment-logs.model';
 
 @Injectable({ providedIn: 'root' })
 export class EventsService {
@@ -14,6 +17,7 @@ export class EventsService {
     environmentUUID: string;
     transaction?: Transaction;
     inflightRequest?: InFlightRequest;
+    websocketEvent?: EnvironmentLogWebSocketEvent;
     origin: EnvironmentLogOrigin;
   }>();
 }

@@ -17,7 +17,8 @@ import {
 } from '@mockoon/commons';
 import {
   EnvironmentLog,
-  EnvironmentLogOrigin
+  EnvironmentLogOrigin,
+  EnvironmentLogWebSocketEvent
 } from 'src/renderer/app/models/environment-logs.model';
 import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { MigrationService } from 'src/renderer/app/services/migration.service';
@@ -84,6 +85,7 @@ export class DataService {
       url: request.request.urlPath,
       route: request.request.route,
       protocol: 'ws',
+      websocketEvent: { type: 'connection' },
       request: {
         isInvalidJson: false,
         query: request.request.query,
@@ -99,6 +101,57 @@ export class DataService {
         statusMessage: 'Switching Protocols',
         headers: [],
         body: '{}',
+        binaryBody: false,
+        isInvalidJson: false
+      },
+      proxied: false
+    };
+  }
+
+  /**
+   * Creates a new environment log record from a WebSocket event.
+   *
+   * @param request
+   */
+  public formatLogFromWebSocketEvent(
+    request: InFlightRequest,
+    origin: EnvironmentLogOrigin,
+    websocketEvent: EnvironmentLogWebSocketEvent
+  ): EnvironmentLog {
+    const messageBody =
+      websocketEvent.type === 'message' ? websocketEvent.message : '';
+    const closeReason =
+      websocketEvent.type === 'closed' ? websocketEvent.reason || '' : '';
+    const status = websocketEvent.type === 'closed' ? websocketEvent.code : 101;
+    const statusMessage =
+      websocketEvent.type === 'message'
+        ? 'WebSocket Message'
+        : closeReason || 'WebSocket Closed';
+
+    return {
+      origin,
+      uuid: generateUUID(),
+      routeUUID: request.routeUUID,
+      timestampMs: Date.now(),
+      method: request.request.method as EnvironmentLog['method'],
+      url: request.request.urlPath,
+      route: request.request.route,
+      protocol: 'ws',
+      websocketEvent,
+      request: {
+        isInvalidJson: false,
+        query: request.request.query,
+        body: messageBody,
+        bodyUnformatted: messageBody,
+        headers: request.request.headers,
+        params: request.request.params || [],
+        queryParams: request.request.queryParams || []
+      },
+      response: {
+        status,
+        statusMessage,
+        headers: [],
+        body: closeReason,
         binaryBody: false,
         isInvalidJson: false
       },

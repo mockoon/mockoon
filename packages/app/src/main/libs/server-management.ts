@@ -135,6 +135,38 @@ export class ServerInstance {
       }
     });
 
+    server.on(
+      'ws-message-received',
+      (request: InFlightRequest, message: string) => {
+        if (!mainWindow.isDestroyed()) {
+          mainWindow.webContents.send(
+            'APP_SERVER_EVENT',
+            this.environment.uuid,
+            'ws-message-received',
+            { inflightRequest: request, websocketMessage: message }
+          );
+        }
+      }
+    );
+
+    server.on(
+      'ws-closed',
+      (request: InFlightRequest, wsCode: number, reason?: string | null) => {
+        if (!mainWindow.isDestroyed()) {
+          mainWindow.webContents.send(
+            'APP_SERVER_EVENT',
+            this.environment.uuid,
+            'ws-closed',
+            {
+              inflightRequest: request,
+              websocketCode: wsCode,
+              websocketReason: reason
+            }
+          );
+        }
+      }
+    );
+
     server.on('transaction-complete', (transaction: Transaction) => {
       if (!mainWindow.isDestroyed()) {
         mainWindow.webContents.send(
