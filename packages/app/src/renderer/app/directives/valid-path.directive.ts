@@ -71,6 +71,14 @@ export class ValidPathDirective {
     this.onTouched = fn;
   }
 
+  public setDisabledState(isDisabled: boolean) {
+    this.renderer.setProperty(
+      this.elementRef.nativeElement,
+      'disabled',
+      isDisabled
+    );
+  }
+
   /**
    * Sanitize the entry:
    * - remove leading slash

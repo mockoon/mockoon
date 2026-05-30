@@ -6,6 +6,8 @@
 @let settings = settings$ | async;
 @let routesFilter = routesFilter$ | async;
 @let isActiveEnvironmentCloud = isActiveEnvironmentCloud$ | async;
+@let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
+@let dragEnabled = dragEnabled$ | async;
 
 <div
   class="routes-menu d-flex flex-column h-100"
@@ -17,6 +19,7 @@
         class="btn btn-link dropdown-toggle dropdown-toggle-icon"
         type="button"
         ngbDropdownToggle
+        [disabled]="!isActiveEnvironmentEditable"
       >
         <app-svg icon="add_box" />
       </button>

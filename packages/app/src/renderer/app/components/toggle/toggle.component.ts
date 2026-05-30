@@ -54,15 +54,15 @@ export class ToggleComponent
 
   @Input()
   public items: ToggleItems;
-  @Input()
+  @Input({ required: true })
   public prefix: string;
   @Input()
   public label?: string;
   @Input()
   public uncheckable = true;
 
-  public onChange: (_: any) => void;
-  public onTouched: () => void;
+  public onChange: (_: any) => void = () => undefined;
+  public onTouched: () => void = () => undefined;
 
   public control: UntypedFormControl;
   private controlChanges: Subscription;
@@ -92,6 +92,14 @@ export class ToggleComponent
 
   public registerOnTouched(fn: any): void {
     this.onTouched = fn;
+  }
+
+  public setDisabledState(isDisabled: boolean): void {
+    if (isDisabled) {
+      this.control.disable({ emitEvent: false });
+    } else {
+      this.control.enable({ emitEvent: false });
+    }
   }
 
   /**

@@ -2485,7 +2485,10 @@ export class EnvironmentsService {
         if (
           this.eventsService.logsRecording$.value[
             serverTransactionPayload.environmentUUID
-          ] === true
+          ] === true &&
+          this.store.getIsEnvironmentEditable(
+            serverTransactionPayload.environmentUUID
+          )
         ) {
           this.createRouteFromLog(
             serverTransactionPayload.environmentUUID,

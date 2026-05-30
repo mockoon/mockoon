@@ -237,9 +237,6 @@ export const environmentHasRoute = (
 ): boolean =>
   environment.routes.some((envRoute) => isRouteDuplicates(envRoute, route));
 
-export const trackByUuid = (item: any) => item.uuid;
-export const trackById = (item: any) => item.id;
-
 /**
  * Check if a text contains all the words (separated by a space) in a search string
  *

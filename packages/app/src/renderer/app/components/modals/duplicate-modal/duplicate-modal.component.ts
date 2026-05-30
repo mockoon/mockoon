@@ -1,43 +1,62 @@
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   OnDestroy,
-  OnInit,
-  inject
+  OnInit
 } from '@angular/core';
 import { Callback, DataBucket, Environment, Route } from '@mockoon/commons';
-import { Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { DataSubject } from 'src/renderer/app/models/data.model';
 import { DuplicateEntityToAnotherEnvironment } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { cancelEntityDuplicationToAnotherEnvironmentAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-duplicate-modal',
   templateUrl: './duplicate-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, NgFor, AsyncPipe]
+  imports: [AsyncPipe]
 })
 export class DuplicateModalComponent implements OnInit, OnDestroy {
   private uiService = inject(UIService);
   private store = inject(Store);
   private environmentsService = inject(EnvironmentsService);
-
-  public environments$: Observable<Environment[]> = this.store
-    .select('environments')
-    .pipe(
-      map((environments: Environment[]) =>
-        environments.filter((environment: Environment) =>
-          this.activeEnvironment
-            ? this.activeEnvironment.uuid !== environment.uuid
-            : true
+  public environments$: Observable<Environment[]> = combineLatest([
+    this.store.select('activeEnvironmentUUID').pipe(filter((uuid) => !!uuid)),
+    this.store
+      .select('environments')
+      .pipe(filter((environments) => !!environments)),
+    this.store.select('settings').pipe(
+      filter((settings) => !!settings),
+      map((settings) => settings.environments)
+    ),
+    this.store.selectIsCloudEditable()
+  ]).pipe(
+    map(
+      ([
+        activeEnvironmentUuid,
+        environments,
+        envDescriptors,
+        isCloudEditable
+      ]) =>
+        // exclude source environment, and cloud envs if not editable
+        environments.filter(
+          (environment: Environment) =>
+            environment.uuid !== activeEnvironmentUuid &&
+            !envDescriptors.find(
+              (envDescriptor) =>
+                envDescriptor.uuid === environment.uuid &&
+                envDescriptor.cloud &&
+                !isCloudEditable
+            )
         )
-      )
-    );
+    )
+  );
   public entityInformation: {
     displayName: string;
     subject: Omit<DataSubject, 'environment'>;

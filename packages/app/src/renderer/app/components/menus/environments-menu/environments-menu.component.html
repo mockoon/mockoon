@@ -13,6 +13,7 @@
 @let localDropdownMenuItems = localDropdownMenuItems$ | async;
 @let deployInstances = deployInstances$ | async;
 @let instanceUrls = instanceUrls$ | async;
+@let dragEnabled = dragEnabled$ | async;
 
 <div
   class="environments-menu d-flex flex-column h-100"
@@ -95,23 +96,12 @@
           <div class="text-truncate">
             {{ category.label }}
             @if (category.id === 'cloud' && syncAlert) {
-              @if (syncAlert.includes('OFFLINE_WARNING')) {
-                <a
-                  class="ms-2 text-warning cursor-pointer"
-                  [ngbTooltip]="alertLabels[syncAlert]"
-                  href="{{ offlineWarningLink }}"
-                  target="_blank"
-                >
-                  <app-svg icon="warning" />
-                </a>
-              } @else {
-                <span
-                  class="ms-2 text-warning"
-                  [ngbTooltip]="alertLabels[syncAlert]"
-                >
-                  <app-svg icon="warning" />
-                </span>
-              }
+              <span
+                class="ms-2 text-warning"
+                [ngbTooltip]="alertLabels[syncAlert]"
+              >
+                <app-svg icon="warning" />
+              </span>
             }
           </div>
         </div>

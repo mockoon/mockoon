@@ -1,5 +1,6 @@
 @let processedDatabuckets = processedDatabuckets$ | async;
 @let activeDatabucket = activeDatabucket$ | async;
+@let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
 
 <div class="d-flex h-100">
   <app-databuckets-menu class="h-100" />
@@ -37,6 +38,7 @@
             class="h-100"
             [options]="bodyEditorConfig?.options"
             mode="json"
+            [readOnly]="!isActiveEnvironmentEditable"
             [uuid]="activeDatabucket.uuid"
             formControlName="value"
           />

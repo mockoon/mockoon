@@ -56,6 +56,20 @@ export class EnvironmentProxyComponent {
       proxyRemovePrefix: [EnvironmentDefault.proxyRemovePrefix]
     });
 
+    this.store
+      .selectIsActiveEnvironmentEditable()
+      .pipe(
+        tap((isEditable) => {
+          if (isEditable) {
+            this.environmentProxyForm.enable({ emitEvent: false });
+          } else {
+            this.environmentProxyForm.disable({ emitEvent: false });
+          }
+        }),
+        takeUntilDestroyed()
+      )
+      .subscribe();
+
     // send new activeEnvironmentForm values to the store, one by one
     merge(
       ...Object.keys(this.environmentProxyForm.controls).map((controlName) =>

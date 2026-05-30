@@ -41,7 +41,6 @@ export const SharedConfig = (options: {
       cloudOverview: `${cloudDocsUrl}about/`,
       cloudDeploy: `${cloudDocsUrl}api-mock-cloud-deployments/`,
       cloudSync: `${cloudDocsUrl}data-synchronization-team-collaboration/`,
-      cloudSyncOffline: `${cloudDocsUrl}data-synchronization-team-collaboration/#offline-editing`,
       cloudDeployCliPull: `${cloudDocsUrl}api-mock-cloud-deployments/#self-host-with-the-cli`
     },
     // URLs should not be used directly in desktop app (but there is a redirection for the web app in user service). Instead use the flow methods in the user service

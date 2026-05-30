@@ -335,6 +335,8 @@ export class CommandPaletteService {
     const hasAtLeastOneEnvironment = this.store.get('environments').length > 0;
     const hasMoreThanOneEnvironment = this.store.get('environments').length > 1;
     const hasActiveEnvironment = !!this.store.getActiveEnvironment();
+    const isActiveEnvironmentEditable =
+      hasActiveEnvironment && this.store.getIsActiveEnvironmentEditable();
     const activeEnvironmentIsLocal = this.store.getIsActiveEnvLocal();
     const hasActiveRoute = !!this.store.getActiveRoute();
     const activeEnvironment = this.store.getActiveEnvironment();
@@ -512,7 +514,7 @@ export class CommandPaletteService {
           this.environmentsService.addDatabucket();
         },
         score: 1,
-        enabled: hasActiveEnvironment
+        enabled: hasActiveEnvironment && isActiveEnvironmentEditable
       },
       {
         id: 'DUPLICATE_DATA_BUCKET',
@@ -521,7 +523,10 @@ export class CommandPaletteService {
           this.environmentsService.duplicateDatabucket(activeDatabucketUuid);
         },
         score: 1,
-        enabled: hasActiveEnvironment && hasActiveDatabucket
+        enabled:
+          hasActiveEnvironment &&
+          hasActiveDatabucket &&
+          isActiveEnvironmentEditable
       },
       {
         id: 'DUPLICATE_DATA_BUCKET_TO_ENVIRONMENT',
@@ -555,7 +560,7 @@ export class CommandPaletteService {
           this.environmentsService.addCallback();
         },
         score: 1,
-        enabled: hasActiveEnvironment
+        enabled: hasActiveEnvironment && isActiveEnvironmentEditable
       },
       {
         id: 'DUPLICATE_CALLBACK',
@@ -564,7 +569,10 @@ export class CommandPaletteService {
           this.environmentsService.duplicateCallback(activeCallbackUuid);
         },
         score: 1,
-        enabled: hasActiveEnvironment && hasActiveCallback
+        enabled:
+          hasActiveEnvironment &&
+          hasActiveCallback &&
+          isActiveEnvironmentEditable
       },
       {
         id: 'DUPLICATE_CALLBACK_TO_ENVIRONMENT',
@@ -588,7 +596,7 @@ export class CommandPaletteService {
           this.environmentsService.addHTTPRoute('root');
         },
         score: 1,
-        enabled: hasActiveEnvironment
+        enabled: hasActiveEnvironment && isActiveEnvironmentEditable
       },
       {
         id: 'CREATE_CRUD_ROUTE',
@@ -598,7 +606,7 @@ export class CommandPaletteService {
           this.environmentsService.addCRUDRoute('root');
         },
         score: 1,
-        enabled: hasActiveEnvironment
+        enabled: hasActiveEnvironment && isActiveEnvironmentEditable
       },
       {
         id: 'CREATE_FOLDER',
@@ -608,7 +616,7 @@ export class CommandPaletteService {
           this.environmentsService.addFolder('root');
         },
         score: 1,
-        enabled: hasActiveEnvironment
+        enabled: hasActiveEnvironment && isActiveEnvironmentEditable
       },
       {
         id: 'OPEN_TEMPLATES',
@@ -617,7 +625,7 @@ export class CommandPaletteService {
           this.uiService.openModal('templates');
         },
         score: 1,
-        enabled: hasActiveEnvironment
+        enabled: hasActiveEnvironment && isActiveEnvironmentEditable
       },
       {
         id: 'ENVIRONMENT_TOGGLE_RECORDING',
@@ -632,7 +640,7 @@ export class CommandPaletteService {
           this.environmentsService.startRecording(activeEnvironmentUuid);
         },
         score: 1,
-        enabled: hasActiveEnvironment
+        enabled: hasActiveEnvironment && isActiveEnvironmentEditable
       },
       {
         id: 'ENVIRONMENT_CLEAR_LOGS',
@@ -675,7 +683,8 @@ export class CommandPaletteService {
           this.environmentsService.addRouteResponse();
         },
         score: 1,
-        enabled: hasActiveEnvironment && hasActiveRoute
+        enabled:
+          hasActiveEnvironment && hasActiveRoute && isActiveEnvironmentEditable
       },
       {
         id: 'ADD_ROUTE_HEADER',
@@ -686,7 +695,8 @@ export class CommandPaletteService {
           this.environmentsService.addRouteResponseHeader();
         },
         score: 1,
-        enabled: hasActiveEnvironment && hasActiveRoute
+        enabled:
+          hasActiveEnvironment && hasActiveRoute && isActiveEnvironmentEditable
       },
       {
         id: 'ADD_ENVIRONMENT_HEADER',
@@ -696,7 +706,7 @@ export class CommandPaletteService {
           this.environmentsService.addEnvironmentHeader();
         },
         score: 1,
-        enabled: hasActiveEnvironment
+        enabled: hasActiveEnvironment && isActiveEnvironmentEditable
       },
       {
         id: 'ENVIRONMENT_TOGGLE_PROXY',
@@ -710,7 +720,7 @@ export class CommandPaletteService {
           );
         },
         score: 1,
-        enabled: hasActiveEnvironment
+        enabled: hasActiveEnvironment && isActiveEnvironmentEditable
       },
       {
         id: 'OPEN_CHANGELOG',
@@ -972,7 +982,8 @@ export class CommandPaletteService {
               .subscribe();
           },
           score: 1,
-          enabled: hasActiveEnvironment && activeEnvironmentIsLocal
+          enabled:
+            hasActiveEnvironment && activeEnvironmentIsLocal && isSyncConnected
         }
       );
     } else {
@@ -986,7 +997,7 @@ export class CommandPaletteService {
             .subscribe();
         },
         score: 1,
-        enabled: true
+        enabled: isSyncConnected
       });
     }
 
