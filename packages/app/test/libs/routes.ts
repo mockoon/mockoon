@@ -225,7 +225,7 @@ class Routes {
 
   public getRouteResponseFlagBtn(index: number) {
     return $(
-      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) span:nth-child(2) app-svg`
+      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) button app-svg`
     );
   }
 
@@ -484,7 +484,7 @@ class Routes {
 
   public async assertDefaultRouteResponse(index: number, reverse = false) {
     const flag = $(
-      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) span:nth-child(2) app-svg`
+      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) button app-svg`
     );
 
     if (reverse) {
@@ -506,7 +506,7 @@ class Routes {
     className: string
   ) {
     const flagContainer = $(
-      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) span:nth-child(2)`
+      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) button`
     );
 
     await utils.assertHasClass(flagContainer, className);
@@ -514,7 +514,7 @@ class Routes {
 
   public async setDefaultRouteResponse(index: number) {
     const flag = $(
-      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) span:nth-child(2)`
+      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) button`
     );
     await flag.click();
   }
@@ -578,7 +578,7 @@ class Routes {
 
   public async assertRulesOperator(operator: LogicalOperators) {
     const element = await $(
-      `.rules-operator #rules-operators-${operator} input`
+      `.rules-operator #rules-operators-${operator}-input`
     );
     const selected: boolean = await element.isSelected();
     expect(selected).toEqual(true);
