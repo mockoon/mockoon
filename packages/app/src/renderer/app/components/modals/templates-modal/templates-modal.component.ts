@@ -1,10 +1,4 @@
-import {
-  AsyncPipe,
-  NgFor,
-  NgIf,
-  NgTemplateOutlet,
-  UpperCasePipe
-} from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet, UpperCasePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -73,9 +67,7 @@ import { Config } from 'src/renderer/config';
   styleUrls: ['./templates-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     SvgComponent,
-    NgFor,
     EditorComponent,
     FormsModule,
     ReactiveFormsModule,
@@ -85,7 +77,6 @@ import { Config } from 'src/renderer/config';
     AsyncPipe,
     UpperCasePipe,
     SpinnerComponent,
-    // fixes a circular dependency (no idea where it comes from)
     forwardRef(() => FilterComponent)
   ]
 })

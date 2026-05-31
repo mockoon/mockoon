@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -34,7 +33,7 @@ import {
       multi: true
     }
   ],
-  imports: [NgIf, FormsModule, ReactiveFormsModule]
+  imports: [FormsModule, ReactiveFormsModule]
 })
 export class EditableElementComponent implements ControlValueAccessor {
   /**

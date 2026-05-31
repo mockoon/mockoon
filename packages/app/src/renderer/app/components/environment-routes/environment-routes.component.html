@@ -16,12 +16,13 @@
 @let effectiveContentType = effectiveContentType$ | async;
 @let activeRouteResponseLastLog = activeRouteResponseLastLog$ | async;
 @let externalLink = externalLink$ | async;
+@let bodyType = bodyType$ | async;
 
 <div class="d-flex h-100">
   <app-routes-menu class="h-100" />
 
   <div class="d-flex flex-column flex-fill mh0">
-    <ng-container *ngIf="activeRoute; else noActiveRoute">
+    @if (activeRoute) {
       <!-- Method + endpoint + warning + delete -->
       <div
         [formGroup]="activeRouteForm"
@@ -29,13 +30,14 @@
         appTourStep="tour-route-config"
       >
         <div class="route-path-grid-{{ activeRoute?.type }}">
-          <app-custom-select
-            *ngIf="activeRoute?.type === 'http'"
-            formControlName="method"
-            [enableCustomInput]="false"
-            [items]="methods"
-            dropdownId="methods"
-          />
+          @if (activeRoute?.type === 'http') {
+            <app-custom-select
+              formControlName="method"
+              [enableCustomInput]="false"
+              [items]="methods"
+              dropdownId="methods"
+            />
+          }
           <span class="input-group-text">/</span>
           <input
             type="text"
@@ -45,7 +47,6 @@
             formControlName="endpoint"
             [appFocusOnEvent]="focusableInputs.ROUTE_PATH"
           />
-
           <div class="d-flex">
             @if (
               environmentsStatus[activeEnvironment?.uuid]?.running &&
@@ -67,17 +68,16 @@
                 <app-svg icon="open_in_new" />
               </a>
             }
-
-            <span
-              *ngIf="routeHasErrors"
-              class="input-group-text text-warning"
-              [ngbTooltip]="routeHasErrors"
-            >
-              <app-svg icon="warning" />
-            </span>
+            @if (routeHasErrors) {
+              <span
+                class="input-group-text text-warning"
+                [ngbTooltip]="routeHasErrors"
+              >
+                <app-svg icon="warning" />
+              </span>
+            }
           </div>
         </div>
-
         <!-- Documentation -->
         <div class="input-group mt-2">
           <input
@@ -87,54 +87,52 @@
             formControlName="documentation"
           />
         </div>
-
-        <div
-          *ngIf="activeRoute && activeRoute.type === 'ws'"
-          class="d-flex mt-2"
-        >
-          <app-toggle
-            prefix="streaming-modes"
-            formControlName="streamingMode"
-            [items]="streamingModes"
-          />
-          <div class="input-group">
-            <div
-              class="input-group-prepend"
-              ngbTooltip="Streaming interval (ms)"
-            >
-              <span class="input-group-text">
-                <app-svg icon="access_time" />
-              </span>
-            </div>
-            <input
-              type="number"
-              class="form-control"
-              [attr.disabled]="
-                activeRouteForm.get(['streamingMode']).value === null
-                  ? true
-                  : null
-              "
-              [appInputNumber]="{
-                min: 10,
-                max: Infinity,
-                canBeEmpty: false
-              }"
-              formControlName="streamingInterval"
+        @if (activeRoute && activeRoute.type === 'ws') {
+          <div class="d-flex mt-2">
+            <app-toggle
+              prefix="streaming-modes"
+              formControlName="streamingMode"
+              [items]="streamingModes"
             />
-            <div
-              *ngIf="
+            <div class="input-group">
+              <div
+                class="input-group-prepend"
+                ngbTooltip="Streaming interval (ms)"
+              >
+                <span class="input-group-text">
+                  <app-svg icon="access_time" />
+                </span>
+              </div>
+              <input
+                type="number"
+                class="form-control"
+                [attr.disabled]="
+                  activeRouteForm.get(['streamingMode']).value === null
+                    ? true
+                    : null
+                "
+                [appInputNumber]="{
+                  min: 10,
+                  max: Infinity,
+                  canBeEmpty: false
+                }"
+                formControlName="streamingInterval"
+              />
+              @if (
                 10 > (activeRouteForm.get(['streamingInterval']).value || 0)
-              "
-              class="warning-message ms-auto text-center ps-2 align-self-center"
-              id="disabled-rules-warning-message"
-              [ngbTooltip]="texts.MINIMUM_STREAMING_INTERVAL_WARNING"
-            >
-              <app-svg icon="warning" class="pe-1" />
+              ) {
+                <div
+                  class="warning-message ms-auto text-center ps-2 align-self-center"
+                  id="disabled-rules-warning-message"
+                  [ngbTooltip]="texts.MINIMUM_STREAMING_INTERVAL_WARNING"
+                >
+                  <app-svg icon="warning" class="pe-1" />
+                </div>
+              }
             </div>
           </div>
-        </div>
+        }
       </div>
-
       <!-- Route responses navigation tabs -->
       <div id="route-responses-menu">
         <div
@@ -154,7 +152,6 @@
           >
             <app-svg icon="add_box" />
           </button>
-
           <!-- Route responses dropdown -->
           <div
             class="text-truncate"
@@ -170,35 +167,37 @@
               id="route-responses-dropdown"
               ngbDropdownToggle
             >
-              <div *ngIf="!activeRouteResponse" class="dropdown-toggle-label">
-                <span class="text-muted">{{
-                  activeRoute?.responses.length > 0
-                    ? 'No response selected'
-                    : 'No response defined'
-                }}</span>
-              </div>
-
-              <div *ngIf="activeRouteResponse" class="dropdown-toggle-label">
-                <div class="d-flex">
-                  <div
-                    class="text-truncate me-2"
-                    [innerHTML]="
-                      buildResponseLabel(
-                        activeRoute.type,
-                        activeRouteResponseIndex,
-                        activeRouteResponse
-                      )
-                    "
-                  ></div>
-                  <div
-                    class="d-flex align-items-center badge badge-hollow fw-bold ms-auto"
-                  >
-                    {{ activeRoute?.responses.length }}
+              @if (!activeRouteResponse) {
+                <div class="dropdown-toggle-label">
+                  <span class="text-muted">{{
+                    activeRoute?.responses.length > 0
+                      ? 'No response selected'
+                      : 'No response defined'
+                  }}</span>
+                </div>
+              }
+              @if (activeRouteResponse) {
+                <div class="dropdown-toggle-label">
+                  <div class="d-flex">
+                    <div
+                      class="text-truncate me-2"
+                      [innerHTML]="
+                        buildResponseLabel(
+                          activeRoute.type,
+                          activeRouteResponseIndex,
+                          activeRouteResponse
+                        )
+                      "
+                    ></div>
+                    <div
+                      class="d-flex align-items-center badge badge-hollow fw-bold ms-auto"
+                    >
+                      {{ activeRoute?.responses.length }}
+                    </div>
                   </div>
                 </div>
-              </div>
+              }
             </button>
-
             <div
               class="dropdown-menu route-responses-dropdown-menu dropdown-menu-with-fixed-search"
               [style]="{
@@ -216,7 +215,10 @@
             >
               <app-filter filterName="routeResponses" [focusableInput]="null" />
               <div class="dropdown-menu-content">
-                @for (routeResponse of activeRouteResponses; track $index) {
+                @for (
+                  routeResponse of activeRouteResponses;
+                  track routeResponse.uuid
+                ) {
                   <div
                     class="dropdown-item d-flex cursor-pointer"
                     [class]="{
@@ -258,63 +260,59 @@
                       "
                     >
                     </span>
-                    <ng-container
-                      *ngIf="
-                        activeRoute?.type === 'crud' && routeResponse.default
-                      "
-                    >
+                    @if (
+                      activeRoute?.type === 'crud' && routeResponse.default
+                    ) {
                       <span
                         class="px-2 text-primary"
                         ngbTooltip="Response linked to the data bucket for CRUD operations"
                       >
                         <app-svg icon="data" />
                       </span>
-                    </ng-container>
-                    <ng-container
-                      *ngIf="
-                        activeRoute?.type === 'http' ||
-                        activeRoute?.type === 'ws'
-                      "
-                    >
-                      <button
-                        *ngIf="routeResponse.default"
-                        type="button"
-                        class="btn btn-link btn-xs btn-icon px-2 py-0"
-                        [disabled]="!isActiveEnvironmentEditable"
-                        (click)="setDefaultRouteResponse(null, $event)"
-                        [class.text-primary]="
-                          !rulesNotUsingDefaultResponse.includes(
-                            activeRoute?.responseMode
-                          )
-                        "
-                        [class.text-muted]="
-                          rulesNotUsingDefaultResponse.includes(
-                            activeRoute?.responseMode
-                          )
-                        "
-                        [ngbTooltip]="defaultResponseTooltip"
-                      >
-                        <app-svg icon="flag" />
-                      </button>
-                      <button
-                        *ngIf="!routeResponse.default"
-                        type="button"
-                        class="btn btn-link btn-xs btn-icon text-muted px-2 py-0"
-                        [disabled]="!isActiveEnvironmentEditable"
-                        (click)="
-                          setDefaultRouteResponse(routeResponse.uuid, $event)
-                        "
-                        ngbTooltip="Make route response as default"
-                      >
-                        <app-svg icon="outlined_flag" />
-                      </button>
-                    </ng-container>
+                    }
+                    @if (
+                      activeRoute?.type === 'http' || activeRoute?.type === 'ws'
+                    ) {
+                      @if (routeResponse.default) {
+                        <button
+                          type="button"
+                          class="btn btn-link btn-xs btn-icon px-2 py-0"
+                          [disabled]="!isActiveEnvironmentEditable"
+                          (click)="setDefaultRouteResponse(null, $event)"
+                          [class.text-primary]="
+                            !rulesNotUsingDefaultResponse.includes(
+                              activeRoute?.responseMode
+                            )
+                          "
+                          [class.text-muted]="
+                            rulesNotUsingDefaultResponse.includes(
+                              activeRoute?.responseMode
+                            )
+                          "
+                          [ngbTooltip]="defaultResponseTooltip"
+                        >
+                          <app-svg icon="flag" />
+                        </button>
+                      }
+                      @if (!routeResponse.default) {
+                        <button
+                          type="button"
+                          class="btn btn-link btn-xs btn-icon text-muted px-2 py-0"
+                          [disabled]="!isActiveEnvironmentEditable"
+                          (click)="
+                            setDefaultRouteResponse(routeResponse.uuid, $event)
+                          "
+                          ngbTooltip="Make route response as default"
+                        >
+                          <app-svg icon="outlined_flag" />
+                        </button>
+                      }
+                    }
                   </div>
                 }
               </div>
             </div>
           </div>
-
           <app-toggle
             class="ms-2"
             prefix="response-modes"
@@ -325,384 +323,363 @@
             appTourStep="tour-route-response-modes"
           />
         </div>
-
-        <div *ngIf="activeRouteResponse" class="d-flex p-2">
-          <!-- Response settings -->
-          <ul class="nav nav-tabs flex-fill">
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                [class]="{ active: activeTab === 'RESPONSE' }"
-                (click)="setActiveTab('RESPONSE')"
-                >{{
-                  activeRoute?.type === 'http' ||
-                  (activeRoute?.type === 'crud' &&
-                    !activeRouteResponse?.default)
-                    ? 'Status & Body'
-                    : 'Data'
-                }}</a
-              >
-            </li>
-            <li class="nav-item" *ngIf="activeRoute.type !== 'ws'">
-              <a
-                class="nav-link d-flex align-items-center"
-                [class]="{ active: activeTab === 'HEADERS' }"
-                (click)="setActiveTab('HEADERS')"
-              >
-                Headers
-                <span
-                  *ngIf="activeRouteResponse?.headers.length"
-                  class="badge badge-hollow fw-bold ms-2"
-                >
-                  {{ activeRouteResponse?.headers.length }}
-                </span>
-              </a>
-            </li>
-            <li
-              class="nav-item"
-              *ngIf="
-                activeRoute?.type === 'http' ||
-                activeRoute?.type === 'ws' ||
-                (activeRoute?.type === 'crud' && !activeRouteResponse?.default)
-              "
-              appTourStep="tour-route-response-rules"
-            >
-              <a
-                class="nav-link d-flex align-items-center"
-                [class]="{ active: activeTab === 'RULES' }"
-                (click)="setActiveTab('RULES')"
-              >
-                <app-svg
-                  *ngIf="
-                    rulesDisablingResponseModes.includes(
-                      activeRoute?.responseMode
-                    ) || activeRoute.streamingMode === 'BROADCAST'
-                  "
-                  [ngbTooltip]="texts.DISABLED_RULES_WARNING"
-                  id="disabled-rules-warning-icon"
-                  icon="warning"
-                  class="text-warning pe-2"
-                />
-                Rules
-                <span
-                  *ngIf="activeRouteResponse?.rules.length"
-                  class="badge badge-hollow fw-bold ms-2"
-                >
-                  {{ activeRouteResponse?.rules.length }}
-                </span>
-              </a>
-            </li>
-            <li
-              class="nav-item"
-              *ngIf="
-                activeRoute?.type === 'http' ||
-                (activeRoute?.type === 'crud' && !activeRouteResponse?.default)
-              "
-            >
-              <a
-                class="nav-link d-flex align-items-center"
-                [class]="{ active: activeTab === 'CALLBACKS' }"
-                (click)="setActiveTab('CALLBACKS')"
-              >
-                Callbacks
-                <span
-                  *ngIf="activeRouteResponse?.callbacks?.length"
-                  class="badge badge-hollow font-weight-bold ms-2"
-                >
-                  {{ activeRouteResponse?.callbacks?.length }}
-                </span>
-              </a>
-            </li>
-            <li
-              class="nav-item"
-              *ngIf="
-                activeRoute?.type === 'http' ||
-                (activeRoute?.type === 'crud' && !activeRouteResponse?.default)
-              "
-            >
-              <a
-                class="nav-link"
-                [class]="{ active: activeTab === 'SETTINGS' }"
-                (click)="setActiveTab('SETTINGS')"
-                >Settings</a
-              >
-            </li>
-          </ul>
-
-          <!-- Response duplication button -->
-          <button
-            type="button"
-            id="route-response-duplication-button"
-            class="btn btn-link btn-icon"
-            (click)="duplicateRouteResponse()"
-            [disabled]="!isActiveEnvironmentEditable"
-          >
-            <span ngbTooltip="Duplicate response">
-              <app-svg icon="content_copy" />
-            </span>
-          </button>
-
-          <!-- Response delete button: show anywhere if http and more than one response, or only after the first response if on a crud route -->
-          <button
-            *ngIf="
-              (activeRoute?.responses.length > 1 &&
-                (activeRoute?.type === 'http' || activeRoute?.type === 'ws')) ||
-              (!activeRouteResponse?.default && activeRoute?.type === 'crud')
-            "
-            type="button"
-            id="route-response-removal-button"
-            class="btn btn-link btn-icon"
-            (click)="deleteCurrentRouteResponse()"
-            [disabled]="!isActiveEnvironmentEditable"
-          >
-            <span
-              *ngIf="deleteCurrentRouteResponseRequested?.enabled === false"
-              ngbTooltip="Delete response"
-            >
-              <app-svg icon="delete" />
-            </span>
-            <span
-              *ngIf="deleteCurrentRouteResponseRequested?.enabled"
-              class="text-danger"
-              ngbTooltip="Confirm deletion"
-            >
-              <app-svg icon="delete" />
-            </span>
-          </button>
-        </div>
-      </div>
-
-      <ng-container *ngIf="activeRouteResponse">
-        <!-- RESPONSE & BODY tab -->
-        <ng-container
-          *ngIf="activeTab === 'RESPONSE'"
-          [formGroup]="activeRouteResponseForm"
-        >
-          <div
-            class="d-flex flex-column flex-fill mh0"
-            appTourStep="tour-route-response-config"
-          >
-            <!-- http: status code + latency, crud: databucket id + latency (if default response), otherwise same as http -->
-            <div class="mt-3 mx-2">
-              <div
-                [class]="{
-                  'route-responses-http':
-                    activeRoute?.type === 'http' ||
-                    (activeRoute?.type === 'crud' &&
-                      !activeRouteResponse?.default),
-                  'route-responses-crud':
-                    activeRoute?.type === 'crud' &&
-                    activeRouteResponse?.default,
-                  'route-responses-ws': activeRoute?.type === 'ws'
-                }"
-              >
-                <app-custom-select
-                  *ngIf="
-                    activeRoute?.type === 'crud' && activeRouteResponse?.default
-                  "
-                  class="me-2"
-                  formControlName="databucketID"
-                  [enableCustomInput]="false"
-                  [items]="databuckets"
-                  dropdownId="databuckets"
-                  emptyListMessage="No databucket defined"
-                  placeholder="Select a databucket for CRUD operations"
-                  placeholderClasses="text-warning"
-                  [clearable]="false"
-                  [defaultClearValue]="''"
-                />
-
-                <div
-                  *ngIf="
-                    activeRoute?.type === 'crud' && activeRouteResponse?.default
-                  "
-                >
-                  <input
-                    type="text"
-                    class="form-control"
-                    formControlName="crudKey"
-                    placeholder="id property for crud operations ('id', 'uuid', 'data.id', etc.)"
-                  />
-                </div>
-
-                <app-custom-select
-                  *ngIf="
+        @if (activeRouteResponse) {
+          <div class="d-flex p-2">
+            <!-- Response settings -->
+            <ul class="nav nav-tabs flex-fill">
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  [class]="{ active: activeTab === 'RESPONSE' }"
+                  (click)="setActiveTab('RESPONSE')"
+                  >{{
                     activeRoute?.type === 'http' ||
                     (activeRoute?.type === 'crud' &&
                       !activeRouteResponse?.default)
-                  "
-                  formControlName="statusCode"
-                  customInputPlaceholder="Custom status code (100-999)"
-                  emptyListMessage="Press enter for custom status code"
-                  unknownValueMessage=" - Unknown"
-                  [isNumber]="true"
-                  [items]="statusCodes"
-                  [hasCategory]="true"
-                  [validation]="statusCodeValidation"
-                  dropdownId="status-code"
-                />
-
-                <span
-                  class="input-group-text"
-                  ngbTooltip="Response latency (ms)"
+                      ? 'Status & Body'
+                      : 'Data'
+                  }}</a
                 >
-                  <app-svg icon="access_time" />
-                </span>
-                <input
-                  type="number"
-                  class="form-control"
-                  [attr.disabled]="
-                    activeRoute.type === 'ws' && !!activeRoute.streamingMode
-                      ? true
-                      : null
-                  "
-                  [appInputNumber]="{
-                    min: 0,
-                    max: Infinity,
-                    canBeEmpty: false
+              </li>
+              @if (activeRoute.type !== 'ws') {
+                <li class="nav-item">
+                  <a
+                    class="nav-link d-flex align-items-center"
+                    [class]="{ active: activeTab === 'HEADERS' }"
+                    (click)="setActiveTab('HEADERS')"
+                  >
+                    Headers
+                    @if (activeRouteResponse?.headers.length) {
+                      <span class="badge badge-hollow fw-bold ms-2">
+                        {{ activeRouteResponse?.headers.length }}
+                      </span>
+                    }
+                  </a>
+                </li>
+              }
+              @if (
+                activeRoute?.type === 'http' ||
+                activeRoute?.type === 'ws' ||
+                (activeRoute?.type === 'crud' && !activeRouteResponse?.default)
+              ) {
+                <li class="nav-item" appTourStep="tour-route-response-rules">
+                  <a
+                    class="nav-link d-flex align-items-center"
+                    [class]="{ active: activeTab === 'RULES' }"
+                    (click)="setActiveTab('RULES')"
+                  >
+                    @if (
+                      rulesDisablingResponseModes.includes(
+                        activeRoute?.responseMode
+                      ) || activeRoute.streamingMode === 'BROADCAST'
+                    ) {
+                      <app-svg
+                        [ngbTooltip]="texts.DISABLED_RULES_WARNING"
+                        id="disabled-rules-warning-icon"
+                        icon="warning"
+                        class="text-warning pe-2"
+                      />
+                    }
+                    Rules
+                    @if (activeRouteResponse?.rules.length) {
+                      <span class="badge badge-hollow fw-bold ms-2">
+                        {{ activeRouteResponse?.rules.length }}
+                      </span>
+                    }
+                  </a>
+                </li>
+              }
+              @if (
+                activeRoute?.type === 'http' ||
+                (activeRoute?.type === 'crud' && !activeRouteResponse?.default)
+              ) {
+                <li class="nav-item">
+                  <a
+                    class="nav-link d-flex align-items-center"
+                    [class]="{ active: activeTab === 'CALLBACKS' }"
+                    (click)="setActiveTab('CALLBACKS')"
+                  >
+                    Callbacks
+                    @if (activeRouteResponse?.callbacks?.length) {
+                      <span class="badge badge-hollow font-weight-bold ms-2">
+                        {{ activeRouteResponse?.callbacks?.length }}
+                      </span>
+                    }
+                  </a>
+                </li>
+              }
+              @if (
+                activeRoute?.type === 'http' ||
+                (activeRoute?.type === 'crud' && !activeRouteResponse?.default)
+              ) {
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    [class]="{ active: activeTab === 'SETTINGS' }"
+                    (click)="setActiveTab('SETTINGS')"
+                    >Settings</a
+                  >
+                </li>
+              }
+            </ul>
+            <!-- Response duplication button -->
+            <button
+              type="button"
+              id="route-response-duplication-button"
+              class="btn btn-link btn-icon"
+              (click)="duplicateRouteResponse()"
+              [disabled]="!isActiveEnvironmentEditable"
+            >
+              <span ngbTooltip="Duplicate response">
+                <app-svg icon="content_copy" />
+              </span>
+            </button>
+            <!-- Response delete button: show anywhere if http and more than one response, or only after the first response if on a crud route -->
+            @if (
+              (activeRoute?.responses.length > 1 &&
+                (activeRoute?.type === 'http' || activeRoute?.type === 'ws')) ||
+              (!activeRouteResponse?.default && activeRoute?.type === 'crud')
+            ) {
+              <button
+                type="button"
+                id="route-response-removal-button"
+                class="btn btn-link btn-icon"
+                (click)="deleteCurrentRouteResponse()"
+                [disabled]="!isActiveEnvironmentEditable"
+              >
+                @if (deleteCurrentRouteResponseRequested?.enabled === false) {
+                  <span ngbTooltip="Delete response">
+                    <app-svg icon="delete" />
+                  </span>
+                }
+                @if (deleteCurrentRouteResponseRequested?.enabled) {
+                  <span class="text-danger" ngbTooltip="Confirm deletion">
+                    <app-svg icon="delete" />
+                  </span>
+                }
+              </button>
+            }
+          </div>
+        }
+      </div>
+      @if (activeRouteResponse) {
+        <!-- RESPONSE & BODY tab -->
+        @if (activeTab === 'RESPONSE') {
+          <ng-container [formGroup]="activeRouteResponseForm">
+            <div
+              class="d-flex flex-column flex-fill mh0"
+              appTourStep="tour-route-response-config"
+            >
+              <!-- http: status code + latency, crud: databucket id + latency (if default response), otherwise same as http -->
+              <div class="mt-3 mx-2">
+                <div
+                  [class]="{
+                    'route-responses-http':
+                      activeRoute?.type === 'http' ||
+                      (activeRoute?.type === 'crud' &&
+                        !activeRouteResponse?.default),
+                    'route-responses-crud':
+                      activeRoute?.type === 'crud' &&
+                      activeRouteResponse?.default,
+                    'route-responses-ws': activeRoute?.type === 'ws'
                   }"
-                  formControlName="latency"
+                >
+                  @if (
+                    activeRoute?.type === 'crud' && activeRouteResponse?.default
+                  ) {
+                    <app-custom-select
+                      class="me-2"
+                      formControlName="databucketID"
+                      [enableCustomInput]="false"
+                      [items]="databuckets"
+                      dropdownId="databuckets"
+                      emptyListMessage="No databucket defined"
+                      placeholder="Select a databucket for CRUD operations"
+                      placeholderClasses="text-warning"
+                      [clearable]="false"
+                      [defaultClearValue]="''"
+                    />
+                  }
+                  @if (
+                    activeRoute?.type === 'crud' && activeRouteResponse?.default
+                  ) {
+                    <div>
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="crudKey"
+                        placeholder="id property for crud operations ('id', 'uuid', 'data.id', etc.)"
+                      />
+                    </div>
+                  }
+                  @if (
+                    activeRoute?.type === 'http' ||
+                    (activeRoute?.type === 'crud' &&
+                      !activeRouteResponse?.default)
+                  ) {
+                    <app-custom-select
+                      formControlName="statusCode"
+                      customInputPlaceholder="Custom status code (100-999)"
+                      emptyListMessage="Press enter for custom status code"
+                      unknownValueMessage=" - Unknown"
+                      [isNumber]="true"
+                      [items]="statusCodes"
+                      [hasCategory]="true"
+                      [validation]="statusCodeValidation"
+                      dropdownId="status-code"
+                    />
+                  }
+                  <span
+                    class="input-group-text"
+                    ngbTooltip="Response latency (ms)"
+                  >
+                    <app-svg icon="access_time" />
+                  </span>
+                  <input
+                    type="number"
+                    class="form-control"
+                    [attr.disabled]="
+                      activeRoute.type === 'ws' && !!activeRoute.streamingMode
+                        ? true
+                        : null
+                    "
+                    [appInputNumber]="{
+                      min: 0,
+                      max: Infinity,
+                      canBeEmpty: false
+                    }"
+                    formControlName="latency"
+                  />
+                </div>
+              </div>
+              <div class="input-group pt-2 px-2">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="label"
+                  placeholder="Add documentation for this response"
                 />
               </div>
-            </div>
-            <div class="input-group pt-2 px-2">
-              <input
-                type="text"
-                class="form-control"
-                formControlName="label"
-                placeholder="Add documentation for this response"
-              />
-            </div>
-
-            <ng-container
-              *ngIf="
+              @if (
                 activeRoute.type === 'http' ||
                 activeRoute.type === 'ws' ||
                 (activeRoute.type === 'crud' && !activeRouteResponse?.default)
-              "
-            >
-              <div class="pt-5 pb-4 d-flex justify-content-center">
-                <app-toggle
-                  prefix="body-type"
-                  formControlName="bodyType"
-                  label="Body"
-                  [items]="bodyType$ | async"
-                  [uncheckable]="false"
-                />
-              </div>
-
-              <!-- body editor -->
-              <ng-container *ngIf="activeRouteResponse?.bodyType === 'INLINE'">
-                <div class="flex-fill px-2">
-                  <div class="d-flex flex-column h-100">
-                    <div class="flex-fill">
-                      <app-editor
-                        class="h-100"
-                        [readOnly]="!isActiveEnvironmentEditable"
-                        [options]="bodyEditorConfig?.options"
-                        [mode]="bodyEditorConfig?.mode"
-                        [uuid]="activeRouteResponse?.uuid"
-                        formControlName="body"
-                      />
+              ) {
+                <div class="pt-5 pb-4 d-flex justify-content-center">
+                  <app-toggle
+                    prefix="body-type"
+                    formControlName="bodyType"
+                    label="Body"
+                    [items]="bodyType"
+                    [uncheckable]="false"
+                  />
+                </div>
+                <!-- body editor -->
+                @if (activeRouteResponse?.bodyType === 'INLINE') {
+                  <div class="flex-fill px-2">
+                    <div class="d-flex flex-column h-100">
+                      <div class="flex-fill">
+                        <app-editor
+                          class="h-100"
+                          [readOnly]="!isActiveEnvironmentEditable"
+                          [options]="bodyEditorConfig?.options"
+                          [mode]="bodyEditorConfig?.mode"
+                          [uuid]="activeRouteResponse?.uuid"
+                          formControlName="body"
+                        />
+                      </div>
+                      <div>
+                        <button
+                          type="button"
+                          class="btn btn-link btn-xs btn-icon text-primary ps-0"
+                          (click)="formatBody()"
+                          [disabled]="!isActiveEnvironmentEditable"
+                        >
+                          Beautify JSON
+                        </button>
+                      </div>
                     </div>
-                    <div>
+                  </div>
+                }
+                <!-- body: file -->
+                @if (activeRouteResponse?.bodyType === 'FILE') {
+                  <div class="input-group px-2">
+                    <input
+                      type="text"
+                      class="form-control col-8"
+                      formControlName="filePath"
+                      placeholder="Relative or absolute path"
+                    />
+                    @if (activeRouteResponse?.filePath) {
                       <button
                         type="button"
-                        class="btn btn-link btn-xs btn-icon text-primary ps-0"
-                        (click)="formatBody()"
-                        [disabled]="!isActiveEnvironmentEditable"
+                        (click)="
+                          activeRouteResponseForm.get('filePath').setValue('')
+                        "
+                        class="btn btn-custom"
+                        ngbTooltip="Clear"
                       >
-                        Beautify JSON
+                        <app-svg icon="clear" />
                       </button>
+                    }
+                    <!-- File options dropdown -->
+                    <div class="d-flex align-items-center">
+                      <app-dropdown-menu
+                        idPrefix="file-options"
+                        [items]="fileDropdownMenuItems"
+                        [payload]="{
+                          filePath: activeRouteResponse?.filePath,
+                          environmentUuid: activeEnvironment?.uuid
+                        }"
+                      />
                     </div>
                   </div>
-                </div>
-              </ng-container>
-
-              <!-- body: file -->
-              <ng-container *ngIf="activeRouteResponse?.bodyType === 'FILE'">
-                <div class="input-group px-2">
-                  <input
-                    type="text"
-                    class="form-control col-8"
-                    formControlName="filePath"
-                    placeholder="Relative or absolute path"
-                  />
-                  <button
-                    *ngIf="activeRouteResponse?.filePath"
-                    type="button"
-                    (click)="
-                      activeRouteResponseForm.get('filePath').setValue('')
-                    "
-                    class="btn btn-custom"
-                    ngbTooltip="Clear"
-                  >
-                    <app-svg icon="clear" />
-                  </button>
-
-                  <!-- File options dropdown -->
-                  <div class="d-flex align-items-center">
-                    <app-dropdown-menu
-                      idPrefix="file-options"
-                      [items]="fileDropdownMenuItems"
-                      [payload]="{
-                        filePath: activeRouteResponse?.filePath,
-                        environmentUuid: activeEnvironment?.uuid
-                      }"
+                  @if (activeRouteResponse?.filePath) {
+                    <div class="d-flex justify-content-between mt-2 px-2">
+                      <div class="form-check">
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="sendFileAsBody"
+                          formControlName="sendFileAsBody"
+                        />
+                        <label class="form-check-label" for="sendFileAsBody"
+                          >Send as body</label
+                        >
+                      </div>
+                      <small>
+                        Detected MIME type:
+                        {{ activeResponseFileMimeType?.mimeType || 'unknown' }}
+                        {{
+                          activeResponseFileMimeType?.supportsTemplating
+                            ? ' - Supports templating'
+                            : ''
+                        }}
+                      </small>
+                    </div>
+                  }
+                }
+                <!-- body: databucket -->
+                @if (activeRouteResponse?.bodyType === 'DATABUCKET') {
+                  <div class="route-responses-databucket px-2">
+                    <app-custom-select
+                      formControlName="databucketID"
+                      [enableCustomInput]="false"
+                      [items]="databuckets"
+                      dropdownId="databuckets"
+                      emptyListMessage="No databucket defined"
+                      placeholder="Select a databucket"
+                      [clearable]="true"
+                      [defaultClearValue]="''"
                     />
                   </div>
-                </div>
-
-                <div
-                  *ngIf="activeRouteResponse?.filePath"
-                  class="d-flex justify-content-between mt-2 px-2"
-                >
-                  <div class="form-check">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      id="sendFileAsBody"
-                      formControlName="sendFileAsBody"
-                    />
-                    <label class="form-check-label" for="sendFileAsBody"
-                      >Send as body</label
-                    >
-                  </div>
-                  <small>
-                    Detected MIME type:
-                    {{ activeResponseFileMimeType?.mimeType || 'unknown' }}
-                    {{
-                      activeResponseFileMimeType?.supportsTemplating
-                        ? ' - Supports templating'
-                        : ''
-                    }}
-                  </small>
-                </div>
-              </ng-container>
-
-              <!-- body: databucket -->
-              <ng-container
-                *ngIf="activeRouteResponse?.bodyType === 'DATABUCKET'"
-              >
-                <div class="route-responses-databucket px-2">
-                  <app-custom-select
-                    formControlName="databucketID"
-                    [enableCustomInput]="false"
-                    [items]="databuckets"
-                    dropdownId="databuckets"
-                    emptyListMessage="No databucket defined"
-                    placeholder="Select a databucket"
-                    [clearable]="true"
-                    [defaultClearValue]="''"
-                  />
-                </div>
-              </ng-container>
-            </ng-container>
-          </div>
-        </ng-container>
-
+                }
+              }
+            </div>
+          </ng-container>
+        }
         <!-- HEADERS tab -->
-        <ng-container *ngIf="activeTab === 'HEADERS'">
+        @if (activeTab === 'HEADERS') {
           <div
             class="flex-fill mh0 scroll-content mt-3 mx-2 h-100"
             #routeHeadersContainer
@@ -716,10 +693,9 @@
               (headerAdded)="scrollToBottom(routeHeadersContainer)"
             />
           </div>
-        </ng-container>
-
+        }
         <!-- RULES tab -->
-        <ng-container *ngIf="activeTab === 'RULES'">
+        @if (activeTab === 'RULES') {
           <div
             class="flex-fill mh0 scroll-content h-100 mt-3 mx-2"
             #routeResponseRulesContainer
@@ -728,10 +704,9 @@
               (ruleAdded)="scrollToBottom(routeResponseRulesContainer)"
             />
           </div>
-        </ng-container>
-
+        }
         <!-- CALLBACKS tab -->
-        <ng-container *ngIf="activeTab === 'CALLBACKS'">
+        @if (activeTab === 'CALLBACKS') {
           <div
             class="flex-fill mh0 scroll-content h-100 mt-3 mx-2"
             #routeCallbacksContainer
@@ -740,10 +715,9 @@
               (callbackAdded)="scrollToBottom(routeCallbacksContainer)"
             />
           </div>
-        </ng-container>
-
+        }
         <!-- Route settings tab -->
-        <ng-container *ngIf="activeTab === 'SETTINGS'">
+        @if (activeTab === 'SETTINGS') {
           <div
             class="flex-fill mh0 mt-3 mx-2 h-100"
             [formGroup]="activeRouteResponseForm"
@@ -770,33 +744,31 @@
                 />
               </div>
             </div>
-            <div
-              class="input-group align-items-center"
-              *ngIf="activeRoute.type !== 'ws'"
-            >
-              <div class="form-check mb-0">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="route-settings-fallback-to-404"
-                  formControlName="fallbackTo404"
-                />
-                <label
-                  class="form-check-label"
-                  for="route-settings-fallback-to-404"
-                  >Respond with 404 when the file path did not match any files
-                </label>
+            @if (activeRoute.type !== 'ws') {
+              <div class="input-group align-items-center">
+                <div class="form-check mb-0">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="route-settings-fallback-to-404"
+                    formControlName="fallbackTo404"
+                  />
+                  <label
+                    class="form-check-label"
+                    for="route-settings-fallback-to-404"
+                    >Respond with 404 when the file path did not match any files
+                  </label>
+                </div>
+                <div class="input-group-text">
+                  <app-svg
+                    icon="info"
+                    ngbTooltip="This will also fallback to use Body content that is present in the editor"
+                  />
+                </div>
               </div>
-              <div class="input-group-text">
-                <app-svg
-                  icon="info"
-                  ngbTooltip="This will also fallback to use Body content that is present in the editor"
-                />
-              </div>
-            </div>
+            }
           </div>
-        </ng-container>
-
+        }
         <div
           class="d-flex justify-content-between align-items-center environment-routes-footer px-2 mt-auto"
         >
@@ -807,62 +779,62 @@
             >
               <small class="ps-0"> {{ effectiveContentType }}</small>
             </div>
-
             <ng-template #servedContentTypeTooltip
               >Response Content-Type<br />(Order: environment headers &rarr;
               file mime type &rarr; route headers)</ng-template
             >
           </div>
-
-          <div *ngIf="activeRouteResponseLastLog" class="pe-0 py-2">
-            <button
-              class="btn btn-link btn-icon btn-xs border-0 align-baseline text-primary view-body-link d-flex align-items-center"
-              (click)="goToRouteResponseLog(activeRouteResponseLastLog?.uuid)"
-            >
-              <span
-                *ngIf="
+          @if (activeRouteResponseLastLog) {
+            <div class="pe-0 py-2">
+              <button
+                class="btn btn-link btn-icon btn-xs border-0 align-baseline text-primary view-body-link d-flex align-items-center"
+                (click)="goToRouteResponseLog(activeRouteResponseLastLog?.uuid)"
+              >
+                @if (
                   activeRouteResponseLastLog?.response.isInvalidJson ||
                   activeRouteResponseLastLog?.request.isInvalidJson
-                "
-                class="text-warning me-2"
-                [ngbTooltip]="lastLogTooltip"
-                tooltipClass="text-start"
-              >
-                <app-svg icon="warning" />
-              </span>
-              <ng-template #lastLogTooltip>
-                <div class="text-left">
-                  One of the last transaction's JSON body was invalid:
-                  <strong>
+                ) {
+                  <span
+                    class="text-warning me-2"
+                    [ngbTooltip]="lastLogTooltip"
+                    tooltipClass="text-start"
+                  >
+                    <app-svg icon="warning" />
+                  </span>
+                }
+                <ng-template #lastLogTooltip>
+                  <div class="text-left">
+                    One of the last transaction's JSON body was invalid:
+                    <strong>
+                      {{
+                        activeRouteResponseLastLog?.request.isInvalidJson
+                          ? 'request'
+                          : ''
+                      }}
+                    </strong>
                     {{
+                      activeRouteResponseLastLog?.response.isInvalidJson &&
                       activeRouteResponseLastLog?.request.isInvalidJson
-                        ? 'request'
+                        ? ' and '
                         : ''
                     }}
-                  </strong>
-                  {{
-                    activeRouteResponseLastLog?.response.isInvalidJson &&
-                    activeRouteResponseLastLog?.request.isInvalidJson
-                      ? ' and '
-                      : ''
-                  }}
-                  <strong>
-                    {{
-                      activeRouteResponseLastLog?.response.isInvalidJson
-                        ? 'response'
-                        : ''
-                    }}
-                  </strong>
-                </div>
-              </ng-template>
-              <span>Last log</span>
-            </button>
-          </div>
+                    <strong>
+                      {{
+                        activeRouteResponseLastLog?.response.isInvalidJson
+                          ? 'response'
+                          : ''
+                      }}
+                    </strong>
+                  </div>
+                </ng-template>
+                <span>Last log</span>
+              </button>
+            </div>
+          }
         </div>
-      </ng-container>
-    </ng-container>
+      }
+    } @else {
+      <p class="message mt-4">No route defined</p>
+    }
   </div>
 </div>
-<ng-template #noActiveRoute>
-  <p class="message mt-4">No route defined</p>
-</ng-template>

@@ -1,6 +1,6 @@
 @if (user && presence?.users?.length > 0) {
   <div class="team-presence">
-    @for (presenceUser of presence?.users; track $index) {
+    @for (presenceUser of presence?.users; track presenceUser.email) {
       <!-- Display at least maxDisplayUsers including self (self is always first in list, see store) -->
       @if (
         (filterBy && presenceUser[filterBy] === filterContext) ||
@@ -38,7 +38,7 @@
 
       <ng-template #presenceTooltip>
         <div class="text-start">
-          @for (presenceUser of presence?.users; track $index) {
+          @for (presenceUser of presence?.users; track presenceUser.email) {
             @if (
               displaySelf || (!displaySelf && presenceUser.uid !== user.uid)
             ) {

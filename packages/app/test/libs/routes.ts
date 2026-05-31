@@ -1,4 +1,10 @@
-import { BodyTypes, LogicalOperators, ResponseRule } from '@mockoon/commons';
+import {
+  BodyTypes,
+  LogicalOperators,
+  ResponseRule,
+  ResponseRuleOperators,
+  ResponseRuleTargets
+} from '@mockoon/commons';
 import { TabsNameType } from '../../src/renderer/app/models/store.model';
 import utils, {
   DropdownMenuFolderActions,
@@ -13,7 +19,7 @@ export enum RoutesMenuActions {
   ADD_FOLDER = 5
 }
 class Routes {
-  private rulesTargetIndexes = {
+  private rulesTargetIndexes: Record<ResponseRuleTargets, number> = {
     body: 1,
     query: 2,
     header: 3,
@@ -21,14 +27,19 @@ class Routes {
     params: 5,
     path: 6,
     method: 7,
-    request_number: 8
+    request_number: 8,
+    global_var: 9,
+    data_bucket: 10,
+    templating: 11
   };
-  private rulesOperatorsIndexes = {
+  private rulesOperatorsIndexes: Record<ResponseRuleOperators, number> = {
     equals: 1,
     regex: 2,
     regex_i: 3,
     null: 4,
-    empty_array: 5
+    empty_array: 5,
+    array_includes: 6,
+    valid_json_schema: 7
   };
   private activeMenuEntrySelector = '.routes-menu .nav-item .nav-link.active';
 
@@ -633,7 +644,7 @@ class Routes {
     index: number,
     level: number
   ): Promise<void> {
-    const levels = {
+    const levels: Record<number, string> = {
       1: '14px',
       2: '35px',
       3: '63px'

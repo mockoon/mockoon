@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -33,7 +33,6 @@ import { Store } from 'src/renderer/app/stores/store';
     FormsModule,
     ReactiveFormsModule,
     FocusOnEventDirective,
-    NgIf,
     NgbTooltip,
     SvgComponent,
     AsyncPipe

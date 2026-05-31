@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -108,7 +108,6 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
   styleUrls: ['./environment-routes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     RoutesMenuComponent,
     NgbPopover,
     TourStepDirective,

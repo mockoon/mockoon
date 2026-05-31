@@ -1,11 +1,13 @@
 <div class="btn-group btn-group-sm h-100" data-bs-toggle="buttons" role="group">
-  <button *ngIf="label" class="btn btn-custom px-3" disabled>
-    {{ label }}
-  </button>
+  @if (label) {
+    <button class="btn btn-custom px-3" disabled>
+      {{ label }}
+    </button>
+  }
 
-  <ng-container *ngFor="let item of items">
+  @for (item of items; track item.value) {
     <!-- Single toggle mode (checkbox, boolean) -->
-    <ng-container *ngIf="items.length === 1">
+    @if (items.length === 1) {
       @let idLabel = (item.label | uppercase) ?? 'checkbox';
 
       <input
@@ -33,17 +35,18 @@
             : ''
         "
       >
-        <app-svg
-          *ngIf="item.icon"
-          [icon]="item.icon"
-          size="{{ item.iconSize ?? 16 }}"
-          [class]="{ 'me-2': !!item.label }"
-        />{{ item.label }}
+        @if (item.icon) {
+          <app-svg
+            [icon]="item.icon"
+            size="{{ item.iconSize ?? 16 }}"
+            [class]="{ 'me-2': !!item.label }"
+          />
+        }
+        {{ item.label }}
       </label>
-    </ng-container>
-
+    }
     <!-- Multi toggle mode (radio buttons, uncheckable) -->
-    <ng-container *ngIf="items.length > 1">
+    @if (items.length > 1) {
       <input
         id="{{ prefix }}-{{ item.value }}-input"
         class="btn-check"
@@ -71,13 +74,15 @@
         "
         (click)="itemClick(item, $event)"
       >
-        <app-svg
-          *ngIf="item.icon"
-          [icon]="item.icon"
-          size="{{ item.iconSize ?? 16 }}"
-          [class]="{ 'me-2': !!item.label }"
-        />{{ item.label }}
+        @if (item.icon) {
+          <app-svg
+            [icon]="item.icon"
+            size="{{ item.iconSize ?? 16 }}"
+            [class]="{ 'me-2': !!item.label }"
+          />
+        }
+        {{ item.label }}
       </label>
-    </ng-container>
-  </ng-container>
+    }
+  }
 </div>

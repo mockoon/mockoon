@@ -1,4 +1,4 @@
-import { NgFor, NgIf, UpperCasePipe } from '@angular/common';
+import { UpperCasePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -38,8 +38,6 @@ import { ToggleItem, ToggleItems } from 'src/renderer/app/models/common.model';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
-    NgFor,
     NgbTooltip,
     FormsModule,
     ReactiveFormsModule,

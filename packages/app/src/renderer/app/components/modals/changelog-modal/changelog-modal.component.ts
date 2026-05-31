@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -17,7 +17,7 @@ import { SpinnerComponent } from '../../spinner.component';
   selector: 'app-changelog-modal',
   templateUrl: './changelog-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, MarkdownComponent, AsyncPipe, SpinnerComponent]
+  imports: [MarkdownComponent, AsyncPipe, SpinnerComponent]
 })
 export class ChangelogModalComponent implements OnInit {
   private httpClient = inject(HttpClient);

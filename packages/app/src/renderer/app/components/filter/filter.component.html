@@ -14,13 +14,14 @@
     [formControl]="filter"
     [appFocusOnEvent]="focusableInput()"
   />
-  <button
-    *ngIf="filter.value.length > 0"
-    type="button"
-    (click)="clearFilter()"
-    class="btn btn-custom"
-    ngbTooltip="Clear filter"
-  >
-    <app-svg icon="clear" />
-  </button>
+  @if (filter.value.length > 0) {
+    <button
+      type="button"
+      (click)="clearFilter()"
+      class="btn btn-custom"
+      ngbTooltip="Clear filter"
+    >
+      <app-svg icon="clear" />
+    </button>
+  }
 </div>
