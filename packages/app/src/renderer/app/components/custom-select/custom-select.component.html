@@ -1,58 +1,55 @@
-<ng-container
-  *ngIf="{
-    selectedItem: selectedItem$ | async,
-    filteredItems: filteredItems$ | async
-  } as data"
->
-  <div class="d-flex">
-    <div
-      id="{{ dropdownId }}-dropdown"
-      class="flex-fill mw0"
-      ngbDropdown
-      #dropdown="ngbDropdown"
-      (openChange)="onDropdownOpenChange($event)"
-      #dropdownElement
-    >
-      <button
-        type="button"
-        class="btn btn-custom dropdown-toggle"
-        role="button"
-        ngbDropdownToggle
-        [disabled]="customValue.disabled"
-      >
-        <div
-          *ngIf="data.selectedItem?.value !== null"
-          class="dropdown-toggle-label"
-        >
-          <span
-            *ngIf="data.selectedItem?.label"
-            [class]="data.selectedItem?.classes"
-            >{{ data.selectedItem.label }}</span
-          >
-          <span
-            *ngIf="!data.selectedItem?.label"
-            [class]="placeholderClasses ? placeholderClasses : 'text-muted'"
-            >{{ placeholder }}</span
-          >
-        </div>
-      </button>
+@let selectedItem = selectedItem$ | async;
+@let filteredItems = filteredItems$ | async;
 
-      <div
-        id="{{ dropdownId }}-dropdown-menu"
-        class="dropdown-menu {{
-          enableCustomInput ? 'dropdown-menu-with-fixed-search' : ''
-        }}"
-        [style]="{
-          'min-width': dropdownElement.getBoundingClientRect().width + 'px',
-          'max-width':
-            window.innerWidth -
-            dropdownElement.getBoundingClientRect().left -
-            10 +
-            'px'
-        }"
-        ngbDropdownMenu
-      >
-        <div *ngIf="enableCustomInput" class="custom-value">
+<div class="d-flex">
+  <div
+    id="{{ dropdownId }}-dropdown"
+    class="flex-fill mw0"
+    ngbDropdown
+    #dropdown="ngbDropdown"
+    (openChange)="onDropdownOpenChange($event)"
+    #dropdownElement
+  >
+    <button
+      type="button"
+      class="btn btn-custom dropdown-toggle"
+      role="button"
+      ngbDropdownToggle
+      [disabled]="customValue.disabled"
+    >
+      @if (selectedItem?.value !== null) {
+        <div class="dropdown-toggle-label">
+          @if (selectedItem?.label) {
+            <span [class]="selectedItem?.classes">{{
+              selectedItem.label
+            }}</span>
+          }
+          @if (!selectedItem?.label) {
+            <span
+              [class]="placeholderClasses ? placeholderClasses : 'text-muted'"
+              >{{ placeholder }}</span
+            >
+          }
+        </div>
+      }
+    </button>
+    <div
+      id="{{ dropdownId }}-dropdown-menu"
+      class="dropdown-menu {{
+        enableCustomInput ? 'dropdown-menu-with-fixed-search' : ''
+      }}"
+      [style]="{
+        'min-width': dropdownElement.getBoundingClientRect().width + 'px',
+        'max-width':
+          window.innerWidth -
+          dropdownElement.getBoundingClientRect().left -
+          10 +
+          'px'
+      }"
+      ngbDropdownMenu
+    >
+      @if (enableCustomInput) {
+        <div class="custom-value">
           <input
             #customValueInput
             type="text"
@@ -64,15 +61,16 @@
             [patterns]="validation.maskPatterns"
           />
         </div>
-
-        <div class="dropdown-menu-content">
-          @for (item of data.filteredItems; track $index) {
-            <h6 *ngIf="item.category" class="dropdown-header">
+      }
+      <div class="dropdown-menu-content">
+        @for (item of filteredItems; track item.value || item.label) {
+          @if (item.category) {
+            <h6 class="dropdown-header">
               {{ item.label }}
             </h6>
-
+          }
+          @if (!item.category) {
             <button
-              *ngIf="!item.category"
               #dropdownMenuItems
               type="button"
               class="btn dropdown-item d-flex"
@@ -86,17 +84,17 @@
                 item.label
               }}</span>
             </button>
-          } @empty {
-            <div class="message message-md text-start p-btn">
-              {{ emptyListMessage }}
-            </div>
           }
-        </div>
+        } @empty {
+          <div class="message message-md text-start p-btn">
+            {{ emptyListMessage }}
+          </div>
+        }
       </div>
     </div>
-
+  </div>
+  @if (clearable && selectedItem?.value !== defaultClearValue) {
     <button
-      *ngIf="clearable && data.selectedItem?.value !== defaultClearValue"
       type="button"
       (click)="clearValue()"
       class="btn btn-custom"
@@ -104,5 +102,5 @@
     >
       <app-svg icon="clear" />
     </button>
-  </div>
-</ng-container>
+  }
+</div>

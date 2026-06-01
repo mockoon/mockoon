@@ -35,7 +35,7 @@
     </thead>
     <tbody>
       @if (isCloudEnabled) {
-        @for (instance of instances; track $index) {
+        @for (instance of instances; track instance.subdomain) {
           <tr
             class="hover-parent"
             [class]="{

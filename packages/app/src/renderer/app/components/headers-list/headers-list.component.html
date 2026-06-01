@@ -1,56 +1,62 @@
 @let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
 @let dataSubject = dataSubject$ | async;
+@let deleteHeaderRequested = deleteHeaderRequested$ | async;
 
 @if (dataSubject) {
   <ng-container [formGroup]="form">
     <ng-container formArrayName="headers">
       <div class="headers-list">
-        <div
-          class="header-item"
-          *ngFor="let header of headers.controls; index as headerIndex"
-          [formGroupName]="headerIndex"
-          [class]="{
-            'mb-2': headerIndex !== headers.controls.length - 1
-          }"
-        >
-          <div class="input-group" style="position: relative">
-            <input
-              type="text"
-              class="form-control me-2"
-              placeholder="name"
-              formControlName="key"
-              [ngbTypeahead]="headerNamesSearch"
-            />
-            <input
-              type="text"
-              class="form-control"
-              placeholder="value"
-              formControlName="value"
-              [ngbTypeahead]="headerValuesSearch"
-            />
-
-            <button
-              *ngIf="deleteHeaderRequested$ | async as deleteHeaderRequested"
-              type="button"
-              class="btn btn-link btn-icon"
-              [disabled]="!isActiveEnvironmentEditable"
-              [class]="{
-                'text-danger':
-                  deleteHeaderRequested.enabled === true &&
-                  deleteHeaderRequested.payload === headerIndex
-              }"
-              [ngbTooltip]="
-                deleteHeaderRequested.enabled === true &&
-                deleteHeaderRequested.payload === headerIndex
-                  ? 'Confirm'
-                  : 'Delete'
-              "
-              (click)="removeHeader(headerIndex)"
-            >
-              <app-svg icon="delete" />
-            </button>
+        @for (
+          header of headers.controls;
+          track headerTrackBy.id(header);
+          let headerIndex = $index
+        ) {
+          <div
+            class="header-item"
+            [formGroupName]="headerIndex"
+            [class]="{
+              'mb-2': headerIndex !== headers.controls.length - 1
+            }"
+          >
+            <div class="input-group" style="position: relative">
+              <input
+                type="text"
+                class="form-control me-2"
+                placeholder="name"
+                formControlName="key"
+                [ngbTypeahead]="headerNamesSearch"
+              />
+              <input
+                type="text"
+                class="form-control"
+                placeholder="value"
+                formControlName="value"
+                [ngbTypeahead]="headerValuesSearch"
+              />
+              @if (deleteHeaderRequested) {
+                <button
+                  type="button"
+                  class="btn btn-link btn-icon"
+                  [disabled]="!isActiveEnvironmentEditable"
+                  [class]="{
+                    'text-danger':
+                      deleteHeaderRequested.enabled === true &&
+                      deleteHeaderRequested.payload === headerIndex
+                  }"
+                  [ngbTooltip]="
+                    deleteHeaderRequested.enabled === true &&
+                    deleteHeaderRequested.payload === headerIndex
+                      ? 'Confirm'
+                      : 'Delete'
+                  "
+                  (click)="removeHeader(headerIndex)"
+                >
+                  <app-svg icon="delete" />
+                </button>
+              }
+            </div>
           </div>
-        </div>
+        }
       </div>
 
       <div class="d-flex justify-content-between">
@@ -63,15 +69,16 @@
           <app-svg icon="add_box" class="text-success pe-2" />
           Add header
         </button>
-        <button
-          *ngIf="secondaryButton"
-          type="button"
-          class="btn btn-link btn-icon mt-2 text-primary add-header-secondary"
-          [disabled]="!isActiveEnvironmentEditable"
-          (click)="secondaryButtonClicked.emit()"
-        >
-          {{ secondaryButton }}
-        </button>
+        @if (secondaryButton) {
+          <button
+            type="button"
+            class="btn btn-link btn-icon mt-2 text-primary add-header-secondary"
+            [disabled]="!isActiveEnvironmentEditable"
+            (click)="secondaryButtonClicked.emit()"
+          >
+            {{ secondaryButton }}
+          </button>
+        }
       </div>
     </ng-container>
   </ng-container>

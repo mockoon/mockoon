@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,7 +17,7 @@ import { Store } from 'src/renderer/app/stores/store';
   selector: 'app-environment-headers',
   templateUrl: './environment-headers.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, HeadersListComponent, AsyncPipe]
+  imports: [HeadersListComponent, AsyncPipe]
 })
 export class EnvironmentHeadersComponent implements OnInit {
   private uiService = inject(UIService);

@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -35,7 +35,6 @@ import { Store } from 'src/renderer/app/stores/store';
     FormsModule,
     ReactiveFormsModule,
     FocusOnEventDirective,
-    NgIf,
     EditorComponent,
     NgbTooltip,
     SvgComponent,

@@ -1,4 +1,3 @@
-import { NgSwitch, NgSwitchCase } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -23,8 +22,7 @@ import {
   selector: 'app-svg',
   templateUrl: './svg.component.html',
   styleUrls: ['./svg.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgSwitch, NgSwitchCase]
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SvgComponent {
   @Input()

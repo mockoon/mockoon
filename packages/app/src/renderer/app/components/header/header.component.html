@@ -133,55 +133,54 @@
   </div>
 
   <ul class="nav nav-tabs">
-    <li
-      *ngFor="let tab of tabs"
-      class="nav-item"
-      [appTourStep]="tourIds[tab.id]"
-    >
-      <a
-        class="nav-link d-flex align-items-center"
-        [class]="{
-          active: activeView === tab.id && activeEnvironment,
-          disabled: !activeEnvironment
-        }"
-        (click)="setActiveView(tab.id)"
-      >
-        <app-svg [icon]="tab.icon" class="pe-2" />
-        {{ tab.title }}
-        <span
-          *ngIf="tab.count$ | async as tabCount"
-          class="badge badge-hollow fw-bold ms-2"
+    @for (tab of tabs; track tab.id) {
+      <li class="nav-item" [appTourStep]="tourIds[tab.id]">
+        <a
+          class="nav-link d-flex align-items-center"
+          [class]="{
+            active: activeView === tab.id && activeEnvironment,
+            disabled: !activeEnvironment
+          }"
+          (click)="setActiveView(tab.id)"
         >
-          {{ tabCount }}
-        </span>
-      </a>
-    </li>
+          <app-svg [icon]="tab.icon" class="pe-2" />
+          {{ tab.title }}
+          @if (tab.count$ | async; as tabCount) {
+            <span class="badge badge-hollow fw-bold ms-2">
+              {{ tabCount }}
+            </span>
+          }
+        </a>
+      </li>
+    }
   </ul>
 
   <div class="ms-auto d-flex align-items-center">
     <!-- Display solo devices presence -->
-    <div
-      *ngIf="sync.status && sync.presence?.devices > 1"
-      ngbTooltip="{{ sync.presence.devices - 1 }} other {{
-        sync.presence.devices - 1 > 1 ? 'devices' : 'device'
-      }} connected"
-      class="badge badge-custom align-middle"
-    >
-      <app-svg icon="computer" />
-      <span class="number-indicator">
-        {{ sync.presence.devices - 1 }}
-      </span>
-    </div>
+    @if (sync.status && sync.presence?.devices > 1) {
+      <div
+        ngbTooltip="{{ sync.presence.devices - 1 }} other {{
+          sync.presence.devices - 1 > 1 ? 'devices' : 'device'
+        }} connected"
+        class="badge badge-custom align-middle"
+      >
+        <app-svg icon="computer" />
+        <span class="number-indicator">
+          {{ sync.presence.devices - 1 }}
+        </span>
+      </div>
+    }
 
     <!-- Display team users presence -->
-    <app-team-presence
-      *ngIf="sync.presence?.users?.length > 0"
-      class="mx-2"
-      [presence]="sync?.presence"
-      [user]="user"
-      [displaySelf]="true"
-      [maxDisplayedUsers]="5"
-    />
+    @if (sync.presence?.users?.length > 0) {
+      <app-team-presence
+        class="mx-2"
+        [presence]="sync?.presence"
+        [user]="user"
+        [displaySelf]="true"
+        [maxDisplayedUsers]="5"
+      />
+    }
 
     <div>
       <button

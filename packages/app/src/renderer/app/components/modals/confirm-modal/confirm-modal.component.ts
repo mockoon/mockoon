@@ -1,4 +1,4 @@
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
@@ -11,7 +11,7 @@ import { UIService } from 'src/renderer/app/services/ui.service';
   selector: 'app-confirm-modal',
   templateUrl: './confirm-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, NgFor, SvgComponent, AsyncPipe]
+  imports: [SvgComponent, AsyncPipe]
 })
 export class ConfirmModalComponent {
   private uiService = inject(UIService);

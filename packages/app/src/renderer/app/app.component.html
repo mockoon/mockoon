@@ -4,7 +4,7 @@
 @let displayOfflineBanner = displayOfflineBanner$ | async;
 
 <div class="toasts-container">
-  @for (toast of toasts; track $index) {
+  @for (toast of toasts; track toast.UUID) {
     <ngb-toast
       [class]="'toast-' + toast.type"
       [autohide]="true"
