@@ -100,13 +100,18 @@ Mockoon is proudly **independent** and **open-source**, maintained without exter
 
 ### Gold
 
-<div align="center" style="margin-top:20px;margin-bottom:20px;">
- 
-  <a href="https://coderabbit.link/mockoon ">
+<div align="center" style="margin-top:20px;margin-bottom:20px;">   <a href="https://coderabbit.link/mockoon">
       <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/coderabbit.png">
       <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/coderabbit.png">
       <img src="https://mockoon.com/images/sponsors/light/coderabbit.png" alt="CodeRabbit logo" />
+      </picture>
+  </a><br/><br/>
+  <a href="https://talordata.com/?campaignid=rGAerPX1XrVAODD0&utm_source=mockoon&utm_term=mockoon">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/talordata.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/talordata.png">
+      <img src="https://mockoon.com/images/sponsors/light/talordata.png" alt="TalorData logo" />
       </picture>
   </a>
 </div>
