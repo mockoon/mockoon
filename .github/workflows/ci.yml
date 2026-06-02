@@ -103,11 +103,16 @@ jobs:
           npm run test:cli
 
   test-desktop-packaged-win:
-    name: Desktop packaged Windows - Build and test
+    name: Desktop packaged Windows - Build and test (${{ matrix.shard }}/4)
     runs-on: windows-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
 
     needs: [lint, test-libs]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -125,14 +130,19 @@ jobs:
           npm run package:desktop:test:win
       - name: Run tests
         run: |
-          npm run test:desktop:win
+          npm run test:desktop:win -- -- --shard=${{ matrix.shard }}/4
 
   test-desktop-packaged-mac:
-    name: Desktop packaged MacOS - Build and test
+    name: Desktop packaged MacOS - Build and test (${{ matrix.shard }}/4)
     runs-on: macos-latest
-    timeout-minutes: 120
+    timeout-minutes: 30
 
     needs: [lint, test-libs]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
 
     env:
       USE_HARD_LINKS: false
@@ -153,14 +163,19 @@ jobs:
           npm run package:desktop:test:mac
       - name: Run tests
         run: |
-          npm run test:desktop:mac
+          npm run test:desktop:mac -- -- --shard=${{ matrix.shard }}/4
 
   test-desktop-packaged-linux:
-    name: Desktop packaged Linux - Build and test
+    name: Desktop packaged Linux - Build and test (${{ matrix.shard }}/4)
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
 
     needs: [lint, test-libs]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
 
     env:
       USE_HARD_LINKS: false
@@ -183,4 +198,4 @@ jobs:
         run: |
           export DISPLAY=':99.0'
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-          npm run test:desktop:linux
+          npm run test:desktop:linux -- -- --shard=${{ matrix.shard }}/4
