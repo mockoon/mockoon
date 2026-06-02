@@ -107,8 +107,7 @@ describe('Create and delete routes', () => {
     });
 
     it('should ctrl-click to multi-select routes', async () => {
-      // active route is implicitly included; ctrl-click two more
-      await routes.select(1);
+      await routes.ctrlSelect(1);
       await routes.ctrlSelect(2);
       await routes.ctrlSelect(3);
       await routes.assertBatchBarVisible();

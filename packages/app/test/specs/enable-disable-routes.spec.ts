@@ -76,7 +76,7 @@ describe('Enable/disable routes', () => {
 
   describe('Batch toggle multiple routes', () => {
     it('should multi-select routes and batch toggle them off', async () => {
-      await routes.select(1);
+      await routes.ctrlSelect(1);
       await routes.ctrlSelect(2);
       await routes.ctrlSelect(3);
       await routes.assertBatchSelectionCount(3);

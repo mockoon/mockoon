@@ -5,7 +5,8 @@ import {
   ElementRef,
   HostListener,
   inject,
-  viewChild
+  viewChild,
+  viewChildren
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -41,6 +42,7 @@ import {
   tap,
   withLatestFrom
 } from 'rxjs/operators';
+import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import {
   DropdownMenuComponent,
   DropdownMenuItem
@@ -113,6 +115,7 @@ export class RoutesMenuComponent {
   private formBuilder = inject(UntypedFormBuilder);
   private mainApiService = inject(MainApiService);
   private routesMenu = viewChild<ElementRef<HTMLUListElement>>('routesMenu');
+  private routeRows = viewChildren<ElementRef<HTMLAnchorElement>>('routeRow');
   public settings$: Observable<Settings>;
   public activeEnvironment$: Observable<Environment>;
   public isActiveEnvironmentCloud$ = this.store.selectIsActiveEnvCloud();
@@ -125,6 +128,7 @@ export class RoutesMenuComponent {
   public disabledRoutes$: Observable<string[]>;
   public collapsedFolders$: Observable<string[]>;
   public routesFilter$: Observable<string>;
+  private batchDeleteConfirmRequested$ = new TimedBoolean();
   public isActiveEnvironmentEditable$ =
     this.store.selectIsActiveEnvironmentEditable();
   private manualDragEnabled$ = new BehaviorSubject(true);
@@ -142,13 +146,10 @@ export class RoutesMenuComponent {
   public isWeb = Config.isWeb;
   // Multi-selection state for batch actions (local UI state).
   // A route is "selected" when present in this set; it is independent of the
-  // "active" route (the one whose editor is shown on the right).
+  // "active" route
   public selectedRoutes$ = new BehaviorSubject<string[]>([]);
-  // Tracks the last route clicked for shift-range selection support.
+  // Tracks the selection anchor used for shift-range selection support.
   private lastClickedRouteUuid: string | null = null;
-  // Flat ordered list of visible (non-hidden) route uuids, used for shift-range.
-  // Rebuilt whenever the routes/folders structure changes.
-  private orderedRouteUuids: string[] = [];
   // Map of routeUuid -> parentId (folder uuid or 'root'), used by batch duplicate.
   private routeParentMap = new Map<string, string>();
   public routeDropdownMenuItems: DropdownMenuItem[] = [
@@ -342,7 +343,6 @@ export class RoutesMenuComponent {
       map((activeEnvironment) => {
         // Reset selection-support indices for the new structure.
         this.routeParentMap.clear();
-        this.orderedRouteUuids = [];
 
         const rootFolder = this.prepareFolders(
           activeEnvironment.rootChildren,
@@ -475,8 +475,7 @@ export class RoutesMenuComponent {
    * Select a route by UUID.
    *
    * - Plain click: clears multi-selection and sets the route as active (default).
-   * - Ctrl/Cmd+click: toggles the route in the multi-selection set, without
-   *   changing the active route.
+   * - Ctrl/Cmd+click: toggles the clicked route in the multi-selection set.
    * - Shift+click: selects the range between the last clicked route and the
    *   current one (based on the visible flat order), without changing the
    *   active route.
@@ -484,8 +483,12 @@ export class RoutesMenuComponent {
   public selectRoute(routeUUID: string, event?: MouseEvent) {
     if (event && (event.ctrlKey || event.metaKey)) {
       event.preventDefault();
+
       this.toggleRouteSelection(routeUUID);
-      this.lastClickedRouteUuid = routeUUID;
+
+      if (this.selectedRoutes$.value.length > 0) {
+        this.lastClickedRouteUuid = routeUUID;
+      }
 
       return;
     }
@@ -493,7 +496,6 @@ export class RoutesMenuComponent {
     if (event?.shiftKey) {
       event.preventDefault();
       this.selectRouteRange(routeUUID);
-      this.lastClickedRouteUuid = routeUUID;
 
       return;
     }
@@ -516,16 +518,34 @@ export class RoutesMenuComponent {
       ? current.filter((uuid) => uuid !== routeUUID)
       : [...current, routeUUID];
     this.selectedRoutes$.next(next);
+
+    // Reset range anchor when the selection is fully cleared.
+    if (next.length === 0) {
+      this.lastClickedRouteUuid = null;
+    }
+
     this.resetBatchDeleteConfirm();
   }
 
   /**
-   * Select all routes between the last clicked route and the provided one
+   * Select all routes between the current selection anchor and the provided one
    * (inclusive) using the visible flat order.
    */
   private selectRouteRange(routeUUID: string) {
-    const ordered = this.orderedRouteUuids;
-    const anchorUuid = this.lastClickedRouteUuid ?? routeUUID;
+    const ordered = this.getVisibleOrderedRouteUuids();
+    const activeRouteUUID = this.store.get('activeRouteUUID');
+    let anchorUuid = this.lastClickedRouteUuid ?? activeRouteUUID ?? routeUUID;
+
+    // If previous anchor is not visible anymore (e.g. collapsed folder),
+    // recover with active route when visible, otherwise clicked route.
+    if (!ordered.includes(anchorUuid)) {
+      anchorUuid =
+        activeRouteUUID && ordered.includes(activeRouteUUID)
+          ? activeRouteUUID
+          : routeUUID;
+      this.lastClickedRouteUuid = anchorUuid;
+    }
+
     const startIdx = ordered.indexOf(anchorUuid);
     const endIdx = ordered.indexOf(routeUUID);
 
@@ -539,11 +559,47 @@ export class RoutesMenuComponent {
     const [from, to] =
       startIdx <= endIdx ? [startIdx, endIdx] : [endIdx, startIdx];
     const range = ordered.slice(from, to + 1);
-    const merged = Array.from(
-      new Set([...this.selectedRoutes$.value, ...range])
-    );
-    this.selectedRoutes$.next(merged);
+
+    if (
+      range.length === 1 &&
+      this.selectedRoutes$.value.length === 1 &&
+      this.selectedRoutes$.value[0] === range[0]
+    ) {
+      this.selectedRoutes$.next([]);
+      this.lastClickedRouteUuid = null;
+      this.resetBatchDeleteConfirm();
+
+      return;
+    }
+
+    this.selectedRoutes$.next(range);
     this.resetBatchDeleteConfirm();
+  }
+
+  /**
+   * Build the current flat list of visible route UUIDs in display order,
+   * based on the rendered route rows.
+   */
+  private getVisibleOrderedRouteUuids(): string[] {
+    return this.routeRows()
+      .filter((rowRef) => !rowRef.nativeElement.closest('.d-none'))
+      .sort((a, b) => {
+        const relation = a.nativeElement.compareDocumentPosition(
+          b.nativeElement
+        );
+
+        if (relation === Node.DOCUMENT_POSITION_FOLLOWING) {
+          return -1;
+        }
+
+        if (relation === Node.DOCUMENT_POSITION_PRECEDING) {
+          return 1;
+        }
+
+        return 0;
+      })
+      .map((rowRef) => rowRef.nativeElement.dataset['routeUuid'])
+      .filter((uuid): uuid is string => !!uuid);
   }
 
   /**
@@ -553,7 +609,9 @@ export class RoutesMenuComponent {
     if (this.selectedRoutes$.value.length === 0) {
       return;
     }
+
     this.selectedRoutes$.next([]);
+    this.lastClickedRouteUuid = null;
     this.resetBatchDeleteConfirm();
   }
 
@@ -595,29 +653,19 @@ export class RoutesMenuComponent {
     }
   }
 
-  /**
-   * Two-step batch delete: first click arms a confirmation state, second
-   * click within a short window actually deletes. Mirrors the
-   * dropdown-menu two-step pattern used elsewhere in the app.
-   */
-  public batchDeleteConfirming$ = new BehaviorSubject<boolean>(false);
-  private batchDeleteConfirmTimeout: ReturnType<typeof setTimeout> | null =
-    null;
+  public batchDeleteConfirming$ = this.batchDeleteConfirmRequested$.pipe(
+    map((state) => state.enabled)
+  );
 
   public batchDelete() {
-    if (!this.batchDeleteConfirming$.value) {
-      this.batchDeleteConfirming$.next(true);
-      this.batchDeleteConfirmTimeout = setTimeout(() => {
-        this.batchDeleteConfirming$.next(false);
-        this.batchDeleteConfirmTimeout = null;
-      }, 4000);
-
+    if (!this.batchDeleteConfirmRequested$.readValue().enabled) {
       return;
     }
 
     this.resetBatchDeleteConfirm();
     const selection = [...this.selectedRoutes$.value];
     this.selectedRoutes$.next([]);
+    this.lastClickedRouteUuid = null;
 
     for (const routeUuid of selection) {
       this.environmentsService.removeRoute(routeUuid);
@@ -625,12 +673,8 @@ export class RoutesMenuComponent {
   }
 
   private resetBatchDeleteConfirm() {
-    if (this.batchDeleteConfirmTimeout) {
-      clearTimeout(this.batchDeleteConfirmTimeout);
-      this.batchDeleteConfirmTimeout = null;
-    }
-    if (this.batchDeleteConfirming$.value) {
-      this.batchDeleteConfirming$.next(false);
+    if (this.batchDeleteConfirmRequested$.getValue().enabled) {
+      this.batchDeleteConfirmRequested$.next({ enabled: false, payload: null });
     }
   }
 
@@ -718,9 +762,8 @@ export class RoutesMenuComponent {
             }
           };
         } else {
-          // Index parent + ordered flat list for selection support.
+          // Index parent for batch duplicate support.
           this.routeParentMap.set(child.uuid, parentId);
-          this.orderedRouteUuids.push(child.uuid);
 
           return {
             type: 'route',

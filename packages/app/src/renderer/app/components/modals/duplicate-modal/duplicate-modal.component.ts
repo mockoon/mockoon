@@ -129,6 +129,13 @@ export class DuplicateModalComponent implements OnInit, OnDestroy {
   private extractEntityToDuplicate(state: DuplicateEntityToAnotherEnvironment) {
     const uuids = state.subjectUuids ?? [];
 
+    if (uuids.length === 0) {
+      this.store.update(cancelEntityDuplicationToAnotherEnvironmentAction());
+      this.uiService.closeModal('duplicate_to_environment', false);
+
+      return;
+    }
+
     if (state.subject === 'route') {
       // Batch case: multiple routes selected.
       if (uuids.length > 1) {

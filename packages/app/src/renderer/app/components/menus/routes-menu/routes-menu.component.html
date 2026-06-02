@@ -55,7 +55,6 @@
     </div>
   </div>
 
-  <!-- Batch action bar: appears only when multiple routes are selected -->
   @if (hasSelection) {
     <div
       class="batch-action-bar d-flex align-items-center ps-2 py-2"
@@ -70,6 +69,7 @@
           type="button"
           id="routes-batch-duplicate"
           class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
+          aria-label="Duplicate selected routes"
           ngbTooltip="Duplicate selected routes"
           [disabled]="!isActiveEnvironmentEditable"
           (click)="batchDuplicate()"
@@ -80,6 +80,7 @@
           type="button"
           id="routes-batch-duplicate-to-env"
           class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
+          aria-label="Duplicate selected routes to another environment"
           ngbTooltip="Duplicate selected routes to another environment"
           (click)="batchDuplicateToEnvironment()"
         >
@@ -90,6 +91,7 @@
             type="button"
             id="routes-batch-toggle"
             class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
+            aria-label="Toggle selected routes"
             ngbTooltip="Toggle selected routes (enable/disable)"
             (click)="batchToggle()"
           >
@@ -100,6 +102,11 @@
           type="button"
           id="routes-batch-delete"
           class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
+          [attr.aria-label]="
+            batchDeleteConfirming
+              ? 'Confirm delete selected routes'
+              : 'Delete selected routes'
+          "
           [class.text-danger]="batchDeleteConfirming"
           [ngbTooltip]="
             batchDeleteConfirming
@@ -118,6 +125,7 @@
           type="button"
           id="routes-batch-clear"
           class="btn btn-link btn-icon py-0 ps-1 d-flex align-items-center"
+          aria-label="Clear selection"
           ngbTooltip="Clear selection (Esc)"
           (click)="clearSelection()"
         >
@@ -295,7 +303,9 @@
       >
         <!-- Calculate padding of 2 rem + 0.5 (gap between the folder icon and folder name) -->
         <a
+          #routeRow
           class="nav-link d-flex pe-0 hover-parent"
+          [attr.data-route-uuid]="route.uuid"
           [style]="{
             'padding-left': `${routesFilter || !level ? undefined : level * 2 + 0.5}rem`
           }"
@@ -317,6 +327,11 @@
               <input
                 type="checkbox"
                 class="form-check-input m-0"
+                [attr.aria-label]="
+                  selectedRoutes.includes(route.uuid)
+                    ? 'Deselect route /' + route.endpoint
+                    : 'Select route /' + route.endpoint
+                "
                 [checked]="selectedRoutes.includes(route.uuid)"
                 (click)="$event.stopPropagation()"
                 (change)="toggleRouteSelection(route.uuid)"

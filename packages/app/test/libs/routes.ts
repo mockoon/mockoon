@@ -341,8 +341,12 @@ class Routes {
     const item = await this.getMenuItem(index);
     const modifier = process.platform === 'darwin' ? 'Meta' : 'Control';
     await browser.action('key').down(modifier).perform();
-    await item.click();
-    await browser.action('key').up(modifier).perform();
+
+    try {
+      await item.click();
+    } finally {
+      await browser.action('key').up(modifier).perform();
+    }
   }
 
   public async assertBatchSelectionCount(expected: number): Promise<void> {

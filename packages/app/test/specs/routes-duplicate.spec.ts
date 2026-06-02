@@ -26,9 +26,8 @@ describe('Duplicate a route', () => {
   });
 
   describe('Batch duplicate multiple routes', () => {
-    it('should ctrl-click to multi-select two routes (plus active)', async () => {
-      // 4 routes now: select first, then ctrl-click 2nd and 3rd
-      await routes.select(1);
+    it('should ctrl-click to multi-select three routes', async () => {
+      await routes.ctrlSelect(1);
       await routes.ctrlSelect(2);
       await routes.ctrlSelect(3);
       await routes.assertBatchSelectionCount(3);

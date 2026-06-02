@@ -68,7 +68,7 @@ describe('Duplicate a route to an environment', async () => {
     it('should switch back to the first environment and multi-select routes', async () => {
       await environments.select(1);
       await navigation.switchView('ENV_ROUTES');
-      await routes.select(1);
+      await routes.ctrlSelect(1);
       await routes.ctrlSelect(2);
       await routes.ctrlSelect(3);
       await routes.assertBatchSelectionCount(3);
