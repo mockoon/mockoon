@@ -97,8 +97,8 @@ export class DatabucketsMenuComponent implements OnInit {
           .pipe(map((environments) => environments.length < 2)),
       action: ({ databucketUuid }: dropdownMenuPayload) => {
         this.environmentsService.startEntityDuplicationToAnotherEnvironment(
-          databucketUuid,
-          'databucket'
+          'databucket',
+          [databucketUuid]
         );
       }
     },

@@ -674,16 +674,16 @@ export const duplicateRouteToAnotherEnvironmentAction = (
   }) as const;
 
 /**
- * Triggers movement of an entity to another environment
+ * Triggers movement of one or more entities to another environment
  */
 export const startEntityDuplicationToAnotherEnvironmentAction = (
-  subjectUUID: string,
-  subject: DataSubject
+  subject: DataSubject,
+  subjectUuids: string[]
 ) =>
   ({
     type: ActionTypes.START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT,
-    subjectUUID,
-    subject
+    subject,
+    subjectUuids
   }) as const;
 
 /**

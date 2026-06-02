@@ -533,8 +533,8 @@ export class CommandPaletteService {
         label: 'Duplicate Current Data Bucket to Another Environment',
         action: () => {
           this.environmentsService.startEntityDuplicationToAnotherEnvironment(
-            activeDatabucketUuid,
-            'databucket'
+            'databucket',
+            [activeDatabucketUuid]
           );
         },
         score: 1,
@@ -579,8 +579,8 @@ export class CommandPaletteService {
         label: 'Duplicate Current Callback to Another Environment',
         action: () => {
           this.environmentsService.startEntityDuplicationToAnotherEnvironment(
-            activeCallbackUuid,
-            'callback'
+            'callback',
+            [activeCallbackUuid]
           );
         },
         score: 1,
@@ -668,8 +668,8 @@ export class CommandPaletteService {
         label: 'Duplicate Current Route to Another Environment',
         action: () => {
           this.environmentsService.startEntityDuplicationToAnotherEnvironment(
-            activeRouteUuid,
-            'route'
+            'route',
+            [activeRouteUuid]
           );
         },
         score: 1,

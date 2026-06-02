@@ -91,8 +91,8 @@ export class CallbacksMenuComponent implements OnInit {
           .pipe(map((environments) => environments.length < 2)),
       action: ({ callbackUuid }: dropdownMenuPayload) => {
         this.environmentsService.startEntityDuplicationToAnotherEnvironment(
-          callbackUuid,
-          'callback'
+          'callback',
+          [callbackUuid]
         );
       }
     },

@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  HostListener,
   inject,
   viewChild
 } from '@angular/core';
@@ -139,6 +140,17 @@ export class RoutesMenuComponent {
   public draggedFolderCollapsed: boolean;
   public ResponseMode = ResponseMode;
   public isWeb = Config.isWeb;
+  // Multi-selection state for batch actions (local UI state).
+  // A route is "selected" when present in this set; it is independent of the
+  // "active" route (the one whose editor is shown on the right).
+  public selectedRoutes$ = new BehaviorSubject<string[]>([]);
+  // Tracks the last route clicked for shift-range selection support.
+  private lastClickedRouteUuid: string | null = null;
+  // Flat ordered list of visible (non-hidden) route uuids, used for shift-range.
+  // Rebuilt whenever the routes/folders structure changes.
+  private orderedRouteUuids: string[] = [];
+  // Map of routeUuid -> parentId (folder uuid or 'root'), used by batch duplicate.
+  private routeParentMap = new Map<string, string>();
   public routeDropdownMenuItems: DropdownMenuItem[] = [
     {
       label: 'Duplicate',
@@ -160,8 +172,8 @@ export class RoutesMenuComponent {
         this.environments$.pipe(map((environments) => environments.length < 2)),
       action: ({ routeUuid }: routeDropdownMenuPayload) => {
         this.environmentsService.startEntityDuplicationToAnotherEnvironment(
-          routeUuid,
-          'route'
+          'route',
+          [routeUuid]
         );
       }
     },
@@ -328,10 +340,26 @@ export class RoutesMenuComponent {
       filter((activeEnvironment) => !!activeEnvironment),
       distinctUntilChanged(),
       map((activeEnvironment) => {
-        const rootFolder = this.prepareFolders(activeEnvironment.rootChildren, [
-          ...activeEnvironment.folders,
-          ...activeEnvironment.routes
-        ]);
+        // Reset selection-support indices for the new structure.
+        this.routeParentMap.clear();
+        this.orderedRouteUuids = [];
+
+        const rootFolder = this.prepareFolders(
+          activeEnvironment.rootChildren,
+          [...activeEnvironment.folders, ...activeEnvironment.routes],
+          'root'
+        );
+
+        // Drop any previously-selected uuids that no longer exist.
+        const currentSelection = this.selectedRoutes$.value;
+        if (currentSelection.length > 0) {
+          const stillExisting = currentSelection.filter((uuid) =>
+            this.routeParentMap.has(uuid)
+          );
+          if (stillExisting.length !== currentSelection.length) {
+            this.selectedRoutes$.next(stillExisting);
+          }
+        }
 
         return {
           uuid: 'root',
@@ -444,10 +472,174 @@ export class RoutesMenuComponent {
   }
 
   /**
-   * Select a route by UUID, or the first route if no UUID is present
+   * Select a route by UUID.
+   *
+   * - Plain click: clears multi-selection and sets the route as active (default).
+   * - Ctrl/Cmd+click: toggles the route in the multi-selection set, without
+   *   changing the active route.
+   * - Shift+click: selects the range between the last clicked route and the
+   *   current one (based on the visible flat order), without changing the
+   *   active route.
    */
-  public selectRoute(routeUUID: string) {
+  public selectRoute(routeUUID: string, event?: MouseEvent) {
+    if (event && (event.ctrlKey || event.metaKey)) {
+      event.preventDefault();
+      this.toggleRouteSelection(routeUUID);
+      this.lastClickedRouteUuid = routeUUID;
+
+      return;
+    }
+
+    if (event?.shiftKey) {
+      event.preventDefault();
+      this.selectRouteRange(routeUUID);
+      this.lastClickedRouteUuid = routeUUID;
+
+      return;
+    }
+
+    // Default click: collapse multi-selection and activate the route.
+    if (this.selectedRoutes$.value.length > 0) {
+      this.selectedRoutes$.next([]);
+      this.resetBatchDeleteConfirm();
+    }
+    this.lastClickedRouteUuid = routeUUID;
     this.environmentsService.setActiveRoute(routeUUID);
+  }
+
+  /**
+   * Add or remove a route from the multi-selection set.
+   */
+  public toggleRouteSelection(routeUUID: string) {
+    const current = this.selectedRoutes$.value;
+    const next = current.includes(routeUUID)
+      ? current.filter((uuid) => uuid !== routeUUID)
+      : [...current, routeUUID];
+    this.selectedRoutes$.next(next);
+    this.resetBatchDeleteConfirm();
+  }
+
+  /**
+   * Select all routes between the last clicked route and the provided one
+   * (inclusive) using the visible flat order.
+   */
+  private selectRouteRange(routeUUID: string) {
+    const ordered = this.orderedRouteUuids;
+    const anchorUuid = this.lastClickedRouteUuid ?? routeUUID;
+    const startIdx = ordered.indexOf(anchorUuid);
+    const endIdx = ordered.indexOf(routeUUID);
+
+    if (startIdx === -1 || endIdx === -1) {
+      // Fallback: just toggle.
+      this.toggleRouteSelection(routeUUID);
+
+      return;
+    }
+
+    const [from, to] =
+      startIdx <= endIdx ? [startIdx, endIdx] : [endIdx, startIdx];
+    const range = ordered.slice(from, to + 1);
+    const merged = Array.from(
+      new Set([...this.selectedRoutes$.value, ...range])
+    );
+    this.selectedRoutes$.next(merged);
+    this.resetBatchDeleteConfirm();
+  }
+
+  /**
+   * Clear the multi-selection.
+   */
+  public clearSelection() {
+    if (this.selectedRoutes$.value.length === 0) {
+      return;
+    }
+    this.selectedRoutes$.next([]);
+    this.resetBatchDeleteConfirm();
+  }
+
+  /**
+   * Duplicate every selected route in place, in its containing folder.
+   */
+  public batchDuplicate() {
+    const selection = this.selectedRoutes$.value;
+
+    for (const routeUuid of selection) {
+      const parentId = this.routeParentMap.get(routeUuid) ?? 'root';
+      this.environmentsService.duplicateRoute(parentId, routeUuid);
+    }
+  }
+
+  /**
+   * Duplicate every selected route to another environment. Opens the existing
+   * duplicate-to-environment modal, which will iterate the list once the user
+   * picks a target environment.
+   */
+  public batchDuplicateToEnvironment() {
+    const selection = this.selectedRoutes$.value;
+    if (selection.length === 0) {
+      return;
+    }
+
+    this.environmentsService.startEntityDuplicationToAnotherEnvironment(
+      'route',
+      [...selection]
+    );
+  }
+
+  /**
+   * Toggle (enable/disable) every selected route.
+   */
+  public batchToggle() {
+    for (const routeUuid of this.selectedRoutes$.value) {
+      this.environmentsService.toggleRoute(routeUuid);
+    }
+  }
+
+  /**
+   * Two-step batch delete: first click arms a confirmation state, second
+   * click within a short window actually deletes. Mirrors the
+   * dropdown-menu two-step pattern used elsewhere in the app.
+   */
+  public batchDeleteConfirming$ = new BehaviorSubject<boolean>(false);
+  private batchDeleteConfirmTimeout: ReturnType<typeof setTimeout> | null =
+    null;
+
+  public batchDelete() {
+    if (!this.batchDeleteConfirming$.value) {
+      this.batchDeleteConfirming$.next(true);
+      this.batchDeleteConfirmTimeout = setTimeout(() => {
+        this.batchDeleteConfirming$.next(false);
+        this.batchDeleteConfirmTimeout = null;
+      }, 4000);
+
+      return;
+    }
+
+    this.resetBatchDeleteConfirm();
+    const selection = [...this.selectedRoutes$.value];
+    this.selectedRoutes$.next([]);
+
+    for (const routeUuid of selection) {
+      this.environmentsService.removeRoute(routeUuid);
+    }
+  }
+
+  private resetBatchDeleteConfirm() {
+    if (this.batchDeleteConfirmTimeout) {
+      clearTimeout(this.batchDeleteConfirmTimeout);
+      this.batchDeleteConfirmTimeout = null;
+    }
+    if (this.batchDeleteConfirming$.value) {
+      this.batchDeleteConfirming$.next(false);
+    }
+  }
+
+  /**
+   * Escape clears the current multi-selection.
+   */
+  @HostListener('document:keydown.escape')
+  public onEscape() {
+    this.clearSelection();
   }
 
   public toggleCollapse(folder: Folder) {
@@ -499,7 +691,8 @@ export class RoutesMenuComponent {
    */
   private prepareFolders(
     children: FolderChild[],
-    foldersAndRoutes: (Folder | Route)[]
+    foldersAndRoutes: (Folder | Route)[],
+    parentId: string
   ): {
     children: (
       | { type: 'folder'; data: Folder }
@@ -519,11 +712,16 @@ export class RoutesMenuComponent {
               ...(foundChild as Folder),
               ...(this.prepareFolders(
                 (foundChild as Folder).children,
-                foldersAndRoutes
+                foldersAndRoutes,
+                (foundChild as Folder).uuid
               ) as unknown as Folder)
             }
           };
         } else {
+          // Index parent + ordered flat list for selection support.
+          this.routeParentMap.set(child.uuid, parentId);
+          this.orderedRouteUuids.push(child.uuid);
+
           return {
             type: 'route',
             isHidden$: this.createRouteHiddenObservable(foundChild as Route),

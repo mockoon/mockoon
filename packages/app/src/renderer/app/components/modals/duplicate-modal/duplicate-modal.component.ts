@@ -60,11 +60,11 @@ export class DuplicateModalComponent implements OnInit, OnDestroy {
   public entityInformation: {
     displayName: string;
     subject: Omit<DataSubject, 'environment'>;
-    uuid: string;
+    uuids: string[];
   } = {
     displayName: '',
     subject: '',
-    uuid: ''
+    uuids: []
   };
 
   private entityDuplicationState$ = this.store.select(
@@ -100,24 +100,26 @@ export class DuplicateModalComponent implements OnInit, OnDestroy {
     entityInformation: {
       displayName: string;
       subject: Omit<DataSubject, 'environment'>;
-      uuid: string;
+      uuids: string[];
     }
   ) {
-    if (entityInformation.subject === 'route') {
-      this.environmentsService.duplicateRouteInAnotherEnvironment(
-        this.entityInformation.uuid,
-        targetEnvironment.uuid
-      );
-    } else if (entityInformation.subject === 'databucket') {
-      this.environmentsService.duplicateDatabucketInAnotherEnvironment(
-        this.entityInformation.uuid,
-        targetEnvironment.uuid
-      );
-    } else if (entityInformation.subject === 'callback') {
-      this.environmentsService.duplicateCallbackInAnotherEnvironment(
-        this.entityInformation.uuid,
-        targetEnvironment.uuid
-      );
+    for (const uuid of entityInformation.uuids) {
+      if (entityInformation.subject === 'route') {
+        this.environmentsService.duplicateRouteInAnotherEnvironment(
+          uuid,
+          targetEnvironment.uuid
+        );
+      } else if (entityInformation.subject === 'databucket') {
+        this.environmentsService.duplicateDatabucketInAnotherEnvironment(
+          uuid,
+          targetEnvironment.uuid
+        );
+      } else if (entityInformation.subject === 'callback') {
+        this.environmentsService.duplicateCallbackInAnotherEnvironment(
+          uuid,
+          targetEnvironment.uuid
+        );
+      }
     }
 
     this.store.update(cancelEntityDuplicationToAnotherEnvironmentAction());
@@ -125,34 +127,47 @@ export class DuplicateModalComponent implements OnInit, OnDestroy {
   }
 
   private extractEntityToDuplicate(state: DuplicateEntityToAnotherEnvironment) {
+    const uuids = state.subjectUuids ?? [];
+
     if (state.subject === 'route') {
+      // Batch case: multiple routes selected.
+      if (uuids.length > 1) {
+        this.entityInformation = {
+          displayName: `${uuids.length} routes`,
+          subject: state.subject,
+          uuids: [...uuids]
+        };
+
+        return;
+      }
+
       const entityToDuplicate = this.activeEnvironment.routes.find(
-        (route: Route) => route.uuid === state.subjectUUID
+        (route: Route) => route.uuid === uuids[0]
       );
       this.entityInformation = {
         displayName: `${entityToDuplicate.method.toUpperCase()} /${
           entityToDuplicate.endpoint
         }`,
         subject: state.subject,
-        uuid: entityToDuplicate.uuid
+        uuids: [entityToDuplicate.uuid]
       };
     } else if (state.subject === 'databucket') {
       const entityToDuplicate = this.activeEnvironment.data.find(
-        (databucket: DataBucket) => databucket.uuid === state.subjectUUID
+        (databucket: DataBucket) => databucket.uuid === uuids[0]
       );
       this.entityInformation = {
         displayName: entityToDuplicate.name,
         subject: state.subject,
-        uuid: entityToDuplicate.uuid
+        uuids: [entityToDuplicate.uuid]
       };
     } else if (state.subject === 'callback') {
       const entityToDuplicate = this.activeEnvironment.callbacks.find(
-        (cb: Callback) => cb.uuid === state.subjectUUID
+        (cb: Callback) => cb.uuid === uuids[0]
       );
       this.entityInformation = {
         displayName: entityToDuplicate.name,
         subject: state.subject,
-        uuid: entityToDuplicate.uuid
+        uuids: [entityToDuplicate.uuid]
       };
     }
   }

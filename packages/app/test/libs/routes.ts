@@ -333,6 +333,51 @@ class Routes {
     );
   }
 
+  /**
+   * Ctrl/Cmd-click a route menu item to add it to the multi-selection.
+   * Uses the Meta (Cmd) key on macOS, Control elsewhere.
+   */
+  public async ctrlSelect(index: number): Promise<void> {
+    const item = await this.getMenuItem(index);
+    const modifier = process.platform === 'darwin' ? 'Meta' : 'Control';
+    await browser.action('key').down(modifier).perform();
+    await item.click();
+    await browser.action('key').up(modifier).perform();
+  }
+
+  public async assertBatchSelectionCount(expected: number): Promise<void> {
+    await utils.assertElementText(
+      $('.batch-action-bar span'),
+      `${expected} selected`
+    );
+  }
+
+  public async assertBatchBarVisible(visible = true): Promise<void> {
+    await $('.batch-action-bar').waitForExist({ reverse: !visible });
+  }
+
+  public async batchDuplicate(): Promise<void> {
+    await $('#routes-batch-duplicate').click();
+  }
+
+  public async batchDuplicateToEnvironment(): Promise<void> {
+    await $('#routes-batch-duplicate-to-env').click();
+  }
+
+  public async batchToggle(): Promise<void> {
+    await $('#routes-batch-toggle').click();
+  }
+
+  public async batchDelete(): Promise<void> {
+    // two-step confirm: click twice
+    await $('#routes-batch-delete').click();
+    await $('#routes-batch-delete').click();
+  }
+
+  public async clearBatchSelection(): Promise<void> {
+    await $('#routes-batch-clear').click();
+  }
+
   public async selectTemplate(index: 1 | 2): Promise<void> {
     this.getTemplateTab(index).click();
   }

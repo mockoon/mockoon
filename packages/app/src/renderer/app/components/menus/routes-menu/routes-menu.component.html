@@ -8,6 +8,9 @@
 @let isActiveEnvironmentCloud = isActiveEnvironmentCloud$ | async;
 @let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
 @let dragEnabled = dragEnabled$ | async;
+@let selectedRoutes = (selectedRoutes$ | async) ?? [];
+@let batchDeleteConfirming = (batchDeleteConfirming$ | async) ?? false;
+@let hasSelection = selectedRoutes.length > 0;
 
 <div
   class="routes-menu d-flex flex-column h-100"
@@ -51,6 +54,78 @@
       />
     </div>
   </div>
+
+  <!-- Batch action bar: appears only when multiple routes are selected -->
+  @if (hasSelection) {
+    <div
+      class="batch-action-bar d-flex align-items-center ps-2 py-2"
+      role="toolbar"
+      aria-label="Batch actions"
+    >
+      <span class="mx-2 text-truncate">
+        {{ selectedRoutes.length }} selected
+      </span>
+      <div class="ms-auto d-flex align-items-center">
+        <button
+          type="button"
+          id="routes-batch-duplicate"
+          class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
+          ngbTooltip="Duplicate selected routes"
+          [disabled]="!isActiveEnvironmentEditable"
+          (click)="batchDuplicate()"
+        >
+          <app-svg icon="content_copy" size="16" />
+        </button>
+        <button
+          type="button"
+          id="routes-batch-duplicate-to-env"
+          class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
+          ngbTooltip="Duplicate selected routes to another environment"
+          (click)="batchDuplicateToEnvironment()"
+        >
+          <app-svg icon="input" size="16" />
+        </button>
+        @if (!isWeb) {
+          <button
+            type="button"
+            id="routes-batch-toggle"
+            class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
+            ngbTooltip="Toggle selected routes (enable/disable)"
+            (click)="batchToggle()"
+          >
+            <app-svg icon="power_settings_new" size="16" />
+          </button>
+        }
+        <button
+          type="button"
+          id="routes-batch-delete"
+          class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
+          [class.text-danger]="batchDeleteConfirming"
+          [ngbTooltip]="
+            batchDeleteConfirming
+              ? 'Click again to confirm deletion'
+              : 'Delete selected routes'
+          "
+          [disabled]="!isActiveEnvironmentEditable"
+          (click)="batchDelete()"
+        >
+          <app-svg
+            [icon]="batchDeleteConfirming ? 'error' : 'delete'"
+            size="16"
+          />
+        </button>
+        <button
+          type="button"
+          id="routes-batch-clear"
+          class="btn btn-link btn-icon py-0 ps-1 d-flex align-items-center"
+          ngbTooltip="Clear selection (Esc)"
+          (click)="clearSelection()"
+        >
+          <app-svg icon="close" size="16" />
+        </button>
+      </div>
+    </div>
+  }
 
   @defer {
     @let rootFolder = rootFolder$ | async;
@@ -226,11 +301,28 @@
           }"
           [class]="{
             active: activeRoute?.uuid === route.uuid,
-            'route-disabled': disabledRoutes.includes(route.uuid)
+            'route-disabled': disabledRoutes.includes(route.uuid),
+            selected: selectedRoutes.includes(route.uuid)
           }"
           appScrollWhenActive
-          (click)="selectRoute(route.uuid)"
+          (click)="selectRoute(route.uuid, $event)"
         >
+          @if (hasSelection) {
+            <div
+              class="route-select-checkbox pe-3 d-flex align-items-center"
+              (click)="
+                $event.stopPropagation(); toggleRouteSelection(route.uuid)
+              "
+            >
+              <input
+                type="checkbox"
+                class="form-check-input m-0"
+                [checked]="selectedRoutes.includes(route.uuid)"
+                (click)="$event.stopPropagation()"
+                (change)="toggleRouteSelection(route.uuid)"
+              />
+            </div>
+          }
           <!-- mw0 is important for proper text truncation -->
           <div class="d-flex flex-column mw0">
             <div
