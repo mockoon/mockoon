@@ -1,23 +1,33 @@
 @let environments = environments$ | async;
+@let entityDuplicationState = entityDuplicationState$ | async;
 
 <div class="modal-header">
   <h3 class="modal-title">
     Choose target environment
     <br />
     <small class="text-muted h6">
-      Copy the
-      @switch (entityInformation.subject) {
+      Copy {{ entityDuplicationState.subjectUuids.length }}
+      @switch (entityDuplicationState.subject) {
         @case ('route') {
-          route
+          {{
+            entityDuplicationState.subjectUuids.length > 1 ? 'routes' : 'route'
+          }}
         }
         @case ('databucket') {
-          data bucket
+          {{
+            entityDuplicationState.subjectUuids.length > 1
+              ? 'data buckets'
+              : 'data bucket'
+          }}
         }
         @case ('callback') {
-          callback
+          {{
+            entityDuplicationState.subjectUuids.length > 1
+              ? 'callbacks'
+              : 'callback'
+          }}
         }
       }
-      <code>{{ entityInformation.displayName }}</code>
       to:
     </small>
   </h3>
@@ -29,7 +39,7 @@
       <button
         class="list-group-item list-group-item-action"
         type="button"
-        (click)="chooseTargetEnvironment(environment, entityInformation)"
+        (click)="chooseTargetEnvironment(environment, entityDuplicationState)"
       >
         <div class="text-truncate">{{ environment.name }}</div>
         <div class="nav-link-subtitle text-truncate">
