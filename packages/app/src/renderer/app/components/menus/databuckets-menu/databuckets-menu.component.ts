@@ -24,7 +24,7 @@ import {
   map,
   tap
 } from 'rxjs/operators';
-import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
+import { ActionToolbarComponent } from 'src/renderer/app/components/action-toolbar/action-toolbar.component';
 import {
   DropdownMenuComponent,
   DropdownMenuItem
@@ -37,6 +37,7 @@ import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column
 import { ScrollWhenActiveDirective } from 'src/renderer/app/directives/scroll-to-active.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { textFilter } from 'src/renderer/app/libs/utils.lib';
+import { ToolbarButtonConfig } from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { Store } from 'src/renderer/app/stores/store';
@@ -58,6 +59,7 @@ type dropdownMenuPayload = { databucketUuid: string };
     DropzoneDirective,
     ScrollWhenActiveDirective,
     DropdownMenuComponent,
+    ActionToolbarComponent,
     ResizeColumnDirective,
     AsyncPipe
   ]
@@ -83,10 +85,49 @@ export class DatabucketsMenuComponent implements OnInit {
     this.store.selectIsActiveEnvironmentEditable();
   public selectedDatabuckets$ = new BehaviorSubject<string[]>([]);
   private lastClickedDatabucketUuid: string | null = null;
-  private batchDeleteConfirmRequested$ = new TimedBoolean();
-  public batchDeleteConfirming$ = this.batchDeleteConfirmRequested$.pipe(
-    map((state) => state.enabled)
-  );
+
+  public getToolbarButtons(): ToolbarButtonConfig[] {
+    const disabled$ = this.isActiveEnvironmentEditable$.pipe(
+      map((isEditable) => !isEditable)
+    );
+
+    return [
+      {
+        id: 'databuckets-batch-duplicate',
+        action: 'duplicate',
+        icon: 'content_copy',
+        ariaLabel: 'Duplicate selected data buckets',
+        tooltip: 'Duplicate selected data buckets',
+        disabled$
+      },
+      {
+        id: 'databuckets-batch-duplicate-to-env',
+        action: 'duplicate-to-env',
+        icon: 'input',
+        ariaLabel: 'Duplicate selected data buckets to another environment',
+        tooltip: 'Duplicate selected data buckets to another environment'
+      },
+      {
+        id: 'databuckets-batch-delete',
+        action: 'delete',
+        icon: 'delete',
+        ariaLabel: 'Delete selected data buckets',
+        tooltip: 'Delete selected data buckets',
+        twoSteps: true,
+        confirmIcon: 'error',
+        confirmAriaLabel: 'Confirm delete selected data buckets',
+        confirmTooltip: 'Click again to confirm deletion',
+        disabled$
+      },
+      {
+        id: 'databuckets-batch-clear',
+        action: 'clear',
+        icon: 'close',
+        ariaLabel: 'Clear selection',
+        tooltip: 'Clear selection (Esc)'
+      }
+    ];
+  }
   public dropdownMenuItems: DropdownMenuItem[] = [
     {
       label: 'Duplicate',
@@ -169,8 +210,6 @@ export class DatabucketsMenuComponent implements OnInit {
           if (nextSelection.length === 0) {
             this.lastClickedDatabucketUuid = null;
           }
-
-          this.resetBatchDeleteConfirm();
         }
       }),
       combineLatestWith(this.databucketsFilter$),
@@ -231,7 +270,6 @@ export class DatabucketsMenuComponent implements OnInit {
     if (this.selectedDatabuckets$.value.length > 0) {
       this.selectedDatabuckets$.next([]);
       this.lastClickedDatabucketUuid = null;
-      this.resetBatchDeleteConfirm();
     }
 
     this.lastClickedDatabucketUuid = databucketUUID;
@@ -248,8 +286,6 @@ export class DatabucketsMenuComponent implements OnInit {
     if (next.length === 0) {
       this.lastClickedDatabucketUuid = null;
     }
-
-    this.resetBatchDeleteConfirm();
   }
 
   private selectDatabucketRange(databucketUUID: string) {
@@ -277,13 +313,11 @@ export class DatabucketsMenuComponent implements OnInit {
     ) {
       this.selectedDatabuckets$.next([]);
       this.lastClickedDatabucketUuid = null;
-      this.resetBatchDeleteConfirm();
 
       return;
     }
 
     this.selectedDatabuckets$.next(range);
-    this.resetBatchDeleteConfirm();
   }
 
   private getVisibleOrderedDatabucketUuids(): string[] {
@@ -314,7 +348,6 @@ export class DatabucketsMenuComponent implements OnInit {
 
     this.selectedDatabuckets$.next([]);
     this.lastClickedDatabucketUuid = null;
-    this.resetBatchDeleteConfirm();
   }
 
   public batchDuplicate() {
@@ -336,11 +369,6 @@ export class DatabucketsMenuComponent implements OnInit {
   }
 
   public batchDelete() {
-    if (!this.batchDeleteConfirmRequested$.readValue().enabled) {
-      return;
-    }
-
-    this.resetBatchDeleteConfirm();
     const selection = [...this.selectedDatabuckets$.value];
     this.selectedDatabuckets$.next([]);
     this.lastClickedDatabucketUuid = null;
@@ -350,9 +378,27 @@ export class DatabucketsMenuComponent implements OnInit {
     }
   }
 
-  private resetBatchDeleteConfirm() {
-    if (this.batchDeleteConfirmRequested$.getValue().enabled) {
-      this.batchDeleteConfirmRequested$.next({ enabled: false, payload: null });
+  public onToolbarAction(action: string) {
+    if (action === 'duplicate') {
+      this.batchDuplicate();
+
+      return;
+    }
+
+    if (action === 'duplicate-to-env') {
+      this.batchDuplicateToEnvironment();
+
+      return;
+    }
+
+    if (action === 'delete') {
+      this.batchDelete();
+
+      return;
+    }
+
+    if (action === 'clear') {
+      this.clearSelection();
     }
   }
 

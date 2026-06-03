@@ -42,7 +42,7 @@ import {
   tap,
   withLatestFrom
 } from 'rxjs/operators';
-import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
+import { ActionToolbarComponent } from 'src/renderer/app/components/action-toolbar/action-toolbar.component';
 import {
   DropdownMenuComponent,
   DropdownMenuItem
@@ -61,6 +61,7 @@ import {
   DuplicatedRoutesTypes,
   EnvironmentsStatuses
 } from 'src/renderer/app/models/store.model';
+import { ToolbarButtonConfig } from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -103,6 +104,7 @@ type folderDropdownMenuPayload = { folder: Folder; folderUuid: string };
     ReactiveFormsModule,
     EditableElementComponent,
     DropdownMenuComponent,
+    ActionToolbarComponent,
     NgbTooltip,
     AsyncPipe,
     UpperCasePipe
@@ -128,7 +130,6 @@ export class RoutesMenuComponent {
   public disabledRoutes$: Observable<string[]>;
   public collapsedFolders$: Observable<string[]>;
   public routesFilter$: Observable<string>;
-  public batchDeleteConfirmRequested$ = new TimedBoolean();
   public isActiveEnvironmentEditable$ =
     this.store.selectIsActiveEnvironmentEditable();
   private manualDragEnabled$ = new BehaviorSubject(true);
@@ -237,6 +238,64 @@ export class RoutesMenuComponent {
       }
     }
   ];
+
+  public getToolbarButtons(): ToolbarButtonConfig[] {
+    const disabled$ = this.isActiveEnvironmentEditable$.pipe(
+      map((isEditable) => !isEditable)
+    );
+
+    const buttons: ToolbarButtonConfig[] = [
+      {
+        id: 'routes-batch-duplicate',
+        action: 'duplicate',
+        icon: 'content_copy',
+        ariaLabel: 'Duplicate selected routes',
+        tooltip: 'Duplicate selected routes',
+        disabled$
+      },
+      {
+        id: 'routes-batch-duplicate-to-env',
+        action: 'duplicate-to-env',
+        icon: 'input',
+        ariaLabel: 'Duplicate selected routes to another environment',
+        tooltip: 'Duplicate selected routes to another environment'
+      }
+    ];
+
+    if (!this.isWeb) {
+      buttons.push({
+        id: 'routes-batch-toggle',
+        action: 'toggle',
+        icon: 'power_settings_new',
+        ariaLabel: 'Toggle selected routes',
+        tooltip: 'Toggle selected routes (enable/disable)'
+      });
+    }
+
+    buttons.push(
+      {
+        id: 'routes-batch-delete',
+        action: 'delete',
+        icon: 'delete',
+        ariaLabel: 'Delete selected routes',
+        tooltip: 'Delete selected routes',
+        twoSteps: true,
+        confirmIcon: 'error',
+        confirmAriaLabel: 'Confirm delete selected routes',
+        confirmTooltip: 'Click again to confirm deletion',
+        disabled$
+      },
+      {
+        id: 'routes-batch-clear',
+        action: 'clear',
+        icon: 'close',
+        ariaLabel: 'Clear selection',
+        tooltip: 'Clear selection (Esc)'
+      }
+    );
+
+    return buttons;
+  }
   public folderDropdownMenuItems: DropdownMenuItem[] = [
     {
       label: 'Add CRUD route',
@@ -503,7 +562,6 @@ export class RoutesMenuComponent {
     // Default click: collapse multi-selection and activate the route.
     if (this.selectedRoutes$.value.length > 0) {
       this.selectedRoutes$.next([]);
-      this.resetBatchDeleteConfirm();
     }
     this.lastClickedRouteUuid = routeUUID;
     this.environmentsService.setActiveRoute(routeUUID);
@@ -523,8 +581,6 @@ export class RoutesMenuComponent {
     if (next.length === 0) {
       this.lastClickedRouteUuid = null;
     }
-
-    this.resetBatchDeleteConfirm();
   }
 
   /**
@@ -567,13 +623,11 @@ export class RoutesMenuComponent {
     ) {
       this.selectedRoutes$.next([]);
       this.lastClickedRouteUuid = null;
-      this.resetBatchDeleteConfirm();
 
       return;
     }
 
     this.selectedRoutes$.next(range);
-    this.resetBatchDeleteConfirm();
   }
 
   /**
@@ -612,7 +666,6 @@ export class RoutesMenuComponent {
 
     this.selectedRoutes$.next([]);
     this.lastClickedRouteUuid = null;
-    this.resetBatchDeleteConfirm();
   }
 
   /**
@@ -654,11 +707,6 @@ export class RoutesMenuComponent {
   }
 
   public batchDelete() {
-    if (!this.batchDeleteConfirmRequested$.readValue().enabled) {
-      return;
-    }
-
-    this.resetBatchDeleteConfirm();
     const selection = [...this.selectedRoutes$.value];
     this.selectedRoutes$.next([]);
     this.lastClickedRouteUuid = null;
@@ -668,9 +716,33 @@ export class RoutesMenuComponent {
     }
   }
 
-  private resetBatchDeleteConfirm() {
-    if (this.batchDeleteConfirmRequested$.getValue().enabled) {
-      this.batchDeleteConfirmRequested$.next({ enabled: false, payload: null });
+  public onToolbarAction(action: string) {
+    if (action === 'duplicate') {
+      this.batchDuplicate();
+
+      return;
+    }
+
+    if (action === 'duplicate-to-env') {
+      this.batchDuplicateToEnvironment();
+
+      return;
+    }
+
+    if (action === 'toggle') {
+      this.batchToggle();
+
+      return;
+    }
+
+    if (action === 'delete') {
+      this.batchDelete();
+
+      return;
+    }
+
+    if (action === 'clear') {
+      this.clearSelection();
     }
   }
 

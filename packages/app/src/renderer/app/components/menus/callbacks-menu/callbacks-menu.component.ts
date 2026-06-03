@@ -22,7 +22,7 @@ import {
   map,
   tap
 } from 'rxjs/operators';
-import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
+import { ActionToolbarComponent } from 'src/renderer/app/components/action-toolbar/action-toolbar.component';
 import {
   DropdownMenuComponent,
   DropdownMenuItem
@@ -35,6 +35,7 @@ import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column
 import { ScrollWhenActiveDirective } from 'src/renderer/app/directives/scroll-to-active.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import { textFilter } from 'src/renderer/app/libs/utils.lib';
+import { ToolbarButtonConfig } from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
@@ -55,6 +56,7 @@ type dropdownMenuPayload = { callbackUuid: string };
     DropzoneDirective,
     ScrollWhenActiveDirective,
     DropdownMenuComponent,
+    ActionToolbarComponent,
     ResizeColumnDirective,
     AsyncPipe,
     UpperCasePipe,
@@ -77,10 +79,49 @@ export class CallbacksMenuComponent implements OnInit {
     this.store.selectIsActiveEnvironmentEditable();
   public selectedCallbacks$ = new BehaviorSubject<string[]>([]);
   private lastClickedCallbackUuid: string | null = null;
-  private batchDeleteConfirmRequested$ = new TimedBoolean();
-  public batchDeleteConfirming$ = this.batchDeleteConfirmRequested$.pipe(
-    map((state) => state.enabled)
-  );
+
+  public getToolbarButtons(): ToolbarButtonConfig[] {
+    const disabled$ = this.isActiveEnvironmentEditable$.pipe(
+      map((isEditable) => !isEditable)
+    );
+
+    return [
+      {
+        id: 'callbacks-batch-duplicate',
+        action: 'duplicate',
+        icon: 'content_copy',
+        ariaLabel: 'Duplicate selected callbacks',
+        tooltip: 'Duplicate selected callbacks',
+        disabled$
+      },
+      {
+        id: 'callbacks-batch-duplicate-to-env',
+        action: 'duplicate-to-env',
+        icon: 'input',
+        ariaLabel: 'Duplicate selected callbacks to another environment',
+        tooltip: 'Duplicate selected callbacks to another environment'
+      },
+      {
+        id: 'callbacks-batch-delete',
+        action: 'delete',
+        icon: 'delete',
+        ariaLabel: 'Delete selected callbacks',
+        tooltip: 'Delete selected callbacks',
+        twoSteps: true,
+        confirmIcon: 'error',
+        confirmAriaLabel: 'Confirm delete selected callbacks',
+        confirmTooltip: 'Click again to confirm deletion',
+        disabled$
+      },
+      {
+        id: 'callbacks-batch-clear',
+        action: 'clear',
+        icon: 'close',
+        ariaLabel: 'Clear selection',
+        tooltip: 'Clear selection (Esc)'
+      }
+    ];
+  }
   public dropdownMenuItems: DropdownMenuItem[] = [
     {
       label: 'Duplicate',
@@ -152,8 +193,6 @@ export class CallbacksMenuComponent implements OnInit {
           if (nextSelection.length === 0) {
             this.lastClickedCallbackUuid = null;
           }
-
-          this.resetBatchDeleteConfirm();
         }
       }),
       combineLatestWith(this.callbacksFilter$),
@@ -211,7 +250,6 @@ export class CallbacksMenuComponent implements OnInit {
     if (this.selectedCallbacks$.value.length > 0) {
       this.selectedCallbacks$.next([]);
       this.lastClickedCallbackUuid = null;
-      this.resetBatchDeleteConfirm();
     }
 
     this.lastClickedCallbackUuid = callbackUUID;
@@ -228,8 +266,6 @@ export class CallbacksMenuComponent implements OnInit {
     if (next.length === 0) {
       this.lastClickedCallbackUuid = null;
     }
-
-    this.resetBatchDeleteConfirm();
   }
 
   private selectCallbackRange(callbackUUID: string) {
@@ -257,13 +293,11 @@ export class CallbacksMenuComponent implements OnInit {
     ) {
       this.selectedCallbacks$.next([]);
       this.lastClickedCallbackUuid = null;
-      this.resetBatchDeleteConfirm();
 
       return;
     }
 
     this.selectedCallbacks$.next(range);
-    this.resetBatchDeleteConfirm();
   }
 
   private getVisibleOrderedCallbackUuids(): string[] {
@@ -294,7 +328,6 @@ export class CallbacksMenuComponent implements OnInit {
 
     this.selectedCallbacks$.next([]);
     this.lastClickedCallbackUuid = null;
-    this.resetBatchDeleteConfirm();
   }
 
   public batchDuplicate() {
@@ -316,11 +349,6 @@ export class CallbacksMenuComponent implements OnInit {
   }
 
   public batchDelete() {
-    if (!this.batchDeleteConfirmRequested$.readValue().enabled) {
-      return;
-    }
-
-    this.resetBatchDeleteConfirm();
     const selection = [...this.selectedCallbacks$.value];
     this.selectedCallbacks$.next([]);
     this.lastClickedCallbackUuid = null;
@@ -330,9 +358,27 @@ export class CallbacksMenuComponent implements OnInit {
     }
   }
 
-  private resetBatchDeleteConfirm() {
-    if (this.batchDeleteConfirmRequested$.getValue().enabled) {
-      this.batchDeleteConfirmRequested$.next({ enabled: false, payload: null });
+  public onToolbarAction(action: string) {
+    if (action === 'duplicate') {
+      this.batchDuplicate();
+
+      return;
+    }
+
+    if (action === 'duplicate-to-env') {
+      this.batchDuplicateToEnvironment();
+
+      return;
+    }
+
+    if (action === 'delete') {
+      this.batchDelete();
+
+      return;
+    }
+
+    if (action === 'clear') {
+      this.clearSelection();
     }
   }
 

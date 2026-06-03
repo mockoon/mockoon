@@ -5,7 +5,6 @@
 @let settings = settings$ | async;
 @let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
 @let selectedDatabuckets = (selectedDatabuckets$ | async) ?? [];
-@let batchDeleteConfirming = (batchDeleteConfirming$ | async) ?? false;
 @let hasSelection = selectedDatabuckets.length > 0;
 
 @if (activeEnvironment) {
@@ -22,7 +21,7 @@
           <app-svg icon="add_box" />
         </button>
       </div>
-      <div class="flex-grow-1">
+      <div class="flex-grow-1 me-2">
         <app-filter
           filterName="databuckets"
           [focusableInput]="focusableInputs.DATABUCKET_FILTER"
@@ -31,71 +30,13 @@
     </div>
 
     @if (hasSelection) {
-      <div
-        class="batch-action-bar d-flex align-items-center ps-2 py-2"
-        role="toolbar"
-        aria-label="Batch actions"
-      >
-        <span class="mx-2 text-truncate">
-          {{ selectedDatabuckets.length }} selected
-        </span>
-        <div class="ms-auto d-flex align-items-center">
-          <button
-            type="button"
-            id="databuckets-batch-duplicate"
-            class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
-            aria-label="Duplicate selected data buckets"
-            ngbTooltip="Duplicate selected data buckets"
-            [disabled]="!isActiveEnvironmentEditable"
-            (click)="batchDuplicate()"
-          >
-            <app-svg icon="content_copy" size="16" />
-          </button>
-          <button
-            type="button"
-            id="databuckets-batch-duplicate-to-env"
-            class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
-            aria-label="Duplicate selected data buckets to another environment"
-            ngbTooltip="Duplicate selected data buckets to another environment"
-            (click)="batchDuplicateToEnvironment()"
-          >
-            <app-svg icon="input" size="16" />
-          </button>
-          <button
-            type="button"
-            id="databuckets-batch-delete"
-            class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
-            [attr.aria-label]="
-              batchDeleteConfirming
-                ? 'Confirm delete selected data buckets'
-                : 'Delete selected data buckets'
-            "
-            [class.text-danger]="batchDeleteConfirming"
-            [ngbTooltip]="
-              batchDeleteConfirming
-                ? 'Click again to confirm deletion'
-                : 'Delete selected data buckets'
-            "
-            [disabled]="!isActiveEnvironmentEditable"
-            (click)="batchDelete()"
-          >
-            <app-svg
-              [icon]="batchDeleteConfirming ? 'error' : 'delete'"
-              size="16"
-            />
-          </button>
-          <button
-            type="button"
-            id="databuckets-batch-clear"
-            class="btn btn-link btn-icon py-0 ps-1 d-flex align-items-center"
-            aria-label="Clear selection"
-            ngbTooltip="Clear selection (Esc)"
-            (click)="clearSelection()"
-          >
-            <app-svg icon="close" size="16" />
-          </button>
-        </div>
-      </div>
+      <app-action-toolbar
+        class="mb-2 mx-2"
+        [count]="selectedDatabuckets.length"
+        ariaLabel="Batch actions"
+        [buttons]="getToolbarButtons()"
+        (buttonClicked)="onToolbarAction($event)"
+      />
     }
 
     @if (databucketList) {
