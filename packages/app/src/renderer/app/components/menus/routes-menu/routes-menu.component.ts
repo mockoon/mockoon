@@ -128,7 +128,7 @@ export class RoutesMenuComponent {
   public disabledRoutes$: Observable<string[]>;
   public collapsedFolders$: Observable<string[]>;
   public routesFilter$: Observable<string>;
-  private batchDeleteConfirmRequested$ = new TimedBoolean();
+  public batchDeleteConfirmRequested$ = new TimedBoolean();
   public isActiveEnvironmentEditable$ =
     this.store.selectIsActiveEnvironmentEditable();
   private manualDragEnabled$ = new BehaviorSubject(true);
@@ -652,10 +652,6 @@ export class RoutesMenuComponent {
       this.environmentsService.toggleRoute(routeUuid);
     }
   }
-
-  public batchDeleteConfirming$ = this.batchDeleteConfirmRequested$.pipe(
-    map((state) => state.enabled)
-  );
 
   public batchDelete() {
     if (!this.batchDeleteConfirmRequested$.readValue().enabled) {

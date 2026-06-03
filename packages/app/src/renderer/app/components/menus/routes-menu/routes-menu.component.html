@@ -9,7 +9,7 @@
 @let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
 @let dragEnabled = dragEnabled$ | async;
 @let selectedRoutes = (selectedRoutes$ | async) ?? [];
-@let batchDeleteConfirming = (batchDeleteConfirming$ | async) ?? false;
+@let batchDeleteConfirmRequested = batchDeleteConfirmRequested$ | async;
 @let hasSelection = selectedRoutes.length > 0;
 
 <div
@@ -49,6 +49,7 @@
 
     <div class="flex-grow-1">
       <app-filter
+        class="me-2"
         filterName="routes"
         [focusableInput]="focusableInputs.ROUTE_FILTER"
       />
@@ -65,72 +66,74 @@
         {{ selectedRoutes.length }} selected
       </span>
       <div class="ms-auto d-flex align-items-center">
-        <button
-          type="button"
-          id="routes-batch-duplicate"
-          class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
-          aria-label="Duplicate selected routes"
-          ngbTooltip="Duplicate selected routes"
-          [disabled]="!isActiveEnvironmentEditable"
-          (click)="batchDuplicate()"
-        >
-          <app-svg icon="content_copy" size="16" />
-        </button>
-        <button
-          type="button"
-          id="routes-batch-duplicate-to-env"
-          class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
-          aria-label="Duplicate selected routes to another environment"
-          ngbTooltip="Duplicate selected routes to another environment"
-          (click)="batchDuplicateToEnvironment()"
-        >
-          <app-svg icon="input" size="16" />
-        </button>
-        @if (!isWeb) {
+        <div class="btn-group btn-group-sm me-2">
           <button
             type="button"
-            id="routes-batch-toggle"
-            class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
-            aria-label="Toggle selected routes"
-            ngbTooltip="Toggle selected routes (enable/disable)"
-            (click)="batchToggle()"
+            id="routes-batch-duplicate"
+            class="btn btn-custom d-flex align-items-center"
+            aria-label="Duplicate selected routes"
+            ngbTooltip="Duplicate selected routes"
+            [disabled]="!isActiveEnvironmentEditable"
+            (click)="batchDuplicate()"
           >
-            <app-svg icon="power_settings_new" size="16" />
+            <app-svg icon="content_copy" size="16" />
           </button>
-        }
-        <button
-          type="button"
-          id="routes-batch-delete"
-          class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
-          [attr.aria-label]="
-            batchDeleteConfirming
-              ? 'Confirm delete selected routes'
-              : 'Delete selected routes'
-          "
-          [class.text-danger]="batchDeleteConfirming"
-          [ngbTooltip]="
-            batchDeleteConfirming
-              ? 'Click again to confirm deletion'
-              : 'Delete selected routes'
-          "
-          [disabled]="!isActiveEnvironmentEditable"
-          (click)="batchDelete()"
-        >
-          <app-svg
-            [icon]="batchDeleteConfirming ? 'error' : 'delete'"
-            size="16"
-          />
-        </button>
-        <button
-          type="button"
-          id="routes-batch-clear"
-          class="btn btn-link btn-icon py-0 ps-1 d-flex align-items-center"
-          aria-label="Clear selection"
-          ngbTooltip="Clear selection (Esc)"
-          (click)="clearSelection()"
-        >
-          <app-svg icon="close" size="16" />
-        </button>
+          <button
+            type="button"
+            id="routes-batch-duplicate-to-env"
+            class="btn btn-custom d-flex align-items-center"
+            aria-label="Duplicate selected routes to another environment"
+            ngbTooltip="Duplicate selected routes to another environment"
+            (click)="batchDuplicateToEnvironment()"
+          >
+            <app-svg icon="input" size="16" />
+          </button>
+          @if (!isWeb) {
+            <button
+              type="button"
+              id="routes-batch-toggle"
+              class="btn btn-custom d-flex align-items-center"
+              aria-label="Toggle selected routes"
+              ngbTooltip="Toggle selected routes (enable/disable)"
+              (click)="batchToggle()"
+            >
+              <app-svg icon="power_settings_new" size="16" />
+            </button>
+          }
+          <button
+            type="button"
+            id="routes-batch-delete"
+            class="btn btn-custom d-flex align-items-center"
+            [attr.aria-label]="
+              batchDeleteConfirmRequested.enabled
+                ? 'Confirm delete selected routes'
+                : 'Delete selected routes'
+            "
+            [class.text-danger]="batchDeleteConfirmRequested.enabled"
+            [ngbTooltip]="
+              batchDeleteConfirmRequested.enabled
+                ? 'Click again to confirm deletion'
+                : 'Delete selected routes'
+            "
+            [disabled]="!isActiveEnvironmentEditable"
+            (click)="batchDelete()"
+          >
+            <app-svg
+              [icon]="batchDeleteConfirmRequested.enabled ? 'error' : 'delete'"
+              size="16"
+            />
+          </button>
+          <button
+            type="button"
+            id="routes-batch-clear"
+            class="btn btn-custom d-flex align-items-center"
+            aria-label="Clear selection"
+            ngbTooltip="Clear selection (Esc)"
+            (click)="clearSelection()"
+          >
+            <app-svg icon="close" size="16" />
+          </button>
+        </div>
       </div>
     </div>
   }

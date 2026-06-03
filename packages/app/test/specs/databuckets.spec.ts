@@ -110,7 +110,7 @@ describe('Databucket duplication to another environment', () => {
 
     const modalText = await $('.modal-content .modal-title small').getText();
 
-    expect(modalText).toContain('My Databucket');
+    expect(modalText).toContain('Copy 1 data bucket to:');
 
     await modals.assertDuplicationModalEnvName('Basic data');
     await modals.assertDuplicationModalEnvHostname('localhost:3000/');

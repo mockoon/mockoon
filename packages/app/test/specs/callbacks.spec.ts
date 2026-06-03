@@ -194,7 +194,7 @@ describe('Callback duplication to another environment', () => {
 
     const modalText = await $('.modal-content .modal-title small').getText();
 
-    expect(modalText).toContain('Callback PUT');
+    expect(modalText).toContain('Copy 1 callback to:');
 
     await modals.assertDuplicationModalEnvName('Basic data');
     await modals.assertDuplicationModalEnvHostname('localhost:3000/');
