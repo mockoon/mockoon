@@ -344,13 +344,13 @@ class Routes {
 
   public async assertBatchSelectionCount(expected: number): Promise<void> {
     await utils.assertElementText(
-      $('.batch-action-bar span'),
+      $('.routes-menu .toolbar span'),
       `${expected} selected`
     );
   }
 
   public async assertBatchBarVisible(visible = true): Promise<void> {
-    await $('.batch-action-bar').waitForExist({ reverse: !visible });
+    await $('.routes-menu .toolbar').waitForExist({ reverse: !visible });
   }
 
   public async batchDuplicate(): Promise<void> {
