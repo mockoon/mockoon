@@ -36,42 +36,6 @@ describe('Callbacks navigation and deletion', () => {
   });
 });
 
-describe('Callbacks toolbar batch actions', () => {
-  it('should require a second click to confirm batch delete', async () => {
-    await environments.localAdd('batch-toolbar-callbacks');
-    await navigation.switchView('ENV_CALLBACKS');
-
-    let count = (await browser.execute(
-      () =>
-        document.querySelectorAll(
-          '.callbacks-menu .menu-list .nav-item:not(.d-none)'
-        ).length
-    )) as number;
-    while (count < 2) {
-      await callbacks.add();
-      count += 1;
-    }
-
-    await utils.ctrlSelect(
-      $('.callbacks-menu .menu-list .nav-item:nth-child(1) .nav-link')
-    );
-    await utils.ctrlSelect(
-      $('.callbacks-menu .menu-list .nav-item:nth-child(2) .nav-link')
-    );
-
-    await utils.assertElementText(
-      $('.callbacks-menu .toolbar span'),
-      '2 selected'
-    );
-
-    await $('#callbacks-batch-delete').click();
-    await callbacks.assertCount(count);
-
-    await $('#callbacks-batch-delete').click();
-    await callbacks.assertCount(count - 2);
-  });
-});
-
 describe('Callback addition', () => {
   it('should add a callback', async () => {
     await callbacks.add();
@@ -612,6 +576,41 @@ describe('Callback usages', () => {
         4,
         8
       );
+    });
+  });
+
+  describe('Callbacks toolbar batch actions', () => {
+    it('should require a second click to confirm batch delete', async () => {
+      await navigation.switchView('ENV_CALLBACKS');
+
+      let count = (await browser.execute(
+        () =>
+          document.querySelectorAll(
+            '.callbacks-menu .menu-list .nav-item:not(.d-none)'
+          ).length
+      )) as number;
+      while (count < 2) {
+        await callbacks.add();
+        count += 1;
+      }
+
+      await utils.ctrlSelect(
+        $('.callbacks-menu .menu-list .nav-item:nth-child(1) .nav-link')
+      );
+      await utils.ctrlSelect(
+        $('.callbacks-menu .menu-list .nav-item:nth-child(2) .nav-link')
+      );
+
+      await utils.assertElementText(
+        $('.callbacks-menu .toolbar span'),
+        '2 selected'
+      );
+
+      await $('#callbacks-batch-delete').click();
+      await callbacks.assertCount(count);
+
+      await $('#callbacks-batch-delete').click();
+      await callbacks.assertCount(count - 2);
     });
   });
 });
