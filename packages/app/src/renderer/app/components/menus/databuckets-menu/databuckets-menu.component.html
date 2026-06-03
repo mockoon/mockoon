@@ -4,6 +4,9 @@
 @let databucketList = databucketList$ | async;
 @let settings = settings$ | async;
 @let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
+@let selectedDatabuckets = (selectedDatabuckets$ | async) ?? [];
+@let batchDeleteConfirming = (batchDeleteConfirming$ | async) ?? false;
+@let hasSelection = selectedDatabuckets.length > 0;
 
 @if (activeEnvironment) {
   <div class="databuckets-menu d-flex flex-column h-100">
@@ -27,6 +30,74 @@
       </div>
     </div>
 
+    @if (hasSelection) {
+      <div
+        class="batch-action-bar d-flex align-items-center ps-2 py-2"
+        role="toolbar"
+        aria-label="Batch actions"
+      >
+        <span class="mx-2 text-truncate">
+          {{ selectedDatabuckets.length }} selected
+        </span>
+        <div class="ms-auto d-flex align-items-center">
+          <button
+            type="button"
+            id="databuckets-batch-duplicate"
+            class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
+            aria-label="Duplicate selected data buckets"
+            ngbTooltip="Duplicate selected data buckets"
+            [disabled]="!isActiveEnvironmentEditable"
+            (click)="batchDuplicate()"
+          >
+            <app-svg icon="content_copy" size="16" />
+          </button>
+          <button
+            type="button"
+            id="databuckets-batch-duplicate-to-env"
+            class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
+            aria-label="Duplicate selected data buckets to another environment"
+            ngbTooltip="Duplicate selected data buckets to another environment"
+            (click)="batchDuplicateToEnvironment()"
+          >
+            <app-svg icon="input" size="16" />
+          </button>
+          <button
+            type="button"
+            id="databuckets-batch-delete"
+            class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
+            [attr.aria-label]="
+              batchDeleteConfirming
+                ? 'Confirm delete selected data buckets'
+                : 'Delete selected data buckets'
+            "
+            [class.text-danger]="batchDeleteConfirming"
+            [ngbTooltip]="
+              batchDeleteConfirming
+                ? 'Click again to confirm deletion'
+                : 'Delete selected data buckets'
+            "
+            [disabled]="!isActiveEnvironmentEditable"
+            (click)="batchDelete()"
+          >
+            <app-svg
+              [icon]="batchDeleteConfirming ? 'error' : 'delete'"
+              size="16"
+            />
+          </button>
+          <button
+            type="button"
+            id="databuckets-batch-clear"
+            class="btn btn-link btn-icon py-0 ps-1 d-flex align-items-center"
+            aria-label="Clear selection"
+            ngbTooltip="Clear selection (Esc)"
+            (click)="clearSelection()"
+          >
+            <app-svg icon="close" size="16" />
+          </button>
+        </div>
+      </div>
+    }
+
     @if (databucketList) {
       <ul class="nav flex-column menu-list h-100">
         @for (databucket of databucketList; track databucket.uuid) {
@@ -42,13 +113,38 @@
             (dropped)="reorganizeDatabuckets($event)"
           >
             <a
+              #databucketRow
               class="nav-link d-flex pe-0 hover-parent"
+              [attr.data-databucket-uuid]="databucket.uuid"
               [class]="{
-                active: activeDatabucket?.uuid === databucket.uuid
+                active: activeDatabucket?.uuid === databucket.uuid,
+                selected: selectedDatabuckets.includes(databucket.uuid)
               }"
               appScrollWhenActive
-              (click)="selectDatabucket(databucket.uuid)"
+              (click)="selectDatabucket(databucket.uuid, $event)"
             >
+              @if (hasSelection) {
+                <div
+                  class="databucket-select-checkbox pe-3 d-flex align-items-center"
+                  (click)="
+                    $event.stopPropagation();
+                    toggleDatabucketSelection(databucket.uuid)
+                  "
+                >
+                  <input
+                    type="checkbox"
+                    class="form-check-input m-0"
+                    [attr.aria-label]="
+                      selectedDatabuckets.includes(databucket.uuid)
+                        ? 'Deselect data bucket ' + databucket.name
+                        : 'Select data bucket ' + databucket.name
+                    "
+                    [checked]="selectedDatabuckets.includes(databucket.uuid)"
+                    (click)="$event.stopPropagation()"
+                    (change)="toggleDatabucketSelection(databucket.uuid)"
+                  />
+                </div>
+              }
               <!-- mw0 is important for proper text truncation -->
               <div class="d-flex flex-column mw0">
                 @if (settings) {

@@ -2,8 +2,11 @@ import { AsyncPipe, LowerCasePipe, UpperCasePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
+  HostListener,
   OnInit,
-  inject
+  inject,
+  viewChildren
 } from '@angular/core';
 import {
   Callback,
@@ -11,13 +14,15 @@ import {
   ReorderableContainers
 } from '@mockoon/commons';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import {
   combineLatestWith,
   distinctUntilChanged,
   filter,
-  map
+  map,
+  tap
 } from 'rxjs/operators';
+import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import {
   DropdownMenuComponent,
   DropdownMenuItem
@@ -59,6 +64,8 @@ type dropdownMenuPayload = { callbackUuid: string };
 export class CallbacksMenuComponent implements OnInit {
   private environmentsService = inject(EnvironmentsService);
   private store = inject(Store);
+  private callbackRows =
+    viewChildren<ElementRef<HTMLAnchorElement>>('callbackRow');
 
   public settings$: Observable<Settings>;
   public callbackList$: Observable<Callback[]>;
@@ -68,6 +75,12 @@ export class CallbacksMenuComponent implements OnInit {
   public menuSize = Config.defaultSecondaryMenuSize;
   public isActiveEnvironmentEditable$ =
     this.store.selectIsActiveEnvironmentEditable();
+  public selectedCallbacks$ = new BehaviorSubject<string[]>([]);
+  private lastClickedCallbackUuid: string | null = null;
+  private batchDeleteConfirmRequested$ = new TimedBoolean();
+  public batchDeleteConfirming$ = this.batchDeleteConfirmRequested$.pipe(
+    map((state) => state.enabled)
+  );
   public dropdownMenuItems: DropdownMenuItem[] = [
     {
       label: 'Duplicate',
@@ -120,6 +133,29 @@ export class CallbacksMenuComponent implements OnInit {
     this.callbackList$ = this.store.selectActiveEnvironment().pipe(
       filter((activeEnvironment) => !!activeEnvironment),
       distinctUntilChanged(),
+      tap((activeEnvironment) => {
+        const currentSelection = this.selectedCallbacks$.value;
+        if (currentSelection.length === 0) {
+          return;
+        }
+
+        const existing = new Set(
+          activeEnvironment.callbacks.map((c) => c.uuid)
+        );
+        const nextSelection = currentSelection.filter((uuid) =>
+          existing.has(uuid)
+        );
+
+        if (nextSelection.length !== currentSelection.length) {
+          this.selectedCallbacks$.next(nextSelection);
+
+          if (nextSelection.length === 0) {
+            this.lastClickedCallbackUuid = null;
+          }
+
+          this.resetBatchDeleteConfirm();
+        }
+      }),
       combineLatestWith(this.callbacksFilter$),
       map(([activeEnvironment, search]) =>
         !search
@@ -153,7 +189,155 @@ export class CallbacksMenuComponent implements OnInit {
   /**
    * Select a callback by UUID, or the first callback if no UUID is present
    */
-  public selectCallback(callbackUUID: string) {
+  public selectCallback(callbackUUID: string, event?: MouseEvent) {
+    if (event && (event.ctrlKey || event.metaKey)) {
+      event.preventDefault();
+      this.toggleCallbackSelection(callbackUUID);
+
+      if (this.selectedCallbacks$.value.length > 0) {
+        this.lastClickedCallbackUuid = callbackUUID;
+      }
+
+      return;
+    }
+
+    if (event?.shiftKey) {
+      event.preventDefault();
+      this.selectCallbackRange(callbackUUID);
+
+      return;
+    }
+
+    if (this.selectedCallbacks$.value.length > 0) {
+      this.selectedCallbacks$.next([]);
+      this.lastClickedCallbackUuid = null;
+      this.resetBatchDeleteConfirm();
+    }
+
+    this.lastClickedCallbackUuid = callbackUUID;
     this.environmentsService.setActiveCallback(callbackUUID);
+  }
+
+  public toggleCallbackSelection(callbackUUID: string) {
+    const current = this.selectedCallbacks$.value;
+    const next = current.includes(callbackUUID)
+      ? current.filter((uuid) => uuid !== callbackUUID)
+      : [...current, callbackUUID];
+    this.selectedCallbacks$.next(next);
+
+    if (next.length === 0) {
+      this.lastClickedCallbackUuid = null;
+    }
+
+    this.resetBatchDeleteConfirm();
+  }
+
+  private selectCallbackRange(callbackUUID: string) {
+    const ordered = this.getVisibleOrderedCallbackUuids();
+    const activeCallbackUUID = this.store.get('activeCallbackUUID');
+    const anchorUuid =
+      this.lastClickedCallbackUuid ?? activeCallbackUUID ?? callbackUUID;
+    const startIdx = ordered.indexOf(anchorUuid);
+    const endIdx = ordered.indexOf(callbackUUID);
+
+    if (startIdx === -1 || endIdx === -1) {
+      this.toggleCallbackSelection(callbackUUID);
+
+      return;
+    }
+
+    const [from, to] =
+      startIdx <= endIdx ? [startIdx, endIdx] : [endIdx, startIdx];
+    const range = ordered.slice(from, to + 1);
+
+    if (
+      range.length === 1 &&
+      this.selectedCallbacks$.value.length === 1 &&
+      this.selectedCallbacks$.value[0] === range[0]
+    ) {
+      this.selectedCallbacks$.next([]);
+      this.lastClickedCallbackUuid = null;
+      this.resetBatchDeleteConfirm();
+
+      return;
+    }
+
+    this.selectedCallbacks$.next(range);
+    this.resetBatchDeleteConfirm();
+  }
+
+  private getVisibleOrderedCallbackUuids(): string[] {
+    return [...this.callbackRows()]
+      .sort((a, b) => {
+        const relation = a.nativeElement.compareDocumentPosition(
+          b.nativeElement
+        );
+
+        if (relation === Node.DOCUMENT_POSITION_FOLLOWING) {
+          return -1;
+        }
+
+        if (relation === Node.DOCUMENT_POSITION_PRECEDING) {
+          return 1;
+        }
+
+        return 0;
+      })
+      .map((rowRef) => rowRef.nativeElement.dataset['callbackUuid'])
+      .filter((uuid): uuid is string => !!uuid);
+  }
+
+  public clearSelection() {
+    if (this.selectedCallbacks$.value.length === 0) {
+      return;
+    }
+
+    this.selectedCallbacks$.next([]);
+    this.lastClickedCallbackUuid = null;
+    this.resetBatchDeleteConfirm();
+  }
+
+  public batchDuplicate() {
+    for (const callbackUUID of this.selectedCallbacks$.value) {
+      this.environmentsService.duplicateCallback(callbackUUID);
+    }
+  }
+
+  public batchDuplicateToEnvironment() {
+    const selection = this.selectedCallbacks$.value;
+    if (selection.length === 0) {
+      return;
+    }
+
+    this.environmentsService.startEntityDuplicationToAnotherEnvironment(
+      'callback',
+      [...selection]
+    );
+  }
+
+  public batchDelete() {
+    if (!this.batchDeleteConfirmRequested$.readValue().enabled) {
+      return;
+    }
+
+    this.resetBatchDeleteConfirm();
+    const selection = [...this.selectedCallbacks$.value];
+    this.selectedCallbacks$.next([]);
+    this.lastClickedCallbackUuid = null;
+
+    for (const callbackUUID of selection) {
+      this.environmentsService.removeCallback(callbackUUID);
+    }
+  }
+
+  private resetBatchDeleteConfirm() {
+    if (this.batchDeleteConfirmRequested$.getValue().enabled) {
+      this.batchDeleteConfirmRequested$.next({ enabled: false, payload: null });
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  public onEscape() {
+    this.clearSelection();
   }
 }

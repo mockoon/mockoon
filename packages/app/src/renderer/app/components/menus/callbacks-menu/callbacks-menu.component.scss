@@ -8,3 +8,12 @@
 
   position: relative; // we need this for the resize-column
 }
+
+.callbacks-menu .nav.flex-column .nav-link.selected {
+  background-color: darken($custom-gray, 12%);
+}
+
+.batch-action-bar {
+  color: $gray-300;
+  font-size: $sub-sup-font-size;
+}

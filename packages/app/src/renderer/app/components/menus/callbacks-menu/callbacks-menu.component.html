@@ -2,6 +2,9 @@
 @let settings = settings$ | async;
 @let activeCallback = activeCallback$ | async;
 @let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
+@let selectedCallbacks = (selectedCallbacks$ | async) ?? [];
+@let batchDeleteConfirming = (batchDeleteConfirming$ | async) ?? false;
+@let hasSelection = selectedCallbacks.length > 0;
 
 <div class="callbacks-menu d-flex flex-column h-100">
   <div class="d-flex w-100 py-2 align-items-center">
@@ -24,6 +27,74 @@
     </div>
   </div>
 
+  @if (hasSelection) {
+    <div
+      class="batch-action-bar d-flex align-items-center ps-2 py-2"
+      role="toolbar"
+      aria-label="Batch actions"
+    >
+      <span class="mx-2 text-truncate">
+        {{ selectedCallbacks.length }} selected
+      </span>
+      <div class="ms-auto d-flex align-items-center">
+        <button
+          type="button"
+          id="callbacks-batch-duplicate"
+          class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
+          aria-label="Duplicate selected callbacks"
+          ngbTooltip="Duplicate selected callbacks"
+          [disabled]="!isActiveEnvironmentEditable"
+          (click)="batchDuplicate()"
+        >
+          <app-svg icon="content_copy" size="16" />
+        </button>
+        <button
+          type="button"
+          id="callbacks-batch-duplicate-to-env"
+          class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
+          aria-label="Duplicate selected callbacks to another environment"
+          ngbTooltip="Duplicate selected callbacks to another environment"
+          (click)="batchDuplicateToEnvironment()"
+        >
+          <app-svg icon="input" size="16" />
+        </button>
+        <button
+          type="button"
+          id="callbacks-batch-delete"
+          class="btn btn-link btn-icon p-0 px-1 d-flex align-items-center"
+          [attr.aria-label]="
+            batchDeleteConfirming
+              ? 'Confirm delete selected callbacks'
+              : 'Delete selected callbacks'
+          "
+          [class.text-danger]="batchDeleteConfirming"
+          [ngbTooltip]="
+            batchDeleteConfirming
+              ? 'Click again to confirm deletion'
+              : 'Delete selected callbacks'
+          "
+          [disabled]="!isActiveEnvironmentEditable"
+          (click)="batchDelete()"
+        >
+          <app-svg
+            [icon]="batchDeleteConfirming ? 'error' : 'delete'"
+            size="16"
+          />
+        </button>
+        <button
+          type="button"
+          id="callbacks-batch-clear"
+          class="btn btn-link btn-icon py-0 ps-1 d-flex align-items-center"
+          aria-label="Clear selection"
+          ngbTooltip="Clear selection (Esc)"
+          (click)="clearSelection()"
+        >
+          <app-svg icon="close" size="16" />
+        </button>
+      </div>
+    </div>
+  }
+
   @if (callbackList) {
     <ul class="nav flex-column menu-list h-100">
       @for (callback of callbackList; track callback.uuid) {
@@ -39,13 +110,38 @@
           (dropped)="reorderCallbacks($event)"
         >
           <a
+            #callbackRow
             class="nav-link d-flex pe-0 hover-parent"
+            [attr.data-callback-uuid]="callback.uuid"
             [class]="{
-              active: activeCallback?.uuid === callback.uuid
+              active: activeCallback?.uuid === callback.uuid,
+              selected: selectedCallbacks.includes(callback.uuid)
             }"
             appScrollWhenActive
-            (click)="selectCallback(callback.uuid)"
+            (click)="selectCallback(callback.uuid, $event)"
           >
+            @if (hasSelection) {
+              <div
+                class="callback-select-checkbox pe-3 d-flex align-items-center"
+                (click)="
+                  $event.stopPropagation();
+                  toggleCallbackSelection(callback.uuid)
+                "
+              >
+                <input
+                  type="checkbox"
+                  class="form-check-input m-0"
+                  [attr.aria-label]="
+                    selectedCallbacks.includes(callback.uuid)
+                      ? 'Deselect callback ' + callback.name
+                      : 'Select callback ' + callback.name
+                  "
+                  [checked]="selectedCallbacks.includes(callback.uuid)"
+                  (click)="$event.stopPropagation()"
+                  (change)="toggleCallbackSelection(callback.uuid)"
+                />
+              </div>
+            }
             <!-- mw0 is important for proper text truncation -->
             <div class="d-flex flex-column mw0">
               @if (settings) {

@@ -2,8 +2,11 @@ import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
+  HostListener,
   OnInit,
-  inject
+  inject,
+  viewChildren
 } from '@angular/core';
 import {
   DataBucket,
@@ -13,13 +16,15 @@ import {
   ReorderableContainers
 } from '@mockoon/commons';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import {
   combineLatestWith,
   distinctUntilChanged,
   filter,
-  map
+  map,
+  tap
 } from 'rxjs/operators';
+import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import {
   DropdownMenuComponent,
   DropdownMenuItem
@@ -61,6 +66,8 @@ export class DatabucketsMenuComponent implements OnInit {
   private environmentsService = inject(EnvironmentsService);
   private store = inject(Store);
   private mainApiService = inject(MainApiService);
+  private databucketRows =
+    viewChildren<ElementRef<HTMLAnchorElement>>('databucketRow');
 
   public settings$: Observable<Settings>;
   public activeEnvironment$: Observable<Environment>;
@@ -74,6 +81,12 @@ export class DatabucketsMenuComponent implements OnInit {
   public menuSize = Config.defaultSecondaryMenuSize;
   public isActiveEnvironmentEditable$ =
     this.store.selectIsActiveEnvironmentEditable();
+  public selectedDatabuckets$ = new BehaviorSubject<string[]>([]);
+  private lastClickedDatabucketUuid: string | null = null;
+  private batchDeleteConfirmRequested$ = new TimedBoolean();
+  public batchDeleteConfirming$ = this.batchDeleteConfirmRequested$.pipe(
+    map((state) => state.enabled)
+  );
   public dropdownMenuItems: DropdownMenuItem[] = [
     {
       label: 'Duplicate',
@@ -139,6 +152,27 @@ export class DatabucketsMenuComponent implements OnInit {
     this.databucketList$ = this.store.selectActiveEnvironment().pipe(
       filter((activeEnvironment) => !!activeEnvironment),
       distinctUntilChanged(),
+      tap((activeEnvironment) => {
+        const currentSelection = this.selectedDatabuckets$.value;
+        if (currentSelection.length === 0) {
+          return;
+        }
+
+        const existing = new Set(activeEnvironment.data.map((d) => d.uuid));
+        const nextSelection = currentSelection.filter((uuid) =>
+          existing.has(uuid)
+        );
+
+        if (nextSelection.length !== currentSelection.length) {
+          this.selectedDatabuckets$.next(nextSelection);
+
+          if (nextSelection.length === 0) {
+            this.lastClickedDatabucketUuid = null;
+          }
+
+          this.resetBatchDeleteConfirm();
+        }
+      }),
       combineLatestWith(this.databucketsFilter$),
       map(([activeEnvironment, search]) =>
         !search
@@ -175,8 +209,156 @@ export class DatabucketsMenuComponent implements OnInit {
   /**
    * Select a databucket by UUID, or the first databucket if no UUID is present
    */
-  public selectDatabucket(databucketUUID: string) {
+  public selectDatabucket(databucketUUID: string, event?: MouseEvent) {
+    if (event && (event.ctrlKey || event.metaKey)) {
+      event.preventDefault();
+      this.toggleDatabucketSelection(databucketUUID);
+
+      if (this.selectedDatabuckets$.value.length > 0) {
+        this.lastClickedDatabucketUuid = databucketUUID;
+      }
+
+      return;
+    }
+
+    if (event?.shiftKey) {
+      event.preventDefault();
+      this.selectDatabucketRange(databucketUUID);
+
+      return;
+    }
+
+    if (this.selectedDatabuckets$.value.length > 0) {
+      this.selectedDatabuckets$.next([]);
+      this.lastClickedDatabucketUuid = null;
+      this.resetBatchDeleteConfirm();
+    }
+
+    this.lastClickedDatabucketUuid = databucketUUID;
     this.environmentsService.setActiveDatabucket(databucketUUID);
+  }
+
+  public toggleDatabucketSelection(databucketUUID: string) {
+    const current = this.selectedDatabuckets$.value;
+    const next = current.includes(databucketUUID)
+      ? current.filter((uuid) => uuid !== databucketUUID)
+      : [...current, databucketUUID];
+    this.selectedDatabuckets$.next(next);
+
+    if (next.length === 0) {
+      this.lastClickedDatabucketUuid = null;
+    }
+
+    this.resetBatchDeleteConfirm();
+  }
+
+  private selectDatabucketRange(databucketUUID: string) {
+    const ordered = this.getVisibleOrderedDatabucketUuids();
+    const activeDatabucketUUID = this.store.get('activeDatabucketUUID');
+    const anchorUuid =
+      this.lastClickedDatabucketUuid ?? activeDatabucketUUID ?? databucketUUID;
+    const startIdx = ordered.indexOf(anchorUuid);
+    const endIdx = ordered.indexOf(databucketUUID);
+
+    if (startIdx === -1 || endIdx === -1) {
+      this.toggleDatabucketSelection(databucketUUID);
+
+      return;
+    }
+
+    const [from, to] =
+      startIdx <= endIdx ? [startIdx, endIdx] : [endIdx, startIdx];
+    const range = ordered.slice(from, to + 1);
+
+    if (
+      range.length === 1 &&
+      this.selectedDatabuckets$.value.length === 1 &&
+      this.selectedDatabuckets$.value[0] === range[0]
+    ) {
+      this.selectedDatabuckets$.next([]);
+      this.lastClickedDatabucketUuid = null;
+      this.resetBatchDeleteConfirm();
+
+      return;
+    }
+
+    this.selectedDatabuckets$.next(range);
+    this.resetBatchDeleteConfirm();
+  }
+
+  private getVisibleOrderedDatabucketUuids(): string[] {
+    return [...this.databucketRows()]
+      .sort((a, b) => {
+        const relation = a.nativeElement.compareDocumentPosition(
+          b.nativeElement
+        );
+
+        if (relation === Node.DOCUMENT_POSITION_FOLLOWING) {
+          return -1;
+        }
+
+        if (relation === Node.DOCUMENT_POSITION_PRECEDING) {
+          return 1;
+        }
+
+        return 0;
+      })
+      .map((rowRef) => rowRef.nativeElement.dataset['databucketUuid'])
+      .filter((uuid): uuid is string => !!uuid);
+  }
+
+  public clearSelection() {
+    if (this.selectedDatabuckets$.value.length === 0) {
+      return;
+    }
+
+    this.selectedDatabuckets$.next([]);
+    this.lastClickedDatabucketUuid = null;
+    this.resetBatchDeleteConfirm();
+  }
+
+  public batchDuplicate() {
+    for (const databucketUUID of this.selectedDatabuckets$.value) {
+      this.environmentsService.duplicateDatabucket(databucketUUID);
+    }
+  }
+
+  public batchDuplicateToEnvironment() {
+    const selection = this.selectedDatabuckets$.value;
+    if (selection.length === 0) {
+      return;
+    }
+
+    this.environmentsService.startEntityDuplicationToAnotherEnvironment(
+      'databucket',
+      [...selection]
+    );
+  }
+
+  public batchDelete() {
+    if (!this.batchDeleteConfirmRequested$.readValue().enabled) {
+      return;
+    }
+
+    this.resetBatchDeleteConfirm();
+    const selection = [...this.selectedDatabuckets$.value];
+    this.selectedDatabuckets$.next([]);
+    this.lastClickedDatabucketUuid = null;
+
+    for (const databucketUUID of selection) {
+      this.environmentsService.removeDatabucket(databucketUUID);
+    }
+  }
+
+  private resetBatchDeleteConfirm() {
+    if (this.batchDeleteConfirmRequested$.getValue().enabled) {
+      this.batchDeleteConfirmRequested$.next({ enabled: false, payload: null });
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  public onEscape() {
+    this.clearSelection();
   }
 
   public copyToClipboard(databucketId: string, event: MouseEvent) {
