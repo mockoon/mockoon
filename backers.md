@@ -46,6 +46,13 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
       <img src="https://mockoon.com/images/sponsors/light/coderabbit.png" alt="CodeRabbit logo" />
       </picture>
   </a><br/><br/>
+  <a href="https://www.rapidproxy.io/?ref=mockoon">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/rapidproxy.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/rapidproxy.png">
+      <img src="https://mockoon.com/images/sponsors/light/rapidproxy.png" alt="Rapidproxy logo" />
+      </picture>
+  </a><br/><br/>
   <a href="https://talordata.com/?campaignid=rGAerPX1XrVAODD0&utm_source=mockoon&utm_term=mockoon">
       <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/talordata.png">
@@ -117,6 +124,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - [Peak Crypto](https://www.peakcrypto.com/)
 - Pedro
 - Rafael Braga Nanes
+- [RapidProxy](https://www.rapidproxy.io/?ref=mockoon)
 - Riaz
 - [Rosario Raulin](https://github.com/rosario-raulin)
 - Roybarberuk
