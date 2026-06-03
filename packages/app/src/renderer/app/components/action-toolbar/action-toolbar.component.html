@@ -1,3 +1,5 @@
+@let confirmRequested = confirmRequested$ | async;
+
 <div
   class="toolbar d-flex align-items-center"
   role="toolbar"
@@ -14,7 +16,11 @@
           [attr.aria-label]="getButtonAriaLabel(button)"
           [ngbTooltip]="getButtonTooltip(button)"
           [disabled]="!!button.disabled || (button.disabled$ | async) === true"
-          [class.text-danger]="isConfirming(button) || !!button.danger"
+          [class.text-danger]="
+            (confirmRequested.enabled &&
+              confirmRequested.payload === button.id) ||
+            !!button.danger
+          "
           (click)="onButtonClick(button)"
         >
           <app-svg [icon]="getButtonIcon(button)" size="16" />

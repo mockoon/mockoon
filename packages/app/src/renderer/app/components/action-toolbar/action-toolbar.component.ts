@@ -19,39 +19,44 @@ import { ToolbarButtonConfig } from 'src/renderer/app/models/ui.model';
   imports: [SvgComponent, NgbTooltip, AsyncPipe]
 })
 export class ActionToolbarComponent {
-  private confirmRequested$ = new TimedBoolean();
+  public confirmRequested$ = new TimedBoolean();
   public readonly count = input.required<number>();
   public readonly selectedLabel = input('selected');
   public readonly ariaLabel = input('Actions');
   public readonly buttons = input.required<ToolbarButtonConfig[]>();
   public readonly buttonClicked = output<string>();
 
-  public isConfirming(button: ToolbarButtonConfig): boolean {
-    const state = this.confirmRequested$.getValue();
-
-    return state.enabled && state.payload === button.id;
-  }
-
   public getButtonIcon(button: ToolbarButtonConfig): SvgComponent['icon'] {
-    return this.isConfirming(button)
+    const confirmValue = this.confirmRequested$.getValue();
+
+    return confirmValue.enabled && confirmValue.payload === button.id
       ? button.confirmIcon || 'error'
       : button.icon;
   }
 
   public getButtonAriaLabel(button: ToolbarButtonConfig): string {
-    return this.isConfirming(button)
+    const confirmValue = this.confirmRequested$.getValue();
+
+    return confirmValue.enabled && confirmValue.payload === button.id
       ? button.confirmAriaLabel || `Confirm ${button.ariaLabel.toLowerCase()}`
       : button.ariaLabel;
   }
 
   public getButtonTooltip(button: ToolbarButtonConfig): string {
-    return this.isConfirming(button)
+    const confirmValue = this.confirmRequested$.getValue();
+
+    return confirmValue.enabled && confirmValue.payload === button.id
       ? button.confirmTooltip || 'Click again to confirm'
       : button.tooltip;
   }
 
   public onButtonClick(button: ToolbarButtonConfig) {
-    if (button.twoSteps && !this.isConfirming(button)) {
+    const confirmValue = this.confirmRequested$.getValue();
+
+    if (
+      button.twoSteps &&
+      !(confirmValue.enabled && confirmValue.payload === button.id)
+    ) {
       this.confirmRequested$.readValue(button.id);
 
       return;

@@ -328,7 +328,7 @@ class Utils {
   public async ctrlSelect(
     element: ReturnType<WebdriverIO.Browser['$']>
   ): Promise<void> {
-    await browser.action('key').down(Key.Ctrl).perform();
+    await browser.action('key').down(Key.Ctrl).perform(true);
 
     try {
       await element.click();
