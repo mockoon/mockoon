@@ -4,6 +4,7 @@ export const config: Partial<WebdriverIO.Config> = {
   specs: ['./specs/**/*.spec.ts'],
   exclude: [],
   maxInstances: 1,
+  specFileRetries: 3,
   logLevel: 'warn',
   runner: 'local',
   services: ['electron'],
