@@ -1,3 +1,4 @@
+import { Key } from 'webdriverio';
 import { ToastTypes } from '../../src/renderer/app/models/toasts.model';
 import { SharedConfig } from '../../src/shared/shared-config';
 
@@ -318,6 +319,22 @@ class Utils {
 
   public async clickOutside() {
     await $('body').click({ x: 0, y: 0 });
+  }
+
+  /**
+   * Ctrl/Cmd-click an element to add/remove it from a multi-selection.
+   * WebdriverIO maps Key.Ctrl to the platform-specific modifier key.
+   */
+  public async ctrlSelect(
+    element: ReturnType<WebdriverIO.Browser['$']>
+  ): Promise<void> {
+    await browser.action('key').down(Key.Ctrl).perform();
+
+    try {
+      await element.click();
+    } finally {
+      await browser.action('key').up(Key.Ctrl).perform();
+    }
   }
 }
 

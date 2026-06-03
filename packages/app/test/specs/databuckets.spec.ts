@@ -422,3 +422,36 @@ describe('Databuckets selection in responses', () => {
     });
   });
 });
+
+describe('Databuckets toolbar batch actions', () => {
+  it('should require a second click to confirm batch delete', async () => {
+    await environments.localAdd('batch-toolbar-databuckets');
+    await navigation.switchView('ENV_DATABUCKETS');
+
+    let count = (
+      await $$('.databuckets-menu .menu-list .nav-item:not(.d-none)')
+    ).length;
+    while (count < 2) {
+      await databuckets.add();
+      count += 1;
+    }
+
+    await utils.ctrlSelect(
+      $('.databuckets-menu .menu-list .nav-item:nth-child(1) .nav-link')
+    );
+    await utils.ctrlSelect(
+      $('.databuckets-menu .menu-list .nav-item:nth-child(2) .nav-link')
+    );
+
+    await utils.assertElementText(
+      $('.databuckets-menu .toolbar span'),
+      '2 selected'
+    );
+
+    await $('#databuckets-batch-delete').click();
+    await databuckets.assertCount(count);
+
+    await $('#databuckets-batch-delete').click();
+    await databuckets.assertCount(count - 2);
+  });
+});

@@ -56,7 +56,13 @@ import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column
 import { ScrollWhenActiveDirective } from 'src/renderer/app/directives/scroll-to-active.directive';
 import { TourStepDirective } from 'src/renderer/app/directives/tour-step.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
-import { buildFullPath, textFilter } from 'src/renderer/app/libs/utils.lib';
+import {
+  buildFullPath,
+  buildSelectionRange,
+  getVisibleOrderedDatasetUuids,
+  textFilter,
+  toggleSelectionUuid
+} from 'src/renderer/app/libs/utils.lib';
 import {
   DuplicatedRoutesTypes,
   EnvironmentsStatuses
@@ -571,10 +577,7 @@ export class RoutesMenuComponent {
    * Add or remove a route from the multi-selection set.
    */
   public toggleRouteSelection(routeUUID: string) {
-    const current = this.selectedRoutes$.value;
-    const next = current.includes(routeUUID)
-      ? current.filter((uuid) => uuid !== routeUUID)
-      : [...current, routeUUID];
+    const next = toggleSelectionUuid(this.selectedRoutes$.value, routeUUID);
     this.selectedRoutes$.next(next);
 
     // Reset range anchor when the selection is fully cleared.
@@ -602,32 +605,25 @@ export class RoutesMenuComponent {
       this.lastClickedRouteUuid = anchorUuid;
     }
 
-    const startIdx = ordered.indexOf(anchorUuid);
-    const endIdx = ordered.indexOf(routeUUID);
+    const range = buildSelectionRange(
+      ordered,
+      this.selectedRoutes$.value,
+      anchorUuid,
+      routeUUID
+    );
 
-    if (startIdx === -1 || endIdx === -1) {
+    if (!range) {
       // Fallback: just toggle.
       this.toggleRouteSelection(routeUUID);
 
       return;
     }
 
-    const [from, to] =
-      startIdx <= endIdx ? [startIdx, endIdx] : [endIdx, startIdx];
-    const range = ordered.slice(from, to + 1);
-
-    if (
-      range.length === 1 &&
-      this.selectedRoutes$.value.length === 1 &&
-      this.selectedRoutes$.value[0] === range[0]
-    ) {
-      this.selectedRoutes$.next([]);
-      this.lastClickedRouteUuid = null;
-
-      return;
-    }
-
     this.selectedRoutes$.next(range);
+
+    if (range.length === 0) {
+      this.lastClickedRouteUuid = null;
+    }
   }
 
   /**
@@ -635,25 +631,11 @@ export class RoutesMenuComponent {
    * based on the rendered route rows.
    */
   private getVisibleOrderedRouteUuids(): string[] {
-    return this.routeRows()
-      .filter((rowRef) => !rowRef.nativeElement.closest('.d-none'))
-      .sort((a, b) => {
-        const relation = a.nativeElement.compareDocumentPosition(
-          b.nativeElement
-        );
-
-        if (relation === Node.DOCUMENT_POSITION_FOLLOWING) {
-          return -1;
-        }
-
-        if (relation === Node.DOCUMENT_POSITION_PRECEDING) {
-          return 1;
-        }
-
-        return 0;
-      })
-      .map((rowRef) => rowRef.nativeElement.dataset['routeUuid'])
-      .filter((uuid): uuid is string => !!uuid);
+    return getVisibleOrderedDatasetUuids(
+      this.routeRows(),
+      'routeUuid',
+      '.d-none'
+    );
   }
 
   /**

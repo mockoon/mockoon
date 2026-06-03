@@ -34,7 +34,12 @@ import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directiv
 import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
 import { ScrollWhenActiveDirective } from 'src/renderer/app/directives/scroll-to-active.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
-import { textFilter } from 'src/renderer/app/libs/utils.lib';
+import {
+  buildSelectionRange,
+  getVisibleOrderedDatasetUuids,
+  textFilter,
+  toggleSelectionUuid
+} from 'src/renderer/app/libs/utils.lib';
 import { ToolbarButtonConfig } from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { Store } from 'src/renderer/app/stores/store';
@@ -257,10 +262,10 @@ export class CallbacksMenuComponent implements OnInit {
   }
 
   public toggleCallbackSelection(callbackUUID: string) {
-    const current = this.selectedCallbacks$.value;
-    const next = current.includes(callbackUUID)
-      ? current.filter((uuid) => uuid !== callbackUUID)
-      : [...current, callbackUUID];
+    const next = toggleSelectionUuid(
+      this.selectedCallbacks$.value,
+      callbackUUID
+    );
     this.selectedCallbacks$.next(next);
 
     if (next.length === 0) {
@@ -273,52 +278,28 @@ export class CallbacksMenuComponent implements OnInit {
     const activeCallbackUUID = this.store.get('activeCallbackUUID');
     const anchorUuid =
       this.lastClickedCallbackUuid ?? activeCallbackUUID ?? callbackUUID;
-    const startIdx = ordered.indexOf(anchorUuid);
-    const endIdx = ordered.indexOf(callbackUUID);
+    const range = buildSelectionRange(
+      ordered,
+      this.selectedCallbacks$.value,
+      anchorUuid,
+      callbackUUID
+    );
 
-    if (startIdx === -1 || endIdx === -1) {
+    if (!range) {
       this.toggleCallbackSelection(callbackUUID);
 
       return;
     }
 
-    const [from, to] =
-      startIdx <= endIdx ? [startIdx, endIdx] : [endIdx, startIdx];
-    const range = ordered.slice(from, to + 1);
-
-    if (
-      range.length === 1 &&
-      this.selectedCallbacks$.value.length === 1 &&
-      this.selectedCallbacks$.value[0] === range[0]
-    ) {
-      this.selectedCallbacks$.next([]);
-      this.lastClickedCallbackUuid = null;
-
-      return;
-    }
-
     this.selectedCallbacks$.next(range);
+
+    if (range.length === 0) {
+      this.lastClickedCallbackUuid = null;
+    }
   }
 
   private getVisibleOrderedCallbackUuids(): string[] {
-    return [...this.callbackRows()]
-      .sort((a, b) => {
-        const relation = a.nativeElement.compareDocumentPosition(
-          b.nativeElement
-        );
-
-        if (relation === Node.DOCUMENT_POSITION_FOLLOWING) {
-          return -1;
-        }
-
-        if (relation === Node.DOCUMENT_POSITION_PRECEDING) {
-          return 1;
-        }
-
-        return 0;
-      })
-      .map((rowRef) => rowRef.nativeElement.dataset['callbackUuid'])
-      .filter((uuid): uuid is string => !!uuid);
+    return getVisibleOrderedDatasetUuids(this.callbackRows(), 'callbackUuid');
   }
 
   public clearSelection() {

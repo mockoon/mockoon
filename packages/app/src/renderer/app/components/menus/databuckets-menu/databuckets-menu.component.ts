@@ -36,7 +36,12 @@ import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directiv
 import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
 import { ScrollWhenActiveDirective } from 'src/renderer/app/directives/scroll-to-active.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
-import { textFilter } from 'src/renderer/app/libs/utils.lib';
+import {
+  buildSelectionRange,
+  getVisibleOrderedDatasetUuids,
+  textFilter,
+  toggleSelectionUuid
+} from 'src/renderer/app/libs/utils.lib';
 import { ToolbarButtonConfig } from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
@@ -277,10 +282,10 @@ export class DatabucketsMenuComponent implements OnInit {
   }
 
   public toggleDatabucketSelection(databucketUUID: string) {
-    const current = this.selectedDatabuckets$.value;
-    const next = current.includes(databucketUUID)
-      ? current.filter((uuid) => uuid !== databucketUUID)
-      : [...current, databucketUUID];
+    const next = toggleSelectionUuid(
+      this.selectedDatabuckets$.value,
+      databucketUUID
+    );
     this.selectedDatabuckets$.next(next);
 
     if (next.length === 0) {
@@ -293,52 +298,31 @@ export class DatabucketsMenuComponent implements OnInit {
     const activeDatabucketUUID = this.store.get('activeDatabucketUUID');
     const anchorUuid =
       this.lastClickedDatabucketUuid ?? activeDatabucketUUID ?? databucketUUID;
-    const startIdx = ordered.indexOf(anchorUuid);
-    const endIdx = ordered.indexOf(databucketUUID);
+    const range = buildSelectionRange(
+      ordered,
+      this.selectedDatabuckets$.value,
+      anchorUuid,
+      databucketUUID
+    );
 
-    if (startIdx === -1 || endIdx === -1) {
+    if (!range) {
       this.toggleDatabucketSelection(databucketUUID);
 
       return;
     }
 
-    const [from, to] =
-      startIdx <= endIdx ? [startIdx, endIdx] : [endIdx, startIdx];
-    const range = ordered.slice(from, to + 1);
-
-    if (
-      range.length === 1 &&
-      this.selectedDatabuckets$.value.length === 1 &&
-      this.selectedDatabuckets$.value[0] === range[0]
-    ) {
-      this.selectedDatabuckets$.next([]);
-      this.lastClickedDatabucketUuid = null;
-
-      return;
-    }
-
     this.selectedDatabuckets$.next(range);
+
+    if (range.length === 0) {
+      this.lastClickedDatabucketUuid = null;
+    }
   }
 
   private getVisibleOrderedDatabucketUuids(): string[] {
-    return [...this.databucketRows()]
-      .sort((a, b) => {
-        const relation = a.nativeElement.compareDocumentPosition(
-          b.nativeElement
-        );
-
-        if (relation === Node.DOCUMENT_POSITION_FOLLOWING) {
-          return -1;
-        }
-
-        if (relation === Node.DOCUMENT_POSITION_PRECEDING) {
-          return 1;
-        }
-
-        return 0;
-      })
-      .map((rowRef) => rowRef.nativeElement.dataset['databucketUuid'])
-      .filter((uuid): uuid is string => !!uuid);
+    return getVisibleOrderedDatasetUuids(
+      this.databucketRows(),
+      'databucketUuid'
+    );
   }
 
   public clearSelection() {

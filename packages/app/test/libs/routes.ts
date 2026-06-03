@@ -5,7 +5,6 @@ import {
   ResponseRuleOperators,
   ResponseRuleTargets
 } from '@mockoon/commons';
-import { Key } from 'webdriverio';
 import { TabsNameType } from '../../src/renderer/app/models/store.model';
 import utils, {
   DropdownMenuFolderActions,
@@ -340,13 +339,7 @@ class Routes {
    */
   public async ctrlSelect(index: number): Promise<void> {
     const item = await this.getMenuItem(index);
-    await browser.action('key').down(Key.Ctrl).perform();
-
-    try {
-      await item.click();
-    } finally {
-      await browser.action('key').up(Key.Ctrl).perform();
-    }
+    await utils.ctrlSelect(item);
   }
 
   public async assertBatchSelectionCount(expected: number): Promise<void> {
