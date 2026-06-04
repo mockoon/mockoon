@@ -2,6 +2,8 @@
 @let settings = settings$ | async;
 @let activeCallback = activeCallback$ | async;
 @let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
+@let selectedCallbacks = (selectedCallbacks$ | async) ?? [];
+@let hasSelection = selectedCallbacks.length > 0;
 
 <div class="callbacks-menu d-flex flex-column h-100">
   <div class="d-flex w-100 py-2 align-items-center">
@@ -16,13 +18,23 @@
         <app-svg icon="add_box" />
       </button>
     </div>
-    <div class="flex-grow-1">
+    <div class="flex-grow-1 me-2">
       <app-filter
         filterName="callbacks"
         [focusableInput]="focusableInputs.CALLBACK_FILTER"
       />
     </div>
   </div>
+
+  @if (hasSelection) {
+    <app-action-toolbar
+      class="mb-2 mx-2"
+      [count]="selectedCallbacks.length"
+      ariaLabel="Batch actions"
+      [buttons]="getToolbarButtons()"
+      (buttonClicked)="onToolbarAction($event)"
+    />
+  }
 
   @if (callbackList) {
     <ul class="nav flex-column menu-list h-100">
@@ -39,13 +51,38 @@
           (dropped)="reorderCallbacks($event)"
         >
           <a
+            #callbackRow
             class="nav-link d-flex pe-0 hover-parent"
+            [attr.data-callback-uuid]="callback.uuid"
             [class]="{
-              active: activeCallback?.uuid === callback.uuid
+              active: activeCallback?.uuid === callback.uuid,
+              selected: selectedCallbacks.includes(callback.uuid)
             }"
             appScrollWhenActive
-            (click)="selectCallback(callback.uuid)"
+            (click)="selectCallback(callback.uuid, $event)"
           >
+            @if (hasSelection) {
+              <div
+                class="callback-select-checkbox pe-3 d-flex align-items-center"
+                (click)="
+                  $event.stopPropagation();
+                  toggleCallbackSelection(callback.uuid)
+                "
+              >
+                <input
+                  type="checkbox"
+                  class="form-check-input m-0"
+                  [attr.aria-label]="
+                    selectedCallbacks.includes(callback.uuid)
+                      ? 'Deselect callback ' + callback.name
+                      : 'Select callback ' + callback.name
+                  "
+                  [checked]="selectedCallbacks.includes(callback.uuid)"
+                  (click)="$event.stopPropagation()"
+                  (change)="toggleCallbackSelection(callback.uuid)"
+                />
+              </div>
+            }
             <!-- mw0 is important for proper text truncation -->
             <div class="d-flex flex-column mw0">
               @if (settings) {

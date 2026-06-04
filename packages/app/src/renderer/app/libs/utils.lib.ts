@@ -254,6 +254,83 @@ export const textFilter = (text: string, search: string) => {
     );
 };
 
+type ElementRefLike = { nativeElement: HTMLElement };
+
+/**
+ * Toggle a UUID in a selection list.
+ */
+export const toggleSelectionUuid = (
+  currentSelection: string[],
+  uuid: string
+): string[] =>
+  currentSelection.includes(uuid)
+    ? currentSelection.filter((currentUuid) => currentUuid !== uuid)
+    : [...currentSelection, uuid];
+
+/**
+ * Compute the selected range between anchor and target UUID (inclusive).
+ * Returns null when either UUID is missing from the ordered list.
+ */
+export const buildSelectionRange = (
+  orderedUuids: string[],
+  currentSelection: string[],
+  anchorUuid: string,
+  targetUuid: string
+): string[] | null => {
+  const startIdx = orderedUuids.indexOf(anchorUuid);
+  const endIdx = orderedUuids.indexOf(targetUuid);
+
+  if (startIdx === -1 || endIdx === -1) {
+    return null;
+  }
+
+  const [from, to] =
+    startIdx <= endIdx ? [startIdx, endIdx] : [endIdx, startIdx];
+  const range = orderedUuids.slice(from, to + 1);
+
+  if (
+    range.length === 1 &&
+    currentSelection.length === 1 &&
+    currentSelection[0] === range[0]
+  ) {
+    return [];
+  }
+
+  return range;
+};
+
+/**
+ * Extract dataset UUIDs from rendered rows in current DOM order.
+ */
+export const getVisibleOrderedDatasetUuids = (
+  rowRefs: readonly ElementRefLike[],
+  datasetKey: string,
+  hiddenContainerSelector?: string
+): string[] => {
+  const visibleRows = hiddenContainerSelector
+    ? rowRefs.filter(
+        (rowRef) => !rowRef.nativeElement.closest(hiddenContainerSelector)
+      )
+    : rowRefs;
+
+  return [...visibleRows]
+    .sort((a, b) => {
+      const relation = a.nativeElement.compareDocumentPosition(b.nativeElement);
+
+      if (relation === Node.DOCUMENT_POSITION_FOLLOWING) {
+        return -1;
+      }
+
+      if (relation === Node.DOCUMENT_POSITION_PRECEDING) {
+        return 1;
+      }
+
+      return 0;
+    })
+    .map((rowRef) => rowRef.nativeElement.dataset[datasetKey])
+    .filter((uuid): uuid is string => !!uuid);
+};
+
 export type DeepPartial<T> = T extends object
   ? {
       [P in keyof T]?: DeepPartial<T[P]>;

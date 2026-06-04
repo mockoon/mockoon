@@ -4,6 +4,8 @@
 @let databucketList = databucketList$ | async;
 @let settings = settings$ | async;
 @let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
+@let selectedDatabuckets = (selectedDatabuckets$ | async) ?? [];
+@let hasSelection = selectedDatabuckets.length > 0;
 
 @if (activeEnvironment) {
   <div class="databuckets-menu d-flex flex-column h-100">
@@ -19,13 +21,23 @@
           <app-svg icon="add_box" />
         </button>
       </div>
-      <div class="flex-grow-1">
+      <div class="flex-grow-1 me-2">
         <app-filter
           filterName="databuckets"
           [focusableInput]="focusableInputs.DATABUCKET_FILTER"
         />
       </div>
     </div>
+
+    @if (hasSelection) {
+      <app-action-toolbar
+        class="mb-2 mx-2"
+        [count]="selectedDatabuckets.length"
+        ariaLabel="Batch actions"
+        [buttons]="getToolbarButtons()"
+        (buttonClicked)="onToolbarAction($event)"
+      />
+    }
 
     @if (databucketList) {
       <ul class="nav flex-column menu-list h-100">
@@ -42,13 +54,38 @@
             (dropped)="reorganizeDatabuckets($event)"
           >
             <a
+              #databucketRow
               class="nav-link d-flex pe-0 hover-parent"
+              [attr.data-databucket-uuid]="databucket.uuid"
               [class]="{
-                active: activeDatabucket?.uuid === databucket.uuid
+                active: activeDatabucket?.uuid === databucket.uuid,
+                selected: selectedDatabuckets.includes(databucket.uuid)
               }"
               appScrollWhenActive
-              (click)="selectDatabucket(databucket.uuid)"
+              (click)="selectDatabucket(databucket.uuid, $event)"
             >
+              @if (hasSelection) {
+                <div
+                  class="databucket-select-checkbox pe-3 d-flex align-items-center"
+                  (click)="
+                    $event.stopPropagation();
+                    toggleDatabucketSelection(databucket.uuid)
+                  "
+                >
+                  <input
+                    type="checkbox"
+                    class="form-check-input m-0"
+                    [attr.aria-label]="
+                      selectedDatabuckets.includes(databucket.uuid)
+                        ? 'Deselect data bucket ' + databucket.name
+                        : 'Select data bucket ' + databucket.name
+                    "
+                    [checked]="selectedDatabuckets.includes(databucket.uuid)"
+                    (click)="$event.stopPropagation()"
+                    (change)="toggleDatabucketSelection(databucket.uuid)"
+                  />
+                </div>
+              }
               <!-- mw0 is important for proper text truncation -->
               <div class="d-flex flex-column mw0">
                 @if (settings) {

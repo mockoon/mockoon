@@ -66,8 +66,11 @@ export type UIState = {
 
 export type DuplicateEntityToAnotherEnvironment = {
   moving: boolean;
-  subject?: Omit<DataSubject, 'environment'>;
-  subjectUUID?: string;
+  subject?: Omit<DataSubject, 'environment' | 'folder'>;
+  // UUIDs of the entities to duplicate. Always an array; contains a single
+  // element for the standard single-entity flow, multiple for batch flows
+  // (currently only supported for routes).
+  subjectUuids?: string[];
   targetEnvironmentUUID?: string;
 };
 

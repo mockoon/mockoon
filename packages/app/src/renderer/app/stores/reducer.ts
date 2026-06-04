@@ -1587,7 +1587,7 @@ export const environmentReducer = (
         duplicateEntityToAnotherEnvironment: {
           moving: true,
           subject: action.subject,
-          subjectUUID: action.subjectUUID
+          subjectUuids: action.subjectUuids
         }
       };
       break;

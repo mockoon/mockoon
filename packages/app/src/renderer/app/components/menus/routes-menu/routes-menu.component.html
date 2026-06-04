@@ -8,6 +8,8 @@
 @let isActiveEnvironmentCloud = isActiveEnvironmentCloud$ | async;
 @let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
 @let dragEnabled = dragEnabled$ | async;
+@let selectedRoutes = (selectedRoutes$ | async) ?? [];
+@let hasSelection = selectedRoutes.length > 0;
 
 <div
   class="routes-menu d-flex flex-column h-100"
@@ -44,13 +46,23 @@
       </div>
     </div>
 
-    <div class="flex-grow-1">
+    <div class="flex-grow-1 me-2">
       <app-filter
         filterName="routes"
         [focusableInput]="focusableInputs.ROUTE_FILTER"
       />
     </div>
   </div>
+
+  @if (hasSelection) {
+    <app-action-toolbar
+      class="mb-2 mx-2"
+      [count]="selectedRoutes.length"
+      ariaLabel="Batch actions"
+      [buttons]="getToolbarButtons()"
+      (buttonClicked)="onToolbarAction($event)"
+    />
+  }
 
   @defer {
     @let rootFolder = rootFolder$ | async;
@@ -220,17 +232,41 @@
       >
         <!-- Calculate padding of 2 rem + 0.5 (gap between the folder icon and folder name) -->
         <a
+          #routeRow
           class="nav-link d-flex pe-0 hover-parent"
+          [attr.data-route-uuid]="route.uuid"
           [style]="{
             'padding-left': `${routesFilter || !level ? undefined : level * 2 + 0.5}rem`
           }"
           [class]="{
             active: activeRoute?.uuid === route.uuid,
-            'route-disabled': disabledRoutes.includes(route.uuid)
+            'route-disabled': disabledRoutes.includes(route.uuid),
+            selected: selectedRoutes.includes(route.uuid)
           }"
           appScrollWhenActive
-          (click)="selectRoute(route.uuid)"
+          (click)="selectRoute(route.uuid, $event)"
         >
+          @if (hasSelection) {
+            <div
+              class="route-select-checkbox pe-3 d-flex align-items-center"
+              (click)="
+                $event.stopPropagation(); toggleRouteSelection(route.uuid)
+              "
+            >
+              <input
+                type="checkbox"
+                class="form-check-input m-0"
+                [attr.aria-label]="
+                  selectedRoutes.includes(route.uuid)
+                    ? 'Deselect route /' + route.endpoint
+                    : 'Select route /' + route.endpoint
+                "
+                [checked]="selectedRoutes.includes(route.uuid)"
+                (click)="$event.stopPropagation()"
+                (change)="toggleRouteSelection(route.uuid)"
+              />
+            </div>
+          }
           <!-- mw0 is important for proper text truncation -->
           <div class="d-flex flex-column mw0">
             <div

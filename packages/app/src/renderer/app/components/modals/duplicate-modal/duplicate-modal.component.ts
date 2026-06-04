@@ -1,15 +1,8 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
-import { Callback, DataBucket, Environment, Route } from '@mockoon/commons';
-import { combineLatest, Observable, Subscription } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
-import { DataSubject } from 'src/renderer/app/models/data.model';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Environment } from '@mockoon/commons';
+import { combineLatest, Observable } from 'rxjs';
+import { filter, map, tap } from 'rxjs/operators';
 import { DuplicateEntityToAnotherEnvironment } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -22,7 +15,7 @@ import { Store } from 'src/renderer/app/stores/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [AsyncPipe]
 })
-export class DuplicateModalComponent implements OnInit, OnDestroy {
+export class DuplicateModalComponent {
   private uiService = inject(UIService);
   private store = inject(Store);
   private environmentsService = inject(EnvironmentsService);
@@ -57,39 +50,20 @@ export class DuplicateModalComponent implements OnInit, OnDestroy {
         )
     )
   );
-  public entityInformation: {
-    displayName: string;
-    subject: Omit<DataSubject, 'environment'>;
-    uuid: string;
-  } = {
-    displayName: '',
-    subject: '',
-    uuid: ''
-  };
-
-  private entityDuplicationState$ = this.store.select(
-    'duplicateEntityToAnotherEnvironment'
-  );
-
-  private entityDuplicationSubscription: Subscription;
-
-  private get activeEnvironment() {
-    return this.store.getActiveEnvironment();
-  }
-
-  ngOnInit() {
-    this.entityDuplicationSubscription = this.entityDuplicationState$.subscribe(
-      (state: DuplicateEntityToAnotherEnvironment) => {
+  public entityDuplicationState$ = this.store
+    .select('duplicateEntityToAnotherEnvironment')
+    .pipe(
+      tap((state: DuplicateEntityToAnotherEnvironment) => {
         if (state.moving) {
-          this.extractEntityToDuplicate(state);
+          if (!state.subjectUuids || state.subjectUuids.length === 0) {
+            this.store.update(
+              cancelEntityDuplicationToAnotherEnvironmentAction()
+            );
+            this.uiService.closeModal('duplicate_to_environment', false);
+          }
         }
-      }
+      })
     );
-  }
-
-  ngOnDestroy() {
-    this.entityDuplicationSubscription.unsubscribe();
-  }
 
   public close() {
     this.uiService.closeModal('duplicate_to_environment', false);
@@ -97,63 +71,28 @@ export class DuplicateModalComponent implements OnInit, OnDestroy {
 
   public chooseTargetEnvironment(
     targetEnvironment: Environment,
-    entityInformation: {
-      displayName: string;
-      subject: Omit<DataSubject, 'environment'>;
-      uuid: string;
-    }
+    state: DuplicateEntityToAnotherEnvironment
   ) {
-    if (entityInformation.subject === 'route') {
-      this.environmentsService.duplicateRouteInAnotherEnvironment(
-        this.entityInformation.uuid,
-        targetEnvironment.uuid
-      );
-    } else if (entityInformation.subject === 'databucket') {
-      this.environmentsService.duplicateDatabucketInAnotherEnvironment(
-        this.entityInformation.uuid,
-        targetEnvironment.uuid
-      );
-    } else if (entityInformation.subject === 'callback') {
-      this.environmentsService.duplicateCallbackInAnotherEnvironment(
-        this.entityInformation.uuid,
-        targetEnvironment.uuid
-      );
+    for (const uuid of state.subjectUuids) {
+      if (state.subject === 'route') {
+        this.environmentsService.duplicateRouteInAnotherEnvironment(
+          uuid,
+          targetEnvironment.uuid
+        );
+      } else if (state.subject === 'databucket') {
+        this.environmentsService.duplicateDatabucketInAnotherEnvironment(
+          uuid,
+          targetEnvironment.uuid
+        );
+      } else if (state.subject === 'callback') {
+        this.environmentsService.duplicateCallbackInAnotherEnvironment(
+          uuid,
+          targetEnvironment.uuid
+        );
+      }
     }
 
     this.store.update(cancelEntityDuplicationToAnotherEnvironmentAction());
     this.uiService.closeModal('duplicate_to_environment');
-  }
-
-  private extractEntityToDuplicate(state: DuplicateEntityToAnotherEnvironment) {
-    if (state.subject === 'route') {
-      const entityToDuplicate = this.activeEnvironment.routes.find(
-        (route: Route) => route.uuid === state.subjectUUID
-      );
-      this.entityInformation = {
-        displayName: `${entityToDuplicate.method.toUpperCase()} /${
-          entityToDuplicate.endpoint
-        }`,
-        subject: state.subject,
-        uuid: entityToDuplicate.uuid
-      };
-    } else if (state.subject === 'databucket') {
-      const entityToDuplicate = this.activeEnvironment.data.find(
-        (databucket: DataBucket) => databucket.uuid === state.subjectUUID
-      );
-      this.entityInformation = {
-        displayName: entityToDuplicate.name,
-        subject: state.subject,
-        uuid: entityToDuplicate.uuid
-      };
-    } else if (state.subject === 'callback') {
-      const entityToDuplicate = this.activeEnvironment.callbacks.find(
-        (cb: Callback) => cb.uuid === state.subjectUUID
-      );
-      this.entityInformation = {
-        displayName: entityToDuplicate.name,
-        subject: state.subject,
-        uuid: entityToDuplicate.uuid
-      };
-    }
   }
 }

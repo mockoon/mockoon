@@ -1,4 +1,5 @@
 import { Observable, Subject } from 'rxjs';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 
 export type DragState = {
   // id of the dragged element (UUID or index)
@@ -42,4 +43,19 @@ export type OpenApiImportModalPayload = {
   cloud: boolean;
   mode: OpenApiImportMode;
   environmentUuid?: string;
+};
+
+export type ToolbarButtonConfig = {
+  id: string;
+  action: string;
+  icon: SvgComponent['icon'];
+  ariaLabel: string;
+  tooltip: string;
+  disabled?: boolean;
+  disabled$?: Observable<boolean>;
+  twoSteps?: boolean;
+  confirmIcon?: SvgComponent['icon'];
+  confirmAriaLabel?: string;
+  confirmTooltip?: string;
+  danger?: boolean;
 };

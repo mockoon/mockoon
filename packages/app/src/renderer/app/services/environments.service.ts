@@ -2264,14 +2264,15 @@ export class EnvironmentsService {
   }
 
   /**
-   * Sends an event for further process of entity movement
+   * Sends an event for further process of entity movement. Accepts one or
+   * more entity UUIDs
    */
   public startEntityDuplicationToAnotherEnvironment(
-    subjectUUID: string,
-    subject: DataSubject
+    subject: DataSubject,
+    subjectUuids: string[]
   ) {
     this.store.update(
-      startEntityDuplicationToAnotherEnvironmentAction(subjectUUID, subject)
+      startEntityDuplicationToAnotherEnvironmentAction(subject, subjectUuids)
     );
 
     this.uiService.openModal('duplicate_to_environment');
