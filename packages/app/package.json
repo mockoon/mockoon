@@ -96,7 +96,7 @@
     "ngx-markdown": "21.1.0",
     "ngx-mask": "21.0.1",
     "rxjs": "7.8.2",
-    "ts-loader": "9.5.4",
+    "ts-loader": "9.6.0",
     "ts-node": "10.9.2",
     "tsconfig-paths": "4.2.0",
     "tslib": "2.8.1",
