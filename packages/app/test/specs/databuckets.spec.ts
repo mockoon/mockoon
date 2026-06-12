@@ -390,6 +390,9 @@ describe('Databuckets selection in responses', () => {
   it('should be able to purge databuckets state with admin endpoint', async () => {
     await environments.stop();
     await environments.start();
+
+    const adminApiAuthToken = await environments.getEnvironmentAdminApiToken();
+
     await http.assertCall({
       method: 'GET',
       path: '/databucketWithReqHelper?param=testvalue1',
@@ -403,7 +406,10 @@ describe('Databuckets selection in responses', () => {
 
     await http.assertCall({
       method: 'PURGE',
-      path: '/mockoon-admin/state'
+      path: '/mockoon-admin/state',
+      headers: {
+        Authorization: `Bearer ${adminApiAuthToken}`
+      }
     });
     await http.assertCall({
       method: 'GET',
@@ -413,7 +419,10 @@ describe('Databuckets selection in responses', () => {
 
     await http.assertCall({
       method: 'POST',
-      path: '/mockoon-admin/state/purge'
+      path: '/mockoon-admin/state/purge',
+      headers: {
+        Authorization: `Bearer ${adminApiAuthToken}`
+      }
     });
     await http.assertCall({
       method: 'GET',

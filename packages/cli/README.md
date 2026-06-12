@@ -155,6 +155,8 @@ The mocks will run by default on the ports and hostnames specified in the files.
 |-w, --watch | Watch local data file(s) for changes and restart the server when a change is detected (watch is using polling, see `--polling-interval` flag below)|
 |--polling-interval | Local files watch polling interval in milliseconds (default: 2000)|
 |--disable-admin-api | Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)|
+|--admin-api-token | Admin API bearer token(s). Provide once to reuse for all environments, or multiple times (or comma-separated) to set one token per environment. Can also be set with `MOCKOON_ADMIN_API_TOKEN`.|
+|--admin-api-cors-origin | Allowed CORS origin(s) for the admin API (e.g. 'https://app.example.com'). Provide multiple times or comma-separated for multiple origins. Use '\*' to explicitly opt into wildcard CORS. When omitted, no CORS headers are emitted on admin API responses. Can also be set with `MOCKOON_ADMIN_API_CORS_ORIGIN`.|
 |--disable-tls | Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/)|
 |--max-transaction-logs | Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100)|
 |--enable-random-latency | Randomize global and responses latencies between 0 and the specified value (default: false)|
@@ -180,7 +182,26 @@ $ mockoon-cli start --data cloud://def01727-aeb7-4cf1-9172-e0c38f22b224 --token 
 
 #### Admin API
 
-Each running mock API has an admin API enabled by default and available at `/mockoon-admin/`. This API allows you to interact with the running mock API, retrieve logs, and more. You can disable the admin API with the `--disable-admin-api` flag.
+Each running mock API has an admin API enabled by default and available at `/mockoon-admin/`. This API allows you to interact with the running mock API, retrieve logs, and more. You can disable it with the `--disable-admin-api` flag.
+
+When the admin API is enabled, bearer authentication is always enabled.
+
+You can provide the admin API token with `--admin-api-token` (or `MOCKOON_ADMIN_API_TOKEN`). If no token is provided, a secure token is auto-generated at startup and printed in the logs.
+
+- Provide one token to reuse it for all environments.
+- Provide one token per environment when starting multiple environments in one command.
+- Send the token with the `Authorization: Bearer <token>` header.
+
+By default, the admin API does not emit CORS headers, which prevents browser-based cross-origin requests. To allow specific origins (e.g. a frontend served from another domain), use `--admin-api-cors-origin` (or `MOCKOON_ADMIN_API_CORS_ORIGIN`):
+
+```bash
+$ mockoon-cli start --data ~/data.json --admin-api-cors-origin https://app.example.com
+$ mockoon-cli start --data ~/data.json --admin-api-cors-origin https://app.example.com https://admin.example.com
+```
+
+Only requests whose `Origin` header matches one of the allowed values receive CORS headers. Use `--admin-api-cors-origin "*"` to explicitly opt into wildcard CORS (not recommended for exposed instances).
+
+Transaction logs returned by the admin API (`GET /mockoon-admin/logs` and the SSE event stream) have known-sensitive headers redacted (`authorization`, `proxy-authorization`, `cookie`, `set-cookie`, `x-api-key`, `api-key`, `x-auth-token`). For `authorization` / `proxy-authorization`, the auth scheme is preserved (e.g. `Bearer [REDACTED]`). Request and response bodies are not modified.
 
 > 💡 To learn more about the admin API, check the [documentation](https://mockoon.com/docs/latest/admin-api/overview/).
 
@@ -194,6 +215,8 @@ Each running mock API has an admin API enabled by default and available at `/moc
 You can access environment variables in your routes' responses by using the [`{{getEnvVar 'VARIABLE_NAME'}}` templating helper](https://mockoon.com/docs/latest/variables/environment-variables/). By default, only the environment variables prefixed with `MOCKOON_` are available, for example, `MOCKOON_MY_VARIABLE`.
 
 You can customize the prefix with the `--env-vars-prefix` flag. For example, if you set `--env-vars-prefix CUSTOM_PREFIX_`, you will be able to access the environment variable `CUSTOM_PREFIX_MY_VARIABLE` in your routes' responses. To disable the prefix, set it to an empty string: `--env-vars-prefix ''` or `--env-vars-prefix=`.
+
+The prefix is also enforced when writing environment variables through the admin API: keys that do not start with the prefix are automatically prepended with it. When the prefix is empty, writes through the admin API are rejected to prevent arbitrary environment variable modifications (e.g. `PATH`, `NODE_OPTIONS`).
 
 #### Disabling routes
 
@@ -440,6 +463,8 @@ As the CLI is running in the foreground, logs are also sent to stdout (console).
 ### Transaction logging
 
 When using the `--log-transaction` flag, logs will contain the full transaction (request and response) with the same information you can see in the desktop application "Logs" tab.
+
+Known-sensitive header values (`authorization`, `proxy-authorization`, `cookie`, `set-cookie`, `x-api-key`, `api-key`, `x-auth-token`) are replaced with `[REDACTED]` in both the CLI transaction logs and the admin API responses. For `authorization` / `proxy-authorization`, the auth scheme is preserved (e.g. `Bearer [REDACTED]`). Request and response bodies are not modified.
 
 Example:
 

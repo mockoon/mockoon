@@ -12,8 +12,13 @@ import {
 import { RequestListener } from 'http';
 import ServerlessHttp from 'serverless-http';
 
+type ServerlessOptions = Partial<ServerOptions> & {
+  logTransaction: boolean;
+  adminApiAuthToken?: string;
+};
+
 export class MockoonServerless {
-  private options: Partial<ServerOptions> & { logTransaction: boolean } = {
+  private options: ServerlessOptions = {
     logTransaction: false,
     disabledRoutes: [],
     fakerOptions: {},
@@ -37,6 +42,15 @@ export class MockoonServerless {
       ...this.options,
       ...options
     };
+
+    this.options.adminApiAuthToken =
+      this.options.adminApiAuthToken ?? process.env['MOCKOON_ADMIN_API_TOKEN'];
+
+    if (this.options.enableAdminApi && !this.options.adminApiAuthToken) {
+      throw new Error(
+        'Admin API is enabled but no admin API token was provided. Set adminApiAuthToken or MOCKOON_ADMIN_API_TOKEN, or disable the admin API.'
+      );
+    }
   }
 
   /**
@@ -47,16 +61,19 @@ export class MockoonServerless {
    */
   public requestListener(): RequestListener {
     const logger = createLoggerInstance();
-    const server = new MockoonServer(this.environment, {
+    const serverOptions = {
       disabledRoutes: this.options.disabledRoutes,
       fakerOptions: this.options.fakerOptions,
       envVarsPrefix: this.options.envVarsPrefix,
       enableAdminApi: this.options.enableAdminApi,
+      adminApiAuthToken: this.options.adminApiAuthToken,
+      adminApiCorsOrigins: this.options.adminApiCorsOrigins,
       disableTls: this.options.disableTls,
       maxTransactionLogs: this.options.maxTransactionLogs,
       enableRandomLatency: this.options.enableRandomLatency,
       enableRouteMetadataHeaders: this.options.enableRouteMetadataHeaders
-    });
+    } as Partial<ServerOptions>;
+    const server = new MockoonServer(this.environment, serverOptions);
     listenServerEvents(
       server,
       this.environment,

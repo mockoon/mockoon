@@ -120,6 +120,20 @@ export type ServerOptions = {
   enableAdminApi: boolean;
 
   /**
+   * Bearer token required to access the admin API.
+   * If omitted, the runtime generates one automatically.
+   */
+  adminApiAuthToken?: string;
+
+  /**
+   * Explicit list of allowed CORS origins for the admin API (e.g. ['https://app.example.com']).
+   * - When empty/undefined, no CORS headers are emitted (default-deny browser cross-origin requests).
+   * - When a request's `Origin` header matches one of the entries, the origin is echoed back.
+   * - To explicitly opt into wildcard CORS, include `'*'` in the list.
+   */
+  adminApiCorsOrigins?: string[];
+
+  /**
    * Disable TLS
    */
   disableTls: boolean;

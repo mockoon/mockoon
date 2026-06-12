@@ -183,6 +183,27 @@ export const generateUUID = (): string =>
     : require('crypto').randomUUID();
 
 /**
+ * Generate a cryptographically secure random token encoded in hexadecimal.
+ */
+export const generateSecureToken = (byteLength = 32): string => {
+  const effectiveByteLength = Math.max(1, Math.floor(byteLength));
+
+  const cryptoLib =
+    globalThis.crypto ?? require('crypto').webcrypto ?? undefined;
+
+  if (!cryptoLib) {
+    return require('crypto').randomBytes(effectiveByteLength).toString('hex');
+  }
+
+  const randomBytes = new Uint8Array(effectiveByteLength);
+  cryptoLib.getRandomValues(randomBytes);
+
+  return Array.from(randomBytes, (byte) =>
+    byte.toString(16).padStart(2, '0')
+  ).join('');
+};
+
+/**
  * Return a random integer
  *
  * @param a
@@ -513,4 +534,17 @@ export const pathMatchErrorBuilder = (error: unknown) => {
     name: 'Error',
     message: 'Invalid route path'
   };
+};
+
+/**
+ * Extract a Bearer token from an Authorization header.
+ * Returns undefined when the header is not a Bearer scheme or token is empty.
+ */
+export const extractBearerToken = (
+  authorizationHeader: string | undefined
+): string | undefined => {
+  const headerValue = authorizationHeader ?? '';
+  const token = headerValue.replace(/^bearer\s+/i, '').trim();
+
+  return token !== headerValue.trim() && token ? token : undefined;
 };

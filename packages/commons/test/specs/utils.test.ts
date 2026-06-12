@@ -1,6 +1,33 @@
 import { strictEqual } from 'node:assert';
 import { describe, it } from 'node:test';
-import { express5PathConvert } from '../../src';
+import { express5PathConvert, generateSecureToken } from '../../src';
+
+describe('generateSecureToken', () => {
+  it('should generate a 64-char hex token by default', () => {
+    const token = generateSecureToken();
+
+    strictEqual(token.length, 64);
+    strictEqual(/^[0-9a-f]+$/.test(token), true);
+  });
+
+  it('should generate a token with 2 hex chars per byte', () => {
+    const token = generateSecureToken(16);
+
+    strictEqual(token.length, 32);
+    strictEqual(/^[0-9a-f]+$/.test(token), true);
+  });
+
+  it('should floor non-integer byte lengths', () => {
+    const token = generateSecureToken(5.9);
+
+    strictEqual(token.length, 10);
+  });
+
+  it('should enforce a minimum of one byte', () => {
+    strictEqual(generateSecureToken(0).length, 2);
+    strictEqual(generateSecureToken(-42).length, 2);
+  });
+});
 
 describe('express5PathConvert', () => {
   it('should name unnamed wildcards', () => {

@@ -18,6 +18,7 @@ import { InputNumberDirective } from 'src/renderer/app/directives/input-number.d
 import { ValidPathDirective } from 'src/renderer/app/directives/valid-path.directive';
 import { buildApiUrl } from 'src/renderer/app/libs/utils.lib';
 import { ToggleItems } from 'src/renderer/app/models/common.model';
+import { EnvironmentStatus } from 'src/renderer/app/models/store.model';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { Store } from 'src/renderer/app/stores/store';
@@ -46,8 +47,10 @@ export class EnvironmentSettingsComponent {
   private dialogsService = inject(DialogsService);
   public activeEnvironment$: Observable<Environment>;
   public instanceUrl$: Observable<string>;
+  public activeEnvironmentStatus$: Observable<EnvironmentStatus>;
   public activeEnvironmentForm: UntypedFormGroup;
   public Infinity = Infinity;
+  public adminApiDocsUrl = Config.docs.adminApi;
   public certTypes: ToggleItems = [
     {
       value: 'CERT',
@@ -88,6 +91,8 @@ export class EnvironmentSettingsComponent {
         return this.isWeb ? urls.webUrl : urls.localUrl;
       })
     );
+
+    this.activeEnvironmentStatus$ = this.store.selectActiveEnvironmentStatus();
 
     this.activeEnvironmentForm = this.formBuilder.group({
       name: [EnvironmentDefault.name],
@@ -165,5 +170,9 @@ export class EnvironmentSettingsComponent {
         })
       )
       .subscribe();
+  }
+
+  public copyAdminApiToken(token: string) {
+    navigator.clipboard.writeText(token);
   }
 }
