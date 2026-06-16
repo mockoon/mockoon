@@ -379,7 +379,7 @@ All of `mockoon-cli start` flags (`--port`, etc.) must be provided when running 
 
 To load the Mockoon data, you can either mount a local data file and pass `mockoon-cli start` flags at the end of the command:
 
-`docker run -d --mount type=bind,source=/home/your-data-file.json,target=/data,readonly -p 3000:3000 mockoon/cli:latest --data data --port 3000`
+`docker run -d --mount type=bind,source=/home/your-data-file.json,target=/home/mockoon/data/your-data-file.json,readonly -p 3000:3000 mockoon/cli:latest --data /home/mockoon/data/your-data-file.json --port 3000`
 
 Or directly pass a URL to the `mockoon-cli start` command, without mounting a local data file:
 
@@ -394,7 +394,7 @@ You can also use `docker-compose` with a `docker-compose.yml` file:
 ```
 mock-server:
   image: mockoon/cli:latest
-  command: ["--data", "data", "--port", "3000"]
+  command: ["--data", "/home/mockoon/data/your-data-file.json", "--port", "3000"]
   healthcheck:
     test: ["CMD-SHELL", "curl -f http://localhost:3000/your-healthcheck-route || exit 1"]
     interval: 30s
@@ -402,7 +402,7 @@ mock-server:
     retries: 2
     start_period: 10s
   volumes:
-    - /home/your-data-file.json:/data:readonly
+    - /home/your-data-file.json:/home/mockoon/data/your-data-file.json:readonly
 ```
 
 > Please note that our [Docker image includes an `ENTRYPOINT`](https://github.com/mockoon/mockoon/blob/main/packages/cli/docker/Dockerfile#L16) that you may override or not. If you don't override it, and use Docker compose `command`, do not include `mockoon-cli start` as it is already included in the `ENTRYPOINT`.
