@@ -21,7 +21,18 @@
       "request": "attach",
       "name": "Desktop: Electron Renderer process",
       "port": 8888,
-      "webRoot": "${workspaceFolder}/packages/app"
+      "webRoot": "${workspaceFolder}/packages/app",
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "src/renderer/*": "${workspaceFolder}/packages/app/src/renderer/*",
+        "./src/renderer/*": "${workspaceFolder}/packages/app/src/renderer/*",
+        "webpack:///./*": "${workspaceFolder}/*",
+        "webpack:///*": "${workspaceFolder}/*"
+      },
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
+        "!**/node_modules/**"
+      ]
     },
     {
       "type": "node",

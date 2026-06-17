@@ -428,9 +428,8 @@ describe('Databuckets toolbar batch actions', () => {
     await environments.localAdd('batch-toolbar-databuckets');
     await navigation.switchView('ENV_DATABUCKETS');
 
-    let count = (
-      await $$('.databuckets-menu .menu-list .nav-item:not(.d-none)')
-    ).length;
+    let count = await $$('.databuckets-menu .menu-list .nav-item:not(.d-none)')
+      .length;
     while (count < 2) {
       await databuckets.add();
       count += 1;
