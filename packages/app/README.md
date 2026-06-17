@@ -68,11 +68,25 @@ Mockoon is proudly **independent** and **open-source**, maintained without exter
 ### Gold
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
+  <a href="https://9proxy.com/?utm_source=Github&utm_campaign=mockoon">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/9proxy.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/9proxy.png">
+      <img src="https://mockoon.com/images/sponsors/light/9proxy.png" alt="9proxy logo" />
+      </picture>
+  </a><br/><br/>
   <a href="https://coderabbit.link/mockoon">
       <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/coderabbit.png">
       <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/coderabbit.png">
       <img src="https://mockoon.com/images/sponsors/light/coderabbit.png" alt="CodeRabbit logo" />
+      </picture>
+  </a><br/><br/>
+  <a href="https://www.rapidproxy.io/?ref=mockoon">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/rapidproxy.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/rapidproxy.png">
+      <img src="https://mockoon.com/images/sponsors/light/rapidproxy.png" alt="Rapidproxy logo" />
       </picture>
   </a><br/><br/>
   <a href="https://talordata.com/?campaignid=rGAerPX1XrVAODD0&utm_source=mockoon&utm_term=mockoon">

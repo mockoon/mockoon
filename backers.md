@@ -39,6 +39,13 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 ### Gold
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
+  <a href="https://9proxy.com/?utm_source=Github&utm_campaign=mockoon">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/9proxy.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/9proxy.png">
+      <img src="https://mockoon.com/images/sponsors/light/9proxy.png" alt="9proxy logo" />
+      </picture>
+  </a><br/><br/>
   <a href="https://coderabbit.link/mockoon">
       <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/coderabbit.png">
@@ -74,6 +81,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 
 - 0xhexmeow
 - [0xhybrid](https://github.com/0xhybrid)
+- [9proxy](https://9proxy.com/?utm_source=Github&utm_campaign=mockoon)
 - Adam Recvlohe
 - Adialix
 - [affiliate.fm](https://affiliate.fm/)
