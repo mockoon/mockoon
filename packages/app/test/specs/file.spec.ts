@@ -48,7 +48,7 @@ describe('File serving', () => {
           status: 200,
           body: {
             contains:
-              'Error while serving the content: Access to relative path outside of the environment base directory'
+              'Error while serving the content: Access to relative path outside of the allowed base directory'
           }
         }
       });
