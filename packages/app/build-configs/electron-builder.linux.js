@@ -41,11 +41,8 @@ const config = Object.assign({}, commonConfig, {
     // Avoid /usr/lib/.build-id collisions with other Electron RPMs.
     fpm: ['--rpm-rpmbuild-define', '_build_id_links none']
   },
-  snapcraft: {
-    base: 'core24',
-    core24: {
-      confinement: 'strict'
-    }
+  snap: {
+    base: 'core22'
   }
 });
 
