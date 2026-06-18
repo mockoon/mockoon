@@ -3,6 +3,7 @@ import environments from '../libs/environments';
 import file from '../libs/file';
 import http from '../libs/http';
 import { HttpCall } from '../libs/models';
+import navigation from '../libs/navigation';
 import routes from '../libs/routes';
 import utils from '../libs/utils';
 
@@ -490,7 +491,7 @@ describe('Responses rules', () => {
       path: '/random-sequential',
       method: 'GET'
     };
-    const statuses = [];
+    const statuses: number[] = [];
 
     it('should enable random responses', async () => {
       await routes.select(4);
@@ -502,7 +503,7 @@ describe('Responses rules', () => {
       for (let calls = 0; calls < 20; calls++) {
         const response = await http.assertCall(testCase);
 
-        statuses.push(response.status);
+        statuses.push(response?.status ?? 0);
       }
 
       expect(statuses).toContain(201);
@@ -623,9 +624,16 @@ describe('Responses rules', () => {
     });
 
     it('should reset the state with the admin endpoint and get the first response again', async () => {
+      const adminApiAuthToken =
+        await environments.getEnvironmentAdminApiToken();
+      await navigation.switchView('ENV_ROUTES');
+
       await http.assertCall({
         path: '/mockoon-admin/state/purge',
-        method: 'POST'
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${adminApiAuthToken}`
+        }
       });
 
       await http.assertCall({

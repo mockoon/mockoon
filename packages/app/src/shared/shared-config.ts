@@ -30,6 +30,7 @@ export const SharedConfig = (options: {
     changelogMarkdownURL: `${options.websiteURL}desktop-changelogs-markdown/`,
     releasePublicURL: `${options.websiteURL}releases/`,
     docs: {
+      adminApi: `${docsUrl}admin-api/overview/`,
       templating: `${docsUrl}templating/overview/`,
       proxy: `${docsUrl}server-configuration/proxy-mode/`,
       cors: `${docsUrl}server-configuration/cors/`,

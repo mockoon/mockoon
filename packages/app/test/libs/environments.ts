@@ -1,6 +1,7 @@
 import { resolve } from 'path';
 import dialogs from '../libs/dialogs';
 import utils, { DropdownMenuEnvironmentActions } from '../libs/utils';
+import navigation from './navigation';
 
 class Environments {
   private activeMenuEntrySelector =
@@ -207,6 +208,12 @@ class Environments {
 
   public async assertStarted() {
     await this.runningEnvironmentMenuEntry.waitForExist();
+  }
+
+  public async getEnvironmentAdminApiToken(): Promise<string> {
+    await navigation.switchView('ENV_SETTINGS');
+
+    return await $('#env-settings-admin-api-token').getValue();
   }
 }
 

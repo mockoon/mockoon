@@ -148,6 +148,8 @@ The `MockoonServerless` class accepts an optional `options` object as a second p
 | `fakerOptions.seed`   | `number`   | `[]`          | Number for the Faker.js seed (e.g. 1234)                                                                                                                                                                  |
 | `envVarsPrefix`       | `string`   | `MOCKOON_`    | [Environment variables prefix](https://mockoon.com/docs/latest/variables/environment-variables/). Pass an empty string to disable it.                                                                     |
 | `enableAdminApi`      | `boolean`  | `true`        | Enable (default) or disable the [Admin API](https://mockoon.com/docs/latest/admin-api/overview/).                                                                                                         |
+| `adminApiAuthToken`   | `string`   | `undefined`   | Admin API bearer token. Required when `enableAdminApi` is `true` if `MOCKOON_ADMIN_API_TOKEN` is not set.                                                                                                 |
+| `adminApiCorsOrigins` | `string[]` | `undefined`   | Allowed CORS origins for the admin API (e.g. `['https://app.example.com']`). When omitted, no CORS headers are emitted on admin API responses. Include `'*'` to explicitly opt into wildcard CORS.        |
 | `disableTls`          | `boolean`  | `false`       | Disable TLS. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/).                                              |
 | `maxTransactionLogs`  | `number`   | `100`         | Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100).                                                                                                      |
 | `enableRandomLatency` | `boolean`  | `false`       | Randomize global and responses latencies between 0 and the specified value (default: false).                                                                                                              |
@@ -167,18 +169,37 @@ const mockoonServerless = new mockoon.MockoonServerless(mockEnv, {
   },
   envVarsPrefix: 'CUSTOM_PREFIX_',
   enableAdminApi: false,
+  adminApiAuthToken: 'my-token',
   disableTls: true,
   enableRandomLatency: false
 });
 ```
 
-#### Admin API
+### Admin API
 
-Each running mock API has an admin API enabled by default and available at `/mockoon-admin/`. This API allows you to interact with the running mock API, retrieve logs, and more. You can disable the admin API with the `enableAdminApi` option.
+Each running mock API has an admin API enabled by default and available at `/mockoon-admin/`. This API allows you to interact with the running mock API, retrieve logs, and more. You can disable it by setting `enableAdminApi: false` in the constructor options.
+
+When the admin API is enabled, bearer authentication is always enabled.
+
+You can provide the admin API token with `adminApiAuthToken` (or `MOCKOON_ADMIN_API_TOKEN`). When `enableAdminApi` is `true`, a token must be provided.
+
+Send the token with the `Authorization: Bearer <token>` header.
+
+By default, the admin API does not emit CORS headers, which prevents browser-based cross-origin requests. To allow specific origins, set `adminApiCorsOrigins`:
+
+```javascript
+const mockoonServerless = new mockoon.MockoonServerless(mockEnv, {
+  adminApiCorsOrigins: ['https://app.example.com']
+});
+```
+
+Only requests whose `Origin` header matches one of the allowed values receive CORS headers. Include `'*'` in the array to explicitly opt into wildcard CORS (not recommended for exposed instances).
+
+Transaction logs returned by the admin API (`GET /mockoon-admin/logs` and the SSE event stream) have known-sensitive headers redacted (`authorization`, `proxy-authorization`, `cookie`, `set-cookie`, `x-api-key`, `api-key`, `x-auth-token`). For `authorization` / `proxy-authorization`, the auth scheme is preserved (e.g. `Bearer [REDACTED]`). Request and response bodies are not modified.
 
 > 💡 To learn more about the admin API, check the [documentation](https://mockoon.com/docs/latest/admin-api/overview/).
 
-#### Faker.js options
+### Faker.js options
 
 - **Locale**: If not provided, Faker.js will use the default locale: `en`. For a list of currently supported locales, you can check the [supported locales list](https://github.com/mockoon/mockoon/blob/main/packages/commons/src/models/faker.model.ts#L1) in Mockoon's commons library. You can also check [Faker.js locales list](https://fakerjs.dev/guide/localization.html#available-locales) for more information (⚠️ Some locales may not yet be implemented in Mockoon).
 - **Seed**: If not provided, Faker.js will not use a seed. By providing a seed value, you can generate repeatable sequences of fake data. Using seeding will not always generate the same value but rather a predictable sequence.

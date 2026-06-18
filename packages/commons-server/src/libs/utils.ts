@@ -31,6 +31,96 @@ export { lookup as mimeTypeLookup } from 'mime-types';
 export { get as objectGetPath } from 'object-path';
 
 /**
+ * Header names whose values are redacted before transactions are exposed
+ * outside of the original process trust boundary.
+ *
+ * Applied to:
+ *  - Admin API output (SSE stream + GET /logs)
+ *  - CLI / serverless transaction logs (--log-transaction)
+ *
+ * NOT applied to:
+ *  - Desktop "Logs" tab (transactions reach the renderer through local IPC
+ *    and are only visible to the user running the app)
+ */
+const SENSITIVE_TRANSACTION_HEADERS = new Set([
+  'authorization',
+  'proxy-authorization',
+  'cookie',
+  'set-cookie',
+  'x-api-key',
+  'api-key',
+  'x-auth-token'
+]);
+
+const REDACTED_VALUE = '[REDACTED]';
+
+/**
+ * Headers whose value starts with an auth scheme (e.g. "Bearer xyz",
+ * "Basic xyz"). For these, the scheme is preserved and only the credential
+ * portion is redacted ("Bearer [REDACTED]"), which is useful for debugging
+ * client configuration without leaking the secret.
+ */
+const SCHEME_PRESERVING_HEADERS = new Set([
+  'authorization',
+  'proxy-authorization'
+]);
+
+const redactHeaderValue = (key: string, value: string): string => {
+  if (SCHEME_PRESERVING_HEADERS.has(key)) {
+    const [scheme, ...rest] = value.split(' ');
+
+    return rest.length === 0 ? REDACTED_VALUE : `${scheme} ${REDACTED_VALUE}`;
+  }
+
+  return REDACTED_VALUE;
+};
+
+/**
+ * Return a copy of the given header list with sensitive values replaced.
+ */
+export const redactHeaders = (headers: Header[]): Header[] =>
+  headers.map((header) => {
+    const lowerKey = header.key.toLowerCase();
+
+    return SENSITIVE_TRANSACTION_HEADERS.has(lowerKey)
+      ? { ...header, value: redactHeaderValue(lowerKey, header.value) }
+      : header;
+  });
+
+/**
+ * Return a shallow copy of a transaction with sensitive request/response
+ * header values redacted.
+ */
+export const redactTransaction = (transaction: Transaction): Transaction => ({
+  ...transaction,
+  request: {
+    ...transaction.request,
+    headers: redactHeaders(transaction.request.headers)
+  },
+  response: {
+    ...transaction.response,
+    headers: redactHeaders(transaction.response.headers)
+  }
+});
+
+/**
+ * Mutate the given in-flight request in place, redacting sensitive header
+ * values. The input is expected to be a clone (e.g. via CloneObject) so the
+ * underlying transaction reference held elsewhere stays unchanged.
+ */
+export const redactInFlightRequestInPlace = (
+  inflightRequest: InFlightRequest
+): InFlightRequest => {
+  if (inflightRequest.request?.headers) {
+    inflightRequest.request.headers = redactHeaders(
+      inflightRequest.request.headers
+    );
+  }
+
+  return inflightRequest;
+};
+
+/**
  * Transform http headers objects to Mockoon's Header key value object
  *
  * @param object

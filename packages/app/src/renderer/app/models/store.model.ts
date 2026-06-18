@@ -53,6 +53,7 @@ export type EnvironmentStatus = {
   running: boolean;
   needRestart: boolean;
   redeploying: boolean;
+  adminApiAuthToken?: string | null;
 };
 
 export type EnvironmentsStatuses = Record<string, EnvironmentStatus>;

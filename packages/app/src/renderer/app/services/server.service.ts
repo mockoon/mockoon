@@ -304,7 +304,11 @@ export class ServerService {
         this.zone.run(() => {
           this.store.update(
             updateEnvironmentStatusAction(
-              { running: true, needRestart: false },
+              {
+                running: true,
+                needRestart: false,
+                adminApiAuthToken: data?.adminApiAuthToken || null
+              },
               environment.uuid
             )
           );
@@ -317,7 +321,8 @@ export class ServerService {
             updateEnvironmentStatusAction(
               {
                 running: false,
-                needRestart: false
+                needRestart: false,
+                adminApiAuthToken: null
               },
               environment.uuid
             )

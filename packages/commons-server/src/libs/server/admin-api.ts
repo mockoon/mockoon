@@ -1,5 +1,12 @@
-import { Environment, EnvironmentSchema, Transaction } from '@mockoon/commons';
+import {
+  Environment,
+  EnvironmentSchema,
+  extractBearerToken,
+  Transaction
+} from '@mockoon/commons';
 import { Express, Request, Response } from 'express';
+import { timingSafeEqual } from 'node:crypto';
+import { redactTransaction } from '../utils';
 import { MockoonServer } from './server';
 import { Sse } from './sse';
 
@@ -21,6 +28,8 @@ export const createAdminEndpoint = (
     getLogs,
     purgeLogs,
     envVarsPrefix,
+    adminApiAuthToken,
+    adminApiCorsOrigins,
     updateEnvironment
   }: {
     statePurgeCallback: () => void;
@@ -33,6 +42,8 @@ export const createAdminEndpoint = (
     getLogs: () => Transaction[];
     purgeLogs: () => void;
     envVarsPrefix: string;
+    adminApiAuthToken: string;
+    adminApiCorsOrigins?: string[];
     updateEnvironment: (environment: Environment) => void;
   }
 ): void => {
@@ -54,22 +65,86 @@ export const createAdminEndpoint = (
         ...replayableEvents,
         ...limitedLogs.map((transaction) => ({
           event: 'transaction-complete',
-          transaction
+          transaction: redactTransaction(transaction)
         }))
       ];
     }
   });
 
   app.use(`${adminApiPrefix}*`, (req, res, next) => {
-    res.setHeaders(
-      new Headers({
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods':
-          'GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS',
-        'Access-Control-Allow-Headers':
-          'Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With'
-      })
-    );
+    const allowedOrigins = adminApiCorsOrigins ?? [];
+    const allowAll = allowedOrigins.includes('*');
+    const requestOrigin = req.get('origin');
+    const matchedOrigin = allowAll
+      ? '*'
+      : requestOrigin && allowedOrigins.includes(requestOrigin)
+        ? requestOrigin
+        : undefined;
+
+    if (matchedOrigin) {
+      res.setHeader('Access-Control-Allow-Origin', matchedOrigin);
+      if (matchedOrigin !== '*') {
+        res.setHeader('Vary', 'Origin');
+      }
+      res.setHeader(
+        'Access-Control-Allow-Methods',
+        'GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS'
+      );
+      res.setHeader(
+        'Access-Control-Allow-Headers',
+        'Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With'
+      );
+    }
+
+    if (req.method === 'OPTIONS') {
+      // Always terminate preflight at the admin endpoint to avoid leaking
+      // to user-defined routes. Browsers will reject the response if no
+      // matching Access-Control-Allow-Origin header is present.
+      res.status(matchedOrigin ? 204 : 403).end();
+
+      return;
+    }
+
+    next();
+  });
+
+  const adminApiUnauthorized = (res: Response) => {
+    res.status(401).send({ message: 'Unauthorized' });
+  };
+
+  const hasValidAdminApiToken = (providedToken: string): boolean => {
+    const expectedTokenBuffer = Buffer.from(adminApiAuthToken, 'utf8');
+    const providedTokenBuffer = Buffer.from(providedToken, 'utf8');
+
+    if (expectedTokenBuffer.length !== providedTokenBuffer.length) {
+      return false;
+    }
+
+    return timingSafeEqual(expectedTokenBuffer, providedTokenBuffer);
+  };
+
+  app.use(`${adminApiPrefix}*`, (req: Request, res: Response, next) => {
+    if (req.method === 'OPTIONS') {
+      next();
+
+      return;
+    }
+
+    const isSseEndpoint =
+      req.method === 'GET' && req.baseUrl === `${adminApiPrefix}/events`;
+    const bearerToken = extractBearerToken(req.get('authorization'));
+    const sseQueryToken =
+      isSseEndpoint && typeof req.query['token'] === 'string'
+        ? req.query['token'].trim()
+        : undefined;
+    const providedToken = bearerToken || sseQueryToken;
+
+    if (!providedToken || !hasValidAdminApiToken(providedToken)) {
+      adminApiUnauthorized(res);
+
+      return;
+    }
+
     next();
   });
 
@@ -86,7 +161,10 @@ export const createAdminEndpoint = (
 
   // listen to server events and send them through the SSE
   serverInstance.on('transaction-complete', (transaction) => {
-    const event = { event: 'transaction-complete', transaction };
+    const event = {
+      event: 'transaction-complete',
+      transaction: redactTransaction(transaction)
+    };
 
     events.send(event);
   });
@@ -143,7 +221,15 @@ export const createAdminEndpoint = (
   };
 
   /**
-   * Set the value of an environment variable
+   * Set the value of an environment variable.
+   *
+   * The key must start with the configured prefix to prevent arbitrary
+   * environment variable writes (e.g. PATH, NODE_OPTIONS). If the key
+   * does not start with the prefix, it is automatically prepended,
+   * mirroring the read handler behavior.
+   *
+   * When the prefix is empty, writes are rejected to avoid arbitrary
+   * environment variable writes.
    *
    * @param req
    * @param res
@@ -151,15 +237,28 @@ export const createAdminEndpoint = (
   const setEnvVarHandler = (req, res) => {
     try {
       const { key, value } = req.body;
-      if (key !== undefined && value !== undefined) {
-        process.env[key] = value;
-
-        res.send({
-          message: `Environment variable '${key}' has been set to '${value}'`
-        });
-      } else {
+      if (key === undefined || value === undefined) {
         throw new Error('Key or value missing from request');
       }
+
+      if (!envVarsPrefix) {
+        res.status(403).send({
+          message:
+            'Environment variable writes are disabled when the prefix is empty'
+        });
+
+        return;
+      }
+
+      const prefixedKey = key.startsWith(envVarsPrefix)
+        ? key
+        : envVarsPrefix + key;
+
+      process.env[prefixedKey] = value;
+
+      res.send({
+        message: `Environment variable '${prefixedKey}' has been set to '${value}'`
+      });
     } catch (_error) {
       res.status(400).send({ message: 'Invalid request' });
     }
@@ -306,7 +405,7 @@ export const createAdminEndpoint = (
     const logs = getLogs();
     const start = (page - 1) * limit;
 
-    res.send(logs.slice(start, start + limit));
+    res.send(logs.slice(start, start + limit).map(redactTransaction));
   };
 
   /**
