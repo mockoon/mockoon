@@ -32,7 +32,7 @@ jobs:
   test-libs:
     name: Libs - Build and test
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     needs: lint
 

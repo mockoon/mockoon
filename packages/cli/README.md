@@ -373,7 +373,7 @@ jobs:
 
 ### Using the generic Docker image
 
-A generic Docker image is published on the [Docker Hub Mockoon CLI repository](https://hub.docker.com/r/mockoon/cli). It uses `node:18-alpine` and installs the latest version of Mockoon CLI.
+A generic Docker image is published on the [Docker Hub Mockoon CLI repository](https://hub.docker.com/r/mockoon/cli). It uses `node:26-alpine` and installs the latest version of Mockoon CLI.
 
 All of `mockoon-cli start` flags (`--port`, etc.) must be provided when running the container.
 

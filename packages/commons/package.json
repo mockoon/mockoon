@@ -32,10 +32,10 @@
   },
   "funding": "https://mockoon.com/sponsor-us/",
   "dependencies": {
-    "joi": "18.2.1",
+    "joi": "18.2.3",
     "path-to-regexp": "8.4.2",
     "tslib": "2.8.1",
-    "yaml": "2.8.3"
+    "yaml": "2.9.0"
   },
   "devDependencies": {
     "openapi-types": "12.1.3"

@@ -47,17 +47,17 @@
   "dependencies": {
     "@mockoon/commons": "9.6.1",
     "@mockoon/commons-server": "9.6.1",
-    "@oclif/core": "4.11.4",
-    "@oclif/plugin-help": "6.2.41",
+    "@oclif/core": "4.11.7",
+    "@oclif/plugin-help": "6.2.50",
     "chokidar": "4.0.3",
     "mustache": "4.2.0",
     "tslib": "2.8.1"
   },
   "devDependencies": {
     "@types/mustache": "4.2.6",
-    "eslint-config-oclif": "6.0.154",
+    "eslint-config-oclif": "6.0.171",
     "eslint-config-oclif-typescript": "3.1.14",
-    "oclif": "4.23.10"
+    "oclif": "4.23.16"
   },
   "engines": {
     "node": ">=18"
