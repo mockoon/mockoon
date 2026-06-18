@@ -99,6 +99,8 @@ jobs:
         with:
           node-version: "24"
           cache: npm
+      - name: Install Snapcraft
+        run: sudo snap install snapcraft --classic
       - name: Install dependencies
         run: npm ci
       - name: Build and package application
