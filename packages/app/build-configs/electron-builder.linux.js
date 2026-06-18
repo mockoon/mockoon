@@ -7,6 +7,7 @@ const commonConfig = require('./electron-builder.common');
 const config = Object.assign({}, commonConfig, {
   linux: {
     executableName: 'mockoon',
+    syncDesktopName: true,
     target: [
       {
         target: 'AppImage',
@@ -40,8 +41,11 @@ const config = Object.assign({}, commonConfig, {
     // Avoid /usr/lib/.build-id collisions with other Electron RPMs.
     fpm: ['--rpm-rpmbuild-define', '_build_id_links none']
   },
-  snap: {
-    base: 'core22'
+  snapcraft: {
+    base: 'core24',
+    core24: {
+      confinement: 'strict'
+    }
   }
 });
 
