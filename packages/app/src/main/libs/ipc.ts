@@ -1,17 +1,9 @@
 import { Environment, Environments } from '@mockoon/commons';
 import { mimeTypeLookup } from '@mockoon/commons-server';
 import { createHash } from 'crypto';
-import {
-  BrowserWindow,
-  Menu,
-  clipboard,
-  dialog,
-  ipcMain,
-  shell
-} from 'electron';
+import { BrowserWindow, clipboard, dialog, ipcMain, shell } from 'electron';
 import { getDataPath } from 'electron-json-storage';
 import { promises as fsPromises } from 'fs';
-import { createServer } from 'http';
 import {
   format as pathFormat,
   join as pathJoin,
@@ -49,10 +41,6 @@ import {
   Settings
 } from 'src/shared/models/settings.model';
 import { startAuthCallbackServer, stopAuthCallbackServer } from './auth';
-
-declare const IS_TESTING: boolean;
-
-const dialogMocks: Record<string, string[]> = { save: [], open: [] };
 
 /**
  * Returns the user data path or the last saved saved/opened directory
@@ -224,11 +212,7 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
   ipcMain.handle('APP_SHOW_OPEN_DIALOG', async (event, options) => {
     options.defaultPath = getDialogDefaultPath();
 
-    if (IS_TESTING) {
-      return { filePaths: [dialogMocks['open'].pop()] };
-    } else {
-      return await dialog.showOpenDialog(mainWindow, options);
-    }
+    return await dialog.showOpenDialog(mainWindow, options);
   });
 
   /**
@@ -239,11 +223,7 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
       options.defaultPath = getDialogDefaultPath();
     }
 
-    if (IS_TESTING) {
-      return { filePath: dialogMocks['save'].pop() };
-    } else {
-      return await dialog.showSaveDialog(mainWindow, options);
-    }
+    return await dialog.showSaveDialog(mainWindow, options);
   });
 
   ipcMain.handle('APP_BUILD_STORAGE_FILEPATH', (event, name: string) =>
@@ -320,48 +300,3 @@ export const clearIPCChannels = () => {
     ipcMain.removeHandler(handler);
   });
 };
-
-/**
- * When running e2e tests and testing native dialogs/menus/clipboard,
- * we open a server to receive the action to mock (we cannot use Webdriver to access Electron's native features).
- * Called URL should be in the following form:
- * - Dialogs: `dialogs#save|open#/path/filename.ext`
- * - Menu items: menu#menu_item_id
- * - Clipboard: clipboard#read
- *
- * (This mock will be striped from the prod build by Webpack)
- *
- * eslint-disable-next-line
- */
-if (IS_TESTING) {
-  createServer((req, res) => {
-    const chunks: any[] = [];
-
-    req.on('data', (chunk) => {
-      chunks.push(chunk);
-    });
-
-    req.on('end', () => {
-      const data = Buffer.concat(chunks).toString();
-
-      let url = '';
-
-      if (req.url) {
-        url = req.url.replace('/', '');
-      }
-
-      const [category, action, filepath] = url.split('#');
-
-      if (category === 'menu' && action) {
-        Menu.getApplicationMenu()?.getMenuItemById(action)?.click();
-      } else if (category === 'clipboard' && action === 'read') {
-        res.write(clipboard.readText('clipboard'));
-      } else if (category === 'clipboard' && action === 'write') {
-        clipboard.writeText(data);
-      } else if (category === 'dialogs' && action && filepath) {
-        dialogMocks[action].push(filepath);
-      }
-      res.end();
-    });
-  }).listen(45123);
-}
