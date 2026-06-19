@@ -2,11 +2,13 @@ import { Environment, HighestMigrationId } from '@mockoon/commons';
 import { promises as fs } from 'fs';
 import { resolve } from 'path';
 import { Settings } from '../../src/shared/models/settings.model';
-import clipboard from '../libs/clipboard';
-import dialogs from '../libs/dialogs';
+import {
+  clickMenu,
+  mockSaveDialog,
+  writeClipboard
+} from '../libs/electron-mocks';
 import environments from '../libs/environments';
 import file from '../libs/file';
-import menu from '../libs/menu';
 import modals from '../libs/modals';
 import routes from '../libs/routes';
 import utils from '../libs/utils';
@@ -238,11 +240,11 @@ describe('Schema validation', () => {
         'utf-8'
       );
 
-      await clipboard.write(fileContent);
-      await dialogs.save(
+      await writeClipboard(fileContent);
+      await mockSaveDialog(
         resolve('./tmp/storage/new-environment-route-broken.json')
       );
-      await menu.click('MENU_NEW_ROUTE_CLIPBOARD');
+      await clickMenu('MENU_NEW_ROUTE_CLIPBOARD');
       await browser.pause(500);
 
       await environments.assertCount(1);
