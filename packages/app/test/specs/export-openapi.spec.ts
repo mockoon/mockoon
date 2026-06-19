@@ -2,7 +2,7 @@ import { generateUUID } from '@mockoon/commons';
 import { promises as fs } from 'fs';
 import { resolve } from 'node:path';
 import commandPalette from '../libs/command-palette';
-import dialogs from '../libs/dialogs';
+import { mockSaveDialog } from '../libs/electron-mocks';
 import environments from '../libs/environments';
 import utils from '../libs/utils';
 
@@ -13,7 +13,7 @@ describe('OpenAPI export', () => {
 
   it('should export the environment and match the reference file (JSON)', async () => {
     const filePath = resolve(`./tmp/storage/${generateUUID()}.json`);
-    await dialogs.save(filePath);
+    await mockSaveDialog(filePath);
 
     await commandPalette.open();
     await commandPalette.executeCommandClickById(
@@ -35,7 +35,7 @@ describe('OpenAPI export', () => {
 
   it('should export the environment and match the reference file (YAML)', async () => {
     const filePath = resolve(`./tmp/storage/${generateUUID()}.yaml`);
-    await dialogs.save(filePath);
+    await mockSaveDialog(filePath);
 
     await commandPalette.open();
     await commandPalette.executeCommandClickById(

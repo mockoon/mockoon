@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import dialogs from '../libs/dialogs';
+import { mockSaveDialog } from '../libs/electron-mocks';
 import environments from '../libs/environments';
 import environmentsSettings from '../libs/environments-settings';
 import http from '../libs/http';
@@ -13,7 +13,7 @@ describe('Duplicate environments', () => {
     });
 
     it('should duplicate first environment', async () => {
-      await dialogs.save(resolve('./tmp/storage/dup-env-test.json'));
+      await mockSaveDialog(resolve('./tmp/storage/dup-env-test.json'));
       await environments.duplicate(1);
       await browser.pause(100);
       await environments.assertCount(2);
@@ -36,7 +36,7 @@ describe('Duplicate environments', () => {
     });
 
     it('should duplicate the environment', async () => {
-      await dialogs.save(resolve('./tmp/storage/dup-env2-test.json'));
+      await mockSaveDialog(resolve('./tmp/storage/dup-env2-test.json'));
       await environments.duplicate(1);
       await browser.pause(100);
       await environments.assertCount(2);
