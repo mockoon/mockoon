@@ -1,6 +1,6 @@
 import { generateUUID } from '@mockoon/commons';
 import { resolve } from 'path';
-import dialogs from '../libs/dialogs';
+import { mockSaveDialog } from '../libs/electron-mocks';
 import environments from '../libs/environments';
 import environmentsLogs from '../libs/environments-logs';
 import file from '../libs/file';
@@ -93,7 +93,7 @@ describe('Environment external reload', () => {
   });
 
   it('should assert the external watch works after a duplicate', async () => {
-    await dialogs.save(resolve('./tmp/storage/new-dup-env.json'));
+    await mockSaveDialog(resolve('./tmp/storage/new-dup-env.json'));
     await environments.duplicate(1);
     await browser.pause(100);
     await environments.assertActiveMenuEntryText('env 1 (change2) (copy)');

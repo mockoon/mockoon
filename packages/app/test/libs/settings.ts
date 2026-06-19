@@ -1,5 +1,5 @@
-import menu from '../libs/menu';
 import utils from '../libs/utils';
+import { clickMenu } from './electron-mocks';
 
 type SettingNames =
   | 'settings-truncate-route-name'
@@ -22,7 +22,7 @@ class Settings {
   }
 
   public async open() {
-    await menu.click('MENU_OPEN_SETTINGS');
+    await clickMenu('MENU_OPEN_SETTINGS');
     await $('.modal-dialog').waitForExist();
   }
 

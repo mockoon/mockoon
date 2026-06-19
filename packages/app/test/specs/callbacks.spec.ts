@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import callbacks from '../libs/callbacks';
-import dialogs from '../libs/dialogs';
+import { mockSaveDialog } from '../libs/electron-mocks';
 import environments from '../libs/environments';
 import environmentsLogs from '../libs/environments-logs';
 import environmentsSettings from '../libs/environments-settings';
@@ -268,7 +268,7 @@ describe('Callback filter', () => {
 
   it('should reset callbacks filter when switching env', async () => {
     await callbacks.setFilter('Second');
-    await dialogs.save(resolve('./tmp/storage/dup-callbacks.json'));
+    await mockSaveDialog(resolve('./tmp/storage/dup-callbacks.json'));
     await environments.duplicate(1);
     await navigation.switchView('ENV_CALLBACKS');
     await callbacks.assertFilter('');
