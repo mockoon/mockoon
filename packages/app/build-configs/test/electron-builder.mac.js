@@ -5,6 +5,9 @@ const commonConfig = require('../electron-builder.common');
  * @see https://www.electron.build/configuration/configuration
  */
 const config = Object.assign({}, commonConfig, {
+  electronFuses: {
+    enableNodeCliInspectArguments: true
+  },
   mac: {
     target: [
       {
