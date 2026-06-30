@@ -2166,6 +2166,14 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     errorMessage: string | Error,
     status?: number
   ) {
+    // Headers may already be sent (e.g. in serverless environments where a
+    // delayed latency callback fires on an already-completed response). Trying
+    // to set headers or send again would throw ERR_HTTP_HEADERS_SENT and crash
+    // the process, so we bail out early. See issue #2080.
+    if (response.headersSent) {
+      return;
+    }
+
     response.set('Content-Type', 'text/plain');
     response.body = errorMessage;
 
