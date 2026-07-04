@@ -27,7 +27,7 @@ class Settings {
   }
 
   public async assertVisible(reverse = false) {
-    const modal = await $('.modal-dialog');
+    const modal = $('.modal-dialog');
 
     if (reverse) {
       await expect(modal).not.toBeDisplayed();
@@ -36,7 +36,7 @@ class Settings {
     }
 
     await expect(modal).toBeDisplayed();
-    await expect(await $('.modal-title')).toHaveText(
+    await expect($('.modal-title')).toHaveText(
       expect.stringContaining('Settings')
     );
   }

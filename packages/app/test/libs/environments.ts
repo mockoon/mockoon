@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 import utils, { DropdownMenuEnvironmentActions } from '../libs/utils';
-import navigation from './navigation';
 import { mockOpenDialog, mockSaveDialog } from './electron-mocks';
+import navigation from './navigation';
 
 class Environments {
   private activeMenuEntrySelector =
@@ -137,8 +137,10 @@ class Environments {
   }
 
   public async stop(): Promise<void> {
-    await this.stopBtn.click();
-    await this.runningEnvironmentMenuEntry.waitForExist({ reverse: true });
+    if (await this.stopBtn.isExisting()) {
+      await this.stopBtn.click();
+      await this.runningEnvironmentMenuEntry.waitForExist({ reverse: true });
+    }
   }
 
   public async restart(): Promise<void> {

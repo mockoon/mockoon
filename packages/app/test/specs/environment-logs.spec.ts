@@ -53,6 +53,17 @@ const binaryCall: HttpCall = {
   }
 };
 
+const envReset = async () => {
+  await environments.select(1);
+  await environments.stop();
+  await navigation.switchView('ENV_LOGS');
+  await environmentsLogs.clear();
+  await environments.select(2);
+  await environments.stop();
+  await navigation.switchView('ENV_LOGS');
+  await environmentsLogs.clear();
+};
+
 describe('Environment logs', () => {
   describe('Verify environment logs content', () => {
     it('should open and start the environments', async () => {
@@ -318,8 +329,10 @@ describe('Environment logs', () => {
   });
 
   describe('Verify "view last body sent" link behavior', () => {
-    it('should reload and start the first environment', async () => {
-      await browser.reloadSession();
+    it('should reset envs and start 1', async () => {
+      await envReset();
+
+      await environments.select(1);
       await environments.start();
     });
 
@@ -363,8 +376,10 @@ describe('Environment logs', () => {
 
   describe('Environments logs UI behavior', () => {
     describe('Navigate in environments logs', () => {
-      it('should reload and start the first environment', async () => {
-        await browser.reloadSession();
+      it('should reset and start the first environment', async () => {
+        await envReset();
+
+        await environments.select(1);
         await environments.start();
       });
 
@@ -383,6 +398,7 @@ describe('Environment logs', () => {
 
       it('should select entry and verify that it is displayed on the right', async () => {
         await environmentsLogs.select(1);
+        await environmentsLogs.switchTab('REQUEST');
         await environmentsLogs.assertLogItem(
           'Request URL: /prefix/endpoint/1',
           'request',
@@ -398,8 +414,10 @@ describe('Environment logs', () => {
     });
 
     describe('Environment logs are limited to maximum number specified', () => {
-      it('should reload and start the first environment', async () => {
-        await browser.reloadSession();
+      it('should reset and start the first environment', async () => {
+        await envReset();
+
+        await environments.select(1);
         await environments.start();
       });
 
@@ -435,8 +453,10 @@ describe('Environment logs', () => {
   });
 
   describe('Select different log items in different environments', () => {
-    it('should reload and start the first environment', async () => {
-      await browser.reloadSession();
+    it('should reset and start the first environment', async () => {
+      await envReset();
+
+      await environments.select(1);
       await environments.start();
     });
 
@@ -476,38 +496,26 @@ describe('Environment logs', () => {
   });
 
   describe('Copy log as cURL with compression', () => {
-    const callWithAcceptEncoding: HttpCall = {
-      description: 'Call GET /prefix/endpoint/1 with accept-encoding header',
-      path: '/prefix/endpoint/1',
-      method: 'GET',
-      headers: { 'accept-encoding': 'gzip, deflate, br' },
-      body: 'requestbody',
-      testedResponse: {
-        body: 'responsebody',
-        status: 200,
-        statusMessage: 'OK'
-      }
-    };
+    it('should reset and start the first environment', async () => {
+      await envReset();
 
-    const callWithoutAcceptEncoding: HttpCall = {
-      description: 'Call GET /prefix/endpoint/2 without accept-encoding header',
-      path: '/prefix/endpoint/2',
-      method: 'GET',
-      body: 'requestbody',
-      testedResponse: {
-        body: 'responsebody',
-        status: 200,
-        statusMessage: 'OK'
-      }
-    };
-
-    it('should reload and start the first environment', async () => {
-      await browser.reloadSession();
+      await environments.select(1);
       await environments.start();
     });
 
     it('should copy log as cURL with --compressed flag when accept-encoding header is present', async () => {
-      await http.assertCall(callWithAcceptEncoding);
+      await http.assertCall({
+        description: 'Call GET /prefix/endpoint/1 with accept-encoding header',
+        path: '/prefix/endpoint/1',
+        method: 'GET',
+        headers: { 'accept-encoding': 'gzip, deflate, br' },
+        body: 'requestbody',
+        testedResponse: {
+          body: 'responsebody',
+          status: 200,
+          statusMessage: 'OK'
+        }
+      });
       await navigation.switchView('ENV_LOGS');
       await environmentsLogs.select(1);
       await environmentsLogs.clickCopyAsCurlButton(1);
@@ -519,13 +527,24 @@ describe('Environment logs', () => {
     });
 
     it('should copy log as cURL without --compressed flag when accept-encoding header is not present', async () => {
-      await http.assertCall(callWithoutAcceptEncoding);
+      await http.assertCall({
+        description:
+          'Call GET /prefix/endpoint/3 without accept-encoding header',
+        path: '/prefix/endpoint/3',
+        method: 'GET',
+        body: 'requestbody',
+        testedResponse: {
+          body: 'responsebody',
+          status: 200,
+          statusMessage: 'OK'
+        }
+      });
       await environmentsLogs.select(1);
       await environmentsLogs.clickCopyAsCurlButton(1);
       await utils.closeTooltip();
       const clipboardContent = await readClipboard();
       expect(clipboardContent).toEqual(
-        'curl --location --request GET "http://localhost:3000/prefix/endpoint/2" --header "connection: keep-alive" --header "host: localhost:3000" --data-binary "requestbody"'
+        'curl --location --request GET "http://localhost:3000/prefix/endpoint/3" --header "connection: keep-alive" --header "host: localhost:3000" --data-binary "requestbody"'
       );
     });
 

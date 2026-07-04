@@ -8,6 +8,7 @@ import file from '../libs/file';
 import headersUtils from '../libs/headers-utils';
 import http from '../libs/http';
 import modals from '../libs/modals';
+import { HttpCall } from '../libs/models';
 import navigation from '../libs/navigation';
 import routes from '../libs/routes';
 import settings from '../libs/settings';
@@ -489,8 +490,6 @@ describe('Callback usages', () => {
       await environments.close(1);
       await environments.close(1);
       await environments.close(1);
-      await utils.waitForAutosave();
-      await browser.reloadSession();
 
       await environments.open('callbacks');
       await environments.open('basic-data');
@@ -526,7 +525,10 @@ describe('Callback usages', () => {
       await environments.select(2);
       await navigation.switchView('ENV_LOGS');
 
-      await http.assertCallWithPort({ method: 'GET', path: '/inline' }, 3000);
+      await http.assertCallWithPort(
+        { method: 'GET', path: '/inline' } as HttpCall,
+        3000
+      );
       await browser.pause(1000);
       await environmentsLogs.assertCount(1);
       await environmentsLogs.assertLogItem(
@@ -560,7 +562,10 @@ describe('Callback usages', () => {
       await environments.start();
       await navigation.switchView('ENV_LOGS');
 
-      await http.assertCallWithPort({ method: 'GET', path: '/inline' }, 3000);
+      await http.assertCallWithPort(
+        { method: 'GET', path: '/inline' } as HttpCall,
+        3000
+      );
       await browser.pause(1000);
       await environmentsLogs.assertCount(3);
       await environmentsLogs.select(1);
