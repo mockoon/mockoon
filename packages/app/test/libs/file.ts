@@ -24,7 +24,7 @@ class File {
     );
     settings = { ...settings, ...properties };
     await fs.writeFile(this.settingsPath, JSON.stringify(settings));
-    await browser.reconnect('');
+    await browser.reloadSession();
     await browser.pause(2000);
   }
 
