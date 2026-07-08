@@ -28,6 +28,35 @@
     </div>
   </div>
 
+  <app-title-separator heading="Self-hosted Mockoon Cloud API" icon="cloud" />
+
+  <div class="ps-4">
+    <div class="mb-3">
+      <div class="input-group">
+        <label for="settings-api-url" class="col-form-label pe-2">
+          Self-hosted API URL
+        </label>
+        <input
+          type="text"
+          class="form-control col-1"
+          id="settings-api-url"
+          placeholder="https://api.mockoon.com/"
+          formControlName="apiURL"
+        />
+        <div class="input-group-text">
+          <app-svg icon="info" [ngbTooltip]="apiUrlTooltip" />
+          <ng-template #apiUrlTooltip>
+            <div>
+              Override the default API URL to use a self-hosted Mockoon Cloud
+              instance. Leave empty to use the built-in URL
+              (https://api.mockoon.com/).
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+
   @if (!isWeb) {
     <app-title-separator heading="Environment variables" icon="list" />
 

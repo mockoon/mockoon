@@ -10,6 +10,8 @@ import {
   debounceTime,
   distinctUntilChanged,
   filter,
+  first,
+  map,
   mergeMap,
   pairwise,
   startWith,
@@ -135,6 +137,48 @@ export class SettingsService {
    */
   public updateSettings(newProperties: Partial<Settings>) {
     this.store.update(updateSettingsAction(newProperties));
+  }
+
+  /**
+   * Get the API URL with settings override priority for desktop app.
+   * Fallback to the shared config value.
+   */
+  public selectApiURL(): Observable<string> {
+    return this.store.select('settings').pipe(
+      filter((settings) => !!settings),
+      map((settings) => settings.apiURL?.trim()),
+      first(),
+      map((configuredApiURL) => {
+        if (configuredApiURL) {
+          if (!configuredApiURL.endsWith('/')) {
+            configuredApiURL += '/';
+          }
+
+          if (
+            !configuredApiURL.startsWith('http://') &&
+            !configuredApiURL.startsWith('https://')
+          ) {
+            configuredApiURL = `https://${configuredApiURL}`;
+          }
+
+          return configuredApiURL;
+        }
+
+        return Config.apiURL;
+      })
+    );
+  }
+
+  /**
+   * Check if a desktop custom API URL override is configured in settings.
+   */
+  public selectIsApiURLOverridden(): Observable<boolean> {
+    return this.store.select('settings').pipe(
+      filter((settings) => !!settings),
+      map((settings) => settings.apiURL?.trim()),
+      first(),
+      map((configuredApiURL) => !Config.isWeb && !!configuredApiURL)
+    );
   }
 
   /**

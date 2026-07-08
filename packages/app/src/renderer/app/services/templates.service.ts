@@ -14,19 +14,21 @@ import {
   map,
   shareReplay,
   switchMap,
-  tap
+  tap,
+  withLatestFrom
 } from 'rxjs';
 import { DeepPartial } from 'src/renderer/app/libs/utils.lib';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { updateUserAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
-import { Config } from 'src/renderer/config';
 
 @Service()
 export class TemplatesService {
   private httpClient = inject(HttpClient);
   private userService = inject(UserService);
+  private settingsService = inject(SettingsService);
   private toastsService = inject(ToastsService);
   private store = inject(Store);
 
@@ -46,9 +48,12 @@ export class TemplatesService {
    * Get the list of available templates
    */
   public getTemplatesList(): Observable<TemplateListItem[]> {
-    return this.httpClient
-      .get<Template[]>(`${Config.apiURL}templates`)
-      .pipe(shareReplay(1));
+    return this.settingsService.selectApiURL().pipe(
+      switchMap((apiUrl) =>
+        this.httpClient.get<Template[]>(`${apiUrl}templates`)
+      ),
+      shareReplay(1)
+    );
   }
 
   /**
@@ -62,9 +67,12 @@ export class TemplatesService {
     if (!this.templateCache.has(cacheKey)) {
       this.templateCache.set(
         cacheKey,
-        this.httpClient
-          .get<Template>(`${Config.apiURL}templates/${id}`)
-          .pipe(shareReplay(1))
+        this.settingsService.selectApiURL().pipe(
+          switchMap((apiUrl) =>
+            this.httpClient.get<Template>(`${apiUrl}templates/${id}`)
+          ),
+          shareReplay(1)
+        )
       );
     }
 
@@ -84,10 +92,11 @@ export class TemplatesService {
     this.generatingTemplate$.next('INPROGRESS');
     this.lastTemplatePrompt$.next(prompt);
 
-    return this.userService.getIdToken().pipe(
-      switchMap((token) =>
+    return this.userService.getToken().pipe(
+      withLatestFrom(this.settingsService.selectApiURL()),
+      switchMap(([token, apiUrl]) =>
         this.httpClient
-          .get<{ data: string }>(`${Config.apiURL}templates/generate`, {
+          .get<{ data: string }>(`${apiUrl}templates/generate`, {
             params: {
               q: prompt,
               type: 'template',
@@ -135,10 +144,11 @@ export class TemplatesService {
     this.generatingEndpoint$.next('INPROGRESS');
     this.lastEndpointPrompt$.next(prompt);
 
-    return this.userService.getIdToken().pipe(
-      switchMap((token) =>
+    return this.userService.getToken().pipe(
+      withLatestFrom(this.settingsService.selectApiURL()),
+      switchMap(([token, apiUrl]) =>
         this.httpClient
-          .get<{ data: Route }>(`${Config.apiURL}templates/generate`, {
+          .get<{ data: Route }>(`${apiUrl}templates/generate`, {
             params: {
               q: prompt,
               type: 'endpoint',

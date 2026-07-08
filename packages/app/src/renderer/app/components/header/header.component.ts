@@ -212,7 +212,7 @@ export class HeaderComponent implements OnInit {
   }
 
   public refreshAuthToken() {
-    this.userService.getIdToken(true).subscribe();
+    this.userService.getToken(true).subscribe();
   }
 
   /**

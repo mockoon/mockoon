@@ -102,7 +102,7 @@ export class SyncService {
             delay(500),
             switchMap((user) =>
               this.userService
-                .getIdToken()
+                .getToken()
                 .pipe(map((token) => ({ user, token })))
             ),
             switchMap(({ user, token }) => {
@@ -219,7 +219,7 @@ export class SyncService {
     return fromEvent(socket, 'connect_error').pipe(
       switchMap((error) => {
         if (error.message === SyncErrors.UNAUTHORIZED) {
-          return this.userService.getIdToken().pipe(
+          return this.userService.getToken().pipe(
             tap((token) => {
               socket.auth = { ...socket.auth, token };
               // Unauthorized response will close the connection

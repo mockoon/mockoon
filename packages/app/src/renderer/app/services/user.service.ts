@@ -2,29 +2,23 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { User } from '@mockoon/cloud';
 import {
-  Auth,
-  User as FirebaseUser,
-  getAuth,
-  onIdTokenChanged,
-  reload,
-  signInWithCustomToken
-} from 'firebase/auth';
-import {
   catchError,
   combineLatest,
   EMPTY,
   filter,
-  finalize,
-  from,
+  map,
   Observable,
   of,
   switchMap,
   take,
   tap,
-  throwError
+  withLatestFrom
 } from 'rxjs';
+import { AuthStrategy } from 'src/renderer/app/services/auth-strategies/auth-strategy.interface';
+import { FirebaseAuthStrategy } from 'src/renderer/app/services/auth-strategies/firebase-auth.strategy';
+import { SelfHostedAuthStrategy } from 'src/renderer/app/services/auth-strategies/self-hosted-auth.strategy';
 import { LoggerService } from 'src/renderer/app/services/logger-service';
-import { MainApiService } from 'src/renderer/app/services/main-api.service';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import {
   updateDeployInstancesAction,
@@ -39,28 +33,20 @@ import { Config } from 'src/renderer/config';
 export class UserService {
   private httpClient = inject(HttpClient);
   private store = inject(Store);
+  private firebaseAuthStrategy = inject(FirebaseAuthStrategy);
+  private selfHostedAuthStrategy = inject(SelfHostedAuthStrategy);
+  private settingsService = inject(SettingsService);
   private uiService = inject(UIService);
-  private mainApiService = inject(MainApiService);
   private loggerService = inject(LoggerService);
   private isWeb = Config.isWeb;
-  private auth: Auth = getAuth();
-  private authState$ = new Observable<FirebaseUser | null>((subscriber) => {
-    const unsubscribe = onIdTokenChanged(
-      this.auth,
-      subscriber.next.bind(subscriber),
-      subscriber.error.bind(subscriber),
-      subscriber.complete.bind(subscriber)
-    );
-
-    return { unsubscribe };
-  });
   private lastUserRefresh = 0;
 
   /**
    * Monitor auth token state and update the store
    */
   public init() {
-    return this.authState$.pipe(
+    return this.selectAuthStrategy().pipe(
+      switchMap((authStrategy) => authStrategy.observeAuthState()),
       switchMap((authUser) => {
         if (authUser) {
           return this.getUserInfo(true);
@@ -74,7 +60,10 @@ export class UserService {
   }
 
   public authStateChanges() {
-    return this.authState$.pipe(filter((user) => !!user));
+    return this.selectAuthStrategy().pipe(
+      switchMap((authStrategy) => authStrategy.observeAuthState()),
+      filter((user) => !!user)
+    );
   }
 
   /**
@@ -82,11 +71,9 @@ export class UserService {
    * Can be used to trigger an authentication after going offline
    */
   public reloadUser() {
-    if (this.auth?.currentUser) {
-      return from(reload(this.auth.currentUser));
-    }
-
-    return EMPTY;
+    return this.selectAuthStrategy().pipe(
+      switchMap((authStrategy) => authStrategy.reloadUser())
+    );
   }
 
   /**
@@ -96,17 +83,8 @@ export class UserService {
    * @returns
    */
   public authWithToken(token: string) {
-    return from(signInWithCustomToken(this.auth, token)).pipe(
-      catchError((error) => {
-        if (error?.code === 'auth/network-request-failed') {
-          return from(this.auth.signOut()).pipe(
-            catchError(() => of(null)),
-            switchMap(() => throwError(() => error))
-          );
-        }
-
-        return throwError(() => error);
-      })
+    return this.selectAuthStrategy().pipe(
+      switchMap((authStrategy) => authStrategy.authWithToken(token))
     );
   }
 
@@ -131,9 +109,10 @@ export class UserService {
 
     this.lastUserRefresh = now;
 
-    return this.getIdToken().pipe(
-      switchMap((token) =>
-        this.httpClient.get(`${Config.apiURL}user`, {
+    return this.getToken().pipe(
+      withLatestFrom(this.settingsService.selectApiURL()),
+      switchMap(([token, apiURL]) =>
+        this.httpClient.get(`${apiURL}user`, {
           headers: { Authorization: `Bearer ${token}` }
         })
       ),
@@ -150,14 +129,10 @@ export class UserService {
    * @param force
    * @returns
    */
-  public getIdToken(force = false): Observable<string | null> {
-    if (this.auth?.currentUser) {
-      return from(this.auth.currentUser.getIdToken(force)).pipe(
-        catchError(() => of(null))
-      );
-    }
-
-    return of(null);
+  public getToken(force = false): Observable<string | null> {
+    return this.selectAuthStrategy().pipe(
+      switchMap((authStrategy) => authStrategy.getToken(force))
+    );
   }
 
   /**
@@ -165,16 +140,14 @@ export class UserService {
    * Open the auth modal and send the APP_AUTH event to the main process
    */
   public startLoginFlow() {
-    if (Config.isWeb) {
-      this.uiService.openModal('authIframe');
-    } else {
-      this.uiService.openModal('auth');
-      this.mainApiService.send('APP_AUTH');
-    }
-  }
-
-  public stopAuthFlow() {
-    this.mainApiService.send('APP_AUTH_STOP_SERVER');
+    this.selectAuthStrategy()
+      .pipe(
+        take(1),
+        tap((authStrategy) => {
+          authStrategy.startLoginFlow();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -193,9 +166,6 @@ export class UserService {
         this.loggerService.logMessage('error', 'LOGIN_ERROR');
 
         return EMPTY;
-      }),
-      finalize(() => {
-        this.stopAuthFlow();
       })
     );
   }
@@ -212,6 +182,7 @@ export class UserService {
       tap(() => {
         this.loggerService.logMessage('info', 'LOGIN_SUCCESS');
       }),
+      map(() => true),
       catchError(() => {
         this.loggerService.logMessage('error', 'LOGIN_ERROR');
 
@@ -230,14 +201,54 @@ export class UserService {
    * @returns
    */
   public webAuthHandler() {
-    return combineLatest([this.authState$, this.store.select('settings')]).pipe(
-      take(1),
-      tap(([user, settings]) => {
-        if (!user && settings.welcomeShown) {
-          this.uiService.openModal('authIframe');
-        }
-      })
-    );
+    const callbackToken = this.getWebAuthTokenFromUrl();
+
+    if (callbackToken) {
+      this.clearWebAuthTokenFromUrl();
+
+      return this.webAuthCallbackHandler(callbackToken);
+    }
+
+    return this.selectAuthStrategy()
+      .pipe(
+        switchMap((authStrategy) =>
+          combineLatest([
+            authStrategy.observeAuthState(),
+            this.store.select('settings')
+          ])
+        )
+      )
+      .pipe(
+        take(1),
+        tap(([user, settings]) => {
+          if (!user && settings.welcomeShown) {
+            this.startLoginFlow();
+          }
+        }),
+        map(() => true)
+      );
+  }
+
+  private getWebAuthTokenFromUrl() {
+    if (!Config.isWeb) {
+      return null;
+    }
+
+    const url = new URL(window.location.href);
+
+    return url.searchParams.get('token');
+  }
+
+  private clearWebAuthTokenFromUrl() {
+    if (!Config.isWeb) {
+      return;
+    }
+
+    const url = new URL(window.location.href);
+
+    url.searchParams.delete('token');
+
+    window.history.replaceState({}, document.title, url.toString());
   }
 
   /**
@@ -248,7 +259,8 @@ export class UserService {
    * @returns
    */
   public logout() {
-    return from(this.auth.signOut()).pipe(
+    return this.selectAuthStrategy().pipe(
+      switchMap((authStrategy) => authStrategy.logout()),
       tap(() => {
         this.resetUserData();
 
@@ -259,11 +271,26 @@ export class UserService {
     );
   }
 
+  private selectAuthStrategy(): Observable<AuthStrategy> {
+    return this.settingsService
+      .selectIsApiURLOverridden()
+      .pipe(
+        switchMap((isApiURLOverridden) =>
+          of(
+            isApiURLOverridden
+              ? this.selfHostedAuthStrategy
+              : this.firebaseAuthStrategy
+          )
+        )
+      );
+  }
+
   public sendFeedback(message: string) {
-    return from(this.auth.currentUser.getIdToken()).pipe(
-      switchMap((token) =>
+    return this.getToken().pipe(
+      withLatestFrom(this.settingsService.selectApiURL()),
+      switchMap(([token, apiURL]) =>
         this.httpClient.post(
-          `${Config.apiURL}user/feedback`,
+          `${apiURL}user/feedback`,
           { message },
           {
             headers: { Authorization: `Bearer ${token}` }

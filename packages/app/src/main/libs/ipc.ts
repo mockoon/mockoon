@@ -48,7 +48,7 @@ import {
   EnvironmentDescriptor,
   Settings
 } from 'src/shared/models/settings.model';
-import { startAuthCallbackServer, stopAuthCallbackServer } from './auth';
+import { startAuthCallbackServer } from './auth';
 
 declare const IS_TESTING: boolean;
 
@@ -121,12 +121,8 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
     showFolderInExplorer(name);
   });
 
-  ipcMain.on('APP_AUTH', () => {
-    startAuthCallbackServer();
-  });
-
-  ipcMain.on('APP_AUTH_STOP_SERVER', () => {
-    stopAuthCallbackServer();
+  ipcMain.on('APP_AUTH', (event, loginURL?: string) => {
+    startAuthCallbackServer(loginURL);
   });
 
   ipcMain.on('APP_WRITE_CLIPBOARD', async (event, data) => {

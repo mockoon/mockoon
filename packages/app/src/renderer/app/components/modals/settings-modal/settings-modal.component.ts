@@ -58,6 +58,7 @@ export class SettingsModalComponent {
 
     this.settingsForm = this.formBuilder.group({
       truncateRouteName: [SettingsDefault.truncateRouteName],
+      apiURL: [SettingsDefault.apiURL],
       maxLogsPerEnvironment: [SettingsDefault.maxLogsPerEnvironment],
       fakerLocale: [SettingsDefault.fakerLocale],
       fakerSeed: [SettingsDefault.fakerSeed],
@@ -95,6 +96,7 @@ export class SettingsModalComponent {
           this.settingsForm.setValue(
             {
               truncateRouteName: settings.truncateRouteName,
+              apiURL: settings.apiURL,
               maxLogsPerEnvironment: settings.maxLogsPerEnvironment,
               fakerLocale: settings.fakerLocale,
               fakerSeed: settings.fakerSeed,
