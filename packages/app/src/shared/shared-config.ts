@@ -10,12 +10,12 @@ const appVersion: string = require('../../package.json').version;
  * @returns
  */
 export const SharedConfig = (options: {
-  websiteURL: string;
-  apiURL: string;
+  websiteUrl: string;
+  defaultApiUrl: string;
   isWeb?: boolean;
 }) => {
-  const docsUrl = `${options.websiteURL}docs/latest/`;
-  const cloudDocsUrl = `${options.websiteURL}cloud/docs/`;
+  const docsUrl = `${options.websiteUrl}docs/latest/`;
+  const cloudDocsUrl = `${options.websiteUrl}cloud/docs/`;
 
   return {
     isWeb: options.isWeb,
@@ -23,12 +23,12 @@ export const SharedConfig = (options: {
     remoteConfigDefaults: {
       dataRefreshInterval: 300_000 // 5 minutes
     },
-    websiteURL: options.websiteURL,
-    apiURL: options.apiURL,
+    websiteUrl: options.websiteUrl,
+    defaultApiUrl: options.defaultApiUrl,
     githubBinaryURL: 'https://github.com/mockoon/mockoon/releases/download/',
-    latestReleaseDataURL: `${options.apiURL}releases/desktop/stable.json`,
-    changelogMarkdownURL: `${options.websiteURL}desktop-changelogs-markdown/`,
-    releasePublicURL: `${options.websiteURL}releases/`,
+    latestReleaseDataURL: `${options.defaultApiUrl}releases/desktop/stable.json`,
+    changelogMarkdownURL: `${options.websiteUrl}desktop-changelogs-markdown/`,
+    releasePublicURL: `${options.websiteUrl}releases/`,
     docs: {
       adminApi: `${docsUrl}admin-api/overview/`,
       templating: `${docsUrl}templating/overview/`,
@@ -38,18 +38,18 @@ export const SharedConfig = (options: {
       headers: `${docsUrl}response-configuration/response-headers/`,
       rules: `${docsUrl}route-responses/multiple-responses/`,
       hostname: `${docsUrl}server-configuration/listening-hostname/`,
-      faq: `${options.websiteURL}faq/`,
+      faq: `${options.websiteUrl}faq/`,
       cloudOverview: `${cloudDocsUrl}about/`,
       cloudDeploy: `${cloudDocsUrl}api-mock-cloud-deployments/`,
       cloudSync: `${cloudDocsUrl}data-synchronization-team-collaboration/`,
       cloudDeployCliPull: `${cloudDocsUrl}api-mock-cloud-deployments/#self-host-with-the-cli`
     },
     // URLs should not be used directly in desktop app (but there is a redirection for the web app in user service). Instead use the flow methods in the user service
-    appAuthURL: `${options.websiteURL}app-auth/`,
-    loginURL: `${options.websiteURL}login/`,
-    accountUrl: `${options.websiteURL}account/subscription/`,
-    accountAuthenticationUrl: `${options.websiteURL}account/access-tokens/`,
-    cloudPlansURL: `${options.websiteURL}cloud/`,
+    appAuthURL: `${options.websiteUrl}app-auth/`,
+    loginURL: `${options.websiteUrl}login/`,
+    accountUrl: `${options.websiteUrl}account/subscription/`,
+    accountAuthenticationUrl: `${options.websiteUrl}account/access-tokens/`,
+    cloudPlansURL: `${options.websiteUrl}cloud/`,
     maxPromptLength: 500,
     defaultMaxLogsPerEnvironment: defaultMaxTransactionLogs,
     maxLogsPerEnvironmentLimit: 1_000,

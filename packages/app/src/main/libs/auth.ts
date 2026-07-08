@@ -1,3 +1,4 @@
+import { randomBytes } from 'crypto';
 import { shell } from 'electron';
 import { createServer, Server } from 'http';
 import { AddressInfo } from 'net';
@@ -5,53 +6,121 @@ import { Config } from 'src/main/config';
 import { getMainWindow } from 'src/main/libs/main-window';
 import { parse as urlParse } from 'url';
 
-let server: Server;
+let server: Server | undefined;
+let authCallbackServerTimeout: NodeJS.Timeout | undefined;
+let authState: string | undefined;
+const authCallbackServerTimeoutMs = 5 * 60 * 1000;
+
+const authCallbackPage = `<!doctype html>
+<html lang="en" style="height: 100%;">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mockoon authentication complete</title>
+  </head>
+  <body style="height: 100%; margin: 0;font-family: sans-serif;background-color: #252830;color: #b8bcc4;font-size: 18px;">
+    <div style="max-width: 80vw;margin: 0 auto">
+      <div style="display: flex; justify-content: center; height: 100%;margin-top: 10vh;">
+        <div style="text-align: center; margin: 0 auto;">
+          <h1>Success!</h1>
+          <p style="margin:0;">Authentication complete. You can close this window.</p>
+          <img src="https://mockoon.com/images/logo-eyes-sticker.png" alt="Mockoon logo" style="max-width: 140px;margin-top: 5vh;">
+          <hr style="margin-top: 5vh; margin-bottom: 5vh; border: 0; border-top: 1px solid #323641;">
+          <p style="margin:0;">Didn't work? Copy the token and paste it in the application.</p>
+          <code style="display: block; margin-top: 1vh; background-color: #323641; color: #b8bcc4; padding: 0.5em 1em; border-radius: 4px; max-width: 80%; box-sizing: border-box; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; margin: 1vh auto;user-select:all;">{{token}}</code>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>`;
+
+function escapeHtml(value: string) {
+  const entities: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  };
+
+  return value.replace(/[&<>"']/g, (character) => entities[character]);
+}
+
+/**
+ * Stop the auth callback server
+ */
+export function stopAuthCallbackServer() {
+  authState = undefined;
+
+  if (authCallbackServerTimeout) {
+    clearTimeout(authCallbackServerTimeout);
+    authCallbackServerTimeout = undefined;
+  }
+
+  if (server) {
+    server.close();
+    server = undefined;
+  }
+}
 
 /**
  * Start a server to listen for the auth callback from the website
  * and send the token to the renderer process
  */
-export const startAuthCallbackServer = async () => {
+export const startAuthCallbackServer = async (loginURL?: string) => {
   // Close the server if already started
-  if (server) {
-    server.close();
-  }
+  stopAuthCallbackServer();
+
+  authState = randomBytes(24).toString('hex');
 
   // Start a server to listen for the auth callback
   server = createServer((req, res) => {
-    res.writeHead(204, {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers':
-        'Content-Type, Authorization, Content-Length, X-Requested-With',
-      'Access-Control-Allow-Credentials': 'true'
-    });
-    res.end();
+    const { query } = urlParse(req.url ?? '', true);
+    const token: string = query['token'] as string;
+    const state: string = query['state'] as string;
 
-    if (req.method === 'OPTIONS') {
+    if (!authState || !state || state !== authState) {
+      res.writeHead(400, {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Cache-Control': 'no-store'
+      });
+      res.end('Invalid or missing authentication state.');
+
       return;
     }
 
-    const { query } = urlParse(req.url ?? '', true);
-
     // Send the token to the renderer process
-    if (query['token']) {
-      getMainWindow().webContents.send('APP_AUTH_CALLBACK', query['token']);
+    if (token) {
+      getMainWindow().webContents.send('APP_AUTH_CALLBACK', token);
+      stopAuthCallbackServer();
     }
+
+    res.writeHead(200, {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'no-store'
+    });
+
+    res.end(authCallbackPage.replace('{{token}}', escapeHtml(token)));
   });
 
   server.listen(0, '127.0.0.1', () => {
-    shell.openExternal(
-      `${Config.loginURL}?authCallback=http://127.0.0.1:${(server.address() as AddressInfo).port}`
-    );
-  });
-};
+    authCallbackServerTimeout = setTimeout(() => {
+      stopAuthCallbackServer();
+    }, authCallbackServerTimeoutMs);
 
-/**
- * Stop the auth callback server
- */
-export const stopAuthCallbackServer = () => {
-  if (server) {
-    server.close();
-  }
+    if (!server) {
+      return;
+    }
+
+    const targetUrl = new URL(loginURL || Config.loginURL);
+    targetUrl.searchParams.set(
+      'appRedirect',
+      `http://127.0.0.1:${(server.address() as AddressInfo).port}`
+    );
+    if (authState) {
+      targetUrl.searchParams.set('state', authState);
+    }
+
+    shell.openExternal(targetUrl.toString());
+  });
 };

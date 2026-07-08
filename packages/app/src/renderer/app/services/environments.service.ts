@@ -87,6 +87,7 @@ import {
   ViewsNameType
 } from 'src/renderer/app/models/store.model';
 import { DataService } from 'src/renderer/app/services/data.service';
+import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { LoggerService } from 'src/renderer/app/services/logger-service';
@@ -155,6 +156,7 @@ export class EnvironmentsService {
   private http = inject(HttpClient);
   private mainApiService = inject(MainApiService);
   private loggerService = inject(LoggerService);
+  private deployService = inject(DeployService);
 
   private environmentChangesNotified = false;
   private environmentChanges$ = new BehaviorSubject<
@@ -1017,6 +1019,8 @@ export class EnvironmentsService {
         tap((confirmed) => {
           if (confirmed) {
             this.store.update(convertEnvironmentToLocalAction(environmentUuid));
+
+            this.deployService.getInstances(true).subscribe();
           }
         })
       );
@@ -1051,7 +1055,9 @@ export class EnvironmentsService {
       .pipe(
         switchMap((confirmed) => {
           if (confirmed) {
-            // in web version, completely delete the environment an do not convert to local
+            this.deployService.getInstances(true).subscribe();
+
+            // in web version, completely delete the environment and do not convert to local
             if (this.isWeb) {
               this.store.update(removeEnvironmentAction(environmentUuid));
               this.mainApiService.invoke(
@@ -1362,9 +1368,8 @@ export class EnvironmentsService {
     }
   ) {
     const activeEnvironment = this.store.getActiveEnvironment();
-    const isActiveEnvCloud = this.store.getIsActiveEnvCloud();
 
-    if (activeEnvironment && !isActiveEnvCloud) {
+    if (activeEnvironment) {
       this.store.update(
         addRouteAction(
           activeEnvironment.uuid,

@@ -28,7 +28,7 @@ const commonOptions = {
     WEBSITE_URL: JSON.stringify(
       isDev ? 'http://localhost:3000/' : 'https://mockoon.com/'
     ),
-    API_URL: JSON.stringify(
+    DEFAULT_API_URL: JSON.stringify(
       isDev ? 'http://localhost:5003/' : 'https://api.mockoon.com/'
     )
   },

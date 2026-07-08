@@ -10,6 +10,8 @@ import {
   debounceTime,
   distinctUntilChanged,
   filter,
+  first,
+  map,
   mergeMap,
   pairwise,
   startWith,
@@ -22,7 +24,7 @@ import { StorageService } from 'src/renderer/app/services/storage.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { updateSettingsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
-import { Config } from 'src/renderer/config';
+import { Config, getCallbackApiUrl } from 'src/renderer/config';
 import {
   EnvironmentsCategories,
   FileWatcherOptions,
@@ -66,7 +68,11 @@ export class SettingsService {
   public loadSettings(): Observable<any> {
     return this.storageService.loadSettings().pipe(
       tap((settings: Settings) => {
-        const validatedSchema = SettingsSchema.validate(settings);
+        const callbackApiUrl = getCallbackApiUrl();
+        const validatedSchema = SettingsSchema.validate({
+          ...settings,
+          apiUrl: settings.apiUrl?.trim() || callbackApiUrl
+        });
         this.updateSettings(validatedSchema.value);
         settings = validatedSchema.value;
 
@@ -135,6 +141,55 @@ export class SettingsService {
    */
   public updateSettings(newProperties: Partial<Settings>) {
     this.store.update(updateSettingsAction(newProperties));
+  }
+
+  /**
+   * Get the API URL with settings override priority for desktop app.
+   * Fallback to the shared config value.
+   */
+  public selectApiUrl(): Observable<string> {
+    return this.store.select('settings').pipe(
+      filter((settings) => !!settings),
+      map((settings) => settings.apiUrl?.trim()),
+      first(),
+      map((configuredApiUrl) => {
+        if (configuredApiUrl) {
+          if (!configuredApiUrl.endsWith('/')) {
+            configuredApiUrl += '/';
+          }
+
+          if (
+            !configuredApiUrl.startsWith('http://') &&
+            !configuredApiUrl.startsWith('https://')
+          ) {
+            configuredApiUrl = `https://${configuredApiUrl}`;
+          }
+
+          return configuredApiUrl;
+        }
+
+        return Config.defaultApiUrl;
+      })
+    );
+  }
+
+  /**
+   * Check if a custom API URL override is configured in settings.
+   */
+  public selectIsSelfHosted(): Observable<boolean> {
+    return this.store.select('settings').pipe(
+      filter((settings) => !!settings),
+      map((settings) => settings.apiUrl?.trim()),
+      map((configuredApiUrl) => !!configuredApiUrl),
+      distinctUntilChanged()
+    );
+  }
+
+  /**
+   * Check if a custom API URL override is configured in settings.
+   */
+  public getIsSelfHosted(): boolean {
+    return !!this.store.get('settings').apiUrl?.trim();
   }
 
   /**
