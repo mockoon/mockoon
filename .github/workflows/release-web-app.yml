@@ -39,16 +39,11 @@ jobs:
           npm ci
           npm run build:libs
           npm run build:web:prod
-      - name: Package web app artifact
-        run: |
-          mkdir -p release-assets
-          cd packages/app/dist
-          zip -r ../../../release-assets/mockoon-web-app-v${{steps.web-version.outputs.WEB_VERSION}}.zip renderer
       - name: Upload web app artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: web-app-dist-v${{steps.web-version.outputs.WEB_VERSION}}
-          path: release-assets/
+          path: packages/app/dist/renderer/
       - name: deploy
         run: |
           npm run deploy:web
