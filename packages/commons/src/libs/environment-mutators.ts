@@ -39,7 +39,8 @@ export const updateEnvironmentMutator = (
 export const addRouteMutator = (
   environment: Environment,
   newRoute: Route,
-  parentId: string | 'root'
+  parentId: string | 'root',
+  insertAfterUuid?: string
 ): Environment => {
   let rootChildren = environment.rootChildren;
   const routes = [...environment.routes];
@@ -49,16 +50,49 @@ export const addRouteMutator = (
 
   // insert route in root level or folder
   if (parentId === 'root') {
-    rootChildren = [
-      ...environment.rootChildren,
-      { type: 'route', uuid: newRoute.uuid }
-    ];
+    rootChildren = [...environment.rootChildren];
+
+    if (insertAfterUuid) {
+      const insertAfterIndex = rootChildren.findIndex(
+        (child) => child.uuid === insertAfterUuid
+      );
+
+      if (insertAfterIndex !== -1) {
+        rootChildren.splice(insertAfterIndex + 1, 0, {
+          type: 'route',
+          uuid: newRoute.uuid
+        });
+      } else {
+        rootChildren.push({ type: 'route', uuid: newRoute.uuid });
+      }
+    } else {
+      rootChildren.push({ type: 'route', uuid: newRoute.uuid });
+    }
   } else {
     folders = environment.folders.map((folder) => {
       if (folder.uuid === parentId) {
+        const children = [...folder.children];
+
+        if (insertAfterUuid) {
+          const insertAfterIndex = children.findIndex(
+            (child) => child.uuid === insertAfterUuid
+          );
+
+          if (insertAfterIndex !== -1) {
+            children.splice(insertAfterIndex + 1, 0, {
+              type: 'route',
+              uuid: newRoute.uuid
+            });
+          } else {
+            children.push({ type: 'route', uuid: newRoute.uuid });
+          }
+        } else {
+          children.push({ type: 'route', uuid: newRoute.uuid });
+        }
+
         return {
           ...folder,
-          children: [...folder.children, { type: 'route', uuid: newRoute.uuid }]
+          children
         };
       }
 
@@ -362,7 +396,8 @@ export const reorderCallbackMutator = (
 export const addFolderMutator = (
   environment: Environment,
   newFolder: Folder,
-  parentId: string | 'root'
+  parentId: string | 'root',
+  insertAfterUuid?: string
 ): Environment => {
   let rootChildren = environment.rootChildren;
   let folders = [...environment.folders];
@@ -370,19 +405,49 @@ export const addFolderMutator = (
 
   // add to folder or root level
   if (parentId === 'root') {
-    rootChildren = [
-      ...environment.rootChildren,
-      { type: 'folder', uuid: newFolder.uuid }
-    ];
+    rootChildren = [...environment.rootChildren];
+
+    if (insertAfterUuid) {
+      const insertAfterIndex = rootChildren.findIndex(
+        (child) => child.uuid === insertAfterUuid
+      );
+
+      if (insertAfterIndex !== -1) {
+        rootChildren.splice(insertAfterIndex + 1, 0, {
+          type: 'folder',
+          uuid: newFolder.uuid
+        });
+      } else {
+        rootChildren.push({ type: 'folder', uuid: newFolder.uuid });
+      }
+    } else {
+      rootChildren.push({ type: 'folder', uuid: newFolder.uuid });
+    }
   } else {
     folders = folders.map((folder) => {
       if (folder.uuid === parentId) {
+        const children = [...folder.children];
+
+        if (insertAfterUuid) {
+          const insertAfterIndex = children.findIndex(
+            (child) => child.uuid === insertAfterUuid
+          );
+
+          if (insertAfterIndex !== -1) {
+            children.splice(insertAfterIndex + 1, 0, {
+              type: 'folder',
+              uuid: newFolder.uuid
+            });
+          } else {
+            children.push({ type: 'folder', uuid: newFolder.uuid });
+          }
+        } else {
+          children.push({ type: 'folder', uuid: newFolder.uuid });
+        }
+
         return {
           ...folder,
-          children: [
-            ...folder.children,
-            { type: 'folder', uuid: newFolder.uuid }
-          ]
+          children
         };
       }
 

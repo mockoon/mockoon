@@ -1,4 +1,4 @@
-import { Service } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { DeployInstance, RemoteConfigData } from '@mockoon/cloud';
 import {
   Callback,
@@ -33,6 +33,7 @@ import {
   StoreType
 } from 'src/renderer/app/models/store.model';
 import { Actions, ActionTypes } from 'src/renderer/app/stores/actions';
+import { HistoryManager } from 'src/renderer/app/stores/history-manager';
 import { environmentReducer } from 'src/renderer/app/stores/reducer';
 import { Config } from 'src/renderer/config';
 
@@ -90,6 +91,7 @@ export const storeDefaultState: StoreType = {
 
 @Service()
 export class Store {
+  private historyManager = inject(HistoryManager);
   private store$ = new BehaviorSubject<StoreType>(storeDefaultState);
   /**
    * Emits latest store action
@@ -687,9 +689,36 @@ export class Store {
    * @param force
    * @param emit - emit the action to the storeAction$ observable
    */
-  public update(action: Actions, force = false, emit = true) {
+  public update(
+    action: Actions,
+    force = false,
+    emit = true,
+    trackHistory = true
+  ) {
+    const previousState = this.store$.value;
+
+    if (trackHistory) {
+      this.historyManager.addEnvironmentHistoryEntry(previousState, action);
+    }
+
     this.storeAction$.next({ payload: action, force, emit });
-    this.store$.next(environmentReducer(this.store$.value, action));
+    this.store$.next(environmentReducer(previousState, action));
+  }
+
+  public environmentUndoHistory() {
+    const historyEntry = this.historyManager.undoHistory();
+
+    if (historyEntry) {
+      this.update(historyEntry.undo, true, true, false);
+    }
+  }
+
+  public environmentRedoHistory() {
+    const historyEntry = this.historyManager.redoHistory();
+
+    if (historyEntry) {
+      this.update(historyEntry.redo, true, true, false);
+    }
   }
 
   public getStoreActions() {

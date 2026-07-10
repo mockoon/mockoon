@@ -6,6 +6,27 @@
 @let os = os$ | async;
 
 <div class="header d-flex align-items-center">
+  <div class="me-1 d-flex align-items-center">
+    <button
+      type="button"
+      class="btn btn-link btn-icon"
+      [disabled]="environmentUndoStack().length === 0"
+      [ngbTooltip]="'Undo (' + (os === 'darwin' ? 'Cmd' : 'Ctrl') + '+Z)'"
+      (click)="undo()"
+    >
+      <app-svg icon="undo" />
+    </button>
+    <button
+      type="button"
+      class="btn btn-link btn-icon"
+      [disabled]="environmentRedoStack().length === 0"
+      [ngbTooltip]="'Redo (' + (os === 'darwin' ? 'Cmd' : 'Ctrl') + '+Shift+Z)'"
+      (click)="redo()"
+    >
+      <app-svg icon="redo" />
+    </button>
+  </div>
+
   <div appTourStep="tour-environment-start">
     <!-- Web interface is focused on deploying to the cloud and managing the instance -->
     @if (isWeb) {

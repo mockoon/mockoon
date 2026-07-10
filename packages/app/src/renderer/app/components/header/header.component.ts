@@ -27,6 +27,7 @@ import { SyncService } from 'src/renderer/app/services/sync.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
+import { HistoryManager } from 'src/renderer/app/stores/history-manager';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { environment as env } from 'src/renderer/environments/environment';
@@ -49,6 +50,7 @@ import { environment as env } from 'src/renderer/environments/environment';
 })
 export class HeaderComponent implements OnInit {
   private store = inject(Store);
+  private historyManager = inject(HistoryManager);
   private environmentsService = inject(EnvironmentsService);
   private userService = inject(UserService);
   private remoteConfigService = inject(RemoteConfigService);
@@ -57,7 +59,8 @@ export class HeaderComponent implements OnInit {
   private toastsService = inject(ToastsService);
   private deployService = inject(DeployService);
   private mainApiService = inject(MainApiService);
-
+  public environmentUndoStack = this.historyManager.getUndoHistory();
+  public environmentRedoStack = this.historyManager.getRedoHistory();
   public activeEnvironment$: Observable<Environment>;
   public user$: Observable<User>;
   public activeView$: Observable<ViewsNameType>;
@@ -220,5 +223,13 @@ export class HeaderComponent implements OnInit {
    */
   public openCommandPalette() {
     this.uiService.openModal('commandPalette');
+  }
+
+  public undo() {
+    this.store.environmentUndoHistory();
+  }
+
+  public redo() {
+    this.store.environmentRedoHistory();
   }
 }

@@ -503,14 +503,16 @@ export const addFolderAction = (
   environmentUuid: string,
   folder: Folder,
   parentId: string | 'root',
-  uiReset: boolean
+  uiReset: boolean,
+  insertAfterUuid?: string
 ) =>
   ({
     type: ActionTypes.ADD_FOLDER,
     environmentUuid,
     folder,
     parentId,
-    uiReset
+    uiReset,
+    insertAfterUuid
   }) as const;
 
 /**
@@ -560,13 +562,15 @@ export const addRouteAction = (
   environmentUuid: string,
   route: Route,
   parentId: string | 'root',
-  uiReset: boolean
+  uiReset: boolean,
+  insertAfterUuid?: string
 ) =>
   ({
     type: ActionTypes.ADD_ROUTE,
     route,
     parentId,
     uiReset,
+    insertAfterUuid,
     environmentUuid
   }) as const;
 
