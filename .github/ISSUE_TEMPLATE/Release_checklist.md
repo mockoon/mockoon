@@ -3,13 +3,15 @@ name: Release checklist
 about: Checklist for releases (maintainers use only)
 ---
 
-**Tests:**
-
-- [ ] Manually test desktop binaries (if significant dependencies or native behavior changes)
-
 **Versions:**
 
 - [ ] Bump packages versions
+
+**Desktop app binaries:**
+
+- [ ] Create a **pre-release** (!important) on GitHub with correct version (`v*.*.*`) and publish, for the desktop app
+- [ ] Wait for desktop binaries build (automated after pre-release publication)
+- [ ] Manually test desktop binaries (if significant dependencies or native behavior changes)
 
 **Release the libs (commons, commons-server, cloud, serverless, CLI):**
 
@@ -23,10 +25,8 @@ about: Checklist for releases (maintainers use only)
 
 - [ ] Update libs and re-deploy after libs release (⚠️ Must be done prior to distribution if major release)
 
-**Release desktop:**
+**Release desktop app:**
 
-- [ ] Create a **pre-release** (!important) on GitHub with correct version (`v*.*.*`) and publish, for the desktop app
-- [ ] Wait for desktop binaries build (automated after pre-release publication)
 - [ ] Add desktop binaries (+ app and libs SBOMs) to the GitHub release
 - [ ] Set the release to final (non pre-release)
 
@@ -36,7 +36,8 @@ about: Checklist for releases (maintainers use only)
 
 **Web app:**
 
-- [ ] Trigger the deployment workflow
+- [ ] Create a `web-v{x.x.x}` tag to release and deploy the web app
+- [ ] Copy the artefact from the workflow to the release
 
 **API:**
 
