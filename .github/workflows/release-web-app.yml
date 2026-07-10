@@ -1,10 +1,13 @@
-name: Release web app (Firebase)
+name: Release web app
 
 permissions:
   contents: read
 
 on:
   workflow_dispatch:
+  push:
+    tags:
+      - web-v*
 
 jobs:
   deploy:
@@ -21,11 +24,33 @@ jobs:
           cache: npm
       - name: Install firebase
         run: npm install -g firebase-tools
+      - name: Extract web app version
+        id: web-version
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/web-v* ]]; then
+            WEB_VERSION=${GITHUB_REF#refs/tags/web-v}
+          else
+            WEB_VERSION=$(node -p -e "require('./packages/app/package.json').version")
+          fi
+
+          echo "WEB_VERSION=$WEB_VERSION" >> $GITHUB_OUTPUT
       - name: Build application
         run: |
           npm ci
           npm run build:libs
           npm run build:web:prod
+      - name: Package web app artifact
+        run: |
+          mkdir -p release-assets
+          cd packages/app/dist
+          zip -r ../../../../release-assets/mockoon-web-app-v${{steps.web-version.outputs.WEB_VERSION}}.zip renderer
+          cd ../../..
+          sha256sum release-assets/mockoon-web-app-v${{steps.web-version.outputs.WEB_VERSION}}.zip > release-assets/mockoon-web-app-v${{steps.web-version.outputs.WEB_VERSION}}.sha256
+      - name: Upload web app artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: web-app-dist-v${{steps.web-version.outputs.WEB_VERSION}}
+          path: release-assets/
       - name: deploy
         run: |
           npm run deploy:web
