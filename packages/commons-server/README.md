@@ -66,11 +66,11 @@ Mockoon is proudly **independent** and **open-source**, maintained without exter
       <img src="https://mockoon.com/images/sponsors/light/coderabbit.png" alt="CodeRabbit logo" />
       </picture>
   </a><br/><br/>
-  <a href="https://talordata.com/?campaignid=rGAerPX1XrVAODD0&utm_source=mockoon&utm_term=mockoon">
+  <a href="https://www.swiftproxy.net/?ref=mockoon">
       <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/talordata.png">
-      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/talordata.png">
-      <img src="https://mockoon.com/images/sponsors/light/talordata.png" alt="TalorData logo" />
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/swiftproxy.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/swiftproxy.png">
+      <img src="https://mockoon.com/images/sponsors/light/swiftproxy.png" alt="SwiftProxy logo" />
       </picture>
   </a>
 </div>
