@@ -17,15 +17,20 @@ import { getDirname } from '../libs/utils.js';
 
 /**
  * Returns the default directory where the Mockoon desktop app stores environment files.
- * Windows: %APPDATA%\mockoon\storage
- * Linux/macOS: ~/.config/mockoon/storage
+ * Windows: %APPDATA%\Mockoon\storage
+ * macOS: ~/Library/Application Support/Mockoon/storage
+ * Linux: ~/.config/Mockoon/storage
  */
 function getMockoonStorageDir(): string {
   if (process.platform === 'win32') {
-    return join(process.env['APPDATA'] ?? homedir(), 'mockoon', 'storage');
+    return join(process.env['APPDATA'] ?? homedir(), 'Mockoon', 'storage');
   }
 
-  return join(homedir(), '.config', 'mockoon', 'storage');
+  if (process.platform === 'darwin') {
+    return join(homedir(), 'Library', 'Application Support', 'Mockoon', 'storage');
+  }
+
+  return join(homedir(), '.config', 'Mockoon', 'storage');
 }
 
 /**

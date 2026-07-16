@@ -339,7 +339,7 @@ Running the command in a terminal will print the configuration snippet to add to
 
 **Extra environment directories**:
 
-By default, the MCP server looks for Mockoon environment files in the default desktop app storage directory (`%APPDATA%\mockoon\storage` on Windows, `~/.config/mockoon/storage` on Linux/macOS).
+By default, the MCP server looks for Mockoon environment files in the default desktop app storage directory (`%APPDATA%\Mockoon\storage` on Windows, `~/Library/Application Support/Mockoon/storage` on macOS, `~/.config/Mockoon/storage` on Linux).
 
 To include environment files from additional directories, set the `MOCKOON_DATA_DIRS` environment variable to a semicolon-separated list of paths in your MCP client configuration:
 
