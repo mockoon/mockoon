@@ -59,6 +59,13 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
       <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/swiftproxy.png">
       <img src="https://mockoon.com/images/sponsors/light/swiftproxy.png" alt="SwiftProxy logo" />
       </picture>
+  </a><br/><br/>
+  <a href="https://talordata.com/?campaignid=rGAerPX1XrVAODD0&utm_source=mockoon&utm_term=mockoon">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/talordata.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/talordata.png">
+      <img src="https://mockoon.com/images/sponsors/light/talordata.png" alt="TalorData logo" />
+      </picture>
   </a>
 </div>
 
