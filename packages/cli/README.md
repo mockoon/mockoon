@@ -126,6 +126,7 @@ Mockoon's CLI has been tested on Node.js versions 18, 20, 22 and 24.
 - [`import`](#import-command)
 - [`export`](#export-command)
 - [`validate`](#validate-command)
+- [`mcp`](#mcp-command)
 - [`help`](#help-command)
 
 ### `start` command
@@ -320,7 +321,7 @@ Invalid environment: ~/data2.json
 ```
 
 > ⚠️ This command does not validate the OpenAPI specification files. OpenAPI files are validated by the [start command](#start-command) when you run it with an OpenAPI file as the `--data` parameter.
->
+
 ### `mcp` command
 
 Starts a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that exposes Mockoon mocks to AI assistants (Claude, GitHub Copilot, Cursor, etc.).
