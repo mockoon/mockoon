@@ -191,23 +191,24 @@ export default class Mcp extends Command {
 
           listenServerEvents(mockServer, parsed.environment, logger, false);
 
+          // Reserve the UUID synchronously so concurrent requests fail the
+          // already-running check even while the server is still starting up.
+          runningServers.set(parsed.environment.uuid, {
+            server: mockServer,
+            name: parsed.environment.name,
+            port: parsed.environment.port
+          });
+
+          function onStopped() {
+            runningServers.delete(parsed.environment.uuid);
+          }
+
           const result = await new Promise<{
             content: { type: 'text'; text: string }[];
             isError?: boolean;
           }>((promiseResolve) => {
-            const onStopped = () => {
-              runningServers.delete(parsed.environment.uuid);
-            };
-
-            let onError: (errorCode: string) => void;
-
-            const onStarted = () => {
+            function onStarted() {
               mockServer.removeListener('error', onError);
-              runningServers.set(parsed.environment.uuid, {
-                server: mockServer,
-                name: parsed.environment.name,
-                port: parsed.environment.port
-              });
               mockServer.once('stopped', onStopped);
               promiseResolve({
                 content: [
@@ -217,10 +218,11 @@ export default class Mcp extends Command {
                   }
                 ]
               });
-            };
+            }
 
-            onError = (errorCode: string) => {
+            function onError(errorCode: string) {
               mockServer.removeListener('started', onStarted);
+              runningServers.delete(parsed.environment.uuid);
               promiseResolve({
                 content: [
                   {
@@ -230,7 +232,7 @@ export default class Mcp extends Command {
                 ],
                 isError: true
               });
-            };
+            }
 
             mockServer.once('started', onStarted);
             mockServer.once('error', onError);
