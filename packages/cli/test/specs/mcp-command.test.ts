@@ -106,7 +106,7 @@ describe('MCP command', () => {
     instance.kill();
   });
 
-  it('should list environments', async () => {
+  it('should list mocks', async () => {
     const { instance, send, nextMessage } = spawnMcp();
 
     await initialize(send, nextMessage);
@@ -115,7 +115,7 @@ describe('MCP command', () => {
       jsonrpc: '2.0',
       id: 2,
       method: 'tools/call',
-      params: { name: 'list_environments', arguments: {} }
+      params: { name: 'list_mocks', arguments: {} }
     });
 
     const response = (await nextMessage()) as any;
