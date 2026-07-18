@@ -112,7 +112,10 @@ export default class Mcp extends Command {
       version: Config.version
     });
 
-    const runningServers = new Map<string, MockoonServer>();
+    const runningServers = new Map<
+      string,
+      { server: MockoonServer; name: string; port: number }
+    >();
 
     mcpServer.registerTool(
       'list_mocks',
@@ -188,21 +191,42 @@ export default class Mcp extends Command {
 
           listenServerEvents(mockServer, parsed.environment, logger, false);
 
-          mockServer.on('error', () => {
-            runningServers.delete(parsed.environment.uuid);
+          const result = await new Promise<{
+            content: { type: 'text'; text: string }[];
+            isError?: boolean;
+          }>((resolve) => {
+            mockServer.once('started', () => {
+              runningServers.set(parsed.environment.uuid, {
+                server: mockServer,
+                name: parsed.environment.name,
+                port: parsed.environment.port
+              });
+              resolve({
+                content: [
+                  {
+                    type: 'text',
+                    text: `Mock server '${parsed.environment.name}' started on port ${parsed.environment.port}.`
+                  }
+                ]
+              });
+            });
+
+            mockServer.once('error', (errorCode: string) => {
+              resolve({
+                content: [
+                  {
+                    type: 'text',
+                    text: `Failed to start mock server '${parsed.environment.name}': ${errorCode}`
+                  }
+                ],
+                isError: true
+              });
+            });
+
+            mockServer.start();
           });
 
-          mockServer.start();
-          runningServers.set(parsed.environment.uuid, mockServer);
-
-          return {
-            content: [
-              {
-                type: 'text',
-                text: `Mock server '${parsed.environment.name}' started on port ${parsed.environment.port}.`
-              }
-            ]
-          };
+          return result;
         } catch (error) {
           const message =
             error instanceof Error ? error.message : String(error);
@@ -218,7 +242,7 @@ export default class Mcp extends Command {
     );
 
     process.once('SIGINT', () => {
-      for (const server of runningServers.values()) {
+      for (const { server } of runningServers.values()) {
         server.stop();
       }
       process.exit(0);
