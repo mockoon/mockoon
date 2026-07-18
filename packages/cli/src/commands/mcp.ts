@@ -1,4 +1,4 @@
-import { Environment } from '@mockoon/commons';
+﻿import { Environment } from '@mockoon/commons';
 import {
   createLoggerInstance,
   listenServerEvents,
@@ -7,9 +7,9 @@ import {
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { Command } from '@oclif/core';
-import { existsSync, readdirSync, readFileSync } from 'fs';
-import { homedir } from 'os';
-import { join, resolve } from 'path';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { homedir } from 'node:os';
+import { join, resolve } from 'node:path';
 import { z } from 'zod';
 import { Config } from '../config.js';
 import { parseDataFile } from '../libs/data.js';
@@ -79,10 +79,10 @@ function scanDirForMocks(dir: string): { uuid: string; line: string }[] {
 }
 
 export default class Mcp extends Command {
-  public static override description =
+  public static override readonly description =
     'Start a Model Context Protocol (MCP) server to interact with Mockoon via AI assistants (Claude, GitHub Copilot, Cursor, etc.)';
 
-  public static override examples = [
+  public static override readonly examples = [
     '$ mockoon-cli mcp',
     '$ mockoon-cli mcp  # then add to MCP client config as: {"command": "mockoon-cli", "args": ["mcp"]}'
   ];
