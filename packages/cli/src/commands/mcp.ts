@@ -82,10 +82,7 @@ export default class Mcp extends Command {
   public static override readonly description =
     'Start a Model Context Protocol (MCP) server to interact with Mockoon via AI assistants (Claude, GitHub Copilot, Cursor, etc.)';
 
-  public static override readonly examples = [
-    '$ mockoon-cli mcp',
-    '$ mockoon-cli mcp  # then add to MCP client config as: {"command": "mockoon-cli", "args": ["mcp"]}'
-  ];
+  public static override readonly examples = ['$ mockoon-cli mcp'];
 
   public async run(): Promise<void> {
     if (process.stdin.isTTY) {
@@ -219,10 +216,11 @@ export default class Mcp extends Command {
       }
     );
 
-    process.on('SIGINT', () => {
+    process.once('SIGINT', () => {
       for (const server of runningServers.values()) {
         server.stop();
       }
+      process.exit(0);
     });
 
     const transport = new StdioServerTransport();
