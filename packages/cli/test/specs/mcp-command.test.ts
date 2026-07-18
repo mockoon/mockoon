@@ -1,179 +1,192 @@
 import { ok, strictEqual } from 'node:assert';
-import { ChildProcess, spawn } from 'node:child_process';
 import { resolve } from 'node:path';
-import { describe, it } from 'node:test';
+import { after, describe, it } from 'node:test';
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 
 /**
- * Spawns the CLI in MCP mode (non-TTY stdin → starts the MCP server).
- * Returns helpers to send JSON-RPC messages and await the next response.
+ * Creates and connects an MCP Client to the CLI running in MCP mode.
  */
-const spawnMcp = (): {
-  instance: ChildProcess;
-  send: (msg: object) => void;
-  nextMessage: () => Promise<unknown>;
-} => {
-  const instance = spawn('node', ['./bin/dev.js', 'mcp']);
-
-  let buffer = '';
-  let pendingResolve: ((msg: unknown) => void) | null = null;
-  const queue: string[] = [];
-
-  instance.stdout.on('data', (data: Buffer) => {
-    buffer += data.toString();
-    const lines = buffer.split('\n');
-    buffer = lines.pop() ?? '';
-
-    for (const line of lines) {
-      const trimmed = line.trim();
-      if (!trimmed) continue;
-
-      if (pendingResolve) {
-        const res = pendingResolve;
-        pendingResolve = null;
-        res(JSON.parse(trimmed));
-      } else {
-        queue.push(trimmed);
-      }
-    }
+const createClient = async (): Promise<Client> => {
+  const transport = new StdioClientTransport({
+    command: 'node',
+    args: ['./bin/dev.js', 'mcp']
   });
 
-  const send = (msg: object) => {
-    instance.stdin.write(JSON.stringify(msg) + '\n');
-  };
+  const client = new Client(
+    { name: 'test-client', version: '1.0.0' },
+    { capabilities: {} }
+  );
 
-  const nextMessage = (): Promise<unknown> => {
-    if (queue.length > 0) {
-      const item = queue.shift();
+  await client.connect(transport);
 
-      return Promise.resolve(JSON.parse(item ?? ''));
-    }
-
-    return new Promise((res) => {
-      pendingResolve = res;
-    });
-  };
-
-  return { instance, send, nextMessage };
-};
-
-/**
- * Performs the MCP handshake (initialize + notifications/initialized).
- */
-const initialize = async (
-  send: (msg: object) => void,
-  nextMessage: () => Promise<unknown>
-) => {
-  send({
-    jsonrpc: '2.0',
-    id: 1,
-    method: 'initialize',
-    params: {
-      protocolVersion: '2024-11-05',
-      capabilities: {},
-      clientInfo: { name: 'test', version: '1.0' }
-    }
-  });
-
-  await nextMessage();
-
-  send({
-    jsonrpc: '2.0',
-    method: 'notifications/initialized',
-    params: {}
-  });
+  return client;
 };
 
 describe('MCP command', () => {
+  after(async () => {
+    // Give time for any lingering child processes to exit
+    await new Promise((res) => setTimeout(res, 200));
+  });
+
   it('should respond to initialize with server info', async () => {
-    const { instance, send, nextMessage } = spawnMcp();
+    const client = await createClient();
 
-    send({
-      jsonrpc: '2.0',
-      id: 1,
-      method: 'initialize',
-      params: {
-        protocolVersion: '2024-11-05',
-        capabilities: {},
-        clientInfo: { name: 'test', version: '1.0' }
-      }
-    });
+    try {
+      const info = client.getServerVersion();
 
-    const response = (await nextMessage()) as any;
+      strictEqual(info?.name, 'mockoon');
+    } finally {
+      await client.close();
+    }
+  });
 
-    strictEqual(response.id, 1);
-    strictEqual(response.result?.serverInfo?.name, 'mockoon');
+  it('should list available tools', async () => {
+    const client = await createClient();
 
-    instance.kill();
+    try {
+      const { tools } = await client.listTools();
+      const names = tools.map((t) => t.name);
+
+      ok(names.includes('list_mocks'));
+      ok(names.includes('start_mock'));
+      ok(names.includes('stop_mock'));
+      ok(names.includes('list_running_mocks'));
+    } finally {
+      await client.close();
+    }
   });
 
   it('should list mocks', async () => {
-    const { instance, send, nextMessage } = spawnMcp();
+    const client = await createClient();
 
-    await initialize(send, nextMessage);
+    try {
+      const result = await client.callTool({ name: 'list_mocks', arguments: {} });
 
-    send({
-      jsonrpc: '2.0',
-      id: 2,
-      method: 'tools/call',
-      params: { name: 'list_mocks', arguments: {} }
-    });
-
-    const response = (await nextMessage()) as any;
-
-    strictEqual(response.id, 2);
-    ok(response.result?.content?.[0]?.type === 'text');
-
-    instance.kill();
+      ok(!result.isError);
+      ok(
+        Array.isArray(result.content) &&
+          result.content[0]?.type === 'text'
+      );
+    } finally {
+      await client.close();
+    }
   });
 
   it('should start a mock server via start_mock', async () => {
-    const { instance, send, nextMessage } = spawnMcp();
+    const client = await createClient();
 
-    await initialize(send, nextMessage);
-
-    send({
-      jsonrpc: '2.0',
-      id: 2,
-      method: 'tools/call',
-      params: {
+    try {
+      const result = await client.callTool({
         name: 'start_mock',
-        arguments: {
-          data: resolve('./test/data/envs/mock1.json')
-        }
-      }
-    });
+        arguments: { data: resolve('./test/data/envs/mock1.json') }
+      });
 
-    const response = (await nextMessage()) as any;
-
-    strictEqual(response.id, 2);
-    ok(response.result?.content?.[0]?.text?.includes('started on port'));
-
-    instance.kill();
+      ok(!result.isError);
+      ok(
+        Array.isArray(result.content) &&
+          (result.content[0] as any)?.text?.includes('started on port')
+      );
+    } finally {
+      await client.close();
+    }
   });
 
   it('should return an error for a non-existent data file via start_mock', async () => {
-    const { instance, send, nextMessage } = spawnMcp();
+    const client = await createClient();
 
-    await initialize(send, nextMessage);
-
-    send({
-      jsonrpc: '2.0',
-      id: 2,
-      method: 'tools/call',
-      params: {
+    try {
+      const result = await client.callTool({
         name: 'start_mock',
-        arguments: {
-          data: resolve('./test/data/envs/nonexistent.json')
-        }
-      }
-    });
+        arguments: { data: resolve('./test/data/envs/nonexistent.json') }
+      });
 
-    const response = (await nextMessage()) as any;
+      strictEqual(result.isError, true);
+      ok(
+        Array.isArray(result.content) &&
+          (result.content[0] as any)?.text?.includes('Failed to start')
+      );
+    } finally {
+      await client.close();
+    }
+  });
 
-    strictEqual(response.id, 2);
-    strictEqual(response.result?.isError, true);
-    ok(response.result?.content?.[0]?.text?.includes('Failed to start'));
+  it('should return an error when starting an already running mock', async () => {
+    const client = await createClient();
 
-    instance.kill();
+    try {
+      await client.callTool({
+        name: 'start_mock',
+        arguments: { data: resolve('./test/data/envs/mock2.json') }
+      });
+
+      const result = await client.callTool({
+        name: 'start_mock',
+        arguments: { data: resolve('./test/data/envs/mock2.json') }
+      });
+
+      strictEqual(result.isError, true);
+      ok(
+        Array.isArray(result.content) &&
+          (result.content[0] as any)?.text?.includes('already running')
+      );
+    } finally {
+      await client.close();
+    }
+  });
+
+  it('should stop a running mock via stop_mock', async () => {
+    const client = await createClient();
+
+    try {
+      await client.callTool({
+        name: 'start_mock',
+        arguments: { data: resolve('./test/data/envs/mock2.json') }
+      });
+
+      const running = await client.callTool({
+        name: 'list_running_mocks',
+        arguments: {}
+      });
+
+      ok(!running.isError);
+
+      const text = ((running.content as any[])[0] as any)?.text as string;
+      const uuidMatch = text.match(
+        /\[([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\]/
+      );
+
+      ok(uuidMatch, 'UUID not found in list_running_mocks output');
+
+      const stopResult = await client.callTool({
+        name: 'stop_mock',
+        arguments: { uuid: uuidMatch[1] }
+      });
+
+      ok(!stopResult.isError);
+      ok(((stopResult.content as any[])[0] as any)?.text?.includes('stopped'));
+    } finally {
+      await client.close();
+    }
+  });
+
+  it('should return an error when stopping a non-existent mock', async () => {
+    const client = await createClient();
+
+    try {
+      const result = await client.callTool({
+        name: 'stop_mock',
+        arguments: { uuid: '00000000-0000-0000-0000-000000000000' }
+      });
+
+      strictEqual(result.isError, true);
+      ok(
+        Array.isArray(result.content) &&
+          (result.content[0] as any)?.text?.includes('No running mock server found')
+      );
+    } finally {
+      await client.close();
+    }
   });
 });
+
