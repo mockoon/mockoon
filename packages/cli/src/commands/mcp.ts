@@ -241,6 +241,65 @@ export default class Mcp extends Command {
       }
     );
 
+    mcpServer.registerTool(
+      'list_running_mocks',
+      {
+        description:
+          'List all mock servers currently running in this MCP session. Returns name, port, and UUID for each running mock.'
+      },
+      async () => {
+        if (runningServers.size === 0) {
+          return {
+            content: [{ type: 'text', text: 'No mock servers are currently running.' }]
+          };
+        }
+
+        const lines = Array.from(runningServers.entries()).map(
+          ([uuid, { name, port }]) =>
+            `- [${uuid}] ${name} (port: ${port})`
+        );
+
+        return {
+          content: [{ type: 'text', text: lines.join('\n') }]
+        };
+      }
+    );
+
+    mcpServer.registerTool(
+      'stop_mock',
+      {
+        description:
+          'Stop a running Mockoon mock server by its UUID. Use list_running_mocks to find running UUIDs.',
+        inputSchema: {
+          uuid: z.string().describe('UUID of the mock server to stop')
+        }
+      },
+      async ({ uuid }) => {
+        const server = runningServers.get(uuid);
+
+        if (!server) {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `No running mock server found with UUID '${uuid}'.`
+              }
+            ],
+            isError: true
+          };
+        }
+
+        server.server.stop();
+        runningServers.delete(uuid);
+
+        return {
+          content: [
+            { type: 'text', text: `Mock server '${server.name}' stopped.` }
+          ]
+        };
+      }
+    );
+
     process.once('SIGINT', () => {
       for (const { server } of runningServers.values()) {
         server.stop();
