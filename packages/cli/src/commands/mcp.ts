@@ -194,14 +194,22 @@ export default class Mcp extends Command {
           const result = await new Promise<{
             content: { type: 'text'; text: string }[];
             isError?: boolean;
-          }>((resolve) => {
-            mockServer.once('started', () => {
+          }>((promiseResolve) => {
+            const onStopped = () => {
+              runningServers.delete(parsed.environment.uuid);
+            };
+
+            let onError: (errorCode: string) => void;
+
+            const onStarted = () => {
+              mockServer.removeListener('error', onError);
               runningServers.set(parsed.environment.uuid, {
                 server: mockServer,
                 name: parsed.environment.name,
                 port: parsed.environment.port
               });
-              resolve({
+              mockServer.once('stopped', onStopped);
+              promiseResolve({
                 content: [
                   {
                     type: 'text',
@@ -209,10 +217,11 @@ export default class Mcp extends Command {
                   }
                 ]
               });
-            });
+            };
 
-            mockServer.once('error', (errorCode: string) => {
-              resolve({
+            onError = (errorCode: string) => {
+              mockServer.removeListener('started', onStarted);
+              promiseResolve({
                 content: [
                   {
                     type: 'text',
@@ -221,8 +230,10 @@ export default class Mcp extends Command {
                 ],
                 isError: true
               });
-            });
+            };
 
+            mockServer.once('started', onStarted);
+            mockServer.once('error', onError);
             mockServer.start();
           });
 
