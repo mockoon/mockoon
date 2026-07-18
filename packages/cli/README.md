@@ -358,10 +358,12 @@ Running the command in a terminal will print the configuration snippet to add to
 
 **Available MCP tools**:
 
-| Tool                | Description                                               |
-| ------------------- | --------------------------------------------------------- |
-| `list_mocks`        | List all local Mockoon mock files                         |
-| `start_mock`        | Start a Mockoon mock server from a local mock file        |
+| Tool                  | Description                                                    |
+| --------------------- | -------------------------------------------------------------- |
+| `list_mocks`          | List all local Mockoon mock files                              |
+| `start_mock`          | Start a Mockoon mock server from a local mock file             |
+| `stop_mock`           | Stop a running mock server by UUID                             |
+| `list_running_mocks`  | List all mock servers currently running in the MCP session     |
 
 **Extra mock directories**:
 
