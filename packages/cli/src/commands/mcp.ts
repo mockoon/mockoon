@@ -176,7 +176,8 @@ export default class Mcp extends Command {
                   type: 'text',
                   text: `Server for mock '${parsed.environment.name}' is already running.`
                 }
-              ]
+              ],
+              isError: true
             };
           }
 
