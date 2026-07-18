@@ -1,8 +1,8 @@
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import { ok, strictEqual } from 'node:assert';
 import { resolve } from 'node:path';
 import { after, describe, it } from 'node:test';
-import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 
 /**
  * Creates and connects an MCP Client to the CLI running in MCP mode.
