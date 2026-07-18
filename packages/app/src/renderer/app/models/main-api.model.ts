@@ -117,6 +117,7 @@ export interface MainAPIModel {
         transaction?: Transaction;
         inflightRequest?: InFlightRequest;
         dataBuckets?: ProcessedDatabucketWithoutValue[];
+        adminApiAuthToken?: string;
       }
     ) => void
   ): void;

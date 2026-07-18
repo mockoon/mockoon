@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -28,7 +28,6 @@ import { Store } from 'src/renderer/app/stores/store';
   templateUrl: './environment-proxy.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     FormsModule,
     ReactiveFormsModule,
     SvgComponent,
@@ -55,6 +54,20 @@ export class EnvironmentProxyComponent {
       proxyHost: [EnvironmentDefault.proxyHost],
       proxyRemovePrefix: [EnvironmentDefault.proxyRemovePrefix]
     });
+
+    this.store
+      .selectIsActiveEnvironmentEditable()
+      .pipe(
+        tap((isEditable) => {
+          if (isEditable) {
+            this.environmentProxyForm.enable({ emitEvent: false });
+          } else {
+            this.environmentProxyForm.disable({ emitEvent: false });
+          }
+        }),
+        takeUntilDestroyed()
+      )
+      .subscribe();
 
     // send new activeEnvironmentForm values to the store, one by one
     merge(

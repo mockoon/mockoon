@@ -194,7 +194,7 @@ describe('Callback duplication to another environment', () => {
 
     const modalText = await $('.modal-content .modal-title small').getText();
 
-    expect(modalText).toContain('Callback PUT');
+    expect(modalText).toContain('Copy 1 callback to:');
 
     await modals.assertDuplicationModalEnvName('Basic data');
     await modals.assertDuplicationModalEnvHostname('localhost:3000/');
@@ -571,11 +571,46 @@ describe('Callback usages', () => {
         1
       );
       await environmentsLogs.assertLogItem(
-        'X-mockoon-callback-chain: aa1b9d75-8161-49bf-80d7-c7a50d341a15',
+        'X-mockoon-callback-depth: 1',
         'request',
         4,
         8
       );
+    });
+  });
+
+  describe('Callbacks toolbar batch actions', () => {
+    it('should require a second click to confirm batch delete', async () => {
+      await navigation.switchView('ENV_CALLBACKS');
+
+      let count = (await browser.execute(
+        () =>
+          document.querySelectorAll(
+            '.callbacks-menu .menu-list .nav-item:not(.d-none)'
+          ).length
+      )) as number;
+      while (count < 2) {
+        await callbacks.add();
+        count += 1;
+      }
+
+      await utils.ctrlSelect(
+        $('.callbacks-menu .menu-list .nav-item:nth-child(1) .nav-link')
+      );
+      await utils.ctrlSelect(
+        $('.callbacks-menu .menu-list .nav-item:nth-child(2) .nav-link')
+      );
+
+      await utils.assertElementText(
+        $('.callbacks-menu .toolbar span'),
+        '2 selected'
+      );
+
+      await $('#callbacks-batch-delete').click();
+      await callbacks.assertCount(count);
+
+      await $('#callbacks-batch-delete').click();
+      await callbacks.assertCount(count - 2);
     });
   });
 });

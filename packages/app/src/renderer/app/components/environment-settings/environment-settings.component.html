@@ -1,5 +1,7 @@
 @let instanceUrl = instanceUrl$ | async;
 @let activeEnvironment = activeEnvironment$ | async;
+@let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
+@let activeEnvironmentStatus = activeEnvironmentStatus$ | async;
 
 @if (activeEnvironment) {
   <div class="d-flex flex-column h-100 p-2" [formGroup]="activeEnvironmentForm">
@@ -78,6 +80,71 @@
     </div>
 
     @if (!isWeb) {
+      <app-title-separator heading="Admin API" icon="endpoints">
+        <div subheading>
+          Admin API available on
+          {{
+            instanceUrl +
+              (activeEnvironment.endpointPrefix
+                ? '/' + activeEnvironment.endpointPrefix
+                : '')
+          }}/mockoon-admin
+        </div>
+      </app-title-separator>
+
+      <div class="input-group align-items-center mb-3">
+        <span class="text-muted">
+          Each mock exposes an admin API for runtime state and logs
+          <a
+            class="text-primary ms-1"
+            [href]="adminApiDocsUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            ngbTooltip="Open admin API documentation"
+            aria-label="Open admin API documentation"
+          >
+            <app-svg icon="info" /> </a
+          >. You can use the token below to authenticate your requests to the
+          admin API.
+        </span>
+      </div>
+
+      <div class="input-group align-items-center">
+        <label for="env-settings-admin-api-token" class="pe-2"
+          >Admin API token</label
+        >
+        <div class="col-4">
+          <input
+            type="text"
+            class="form-control"
+            id="env-settings-admin-api-token"
+            [value]="
+              activeEnvironmentStatus?.running &&
+              activeEnvironmentStatus?.adminApiAuthToken
+                ? activeEnvironmentStatus?.adminApiAuthToken
+                : 'Start the environment to generate a token'
+            "
+            readonly
+          />
+        </div>
+        <button
+          type="button"
+          class="btn btn-link"
+          ngbTooltip="Copy token to clipboard"
+          [disabled]="
+            !activeEnvironmentStatus?.running ||
+            !activeEnvironmentStatus?.adminApiAuthToken
+          "
+          (click)="
+            copyAdminApiToken(activeEnvironmentStatus!.adminApiAuthToken!)
+          "
+        >
+          <app-svg icon="assignment" />
+        </button>
+      </div>
+    }
+
+    @if (!isWeb) {
       <app-title-separator
         heading="TLS"
         icon="lock"
@@ -131,6 +198,7 @@
               class="btn btn-link"
               ngbTooltip="Browse files"
               (click)="browseFiles('pfxPath')"
+              [disabled]="!isActiveEnvironmentEditable"
             >
               <app-svg icon="find_in_page" />
             </button>
@@ -151,6 +219,7 @@
               class="btn btn-link"
               ngbTooltip="Browse files"
               (click)="browseFiles('certPath')"
+              [disabled]="!isActiveEnvironmentEditable"
             >
               <app-svg icon="find_in_page" />
             </button>
@@ -165,6 +234,7 @@
               class="btn btn-link"
               ngbTooltip="Browse files"
               (click)="browseFiles('keyPath')"
+              [disabled]="!isActiveEnvironmentEditable"
             >
               <app-svg icon="find_in_page" />
             </button>
@@ -185,6 +255,7 @@
             class="btn btn-link"
             ngbTooltip="Browse files"
             (click)="browseFiles('caPath')"
+            [disabled]="!isActiveEnvironmentEditable"
           >
             <app-svg icon="find_in_page" />
           </button>

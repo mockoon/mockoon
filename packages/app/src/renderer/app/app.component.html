@@ -1,9 +1,10 @@
 @let toasts = toasts$ | async;
 @let activeEnvironment = activeEnvironment$ | async;
 @let activeView = activeView$ | async;
+@let displayOfflineBanner = displayOfflineBanner$ | async;
 
 <div class="toasts-container">
-  @for (toast of toasts; track $index) {
+  @for (toast of toasts; track toast.UUID) {
     <ngb-toast
       [class]="'toast-' + toast.type"
       [autohide]="true"
@@ -26,6 +27,10 @@
     <div class="d-flex flex-column flex-fill h-100 position-relative">
       <!-- Header: env name +start / env port + prefix -->
       <app-header />
+
+      @if (activeEnvironment && displayOfflineBanner) {
+        <app-offline-banner />
+      }
 
       @if (activeEnvironment) {
         <div class="main-content flex-fill mh0 h-100">

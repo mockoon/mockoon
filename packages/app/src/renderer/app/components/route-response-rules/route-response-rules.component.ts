@@ -1,4 +1,4 @@
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
+  AbstractControl,
   FormsModule,
   ReactiveFormsModule,
   UntypedFormArray,
@@ -32,6 +33,7 @@ import {
   map,
   tap
 } from 'rxjs/operators';
+import { StableTrackBy } from 'src/renderer/app/classes/stable-track-by';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
@@ -57,11 +59,9 @@ import { Store } from 'src/renderer/app/stores/store';
   styleUrls: ['./route-response-rules.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     FormsModule,
     ReactiveFormsModule,
     ToggleComponent,
-    NgFor,
     DraggableDirective,
     DropzoneDirective,
     CustomSelectComponent,
@@ -75,6 +75,7 @@ export class RouteResponseRulesComponent {
   private environmentsService = inject(EnvironmentsService);
   private formBuilder = inject(UntypedFormBuilder);
   private store = inject(Store);
+  public ruleTrackBy = new StableTrackBy<AbstractControl>();
   public activeRouteResponse$ = this.store.selectActiveRouteResponse();
   public activeRoute$ = this.store.selectActiveRoute();
   @Output()
@@ -129,7 +130,7 @@ export class RouteResponseRulesComponent {
     array_includes: 'Value',
     valid_json_schema: 'Databucket ID or name'
   };
-  public operatorDisablingForTargets = {
+  public disabledOperatorsPerTarget = {
     request_number: [
       'null',
       'empty_array',
@@ -162,6 +163,18 @@ export class RouteResponseRulesComponent {
     (text$: Observable<string>) => Observable<readonly any[]>
   >();
   private listenToChanges = true;
+  public isActiveEnvironmentEditable$ = this.store
+    .selectIsActiveEnvironmentEditable()
+    .pipe(
+      tap((isEditable) => {
+        if (isEditable) {
+          this.form.enable({ emitEvent: false });
+          this.refreshDisabledFields();
+        } else {
+          this.form.disable({ emitEvent: false });
+        }
+      })
+    );
 
   public get rules() {
     return this.form.get('rules') as UntypedFormArray;
@@ -195,6 +208,31 @@ export class RouteResponseRulesComponent {
         takeUntilDestroyed()
       )
       .subscribe();
+  }
+
+  /**
+   * When the form is fully re-enabled, [attr.disabled] may be reset and
+   * the rules not applied anymore
+   *
+   * (Ideally, we will switch to signal forms where this is not an issue)
+   */
+  private refreshDisabledFields() {
+    this.rules.value.forEach((rule: ResponseRule, index: number) => {
+      const target = rule.target;
+      const operator = rule.operator;
+
+      if (['request_number', 'path', 'method'].includes(target)) {
+        this.rules.at(index).get('modifier').disable({ emitEvent: false });
+      } else {
+        this.rules.at(index).get('modifier').enable({ emitEvent: false });
+      }
+
+      if (['null', 'empty_array'].includes(operator)) {
+        this.rules.at(index).get('value').disable({ emitEvent: false });
+      } else {
+        this.rules.at(index).get('value').enable({ emitEvent: false });
+      }
+    });
   }
 
   /**
@@ -275,6 +313,9 @@ export class RouteResponseRulesComponent {
   private replaceRules(newRules: ResponseRule[], listenToChanges = true) {
     this.listenToChanges = listenToChanges;
 
+    // Preserve the current disabled state of the form
+    const isFormDisabled = this.form.disabled;
+
     this.rules.clear();
 
     newRules.forEach((rule) => {
@@ -284,6 +325,11 @@ export class RouteResponseRulesComponent {
         } as ResponseRule)
       );
     });
+
+    // Reapply the disabled state if necessary
+    if (isFormDisabled) {
+      this.form.disable({ emitEvent: false });
+    }
 
     this.listenToChanges = true;
   }

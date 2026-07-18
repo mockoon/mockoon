@@ -1,4 +1,4 @@
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -42,12 +42,10 @@ import { environment as env } from 'src/renderer/environments/environment';
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     NgbPopover,
     TourStepDirective,
     NgbTooltip,
     SvgComponent,
-    NgFor,
     TeamPresenceComponent,
     NgbDropdown,
     NgbDropdownToggle,

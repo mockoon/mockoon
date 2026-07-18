@@ -8,3 +8,8 @@
 
   position: relative; // we need this for the resize-column
 }
+
+// Multi-selection specific background
+.routes-menu .nav.flex-column .nav-link.selected {
+  background-color: darken($custom-gray, 12%);
+}

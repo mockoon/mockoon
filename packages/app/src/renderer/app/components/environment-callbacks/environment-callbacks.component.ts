@@ -188,6 +188,17 @@ export class EnvironmentCallbacksComponent {
       }
     }
   ];
+  public isActiveEnvironmentEditable$ = this.store
+    .selectIsActiveEnvironmentEditable()
+    .pipe(
+      tap((isEditable) => {
+        if (isEditable) {
+          this.activeCallbackForm.enable({ emitEvent: false });
+        } else {
+          this.activeCallbackForm.disable({ emitEvent: false });
+        }
+      })
+    );
 
   constructor() {
     this.activeEnvironment$ = this.store

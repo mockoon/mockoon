@@ -110,7 +110,7 @@ describe('Databucket duplication to another environment', () => {
 
     const modalText = await $('.modal-content .modal-title small').getText();
 
-    expect(modalText).toContain('My Databucket');
+    expect(modalText).toContain('Copy 1 data bucket to:');
 
     await modals.assertDuplicationModalEnvName('Basic data');
     await modals.assertDuplicationModalEnvHostname('localhost:3000/');
@@ -390,6 +390,9 @@ describe('Databuckets selection in responses', () => {
   it('should be able to purge databuckets state with admin endpoint', async () => {
     await environments.stop();
     await environments.start();
+
+    const adminApiAuthToken = await environments.getEnvironmentAdminApiToken();
+
     await http.assertCall({
       method: 'GET',
       path: '/databucketWithReqHelper?param=testvalue1',
@@ -403,7 +406,10 @@ describe('Databuckets selection in responses', () => {
 
     await http.assertCall({
       method: 'PURGE',
-      path: '/mockoon-admin/state'
+      path: '/mockoon-admin/state',
+      headers: {
+        Authorization: `Bearer ${adminApiAuthToken}`
+      }
     });
     await http.assertCall({
       method: 'GET',
@@ -413,12 +419,47 @@ describe('Databuckets selection in responses', () => {
 
     await http.assertCall({
       method: 'POST',
-      path: '/mockoon-admin/state/purge'
+      path: '/mockoon-admin/state/purge',
+      headers: {
+        Authorization: `Bearer ${adminApiAuthToken}`
+      }
     });
     await http.assertCall({
       method: 'GET',
       path: '/databucketWithReqHelper?param=testvalue4',
       testedResponse: { body: 'testvalue4' }
     });
+  });
+});
+
+describe('Databuckets toolbar batch actions', () => {
+  it('should require a second click to confirm batch delete', async () => {
+    await environments.localAdd('batch-toolbar-databuckets');
+    await navigation.switchView('ENV_DATABUCKETS');
+
+    let count = await $$('.databuckets-menu .menu-list .nav-item:not(.d-none)')
+      .length;
+    while (count < 2) {
+      await databuckets.add();
+      count += 1;
+    }
+
+    await utils.ctrlSelect(
+      $('.databuckets-menu .menu-list .nav-item:nth-child(1) .nav-link')
+    );
+    await utils.ctrlSelect(
+      $('.databuckets-menu .menu-list .nav-item:nth-child(2) .nav-link')
+    );
+
+    await utils.assertElementText(
+      $('.databuckets-menu .toolbar span'),
+      '2 selected'
+    );
+
+    await $('#databuckets-batch-delete').click();
+    await databuckets.assertCount(count);
+
+    await $('#databuckets-batch-delete').click();
+    await databuckets.assertCount(count - 2);
   });
 });

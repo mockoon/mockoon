@@ -10,7 +10,6 @@ import {
 } from '@angular/forms';
 import {
   DeployInstance,
-  Plans,
   SyncDisconnectReasons,
   SyncErrors
 } from '@mockoon/cloud';
@@ -25,7 +24,7 @@ import {
   NgbPopover,
   NgbTooltip
 } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, combineLatest, merge, of } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, merge, of } from 'rxjs';
 import {
   distinctUntilChanged,
   distinctUntilKeyChanged,
@@ -111,7 +110,13 @@ export class EnvironmentsMenuComponent {
   public menuSize = Config.defaultMainMenuSize;
   public editingName = false;
   public activeEnvironmentForm: UntypedFormGroup;
-  public dragEnabled = true;
+  private manualDragEnabled$ = new BehaviorSubject(true);
+  public dragEnabled$ = combineLatest([
+    this.store.selectIsActiveEnvironmentEditable(),
+    this.manualDragEnabled$
+  ]).pipe(
+    map(([isEditable, manualDragEnabled]) => isEditable && manualDragEnabled)
+  );
   public logsRecording$ = this.eventsService.logsRecording$;
   public user$ = this.store.select('user');
   public sync$ = this.store.select('sync');
@@ -121,19 +126,12 @@ export class EnvironmentsMenuComponent {
   public isConnected$ = this.user$.pipe(map((user) => !!user));
   public syncAlert$: Observable<string>;
   public clearRecentLocalEnvironmentsConfirm$ = new TimedBoolean();
-  public offlineWarningLink = Config.docs.cloudSyncOffline;
   public isWeb = Config.isWeb;
   public deployInstances$ = this.store.select('deployInstances');
   public buildApiUrl = buildApiUrl;
   public alertLabels = {
     VERSION_TOO_OLD_WARNING:
-      'We will soon not support your Mockoon version anymore. Please update.',
-    OFFLINE_WARNING:
-      'Concurrent offline editing may result in conflicts. In case of conflict, you will be prompted to choose between the local or remote version. Click to learn more.',
-    OFFLINE_WARNING_SOLO:
-      'Concurrent offline editing (multiple devices) may result in conflicts. In case of conflict, you will be prompted to choose between the local or remote version. Click to learn more.',
-    OFFLINE_WARNING_GROUP:
-      'Concurrent offline editing may result in conflicts. In case of conflict, you will be prompted to choose between the local or remote version. Click to learn more.'
+      'We will soon not support your Mockoon version anymore. Please update.'
   };
   public commonDropdownMenuItems: DropdownMenuItem[] = [
     {
@@ -141,7 +139,9 @@ export class EnvironmentsMenuComponent {
       icon: this.isWeb ? 'content_copy' : 'cloud',
       twoSteps: false,
       disabled$: () =>
-        this.store.select('sync').pipe(map((sync) => !sync.status)),
+        this.store
+          .selectIsCloudEditable()
+          .pipe(map((isEditable) => !isEditable)),
       action: ({ environmentUuid }: dropdownMenuPayload) => {
         this.environmentsService.duplicateToCloud(environmentUuid).subscribe();
       }
@@ -252,9 +252,12 @@ export class EnvironmentsMenuComponent {
         ),
       twoSteps: false,
       disabled$: () =>
-        this.store
-          .select('user')
-          .pipe(map((user) => !user || user?.plan === 'FREE')),
+        combineLatest([
+          this.store.select('user'),
+          this.store.select('sync')
+        ]).pipe(
+          map(([user, sync]) => !user || user?.plan === 'FREE' || !sync?.status)
+        ),
       action: ({ environmentUuid }: dropdownMenuPayload) => {
         this.uiService.openModal('deploy', environmentUuid);
       }
@@ -282,6 +285,10 @@ export class EnvironmentsMenuComponent {
       label: 'Reimport from OpenAPI/Swagger',
       icon: 'description',
       twoSteps: false,
+      disabled$: () =>
+        this.store
+          .selectIsCloudEditable()
+          .pipe(map((isEditable) => !isEditable)),
       action: ({ environmentUuid }: dropdownMenuPayload) => {
         this.uiService.openModal('openApiImport', {
           cloud: true,
@@ -309,7 +316,9 @@ export class EnvironmentsMenuComponent {
             icon: 'cloud_remove',
             twoSteps: false,
             disabled$: () =>
-              this.store.select('sync').pipe(map((sync) => !sync.status)),
+              this.store
+                .selectIsCloudEditable()
+                .pipe(map((isEditable) => !isEditable)),
             action: ({ environmentUuid }: dropdownMenuPayload) => {
               this.environmentsService
                 .convertCloudToLocal(environmentUuid)
@@ -322,7 +331,9 @@ export class EnvironmentsMenuComponent {
       icon: this.isWeb ? 'delete' : 'cloud_remove',
       twoSteps: false,
       disabled$: () =>
-        this.store.select('sync').pipe(map((sync) => !sync.status)),
+        this.store
+          .selectIsCloudEditable()
+          .pipe(map((isEditable) => !isEditable)),
       action: ({ environmentUuid }: dropdownMenuPayload) => {
         this.environmentsService.deleteFromCloud(environmentUuid).subscribe();
       }
@@ -423,10 +434,6 @@ export class EnvironmentsMenuComponent {
       separator: true
     }
   ];
-  private userAndSync$ = combineLatest([
-    this.store.select('user').pipe(distinctUntilChanged()),
-    this.store.select('sync').pipe(distinctUntilChanged())
-  ]);
   private categories: {
     id: EnvironmentsCategories;
     label: string;
@@ -532,25 +539,11 @@ export class EnvironmentsMenuComponent {
         }));
       })
     );
-    this.syncAlert$ = combineLatest([
-      this.cloudEnvironments$,
-      this.userAndSync$
-    ]).pipe(
-      map(([cloudEnvironments, [user, sync]]) => {
+    this.syncAlert$ = this.sync$.pipe(
+      map((sync) => {
         // if we have an alert from the server, display it
         if (sync.alert) {
           return sync.alert;
-        }
-
-        // if we have cloud environments and the sync is not running, display a warning to inform about offline mode
-        if (cloudEnvironments.length > 0 && !sync.status) {
-          return `OFFLINE_WARNING${
-            user && user.plan !== 'FREE'
-              ? user.plan === Plans.SOLO
-                ? '_SOLO'
-                : '_GROUP'
-              : ''
-          }`;
         }
 
         return null;
@@ -635,10 +628,23 @@ export class EnvironmentsMenuComponent {
         takeUntilDestroyed()
       )
       .subscribe();
+    this.store
+      .selectIsActiveEnvironmentEditable()
+      .pipe(
+        tap((isEditable) => {
+          if (isEditable) {
+            this.activeEnvironmentForm.enable({ emitEvent: false });
+          } else {
+            this.activeEnvironmentForm.disable({ emitEvent: false });
+          }
+        }),
+        takeUntilDestroyed()
+      )
+      .subscribe();
   }
 
   public enableDrag(enable: boolean) {
-    this.dragEnabled = enable;
+    this.manualDragEnabled$.next(enable);
   }
 
   /**

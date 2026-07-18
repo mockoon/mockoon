@@ -9,7 +9,20 @@ import {
 import { Title } from '@angular/platform-browser';
 import { Environment } from '@mockoon/commons';
 import { NgbToast } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, from, fromEvent, switchMap, tap } from 'rxjs';
+import {
+  Observable,
+  auditTime,
+  combineLatest,
+  delay,
+  distinctUntilChanged,
+  from,
+  fromEvent,
+  map,
+  of,
+  startWith,
+  switchMap,
+  tap
+} from 'rxjs';
 import { EnvironmentCallbacksComponent } from 'src/renderer/app/components/environment-callbacks/environment-callbacks.component';
 import { EnvironmentDatabucketsComponent } from 'src/renderer/app/components/environment-databuckets/environment-databuckets.component';
 import { EnvironmentHeadersComponent } from 'src/renderer/app/components/environment-headers/environment-headers.component';
@@ -33,13 +46,13 @@ import { RemoteConfigService } from 'src/renderer/app/services/remote-config.ser
 import { ServerService } from 'src/renderer/app/services/server.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { SyncService } from 'src/renderer/app/services/sync.service';
-import { TelemetryService } from 'src/renderer/app/services/telemetry.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { TourService } from 'src/renderer/app/services/tour.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { environment } from 'src/renderer/environments/environment';
+import { OfflineBannerComponent } from './components/offline-banner/offline-banner.component';
 
 @Component({
   selector: 'app-root',
@@ -58,11 +71,11 @@ import { environment } from 'src/renderer/environments/environment';
     EnvironmentSettingsComponent,
     FooterComponent,
     TourComponent,
-    AsyncPipe
+    AsyncPipe,
+    OfflineBannerComponent
   ]
 })
 export class AppComponent implements OnInit {
-  private telemetryService = inject(TelemetryService);
   private environmentsService = inject(EnvironmentsService);
   private store = inject(Store);
   private toastService = inject(ToastsService);
@@ -81,6 +94,34 @@ export class AppComponent implements OnInit {
   private loggerService = inject(LoggerService);
   public activeEnvironment$: Observable<Environment>;
   public activeView$: Observable<ViewsNameType>;
+  public displayOfflineBanner$ = combineLatest([
+    this.store.selectIsActiveEnvironmentEditable(),
+    this.store.select('sync').pipe(
+      map((sync) => sync?.lastDisconnectedAt),
+      distinctUntilChanged()
+    )
+  ]).pipe(
+    auditTime(0),
+    switchMap(([isEditable, lastDisconnectedAt]) => {
+      if (isEditable) {
+        return of(false);
+      }
+      if (lastDisconnectedAt === null) {
+        return of(true).pipe(delay(6000));
+      }
+
+      const elapsed = Date.now() - lastDisconnectedAt;
+
+      if (elapsed >= 6000) {
+        return of(true);
+      }
+
+      return of(true).pipe(delay(6000 - elapsed));
+    }),
+    // Hide the banner during the initial async pipe `null` state to avoid
+    // flashing it before the first real emission.
+    startWith(false)
+  );
   public scrollToBottom = this.uiService.scrollToBottom;
   public toasts$: Observable<Toast[]>;
   public os: string;
@@ -100,11 +141,6 @@ export class AppComponent implements OnInit {
         this.deployService.getInstances().subscribe();
       }
     }
-  }
-
-  @HostListener('document:click')
-  public documentClick() {
-    this.telemetryService.sendEvent();
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -164,8 +200,6 @@ export class AppComponent implements OnInit {
     fromEvent(window, 'online')
       .pipe(switchMap(() => this.userService.reloadUser()))
       .subscribe();
-
-    this.telemetryService.init().subscribe();
 
     this.activeEnvironment$ = this.store.selectActiveEnvironment().pipe(
       tap((activeEnvironment) => {

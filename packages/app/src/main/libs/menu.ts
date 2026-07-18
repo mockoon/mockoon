@@ -339,33 +339,6 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
   return Menu.buildFromTemplate(menu);
 };
 
-// menu items requiring at least one environment
-const requireEnvironmentsMenuItems = [
-  'MENU_DUPLICATE_ENVIRONMENT',
-  'MENU_CLOSE_ENVIRONMENT',
-  'MENU_NEW_ROUTE',
-  'MENU_DUPLICATE_ROUTE',
-  'MENU_DELETE_ROUTE',
-  'MENU_START_ENVIRONMENT',
-  'MENU_START_ALL_ENVIRONMENTS',
-  'MENU_PREVIOUS_ENVIRONMENT',
-  'MENU_NEXT_ENVIRONMENT',
-  'MENU_PREVIOUS_ROUTE',
-  'MENU_NEXT_ROUTE'
-];
-
-// menu items requiring cloud to be active
-const requireCloudMenuItems = ['MENU_NEW_CLOUD_ENVIRONMENT'];
-// menu items requiring an active cloud environment
-const requireCloudActiveEnvironmentMenuItems = ['MENU_CLOSE_ENVIRONMENT'];
-// route specific menu items based on active environment routes count
-const requireRoutesMenuItems = [
-  'MENU_DUPLICATE_ROUTE',
-  'MENU_DELETE_ROUTE',
-  'MENU_PREVIOUS_ROUTE',
-  'MENU_NEXT_ROUTE'
-];
-
 const toggleMenuItems = (items: string[], enabled: boolean) => {
   const menu = Menu.getApplicationMenu();
 
@@ -379,14 +352,33 @@ const toggleMenuItems = (items: string[], enabled: boolean) => {
 };
 
 export const updateMenuState = (state: MenuStateUpdatePayload) => {
-  toggleMenuItems(requireEnvironmentsMenuItems, state.environmentsCount > 0);
-  toggleMenuItems(requireCloudMenuItems, state.cloudEnabled);
   toggleMenuItems(
-    requireCloudActiveEnvironmentMenuItems,
-    !state.isActiveEnvironmentCloud
+    [
+      'MENU_DUPLICATE_ENVIRONMENT',
+      'MENU_START_ENVIRONMENT',
+      'MENU_START_ALL_ENVIRONMENTS',
+      'MENU_PREVIOUS_ENVIRONMENT',
+      'MENU_NEXT_ENVIRONMENT'
+    ],
+    state.environmentsCount > 0
+  );
+  toggleMenuItems(['MENU_NEW_CLOUD_ENVIRONMENT'], state.cloudEnabled);
+  toggleMenuItems(
+    ['MENU_CLOSE_ENVIRONMENT'],
+    state.hasActiveEnvironment && !state.isActiveEnvironmentCloud
   );
   toggleMenuItems(
-    requireRoutesMenuItems,
-    state.activeEnvironmentRoutesCount > 0
+    ['MENU_PREVIOUS_ROUTE', 'MENU_NEXT_ROUTE'],
+    state.hasActiveEnvironment && state.activeEnvironmentRoutesCount > 0
+  );
+  toggleMenuItems(
+    ['MENU_NEW_ROUTE', 'MENU_NEW_ROUTE_CLIPBOARD'],
+    state.hasActiveEnvironment && state.isActiveEnvironmentEditable
+  );
+  toggleMenuItems(
+    ['MENU_DUPLICATE_ROUTE', 'MENU_DELETE_ROUTE'],
+    state.hasActiveEnvironment &&
+      state.activeEnvironmentRoutesCount > 0 &&
+      state.isActiveEnvironmentEditable
   );
 };

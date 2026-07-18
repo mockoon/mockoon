@@ -1,4 +1,10 @@
-import { BodyTypes, LogicalOperators, ResponseRule } from '@mockoon/commons';
+import {
+  BodyTypes,
+  LogicalOperators,
+  ResponseRule,
+  ResponseRuleOperators,
+  ResponseRuleTargets
+} from '@mockoon/commons';
 import { TabsNameType } from '../../src/renderer/app/models/store.model';
 import utils, {
   DropdownMenuFolderActions,
@@ -13,7 +19,7 @@ export enum RoutesMenuActions {
   ADD_FOLDER = 5
 }
 class Routes {
-  private rulesTargetIndexes = {
+  private rulesTargetIndexes: Record<ResponseRuleTargets, number> = {
     body: 1,
     query: 2,
     header: 3,
@@ -21,14 +27,19 @@ class Routes {
     params: 5,
     path: 6,
     method: 7,
-    request_number: 8
+    request_number: 8,
+    global_var: 9,
+    data_bucket: 10,
+    templating: 11
   };
-  private rulesOperatorsIndexes = {
+  private rulesOperatorsIndexes: Record<ResponseRuleOperators, number> = {
     equals: 1,
     regex: 2,
     regex_i: 3,
     null: 4,
-    empty_array: 5
+    empty_array: 5,
+    array_includes: 6,
+    valid_json_schema: 7
   };
   private activeMenuEntrySelector = '.routes-menu .nav-item .nav-link.active';
 
@@ -225,7 +236,7 @@ class Routes {
 
   public getRouteResponseFlagBtn(index: number) {
     return $(
-      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) span:nth-child(2) app-svg`
+      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) button app-svg`
     );
   }
 
@@ -320,6 +331,48 @@ class Routes {
       DropdownMenuFolderActions.DELETE,
       true
     );
+  }
+
+  /**
+   * Ctrl/Cmd-click a route menu item to add it to the multi-selection.
+   * Uses the Meta (Cmd) key on macOS, Control elsewhere.
+   */
+  public async ctrlSelect(index: number): Promise<void> {
+    const item = await this.getMenuItem(index);
+    await utils.ctrlSelect(item);
+  }
+
+  public async assertBatchSelectionCount(expected: number): Promise<void> {
+    await utils.assertElementText(
+      $('.routes-menu .toolbar span'),
+      `${expected} selected`
+    );
+  }
+
+  public async assertBatchBarVisible(visible = true): Promise<void> {
+    await $('.routes-menu .toolbar').waitForExist({ reverse: !visible });
+  }
+
+  public async batchDuplicate(): Promise<void> {
+    await $('#routes-batch-duplicate').click();
+  }
+
+  public async batchDuplicateToEnvironment(): Promise<void> {
+    await $('#routes-batch-duplicate-to-env').click();
+  }
+
+  public async batchToggle(): Promise<void> {
+    await $('#routes-batch-toggle').click();
+  }
+
+  public async batchDelete(): Promise<void> {
+    // two-step confirm: click twice
+    await $('#routes-batch-delete').click();
+    await $('#routes-batch-delete').click();
+  }
+
+  public async clearBatchSelection(): Promise<void> {
+    await $('#routes-batch-clear').click();
   }
 
   public async selectTemplate(index: 1 | 2): Promise<void> {
@@ -484,7 +537,7 @@ class Routes {
 
   public async assertDefaultRouteResponse(index: number, reverse = false) {
     const flag = $(
-      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) span:nth-child(2) app-svg`
+      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) button app-svg`
     );
 
     if (reverse) {
@@ -506,7 +559,7 @@ class Routes {
     className: string
   ) {
     const flagContainer = $(
-      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) span:nth-child(2)`
+      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) button`
     );
 
     await utils.assertHasClass(flagContainer, className);
@@ -514,7 +567,7 @@ class Routes {
 
   public async setDefaultRouteResponse(index: number) {
     const flag = $(
-      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) span:nth-child(2)`
+      `.route-responses-dropdown-menu .dropdown-item:nth-child(${index}) button`
     );
     await flag.click();
   }
@@ -578,7 +631,7 @@ class Routes {
 
   public async assertRulesOperator(operator: LogicalOperators) {
     const element = await $(
-      `.rules-operator #rules-operators-${operator} input`
+      `.rules-operator #rules-operators-${operator}-input`
     );
     const selected: boolean = await element.isSelected();
     expect(selected).toEqual(true);
@@ -633,7 +686,7 @@ class Routes {
     index: number,
     level: number
   ): Promise<void> {
-    const levels = {
+    const levels: Record<number, string> = {
       1: '14px',
       2: '35px',
       3: '63px'

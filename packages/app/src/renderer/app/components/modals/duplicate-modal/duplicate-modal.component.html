@@ -1,19 +1,33 @@
+@let environments = environments$ | async;
+@let entityDuplicationState = entityDuplicationState$ | async;
+
 <div class="modal-header">
   <h3 class="modal-title">
     Choose target environment
     <br />
     <small class="text-muted h6">
-      Copy the
-      <ng-container *ngIf="entityInformation.subject === 'route'">
-        route
-      </ng-container>
-      <ng-container *ngIf="entityInformation.subject === 'databucket'">
-        data bucket
-      </ng-container>
-      <ng-container *ngIf="entityInformation.subject === 'callback'">
-        callback
-      </ng-container>
-      <code>{{ entityInformation.displayName }}</code>
+      Copy {{ entityDuplicationState.subjectUuids.length }}
+      @switch (entityDuplicationState.subject) {
+        @case ('route') {
+          {{
+            entityDuplicationState.subjectUuids.length > 1 ? 'routes' : 'route'
+          }}
+        }
+        @case ('databucket') {
+          {{
+            entityDuplicationState.subjectUuids.length > 1
+              ? 'data buckets'
+              : 'data bucket'
+          }}
+        }
+        @case ('callback') {
+          {{
+            entityDuplicationState.subjectUuids.length > 1
+              ? 'callbacks'
+              : 'callback'
+          }}
+        }
+      }
       to:
     </small>
   </h3>
@@ -21,11 +35,11 @@
 
 <div class="modal-body p-0">
   <div class="list-group list-group-flush">
-    <ng-container *ngFor="let environment of environments$ | async">
+    @for (environment of environments; track environment.uuid) {
       <button
         class="list-group-item list-group-item-action"
         type="button"
-        (click)="chooseTargetEnvironment(environment, entityInformation)"
+        (click)="chooseTargetEnvironment(environment, entityDuplicationState)"
       >
         <div class="text-truncate">{{ environment.name }}</div>
         <div class="nav-link-subtitle text-truncate">
@@ -34,7 +48,7 @@
           }}
         </div>
       </button>
-    </ng-container>
+    }
   </div>
 </div>
 <div class="modal-footer">

@@ -103,9 +103,6 @@ import {
   addRouteAction,
   addRouteResponseAction,
   convertEnvironmentToLocalAction,
-  duplicateCallbackToAnotherEnvironmentAction,
-  duplicateDatabucketToAnotherEnvironmentAction,
-  duplicateRouteToAnotherEnvironmentAction,
   logRequestAction,
   navigateEnvironmentsAction,
   refreshEnvironmentAction,
@@ -1583,20 +1580,32 @@ export class EnvironmentsService {
    * Duplicate a route to another environment
    */
   public duplicateRouteInAnotherEnvironment(
-    routeUUID: string,
-    targetEnvironmentUUID: string
+    routeUuid: string,
+    targetEnvironmentUuid: string
   ) {
-    const routeToDuplicate = this.store.getRouteByUUID(routeUUID);
+    const routeToDuplicate = this.store.getRouteByUUID(routeUuid);
+    const isTargetEnvCloud = this.store
+      .get('settings')
+      .environments.some(
+        (environment) =>
+          environment.uuid === targetEnvironmentUuid && environment.cloud
+      );
+
+    // WS routes are not supported in cloud environments for now
+    if (
+      routeToDuplicate &&
+      isTargetEnvCloud &&
+      routeToDuplicate.type === RouteType.WS
+    ) {
+      return;
+    }
 
     if (routeToDuplicate) {
       let newRoute: Route = CloneObject(routeToDuplicate);
       newRoute = this.dataService.renewRouteUUIDs(newRoute);
 
       this.store.update(
-        duplicateRouteToAnotherEnvironmentAction(
-          newRoute,
-          targetEnvironmentUUID
-        )
+        addRouteAction(targetEnvironmentUuid, newRoute, 'root', true)
       );
     }
   }
@@ -1604,10 +1613,10 @@ export class EnvironmentsService {
   /**
    * Duplicate a databucket, or the current active databucket and append it at the end
    */
-  public duplicateDatabucket(databucketUUID: string) {
+  public duplicateDatabucket(databucketUuid: string) {
     const activeEnvironment = this.store.getActiveEnvironment();
     const databucketToDuplicate = activeEnvironment.data.find(
-      (data) => data.uuid === databucketUUID
+      (data) => data.uuid === databucketUuid
     );
 
     if (databucketToDuplicate) {
@@ -1651,11 +1660,11 @@ export class EnvironmentsService {
    * Duplicate a databucket to another environment
    */
   public duplicateDatabucketInAnotherEnvironment(
-    databucketUUID: string,
-    targetEnvironmentUUID: string
+    databucketUuid: string,
+    targetEnvironmentUuid: string
   ) {
     const databucketToDuplicate =
-      this.store.getDatabucketByUUID(databucketUUID);
+      this.store.getDatabucketByUUID(databucketUuid);
 
     if (databucketToDuplicate) {
       let newDatabucket: DataBucket = {
@@ -1665,10 +1674,7 @@ export class EnvironmentsService {
       newDatabucket = this.dataService.deduplicateDatabucketID(newDatabucket);
 
       this.store.update(
-        duplicateDatabucketToAnotherEnvironmentAction(
-          newDatabucket,
-          targetEnvironmentUUID
-        )
+        addDatabucketAction(targetEnvironmentUuid, newDatabucket, true)
       );
     }
   }
@@ -1677,10 +1683,10 @@ export class EnvironmentsService {
    * Duplicate a callback to another environment
    */
   public duplicateCallbackInAnotherEnvironment(
-    callbackUUID: string,
-    targetEnvironmentUUID: string
+    callbackUuid: string,
+    targetEnvironmentUuid: string
   ) {
-    const callbackToDuplicate = this.store.getCallbackByUUID(callbackUUID);
+    const callbackToDuplicate = this.store.getCallbackByUUID(callbackUuid);
 
     if (callbackToDuplicate) {
       let newCallback: Callback = {
@@ -1690,10 +1696,7 @@ export class EnvironmentsService {
       newCallback = this.dataService.deduplicateCallbackID(newCallback);
 
       this.store.update(
-        duplicateCallbackToAnotherEnvironmentAction(
-          newCallback,
-          targetEnvironmentUUID
-        )
+        addCallbackAction(targetEnvironmentUuid, newCallback, true)
       );
     }
   }
@@ -2264,14 +2267,15 @@ export class EnvironmentsService {
   }
 
   /**
-   * Sends an event for further process of entity movement
+   * Sends an event for further process of entity movement. Accepts one or
+   * more entity UUIDs
    */
   public startEntityDuplicationToAnotherEnvironment(
-    subjectUUID: string,
-    subject: DataSubject
+    subject: DataSubject,
+    subjectUuids: string[]
   ) {
     this.store.update(
-      startEntityDuplicationToAnotherEnvironmentAction(subjectUUID, subject)
+      startEntityDuplicationToAnotherEnvironmentAction(subject, subjectUuids)
     );
 
     this.uiService.openModal('duplicate_to_environment');
@@ -2485,7 +2489,10 @@ export class EnvironmentsService {
         if (
           this.eventsService.logsRecording$.value[
             serverTransactionPayload.environmentUUID
-          ] === true
+          ] === true &&
+          this.store.getIsEnvironmentEditable(
+            serverTransactionPayload.environmentUUID
+          )
         ) {
           this.createRouteFromLog(
             serverTransactionPayload.environmentUUID,

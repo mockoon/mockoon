@@ -290,40 +290,6 @@
         </div>
       </div>
     </div>
-
-    <app-title-separator heading="Telemetry" icon="show_chart" />
-
-    <div class="ps-4">
-      <div class="mb-3">
-        <div class="input-group align-items-center">
-          <div class="form-check mb-0">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              id="settings-enable-telemetry"
-              formControlName="enableTelemetry"
-            />
-            <label class="form-check-label" for="settings-enable-telemetry"
-              >Enable telemetry
-            </label>
-          </div>
-          <div class="input-group-text">
-            <a href="{{ faqUrl }}" target="_blank">
-              <app-svg icon="info" [ngbTooltip]="telemetryTooltip" />
-            </a>
-            <ng-template #telemetryTooltip>
-              <div>
-                Our custom telemetry system is collecting a minimal amount of
-                information and no personal data
-              </div>
-              <div class="mt-2">
-                ⚠️ Requires application restart to take effect
-              </div>
-            </ng-template>
-          </div>
-        </div>
-      </div>
-    </div>
   }
 </div>
 

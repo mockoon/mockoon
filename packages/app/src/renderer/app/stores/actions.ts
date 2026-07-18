@@ -88,9 +88,6 @@ export const enum ActionTypes {
   UPDATE_UI_STATE = 'UPDATE_UI_STATE',
   START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
   CANCEL_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'CANCEL_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
-  DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT',
-  DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT',
-  DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT',
   FULL_REORDER_ENTITIES = 'FULL_REORDER_ENTITIES',
   UPDATE_PROCESSED_DATABUCKETS = 'UPDATE_PROCESSED_DATABUCKETS',
   UPDATE_FEEDBACK = 'UPDATE_FEEDBACK',
@@ -661,29 +658,16 @@ export const addRouteResponseAction = (
   }) as const;
 
 /**
- * Finalizes route movement to another environment
- */
-export const duplicateRouteToAnotherEnvironmentAction = (
-  route: Route,
-  targetEnvironmentUUID: string
-) =>
-  ({
-    type: ActionTypes.DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT,
-    route,
-    targetEnvironmentUUID
-  }) as const;
-
-/**
- * Triggers movement of an entity to another environment
+ * Triggers movement of one or more entities to another environment
  */
 export const startEntityDuplicationToAnotherEnvironmentAction = (
-  subjectUUID: string,
-  subject: DataSubject
+  subject: DataSubject,
+  subjectUuids: string[]
 ) =>
   ({
     type: ActionTypes.START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT,
-    subjectUUID,
-    subject
+    subject,
+    subjectUuids
   }) as const;
 
 /**
@@ -692,32 +676,6 @@ export const startEntityDuplicationToAnotherEnvironmentAction = (
 export const cancelEntityDuplicationToAnotherEnvironmentAction = () =>
   ({
     type: ActionTypes.CANCEL_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT
-  }) as const;
-
-/**
- * Finalizes databucket movement to another environment
- */
-export const duplicateDatabucketToAnotherEnvironmentAction = (
-  databucket: DataBucket,
-  targetEnvironmentUUID: string
-) =>
-  ({
-    type: ActionTypes.DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT,
-    databucket,
-    targetEnvironmentUUID
-  }) as const;
-
-/**
- * Finalizes databucket movement to another environment
- */
-export const duplicateCallbackToAnotherEnvironmentAction = (
-  callback: Callback,
-  targetEnvironmentUUID: string
-) =>
-  ({
-    type: ActionTypes.DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT,
-    callback,
-    targetEnvironmentUUID
   }) as const;
 
 /**
@@ -769,8 +727,8 @@ export const setActiveCallbackAction = (callbackUUID: string) =>
  *
  * @param environmentUuid - environment UUID to which the databucket is linked to
  * @param databucket - databucket to add
- * @param insertAfterUuid - databucket UUID after which the new databucket must be inserted
  * @param uiReset - indicates if the databucket must be selected after addition
+ * @param insertAfterUuid - databucket UUID after which the new databucket must be inserted
  */
 export const addDatabucketAction = (
   environmentUuid: string,
@@ -1086,9 +1044,6 @@ export type Actions =
   | ReturnType<typeof updateSettingsEnvironmentDescriptorAction>
   | ReturnType<typeof startEntityDuplicationToAnotherEnvironmentAction>
   | ReturnType<typeof cancelEntityDuplicationToAnotherEnvironmentAction>
-  | ReturnType<typeof duplicateRouteToAnotherEnvironmentAction>
-  | ReturnType<typeof duplicateDatabucketToAnotherEnvironmentAction>
-  | ReturnType<typeof duplicateCallbackToAnotherEnvironmentAction>
   | ReturnType<typeof updateProcessedDatabucketsAction>
   | ReturnType<typeof updateFeedbackAction>
   | ReturnType<typeof updateRemoteConfigAction>

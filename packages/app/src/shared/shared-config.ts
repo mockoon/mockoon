@@ -20,9 +20,6 @@ export const SharedConfig = (options: {
   return {
     isWeb: options.isWeb,
     appVersion,
-    telemetry: {
-      sessionDuration: 3_600_000 // 1h
-    },
     remoteConfigDefaults: {
       dataRefreshInterval: 300_000 // 5 minutes
     },
@@ -33,6 +30,7 @@ export const SharedConfig = (options: {
     changelogMarkdownURL: `${options.websiteURL}desktop-changelogs-markdown/`,
     releasePublicURL: `${options.websiteURL}releases/`,
     docs: {
+      adminApi: `${docsUrl}admin-api/overview/`,
       templating: `${docsUrl}templating/overview/`,
       proxy: `${docsUrl}server-configuration/proxy-mode/`,
       cors: `${docsUrl}server-configuration/cors/`,
@@ -44,7 +42,6 @@ export const SharedConfig = (options: {
       cloudOverview: `${cloudDocsUrl}about/`,
       cloudDeploy: `${cloudDocsUrl}api-mock-cloud-deployments/`,
       cloudSync: `${cloudDocsUrl}data-synchronization-team-collaboration/`,
-      cloudSyncOffline: `${cloudDocsUrl}data-synchronization-team-collaboration/#offline-editing`,
       cloudDeployCliPull: `${cloudDocsUrl}api-mock-cloud-deployments/#self-host-with-the-cli`
     },
     // URLs should not be used directly in desktop app (but there is a redirection for the web app in user service). Instead use the flow methods in the user service

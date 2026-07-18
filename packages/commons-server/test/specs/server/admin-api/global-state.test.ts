@@ -3,6 +3,7 @@ import { strictEqual } from 'node:assert';
 import { after, before, describe, it } from 'node:test';
 import { MockoonServer } from '../../../../src';
 import { getEnvironment } from '../../../libs/environment';
+import { adminFetch, testAdminApiToken } from '../../../libs/utils';
 
 describe('Admin API: global state', () => {
   let environment: Environment;
@@ -13,7 +14,9 @@ describe('Admin API: global state', () => {
   before(async () => {
     environment = await getEnvironment('test');
     environment.port = port;
-    server = new MockoonServer(environment);
+    server = new MockoonServer(environment, {
+      adminApiAuthToken: testAdminApiToken
+    });
     await new Promise((resolve, reject) => {
       server.on('started', () => {
         resolve(true);
@@ -36,7 +39,7 @@ describe('Admin API: global state', () => {
   });
 
   it('should purge the state when PURGE request is made to /mockoon-admin/state', async () => {
-    const response = await fetch(`${url}/mockoon-admin/state`, {
+    const response = await adminFetch(url, '/mockoon-admin/state', {
       method: 'PURGE'
     });
     const body = await response.text();

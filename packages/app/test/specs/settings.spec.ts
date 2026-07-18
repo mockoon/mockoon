@@ -88,21 +88,6 @@ describe('Settings', () => {
     });
   });
 
-  describe('Disable telemetry', () => {
-    it('should disable telemetry and verify the settings file', async () => {
-      await settings.open();
-      await settings.toggleSetting('settings-enable-telemetry');
-      await modals.close();
-
-      await utils.waitForAutosave();
-      await file.verifyObjectPropertyInFile(
-        './tmp/storage/settings.json',
-        'enableTelemetry',
-        false
-      );
-    });
-  });
-
   describe('Faker.js', () => {
     it('should verify Faker.js initial settings', async () => {
       await utils.waitForAutosave();

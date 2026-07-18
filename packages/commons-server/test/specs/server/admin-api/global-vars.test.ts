@@ -3,6 +3,7 @@ import { strictEqual } from 'node:assert';
 import { after, before, describe, it } from 'node:test';
 import { MockoonServer } from '../../../../src';
 import { getEnvironment } from '../../../libs/environment';
+import { adminFetch, testAdminApiToken } from '../../../libs/utils';
 
 describe('Admin API: global vars', () => {
   let environment: Environment;
@@ -13,7 +14,9 @@ describe('Admin API: global vars', () => {
   before(async () => {
     environment = await getEnvironment('test');
     environment.port = port;
-    server = new MockoonServer(environment);
+    server = new MockoonServer(environment, {
+      adminApiAuthToken: testAdminApiToken
+    });
     await new Promise((resolve, reject) => {
       server.on('started', () => {
         resolve(true);
@@ -38,7 +41,7 @@ describe('Admin API: global vars', () => {
   it("should get 404 if var doesn't exists", async () => {
     strictEqual(
       await (
-        await fetch(`${url}/mockoon-admin/global-vars/UNKNOWN_NAME`)
+        await adminFetch(url, '/mockoon-admin/global-vars/UNKNOWN_NAME')
       ).text(),
       '{"message":"Global variable not found"}'
     );
@@ -46,7 +49,7 @@ describe('Admin API: global vars', () => {
 
   it('should get var from the system using admin GET route', async () => {
     strictEqual(
-      await (await fetch(`${url}/mockoon-admin/global-vars/test`)).text(),
+      await (await adminFetch(url, '/mockoon-admin/global-vars/test')).text(),
       '{"key":"test","value":"value1"}'
     );
   });
@@ -54,11 +57,16 @@ describe('Admin API: global vars', () => {
   it('should set global variable on POST to /mockoon-admin/global-vars', async () => {
     const key = 'test';
     const value = 'value2';
-    const response = await fetch(`${url}/mockoon-admin/global-vars`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ key, value })
-    });
+    const response = await adminFetch(
+      url,
+      '/mockoon-admin/global-vars',
+
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, value })
+      }
+    );
     const body = await response.text();
     strictEqual(
       body,
@@ -71,11 +79,16 @@ describe('Admin API: global vars', () => {
   it('should set global variable on PATCH to /mockoon-admin/global-vars', async () => {
     const key = 'test';
     const value = 'value3';
-    const response = await fetch(`${url}/mockoon-admin/global-vars`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ key, value })
-    });
+    const response = await adminFetch(
+      url,
+      '/mockoon-admin/global-vars',
+
+      {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, value })
+      }
+    );
     const body = await response.text();
     strictEqual(
       body,
@@ -88,11 +101,16 @@ describe('Admin API: global vars', () => {
   it('should set global variable on PUT to /mockoon-admin/global-vars', async () => {
     const key = 'test';
     const value = 'value4';
-    const response = await fetch(`${url}/mockoon-admin/global-vars`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ key, value })
-    });
+    const response = await adminFetch(
+      url,
+      '/mockoon-admin/global-vars',
+
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, value })
+      }
+    );
     const body = await response.text();
     strictEqual(
       body,
@@ -102,9 +120,12 @@ describe('Admin API: global vars', () => {
   });
 
   it('should purge global variables when POST request is made to /mockoon-admin/global-vars/purge', async () => {
-    const response = await fetch(`${url}/mockoon-admin/global-vars/purge`, {
-      method: 'POST'
-    });
+    const response = await adminFetch(
+      url,
+      '/mockoon-admin/global-vars/purge',
+
+      { method: 'POST' }
+    );
     const body = await response.text();
     strictEqual(body, '{"message":"Global variables have been purged"}');
 

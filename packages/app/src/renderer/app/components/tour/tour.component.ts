@@ -1,4 +1,4 @@
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -16,7 +16,7 @@ import { TourService } from 'src/renderer/app/services/tour.service';
   selector: 'app-tour',
   templateUrl: 'tour.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgFor, SvgComponent, NgIf, AsyncPipe]
+  imports: [SvgComponent, AsyncPipe]
 })
 export class TourComponent implements OnInit, AfterViewInit {
   private tourService = inject(TourService);

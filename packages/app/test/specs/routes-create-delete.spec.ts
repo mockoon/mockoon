@@ -95,4 +95,29 @@ describe('Create and delete routes', () => {
       await routes.assertActiveRouteTab(1);
     });
   });
+
+  describe('Batch delete multiple routes', () => {
+    it('should create a fresh environment and add routes', async () => {
+      await environments.localAdd('test-env-batch-delete');
+      await routes.addHTTPRoute();
+      await routes.addHTTPRoute();
+      await routes.addHTTPRoute();
+      // 1 default + 3 added
+      await routes.assertCount(4);
+    });
+
+    it('should ctrl-click to multi-select routes', async () => {
+      await routes.ctrlSelect(1);
+      await routes.ctrlSelect(2);
+      await routes.ctrlSelect(3);
+      await routes.assertBatchBarVisible();
+      await routes.assertBatchSelectionCount(3);
+    });
+
+    it('should batch delete selected routes (two-step confirm)', async () => {
+      await routes.batchDelete();
+      await routes.assertCount(1);
+      await routes.assertBatchBarVisible(false);
+    });
+  });
 });

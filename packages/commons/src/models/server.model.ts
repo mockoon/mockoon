@@ -120,6 +120,20 @@ export type ServerOptions = {
   enableAdminApi: boolean;
 
   /**
+   * Bearer token required to access the admin API.
+   * If omitted, the runtime generates one automatically.
+   */
+  adminApiAuthToken?: string;
+
+  /**
+   * Explicit list of allowed CORS origins for the admin API (e.g. ['https://app.example.com']).
+   * - When empty/undefined, no CORS headers are emitted (default-deny browser cross-origin requests).
+   * - When a request's `Origin` header matches one of the entries, the origin is echoed back.
+   * - To explicitly opt into wildcard CORS, include `'*'` in the list.
+   */
+  adminApiCorsOrigins?: string[];
+
+  /**
    * Disable TLS
    */
   disableTls: boolean;
@@ -135,6 +149,11 @@ export type ServerOptions = {
    * Enable random latency from 0 to value specified in the route settings.                                                                                                 |
    */
   enableRandomLatency: boolean;
+
+  /**
+   * Add route metadata headers to responses.
+   */
+  enableRouteMetadataHeaders?: boolean;
 
   /**
    * Max file upload number (multipart/form-data).
@@ -157,4 +176,12 @@ export type ServerOptions = {
    * which is configured in the environment definition.
    */
   publicBaseUrl?: string;
+
+  /**
+   * Maximum callback recursion depth allowed.
+   * Prevents infinite callback loops by capping how many times
+   * callbacks can chain (regardless of which route triggers them).
+   * Default is 100.
+   */
+  maxCallbackDepth?: number;
 };

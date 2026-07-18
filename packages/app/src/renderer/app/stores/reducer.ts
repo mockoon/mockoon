@@ -1,6 +1,5 @@
 import {
   Environment,
-  FolderChild,
   addCallbackMutator,
   addDatabucketMutator,
   addFolderMutator,
@@ -1100,6 +1099,33 @@ export const environmentReducer = (
             routeResponses: ''
           }
         };
+
+        // if duplicating to another environment, also switch to it
+        if (state.activeEnvironmentUUID !== action.environmentUuid) {
+          const targetEnvironment = state.environments.find(
+            (environment) => environment.uuid === action.environmentUuid
+          );
+
+          uiUpdate = {
+            ...uiUpdate,
+            activeEnvironmentUUID: action.environmentUuid,
+            activeDatabucketUUID: targetEnvironment?.data.length
+              ? targetEnvironment.data[0].uuid
+              : null,
+            activeCallbackUUID: targetEnvironment?.callbacks.length
+              ? targetEnvironment.callbacks[0].uuid
+              : null,
+            filters: {
+              ...uiUpdate.filters,
+              routes: '',
+              databuckets: '',
+              templates: '',
+              callbacks: '',
+              logs: '',
+              routeResponses: ''
+            }
+          };
+        }
       }
 
       let newEnvironment: Environment;
@@ -1178,6 +1204,34 @@ export const environmentReducer = (
             callbacks: ''
           }
         };
+
+        // if duplicating to another environment, also switch to it
+        if (state.activeEnvironmentUUID !== action.environmentUuid) {
+          const targetEnvironment = state.environments.find(
+            (environment) => environment.uuid === action.environmentUuid
+          );
+          const { routeUUID, routeResponseUUID } =
+            getFirstRouteAndResponseUUIDs(targetEnvironment);
+
+          uiUpdate = {
+            ...uiUpdate,
+            activeEnvironmentUUID: action.environmentUuid,
+            activeRouteUUID: routeUUID,
+            activeRouteResponseUUID: routeResponseUUID,
+            activeDatabucketUUID: targetEnvironment?.data.length
+              ? targetEnvironment.data[0].uuid
+              : null,
+            filters: {
+              ...uiUpdate.filters,
+              routes: '',
+              databuckets: '',
+              templates: '',
+              callbacks: '',
+              routeResponses: '',
+              logs: ''
+            }
+          };
+        }
       }
 
       newState = {
@@ -1260,6 +1314,33 @@ export const environmentReducer = (
             databuckets: ''
           }
         };
+
+        // if duplicating to another environment, also switch to it
+        if (state.activeEnvironmentUUID !== action.environmentUuid) {
+          const targetEnvironment = state.environments.find(
+            (env) => env.uuid === action.environmentUuid
+          );
+          const { routeUUID, routeResponseUUID } =
+            getFirstRouteAndResponseUUIDs(targetEnvironment);
+
+          uiUpdate = {
+            ...uiUpdate,
+            activeEnvironmentUUID: action.environmentUuid,
+            activeRouteUUID: routeUUID,
+            activeRouteResponseUUID: routeResponseUUID,
+            activeCallbackUUID: targetEnvironment?.callbacks.length
+              ? targetEnvironment.callbacks[0].uuid
+              : null,
+            filters: {
+              ...uiUpdate.filters,
+              routes: '',
+              templates: '',
+              callbacks: '',
+              routeResponses: '',
+              logs: ''
+            }
+          };
+        }
       }
 
       newState = {
@@ -1530,64 +1611,13 @@ export const environmentReducer = (
       break;
     }
 
-    case ActionTypes.DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT: {
-      let newEnvironment: Environment;
-
-      const newEnvironments = state.environments.map((environment) => {
-        if (environment.uuid === action.targetEnvironmentUUID) {
-          const rootChildren: FolderChild[] = [
-            ...environment.rootChildren,
-            { type: 'route', uuid: action.route.uuid }
-          ];
-
-          newEnvironment = {
-            ...environment,
-            routes: [...environment.routes, action.route],
-            rootChildren
-          };
-
-          return newEnvironment;
-        }
-
-        return environment;
-      });
-
-      newState = {
-        ...state,
-        environments: newEnvironments,
-        activeRouteUUID: action.route.uuid,
-        activeRouteResponseUUID:
-          action.route.responses.length > 0
-            ? action.route.responses[0].uuid
-            : null,
-        activeEnvironmentUUID: action.targetEnvironmentUUID,
-        activeTab: 'RESPONSE',
-        activeView: 'ENV_ROUTES',
-        duplicatedRoutes: {
-          ...state.duplicatedRoutes,
-          [action.targetEnvironmentUUID]:
-            listDuplicatedRouteUuids(newEnvironment)
-        },
-        filters: {
-          ...state.filters,
-          routes: '',
-          databuckets: '',
-          templates: '',
-          callbacks: '',
-          logs: '',
-          routeResponses: ''
-        }
-      };
-      break;
-    }
-
     case ActionTypes.START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT: {
       newState = {
         ...state,
         duplicateEntityToAnotherEnvironment: {
           moving: true,
           subject: action.subject,
-          subjectUUID: action.subjectUUID
+          subjectUuids: action.subjectUuids
         }
       };
       break;
@@ -1598,63 +1628,6 @@ export const environmentReducer = (
         ...state,
         duplicateEntityToAnotherEnvironment: {
           moving: false
-        }
-      };
-      break;
-    }
-
-    case ActionTypes.DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT: {
-      const newEnvironments = state.environments.map((environment) => {
-        if (environment.uuid === action.targetEnvironmentUUID) {
-          return {
-            ...environment,
-            data: [...environment.data, action.databucket]
-          };
-        }
-
-        return environment;
-      });
-
-      newState = {
-        ...state,
-        environments: newEnvironments,
-        activeDatabucketUUID: action.databucket.uuid,
-        activeEnvironmentUUID: action.targetEnvironmentUUID,
-        activeView: 'ENV_DATABUCKETS',
-        filters: {
-          ...state.filters,
-          routes: '',
-          databuckets: '',
-          templates: '',
-          callbacks: '',
-          routeResponses: '',
-          logs: ''
-        }
-      };
-      break;
-    }
-
-    case ActionTypes.DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT: {
-      const newEnvironments = state.environments.map((environment) => {
-        if (environment.uuid === action.targetEnvironmentUUID) {
-          return {
-            ...environment,
-            callbacks: [...environment.callbacks, action.callback]
-          };
-        }
-
-        return environment;
-      });
-
-      newState = {
-        ...state,
-        environments: newEnvironments,
-        activeCallbackUUID: action.callback.uuid,
-        activeEnvironmentUUID: action.targetEnvironmentUUID,
-        activeView: 'ENV_CALLBACKS',
-        filters: {
-          ...state.filters,
-          callbacks: ''
         }
       };
       break;

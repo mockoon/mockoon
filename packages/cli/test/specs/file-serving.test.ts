@@ -35,23 +35,19 @@ describe('File serving', () => {
     ok(responseBody.includes('"name": "mock1"'));
   });
 
-  it('should not get the file content with a relative path from the environment file if dynamic)', async () => {
-    const { instance, output } = await spawnCli([
+  it('should get the file content with a relative templated path when it stays within the static base', async () => {
+    const { instance } = await spawnCli([
       'start',
       '--data',
       './test/data/envs/file.json'
     ]);
 
-    await (await fetch('http://localhost:3000/param2/file1')).text();
+    const responseBody = await (
+      await fetch('http://localhost:3000/param2/file1')
+    ).text();
 
     instance.kill();
 
-    const { stdout } = await output;
-
-    ok(
-      stdout.includes(
-        'Error while serving the content: Access to relative path outside of the environment base directory'
-      )
-    );
+    ok(responseBody.includes('filecontent'));
   });
 });

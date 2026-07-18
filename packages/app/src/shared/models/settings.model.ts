@@ -35,7 +35,6 @@ export type Settings = {
   environments: EnvironmentDescriptor[];
   disabledRoutes: Record<string, string[]>;
   collapsedFolders: Record<string, string[]>;
-  enableTelemetry: boolean;
   storagePrettyPrint: boolean;
   fileWatcherEnabled: FileWatcherOptions;
   dialogWorkingDir: string;

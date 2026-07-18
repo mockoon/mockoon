@@ -37,7 +37,7 @@ describe('Duplicate a route to an environment', async () => {
 
     const targetRoute = await $('.modal-content .modal-title small').getText();
 
-    expect(targetRoute).toContain('POST /dolphins');
+    expect(targetRoute).toContain('Copy 1 route to:');
 
     await modals.assertDuplicationModalEnvName('New env test');
     await modals.assertDuplicationModalEnvHostname('localhost:3001/');
@@ -61,6 +61,36 @@ describe('Duplicate a route to an environment', async () => {
 
     await headersUtils.assertHeadersValues('route-response-headers', {
       'Content-Type': 'application/json'
+    });
+  });
+
+  describe('Batch duplicate multiple routes to another environment', () => {
+    it('should switch back to the first environment and multi-select routes', async () => {
+      await environments.select(1);
+      await navigation.switchView('ENV_ROUTES');
+      await routes.ctrlSelect(1);
+      await routes.ctrlSelect(2);
+      await routes.ctrlSelect(3);
+      await routes.assertBatchSelectionCount(3);
+    });
+
+    it('should open duplication modal showing the batch count', async () => {
+      await routes.batchDuplicateToEnvironment();
+      await modals.assertExists();
+
+      const targetRoute = await $(
+        '.modal-content .modal-title small'
+      ).getText();
+      expect(targetRoute).toContain('3 routes');
+    });
+
+    it('should batch duplicate selected routes to selected environment', async () => {
+      await modals.confirmDuplicateToEnvModal(1);
+
+      await environments.select(2);
+      await navigation.switchView('ENV_ROUTES');
+      // env 2: 1 default + 1 previously duplicated + 3 batch-duplicated
+      await routes.assertCount(5);
     });
   });
 });

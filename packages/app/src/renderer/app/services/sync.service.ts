@@ -255,7 +255,12 @@ export class SyncService {
     return fromEvent(socket, 'disconnect').pipe(
       tap(() => {
         this.store.update(
-          updateSyncAction({ status: false, presence: null, alert: null })
+          updateSyncAction({
+            status: false,
+            presence: null,
+            alert: null,
+            lastDisconnectedAt: Date.now()
+          })
         );
       })
     );
@@ -395,36 +400,15 @@ export class SyncService {
                     hashResult.hash !== hashResult.lastServerHash &&
                     !this.serverMigrationDone
                   ) {
-                    observable$ = this.uiService
-                      .showConfirmDialog({
-                        title: 'Conflict detected',
-                        text: `The environment "${
-                          this.store.getEnvironmentByUUID(
-                            hashResult.environmentUuid
-                          ).name
-                        }" was modified on the server while you were disconnected. Do you want to keep your local version or accept the remote one?`,
-                        sub: 'Both actions are destructive and will overwrite the other version.',
-                        subIcon: 'warning',
-                        subIconClass: 'text-warning',
-                        confirmButtonText: 'Accept remote and pull',
-                        cancelButtonText: 'Keep local and push'
+                    // local version didn't change, but server changed, pull
+                    observable$ = observable$.pipe(
+                      tap(() => {
+                        this.sendGetFullEnvironment(
+                          hashResult.environmentUuid,
+                          'UPDATE'
+                        );
                       })
-                      .pipe(
-                        tap((result) => {
-                          if (result) {
-                            // accept remote and pull
-                            this.sendGetFullEnvironment(
-                              hashResult.environmentUuid,
-                              'UPDATE'
-                            );
-                          } else {
-                            // keep local and push
-                            this.sendUpdateFullEnvironment(
-                              hashResult.environmentUuid
-                            );
-                          }
-                        })
-                      );
+                    );
                   } else if (
                     hashResult.lastServerHash !== hashResult.serverHash &&
                     hashResult.hash !== hashResult.lastServerHash &&
@@ -616,7 +600,7 @@ export class SyncService {
         }
 
         // if we are not connected, we don't buffer actions, we will either push or pull depending on the environment list
-        if (!this.socket.disconnected) {
+        if (this.socket?.connected) {
           this.socket.emit(
             SyncMessageTypes.SYNC,
             syncAction,

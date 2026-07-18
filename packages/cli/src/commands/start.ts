@@ -5,6 +5,7 @@ import {
   ServerErrorCodes,
   ServerOptions,
   defaultEnvironmentVariablesPrefix,
+  defaultMaxCallbackDepth,
   defaultMaxTransactionLogs
 } from '@mockoon/commons';
 import {
@@ -99,6 +100,18 @@ export default class Start extends Command {
         'Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)',
       default: false
     }),
+    'admin-api-token': Flags.string({
+      description:
+        'Admin API bearer token(s). Provide once to reuse for all environments, or multiple times (or comma-separated) to set one token per environment.',
+      multiple: true,
+      env: 'MOCKOON_ADMIN_API_TOKEN'
+    }),
+    'admin-api-cors-origin': Flags.string({
+      description:
+        "Allowed CORS origin(s) for the admin API (e.g. 'https://app.example.com'). Provide multiple times or comma-separated for multiple origins. Use '*' to explicitly opt into wildcard CORS. When omitted, no CORS headers are emitted on admin API responses.",
+      multiple: true,
+      env: 'MOCKOON_ADMIN_API_CORS_ORIGIN'
+    }),
     'disable-tls': Flags.boolean({
       description:
         'Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/).',
@@ -111,6 +124,11 @@ export default class Start extends Command {
     'enable-random-latency': Flags.boolean({
       description:
         'Enable random latency from 0 to value specified in the route settings',
+      default: false
+    }),
+    'enable-route-metadata-headers': Flags.boolean({
+      description:
+        'Add route metadata headers to responses (UUID and response metadata)',
       default: false
     }),
     proxy: Flags.string({
@@ -131,11 +149,22 @@ export default class Start extends Command {
       char: 'k',
       description: 'Mockoon cloud access token',
       env: 'MOCKOON_CLOUD_TOKEN'
+    }),
+    'max-callback-depth': Flags.integer({
+      description: `Maximum call stack depth for route responses with callback functions (default: ${defaultMaxCallbackDepth})`,
+      default: defaultMaxCallbackDepth
     })
   };
 
   public async run(): Promise<void> {
     const { flags: userFlags } = await this.parse(Start);
+    const adminApiTokens = this.resolveTokens(
+      userFlags['admin-api-token'],
+      userFlags.data.length
+    );
+    const adminApiCorsOrigins = this.normalizeCsvFlag(
+      userFlags['admin-api-cors-origin']
+    );
 
     // validate flags
     if (
@@ -193,9 +222,15 @@ export default class Start extends Command {
           },
           envVarsPrefix: userFlags['env-vars-prefix'],
           enableAdminApi: !userFlags['disable-admin-api'],
+          adminApiAuthToken: adminApiTokens[index],
+          adminApiCorsOrigins:
+            adminApiCorsOrigins.length > 0 ? adminApiCorsOrigins : undefined,
           disableTls: userFlags['disable-tls'],
           maxTransactionLogs: userFlags['max-transaction-logs'],
           enableRandomLatency: userFlags['enable-random-latency'],
+          enableRouteMetadataHeaders:
+            userFlags['enable-route-metadata-headers'],
+          maxCallbackDepth: userFlags['max-callback-depth'],
           publicBaseUrl: userFlags['public-base-url'][index]
         });
 
@@ -256,9 +291,13 @@ export default class Start extends Command {
       fakerOptions: parameters.fakerOptions,
       envVarsPrefix: parameters.envVarsPrefix,
       enableAdminApi: parameters.enableAdminApi,
+      adminApiAuthToken: parameters.adminApiAuthToken,
+      adminApiCorsOrigins: parameters.adminApiCorsOrigins,
       disableTls: parameters.disableTls,
       maxTransactionLogs: parameters.maxTransactionLogs,
       enableRandomLatency: parameters.enableRandomLatency,
+      enableRouteMetadataHeaders: parameters.enableRouteMetadataHeaders,
+      maxCallbackDepth: parameters.maxCallbackDepth,
       publicBaseUrl: parameters.publicBaseUrl
     });
 
@@ -322,5 +361,45 @@ export default class Start extends Command {
     server.start();
 
     return server;
+  };
+
+  private resolveTokens = (
+    rawTokens: string[] | string | undefined,
+    environmentsCount: number
+  ): (string | undefined)[] => {
+    const parsedTokens = this.normalizeCsvFlag(rawTokens);
+
+    if (parsedTokens.length === 0) {
+      return Array.from({ length: environmentsCount }, () => undefined);
+    }
+
+    if (parsedTokens.length === 1) {
+      return Array.from({ length: environmentsCount }, () => parsedTokens[0]);
+    }
+
+    if (parsedTokens.length !== environmentsCount) {
+      this.error(
+        `The number of provided API tokens (${parsedTokens.length}) must be 1 or match the number of environments (${environmentsCount}).`
+      );
+    }
+
+    return parsedTokens;
+  };
+
+  /**
+   * Normalize an oclif flag value that may arrive as a single CSV string
+   * (when set through an env var) or an array (when set through repeated
+   * CLI flags), into a flat array of trimmed, non-empty values.
+   */
+  private normalizeCsvFlag = (
+    rawValue: string[] | string | undefined
+  ): string[] => {
+    const values =
+      rawValue == null ? [] : Array.isArray(rawValue) ? rawValue : [rawValue];
+
+    return values
+      .flatMap((value) => value.split(','))
+      .map((value) => value.trim())
+      .filter((value) => value.length > 0);
   };
 }

@@ -39,12 +39,32 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 ### Gold
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
- 
-  <a href="https://www.testmuai.com/?utm_medium=sponsor&utm_source=mockoon">
+  <a href="https://9proxy.com/?utm_source=Github&utm_campaign=mockoon">
       <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/testmuai.png">
-      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/testmuai.png">
-      <img src="https://mockoon.com/images/sponsors/light/testmuai.png" alt="TestMu AI logo" />
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/9proxy.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/9proxy.png">
+      <img src="https://mockoon.com/images/sponsors/light/9proxy.png" alt="9proxy logo" />
+      </picture>
+  </a><br/><br/>
+  <a href="https://coderabbit.link/mockoon">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/coderabbit.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/coderabbit.png">
+      <img src="https://mockoon.com/images/sponsors/light/coderabbit.png" alt="CodeRabbit logo" />
+      </picture>
+  </a><br/><br/>
+  <a href="https://www.swiftproxy.net/?ref=mockoon">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/swiftproxy.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/swiftproxy.png">
+      <img src="https://mockoon.com/images/sponsors/light/swiftproxy.png" alt="SwiftProxy logo" />
+      </picture>
+  </a><br/><br/>
+  <a href="https://talordata.com/?campaignid=rGAerPX1XrVAODD0&utm_source=mockoon&utm_term=mockoon">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/talordata.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/talordata.png">
+      <img src="https://mockoon.com/images/sponsors/light/talordata.png" alt="TalorData logo" />
       </picture>
   </a>
 </div>
@@ -61,6 +81,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 
 - 0xhexmeow
 - [0xhybrid](https://github.com/0xhybrid)
+- [9proxy](https://9proxy.com/?utm_source=Github&utm_campaign=mockoon)
 - Adam Recvlohe
 - Adialix
 - [affiliate.fm](https://affiliate.fm/)
@@ -68,11 +89,12 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Andrey Kozlov
 - [Anthony Critelli](https://github.com/acritelli)
 - [Appwrite](https://appwrite.io/)
-- Asopian
+- [Asopian](https://github.com/asopian)
 - Валентин Радчук
 - Barefootdeveloper
 - Buckley Robinson
 - Burak Sinan Karabulut
+- [CodeRabbit](https://coderabbit.link/mockoon)
 - Colin White
 - Cyhung
 - Dwi Satria
@@ -85,6 +107,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - [fl0rian-p](https://github.com/fl0rian-p)
 - François Grémont
 - [GitHub](https://github.blog/2023-04-12-github-accelerator-our-first-cohort-and-whats-next/)
+- [GitHub Secure Open-Source Fund](https://github.com/GitHub-SecureOSS-Fund)
 - Jakub Bartkowiak
 - Jakub Ślusarski
 - Jeremy
@@ -109,6 +132,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - [Peak Crypto](https://www.peakcrypto.com/)
 - Pedro
 - Rafael Braga Nanes
+- [RapidProxy](https://www.rapidproxy.io/?ref=mockoon)
 - Riaz
 - [Rosario Raulin](https://github.com/rosario-raulin)
 - Roybarberuk
@@ -116,6 +140,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Samer Samer
 - Samja666
 - Sander
+- [Santosh Yadav](https://github.com/santoshyadavdev)
 - [ScottMariano](https://github.com/ScottMariano)
 - Sebastián Díaz
 - Serj
@@ -124,6 +149,8 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Silicon Jungles
 - Steve Seidenthal
 - Steven Pollock
+- [TalorData](https://talordata.com/?campaignid=rGAerPX1XrVAODD0&utm_source=mockoon&utm_term=mockoon)
+- [SwiftProxy](https://www.swiftproxy.net/?ref=mockoon)
 - Thilo
 - Vetle Økland
 - Victor Castro

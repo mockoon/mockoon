@@ -8,3 +8,7 @@
 
   position: relative; // we need this for the resize-column
 }
+
+.databuckets-menu .nav.flex-column .nav-link.selected {
+  background-color: darken($custom-gray, 12%);
+}

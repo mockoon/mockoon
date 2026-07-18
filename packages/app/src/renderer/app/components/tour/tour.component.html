@@ -1,3 +1,5 @@
+@let backdropSizes = backdropSizes$ | async;
+
 <ng-template #popover let-data="data" let-total="total" let-current="current">
   <div class="">
     <div class="d-flex mb-2">
@@ -11,11 +13,13 @@
     </div>
 
     <div [innerHTML]="data.content"></div>
-    <div *ngFor="let link of data.links" class="mt-2">
-      <a href="{{ link.url }}" target="_blank">{{
-        link.text ? link.text : 'Learn more'
-      }}</a>
-    </div>
+    @for (link of data.links; track link.url) {
+      <div class="mt-2">
+        <a href="{{ link.url }}" target="_blank">{{
+          link.text ? link.text : 'Learn more'
+        }}</a>
+      </div>
+    }
 
     <div class="d-flex align-items-center justify-content-between mt-4">
       <button
@@ -27,28 +31,21 @@
         Prev
       </button>
       <div class="">{{ current }} / {{ total }}</div>
-      <button
-        *ngIf="current < total"
-        class="btn btn-sm btn-primary"
-        (click)="next()"
-      >
-        Next
-        <app-svg icon="chevron_right" />
-      </button>
-      <button
-        *ngIf="current === total"
-        class="btn btn-sm btn-primary"
-        (click)="close()"
-      >
-        End
-      </button>
+      @if (current < total) {
+        <button class="btn btn-sm btn-primary" (click)="next()">
+          Next
+          <app-svg icon="chevron_right" />
+        </button>
+      }
+      @if (current === total) {
+        <button class="btn btn-sm btn-primary" (click)="close()">End</button>
+      }
     </div>
   </div>
 </ng-template>
 
-<ng-container *ngIf="{ backdropSizes: backdropSizes$ | async } as data">
+@for (backdropSize of backdropSizes; track $index) {
   <div
-    *ngFor="let backdropSize of data.backdropSizes"
     class="tour-backdrop"
     [style]="{
       width: backdropSize.width + 'px',
@@ -57,4 +54,4 @@
       left: backdropSize.left + 'px'
     }"
   ></div>
-</ng-container>
+}

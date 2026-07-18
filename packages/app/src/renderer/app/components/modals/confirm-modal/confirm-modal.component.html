@@ -1,26 +1,33 @@
-<ng-container *ngIf="confirmModalPayload$ | async as confirmModalPayload">
+@let confirmModalPayload = confirmModalPayload$ | async;
+
+@if (confirmModalPayload) {
   <div class="modal-header">
     <h4 class="modal-title">{{ confirmModalPayload?.title }}</h4>
   </div>
   <div class="modal-body p-0">
     <p class="px-3 pt-2">{{ confirmModalPayload?.text }}</p>
-    <ng-container *ngIf="confirmModalPayload?.list$ | async as itemList">
-      <ul *ngIf="itemList.length > 0" class="list-group pb-3">
-        <li class="list-group-item" *ngFor="let item of itemList">
-          <div class="text-truncate">{{ item }}</div>
-        </li>
-      </ul>
-    </ng-container>
-    <div *ngIf="confirmModalPayload.sub" class="px-3 pb-2">
-      <small>
-        <app-svg
-          [icon]="confirmModalPayload.subIcon"
-          class="{{ confirmModalPayload.subIconClass }} me-2"
-        />
-
-        <span [innerHTML]="confirmModalPayload.sub"></span>
-      </small>
-    </div>
+    @if (confirmModalPayload?.list$ | async; as itemList) {
+      @if (itemList.length > 0) {
+        <ul class="list-group pb-3">
+          @for (item of itemList; track $index) {
+            <li class="list-group-item">
+              <div class="text-truncate">{{ item }}</div>
+            </li>
+          }
+        </ul>
+      }
+    }
+    @if (confirmModalPayload.sub) {
+      <div class="px-3 pb-2">
+        <small>
+          <app-svg
+            [icon]="confirmModalPayload.subIcon"
+            class="{{ confirmModalPayload.subIconClass }} me-2"
+          />
+          <span [innerHTML]="confirmModalPayload.sub"></span>
+        </small>
+      </div>
+    }
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="close()">
@@ -30,4 +37,4 @@
       {{ confirmModalPayload.cancelButtonText || 'Cancel' }}
     </button>
   </div>
-</ng-container>
+}

@@ -157,12 +157,16 @@ The mocks will run by default on the ports and hostnames specified in the files.
 |-w, --watch | Watch local data file(s) for changes and restart the server when a change is detected (watch is using polling, see `--polling-interval` flag below)|
 |--polling-interval | Local files watch polling interval in milliseconds (default: 2000)|
 |--disable-admin-api | Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)|
+|--admin-api-token | Admin API bearer token(s). Provide once to reuse for all environments, or multiple times (or comma-separated) to set one token per environment. Can also be set with `MOCKOON_ADMIN_API_TOKEN`.|
+|--admin-api-cors-origin | Allowed CORS origin(s) for the admin API (e.g. 'https://app.example.com'). Provide multiple times or comma-separated for multiple origins. Use '\*' to explicitly opt into wildcard CORS. When omitted, no CORS headers are emitted on admin API responses. Can also be set with `MOCKOON_ADMIN_API_CORS_ORIGIN`.|
 |--disable-tls | Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/)|
 |--max-transaction-logs | Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100)|
 |--enable-random-latency | Randomize global and responses latencies between 0 and the specified value (default: false)|
 |--proxy | Override the environment's proxy settings (options: 'enabled' or 'disabled')|
 |--public-base-url | Public base URL used to resolve [relative callback URLs](https://mockoon.com/docs/latest/callbacks/overview/#configure-a-callback) and for the [`baseUrl` templating helper](https://mockoon.com/docs/latest/templating/mockoon-request-helpers/#baseurl) (e.g. https://api.example.com or http://localhost:3000). Must include the protocol and port if non-standard.|
 |-k, --token | Access token used to fetch cloud-hosted Mockoon environments (see  [access token documentation](https://mockoon.com/cloud/docs/access-tokens/))|
+|--max-callback-depth | Maximum call stack depth for route responses with callbacks (default: 100)|
+|--enable-route-metadata-headers | Add [route metadata headers](https://mockoon.com/docs/latest/response-configuration/response-headers/#mockoon-response-headers) to responses (UUID and response metadata) (default: false)|
 |-h, --help | Show CLI help|
 
 **Examples**:
@@ -182,7 +186,26 @@ $ mockoon-cli start --data cloud://def01727-aeb7-4cf1-9172-e0c38f22b224 --token 
 
 #### Admin API
 
-Each running mock API has an admin API enabled by default and available at `/mockoon-admin/`. This API allows you to interact with the running mock API, retrieve logs, and more. You can disable the admin API with the `--disable-admin-api` flag.
+Each running mock API has an admin API enabled by default and available at `/mockoon-admin/`. This API allows you to interact with the running mock API, retrieve logs, and more. You can disable it with the `--disable-admin-api` flag.
+
+When the admin API is enabled, bearer authentication is always enabled.
+
+You can provide the admin API token with `--admin-api-token` (or `MOCKOON_ADMIN_API_TOKEN`). If no token is provided, a secure token is auto-generated at startup and printed in the logs.
+
+- Provide one token to reuse it for all environments.
+- Provide one token per environment when starting multiple environments in one command.
+- Send the token with the `Authorization: Bearer <token>` header.
+
+By default, the admin API does not emit CORS headers, which prevents browser-based cross-origin requests. To allow specific origins (e.g. a frontend served from another domain), use `--admin-api-cors-origin` (or `MOCKOON_ADMIN_API_CORS_ORIGIN`):
+
+```bash
+$ mockoon-cli start --data ~/data.json --admin-api-cors-origin https://app.example.com
+$ mockoon-cli start --data ~/data.json --admin-api-cors-origin https://app.example.com https://admin.example.com
+```
+
+Only requests whose `Origin` header matches one of the allowed values receive CORS headers. Use `--admin-api-cors-origin "*"` to explicitly opt into wildcard CORS (not recommended for exposed instances).
+
+Transaction logs returned by the admin API (`GET /mockoon-admin/logs` and the SSE event stream) have known-sensitive headers redacted (`authorization`, `proxy-authorization`, `cookie`, `set-cookie`, `x-api-key`, `api-key`, `x-auth-token`). For `authorization` / `proxy-authorization`, the auth scheme is preserved (e.g. `Bearer [REDACTED]`). Request and response bodies are not modified.
 
 > 💡 To learn more about the admin API, check the [documentation](https://mockoon.com/docs/latest/admin-api/overview/).
 
@@ -196,6 +219,8 @@ Each running mock API has an admin API enabled by default and available at `/moc
 You can access environment variables in your routes' responses by using the [`{{getEnvVar 'VARIABLE_NAME'}}` templating helper](https://mockoon.com/docs/latest/variables/environment-variables/). By default, only the environment variables prefixed with `MOCKOON_` are available, for example, `MOCKOON_MY_VARIABLE`.
 
 You can customize the prefix with the `--env-vars-prefix` flag. For example, if you set `--env-vars-prefix CUSTOM_PREFIX_`, you will be able to access the environment variable `CUSTOM_PREFIX_MY_VARIABLE` in your routes' responses. To disable the prefix, set it to an empty string: `--env-vars-prefix ''` or `--env-vars-prefix=`.
+
+The prefix is also enforced when writing environment variables through the admin API: keys that do not start with the prefix are automatically prepended with it. When the prefix is empty, writes through the admin API are rejected to prevent arbitrary environment variable modifications (e.g. `PATH`, `NODE_OPTIONS`).
 
 #### Disabling routes
 
@@ -419,13 +444,13 @@ jobs:
 
 ### Using the generic Docker image
 
-A generic Docker image is published on the [Docker Hub Mockoon CLI repository](https://hub.docker.com/r/mockoon/cli). It uses `node:18-alpine` and installs the latest version of Mockoon CLI.
+A generic Docker image is published on the [Docker Hub Mockoon CLI repository](https://hub.docker.com/r/mockoon/cli). It uses `node:26-alpine` and installs the latest version of Mockoon CLI.
 
 All of `mockoon-cli start` flags (`--port`, etc.) must be provided when running the container.
 
 To load the Mockoon data, you can either mount a local data file and pass `mockoon-cli start` flags at the end of the command:
 
-`docker run -d --mount type=bind,source=/home/your-data-file.json,target=/data,readonly -p 3000:3000 mockoon/cli:latest --data data --port 3000`
+`docker run -d --mount type=bind,source=/home/your-data-file.json,target=/home/mockoon/data/your-data-file.json,readonly -p 3000:3000 mockoon/cli:latest --data /home/mockoon/data/your-data-file.json --port 3000`
 
 Or directly pass a URL to the `mockoon-cli start` command, without mounting a local data file:
 
@@ -440,7 +465,7 @@ You can also use `docker-compose` with a `docker-compose.yml` file:
 ```
 mock-server:
   image: mockoon/cli:latest
-  command: ["--data", "data", "--port", "3000"]
+  command: ["--data", "/home/mockoon/data/your-data-file.json", "--port", "3000"]
   healthcheck:
     test: ["CMD-SHELL", "curl -f http://localhost:3000/your-healthcheck-route || exit 1"]
     interval: 30s
@@ -448,7 +473,7 @@ mock-server:
     retries: 2
     start_period: 10s
   volumes:
-    - /home/your-data-file.json:/data:readonly
+    - /home/your-data-file.json:/home/mockoon/data/your-data-file.json:readonly
 ```
 
 > Please note that our [Docker image includes an `ENTRYPOINT`](https://github.com/mockoon/mockoon/blob/main/packages/cli/docker/Dockerfile#L16) that you may override or not. If you don't override it, and use Docker compose `command`, do not include `mockoon-cli start` as it is already included in the `ENTRYPOINT`.
@@ -486,6 +511,8 @@ As the CLI is running in the foreground, logs are also sent to stdout (console).
 ### Transaction logging
 
 When using the `--log-transaction` flag, logs will contain the full transaction (request and response) with the same information you can see in the desktop application "Logs" tab.
+
+Known-sensitive header values (`authorization`, `proxy-authorization`, `cookie`, `set-cookie`, `x-api-key`, `api-key`, `x-auth-token`) are replaced with `[REDACTED]` in both the CLI transaction logs and the admin API responses. For `authorization` / `proxy-authorization`, the auth scheme is preserved (e.g. `Bearer [REDACTED]`). Request and response bodies are not modified.
 
 Example:
 
@@ -613,12 +640,32 @@ Mockoon is proudly **independent** and **open-source**, maintained without exter
 ### Gold
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
- 
-  <a href="https://www.testmuai.com/?utm_medium=sponsor&utm_source=mockoon">
+  <a href="https://9proxy.com/?utm_source=Github&utm_campaign=mockoon">
       <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/testmuai.png">
-      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/testmuai.png">
-      <img src="https://mockoon.com/images/sponsors/light/testmuai.png" alt="TestMu AI logo" />
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/9proxy.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/9proxy.png">
+      <img src="https://mockoon.com/images/sponsors/light/9proxy.png" alt="9proxy logo" />
+      </picture>
+  </a><br/><br/>
+  <a href="https://coderabbit.link/mockoon">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/coderabbit.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/coderabbit.png">
+      <img src="https://mockoon.com/images/sponsors/light/coderabbit.png" alt="CodeRabbit logo" />
+      </picture>
+  </a><br/><br/>
+  <a href="https://www.swiftproxy.net/?ref=mockoon">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/swiftproxy.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/swiftproxy.png">
+      <img src="https://mockoon.com/images/sponsors/light/swiftproxy.png" alt="SwiftProxy logo" />
+      </picture>
+  </a><br/><br/>
+  <a href="https://talordata.com/?campaignid=rGAerPX1XrVAODD0&utm_source=mockoon&utm_term=mockoon">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/talordata.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/talordata.png">
+      <img src="https://mockoon.com/images/sponsors/light/talordata.png" alt="TalorData logo" />
       </picture>
   </a>
 </div>

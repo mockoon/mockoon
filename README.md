@@ -101,12 +101,32 @@ Mockoon is proudly **independent** and **open-source**, maintained without exter
 ### Gold
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
- 
-  <a href="https://www.testmuai.com/?utm_medium=sponsor&utm_source=mockoon">
+  <a href="https://9proxy.com/?utm_source=Github&utm_campaign=mockoon">
       <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/testmuai.png">
-      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/testmuai.png">
-      <img src="https://mockoon.com/images/sponsors/light/testmuai.png" alt="TestMu AI logo" />
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/9proxy.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/9proxy.png">
+      <img src="https://mockoon.com/images/sponsors/light/9proxy.png" alt="9proxy logo" />
+      </picture>
+  </a><br/><br/>
+  <a href="https://coderabbit.link/mockoon">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/coderabbit.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/coderabbit.png">
+      <img src="https://mockoon.com/images/sponsors/light/coderabbit.png" alt="CodeRabbit logo" />
+      </picture>
+  </a><br/><br/>
+  <a href="https://www.swiftproxy.net/?ref=mockoon">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/swiftproxy.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/swiftproxy.png">
+      <img src="https://mockoon.com/images/sponsors/light/swiftproxy.png" alt="SwiftProxy logo" />
+      </picture>
+  </a><br/><br/>
+  <a href="https://talordata.com/?campaignid=rGAerPX1XrVAODD0&utm_source=mockoon&utm_term=mockoon">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/talordata.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/talordata.png">
+      <img src="https://mockoon.com/images/sponsors/light/talordata.png" alt="TalorData logo" />
       </picture>
   </a>
 </div>

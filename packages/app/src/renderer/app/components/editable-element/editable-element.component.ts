@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -34,7 +33,7 @@ import {
       multi: true
     }
   ],
-  imports: [NgIf, FormsModule, ReactiveFormsModule]
+  imports: [FormsModule, ReactiveFormsModule]
 })
 export class EditableElementComponent implements ControlValueAccessor {
   /**
@@ -62,7 +61,7 @@ export class EditableElementComponent implements ControlValueAccessor {
 
   @HostListener('click', ['$event'])
   public elementClick(event: MouseEvent) {
-    if (this.editCondition) {
+    if (this.editCondition && this.data.enabled) {
       this.onTouched();
       this.toggleEdit(event);
     }
@@ -125,5 +124,13 @@ export class EditableElementComponent implements ControlValueAccessor {
     // save the new value and propagate to the parent
     this.text = this.data.value;
     this.onChange(this.data.value);
+  }
+
+  public setDisabledState(isDisabled: boolean): void {
+    if (isDisabled) {
+      this.data.disable({ emitEvent: false });
+    } else {
+      this.data.enable({ emitEvent: false });
+    }
   }
 }
