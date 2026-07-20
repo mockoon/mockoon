@@ -1,7 +1,7 @@
 import { Environment } from '@mockoon/commons';
 import { readFile } from 'node:fs/promises';
 import { parse as pathParse, resolve } from 'path';
-import dialogs from '../libs/dialogs';
+import { mockOpenDialog, mockSaveDialog } from '../libs/electron-mocks';
 import environments from '../libs/environments';
 import utils from '../libs/utils';
 
@@ -145,11 +145,11 @@ describe('Swagger/OpenAPI import', () => {
 
           await environments.localAddFromOpenApi();
 
-          await dialogs.open(resolve(testCase.filePath));
+          await mockOpenDialog(resolve(testCase.filePath));
 
           await environments.browseOpenApi();
 
-          await dialogs.save(
+          await mockSaveDialog(
             resolve(`./tmp/storage/import-result/${filename}.json`)
           );
 

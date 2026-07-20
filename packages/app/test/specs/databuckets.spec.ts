@@ -1,7 +1,6 @@
 import { resolve } from 'path';
-import clipboard from '../libs/clipboard';
 import databuckets from '../libs/databuckets';
-import dialogs from '../libs/dialogs';
+import { mockSaveDialog, readClipboard } from '../libs/electron-mocks';
 import environments from '../libs/environments';
 import file from '../libs/file';
 import http from '../libs/http';
@@ -51,7 +50,7 @@ describe('Databuckets addition', () => {
   it('should copy the ID to the clipboard via the context menu', async () => {
     await databuckets.copyID(5);
     expect(await databuckets.idElement.getText()).toContain(
-      await clipboard.read()
+      await readClipboard()
     );
   });
 });
@@ -185,7 +184,7 @@ describe('Databucket filter', () => {
 
   it('should reset databuckets filter when switching env', async () => {
     await databuckets.setFilter('Second');
-    await dialogs.save(resolve('./tmp/storage/dup-databuckets.json'));
+    await mockSaveDialog(resolve('./tmp/storage/dup-databuckets.json'));
     await environments.duplicate(1);
     await navigation.switchView('ENV_DATABUCKETS');
     await databuckets.assertFilter('');

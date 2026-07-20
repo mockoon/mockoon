@@ -173,9 +173,12 @@ class EnvironmentsLogs {
 
   public async clear() {
     const selector = $('.environment-logs-header button#clear-logs');
-    // click twice to confirm (cannot double click)
-    await selector.click();
-    await selector.click();
+
+    if (await selector.isEnabled()) {
+      // click twice to confirm (cannot double click)
+      await selector.click();
+      await selector.click();
+    }
   }
 }
 

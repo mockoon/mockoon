@@ -1,5 +1,5 @@
-import menu from '../libs/menu';
 import utils from '../libs/utils';
+import { clickMenu } from './electron-mocks';
 
 type SettingNames =
   | 'settings-truncate-route-name'
@@ -22,12 +22,12 @@ class Settings {
   }
 
   public async open() {
-    await menu.click('MENU_OPEN_SETTINGS');
+    await clickMenu('MENU_OPEN_SETTINGS');
     await $('.modal-dialog').waitForExist();
   }
 
   public async assertVisible(reverse = false) {
-    const modal = await $('.modal-dialog');
+    const modal = $('.modal-dialog');
 
     if (reverse) {
       await expect(modal).not.toBeDisplayed();
@@ -36,7 +36,7 @@ class Settings {
     }
 
     await expect(modal).toBeDisplayed();
-    await expect(await $('.modal-title')).toHaveText(
+    await expect($('.modal-title')).toHaveText(
       expect.stringContaining('Settings')
     );
   }

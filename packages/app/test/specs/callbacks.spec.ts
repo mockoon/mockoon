@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import callbacks from '../libs/callbacks';
-import dialogs from '../libs/dialogs';
+import { mockSaveDialog } from '../libs/electron-mocks';
 import environments from '../libs/environments';
 import environmentsLogs from '../libs/environments-logs';
 import environmentsSettings from '../libs/environments-settings';
@@ -8,6 +8,7 @@ import file from '../libs/file';
 import headersUtils from '../libs/headers-utils';
 import http from '../libs/http';
 import modals from '../libs/modals';
+import { HttpCall } from '../libs/models';
 import navigation from '../libs/navigation';
 import routes from '../libs/routes';
 import settings from '../libs/settings';
@@ -268,7 +269,7 @@ describe('Callback filter', () => {
 
   it('should reset callbacks filter when switching env', async () => {
     await callbacks.setFilter('Second');
-    await dialogs.save(resolve('./tmp/storage/dup-callbacks.json'));
+    await mockSaveDialog(resolve('./tmp/storage/dup-callbacks.json'));
     await environments.duplicate(1);
     await navigation.switchView('ENV_CALLBACKS');
     await callbacks.assertFilter('');
@@ -489,8 +490,6 @@ describe('Callback usages', () => {
       await environments.close(1);
       await environments.close(1);
       await environments.close(1);
-      await utils.waitForAutosave();
-      await browser.reloadSession();
 
       await environments.open('callbacks');
       await environments.open('basic-data');
@@ -526,7 +525,10 @@ describe('Callback usages', () => {
       await environments.select(2);
       await navigation.switchView('ENV_LOGS');
 
-      await http.assertCallWithPort({ method: 'GET', path: '/inline' }, 3000);
+      await http.assertCallWithPort(
+        { method: 'GET', path: '/inline' } as HttpCall,
+        3000
+      );
       await browser.pause(1000);
       await environmentsLogs.assertCount(1);
       await environmentsLogs.assertLogItem(
@@ -560,7 +562,10 @@ describe('Callback usages', () => {
       await environments.start();
       await navigation.switchView('ENV_LOGS');
 
-      await http.assertCallWithPort({ method: 'GET', path: '/inline' }, 3000);
+      await http.assertCallWithPort(
+        { method: 'GET', path: '/inline' } as HttpCall,
+        3000
+      );
       await browser.pause(1000);
       await environmentsLogs.assertCount(3);
       await environmentsLogs.select(1);

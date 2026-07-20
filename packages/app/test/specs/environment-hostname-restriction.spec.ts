@@ -16,7 +16,7 @@ const endpointCall: HttpCall = {
   }
 };
 const nics = os.networkInterfaces();
-const testedAddresses = [];
+const testedAddresses: string[] = [];
 
 for (const nicName in nics) {
   if (nicName.toLowerCase().includes('ethernet')) {
@@ -67,8 +67,8 @@ describe('Environment hostname restriction', async () => {
       it(`shouldn't answer on ${address}`, async () => {
         try {
           await http.assertCallWithPortAndHostname(endpointCall, 3000, address);
-        } catch (error) {
-          await expect(error.message).toContain('ECONNREFUSED');
+        } catch (error: any) {
+          expect(error.message).toContain('ECONNREFUSED');
         }
       });
     });

@@ -14,7 +14,7 @@ export type HttpCallResponse = {
 };
 
 export type HttpCall = {
-  description?: string;
+  description: string;
   protocol?: 'http' | 'https';
   path: string;
   method:

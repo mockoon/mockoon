@@ -93,19 +93,18 @@
     "typescript-eslint": "8.61.1"
   },
   "allowScripts": {
+    "edgedriver@6.3.0": true,
+    "electron@41.2.1": true,
+    "geckodriver@6.1.0": true,
     "esbuild@0.27.3": true,
-    "esbuild@0.25.12": true,
     "esbuild@0.28.1": true,
     "esbuild@0.27.7": true,
     "@firebase/util@1.15.1": true,
     "@parcel/watcher@2.5.6": true,
-    "edgedriver@6.3.0": true,
-    "electron@41.2.1": true,
     "electron-winstaller@5.4.0": true,
-    "geckodriver@6.1.0": true,
     "lmdb@3.5.1": true,
     "msgpackr-extract@3.0.4": true,
-    "protobufjs@7.6.4": true,
+    "protobufjs@7.6.5": true,
     "unrs-resolver@1.12.2": true
   }
 }
