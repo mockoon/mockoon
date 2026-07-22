@@ -1,5 +1,6 @@
 import { BodyTypes, Environment, RouteType } from '@mockoon/commons';
-import { deepEqual } from 'node:assert';
+import { deepEqual, strictEqual } from 'node:assert';
+import { EventEmitter } from 'node:events';
 import { after, before, describe, it } from 'node:test';
 import { MockoonServer } from '../../../src';
 
@@ -159,4 +160,34 @@ describe('Server body parsing', () => {
       server.stop();
     });
   });
+
+  describe('Duplicate request end events', () => {
+    it('should only advance the routing pipeline once when end is emitted twice', () => {
+      const server = new MockoonServer(environment);
+      let nextCalls = 0;
+
+      const request = new EventEmitter() as RequestLike;
+      request.headers = {};
+      request.header = () => undefined;
+
+      (server as any).parseBody(request, {} as any, () => {
+        nextCalls += 1;
+      });
+
+      request.emit('end');
+      request.emit('end');
+
+      strictEqual(nextCalls, 1);
+      strictEqual(request.stringBody, '');
+      strictEqual(request.rawBody?.toString('utf8'), '');
+    });
+  });
 });
+
+type RequestLike = EventEmitter & {
+  headers: Record<string, string>;
+  rawBody?: Buffer;
+  stringBody?: string;
+  body?: unknown;
+  header(name: string): string | undefined;
+};
