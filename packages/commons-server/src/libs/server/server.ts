@@ -635,7 +635,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         rawBody.push(Buffer.from(chunk, 'binary'));
       });
 
-      request.on('end', () => {
+      // Use `once` to guarantee the body is processed and `next()` is called a
+      // single time. Some environments (e.g. serverless-http used by the
+      // serverless package) emit the request 'end' event more than once, which
+      // would otherwise dispatch the whole routing pipeline twice and lead to a
+      // double response send (ERR_HTTP_HEADERS_SENT).
+      request.once('end', () => {
         this.processRawBody(request, next, rawBody, requestContentType);
       });
     }
