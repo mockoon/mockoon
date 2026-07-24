@@ -85,7 +85,7 @@
     "@wdio/cli": "9.28.0",
     "@wdio/electron-service": "10.0.0",
     "@wdio/local-runner": "9.28.0",
-    "@wdio/mocha-framework": "9.28.0",
+    "@wdio/mocha-framework": "9.29.1",
     "@wdio/spec-reporter": "9.28.0",
     "angular-eslint": "21.4.0",
     "bootstrap": "5.3.8",
