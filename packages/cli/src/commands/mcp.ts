@@ -27,7 +27,13 @@ function getMockoonStorageDir(): string {
   }
 
   if (process.platform === 'darwin') {
-    return join(homedir(), 'Library', 'Application Support', 'Mockoon', 'storage');
+    return join(
+      homedir(),
+      'Library',
+      'Application Support',
+      'Mockoon',
+      'storage'
+    );
   }
 
   return join(homedir(), '.config', 'Mockoon', 'storage');
@@ -207,35 +213,36 @@ export default class Mcp extends Command {
             content: { type: 'text'; text: string }[];
             isError?: boolean;
           }>((promiseResolve) => {
-            function onStarted() {
-              mockServer.removeListener('error', onError);
-              mockServer.once('stopped', onStopped);
-              promiseResolve({
-                content: [
-                  {
-                    type: 'text',
-                    text: `Mock server '${parsed.environment.name}' started on port ${parsed.environment.port}.`
-                  }
-                ]
-              });
-            }
+            const handlers = {
+              onStarted: () => {
+                mockServer.removeListener('error', handlers.onError);
+                mockServer.once('stopped', onStopped);
+                promiseResolve({
+                  content: [
+                    {
+                      type: 'text',
+                      text: `Mock server '${parsed.environment.name}' started on port ${parsed.environment.port}.`
+                    }
+                  ]
+                });
+              },
+              onError: (errorCode: string) => {
+                mockServer.removeListener('started', handlers.onStarted);
+                runningServers.delete(parsed.environment.uuid);
+                promiseResolve({
+                  content: [
+                    {
+                      type: 'text',
+                      text: `Failed to start mock server '${parsed.environment.name}': ${errorCode}`
+                    }
+                  ],
+                  isError: true
+                });
+              }
+            };
 
-            function onError(errorCode: string) {
-              mockServer.removeListener('started', onStarted);
-              runningServers.delete(parsed.environment.uuid);
-              promiseResolve({
-                content: [
-                  {
-                    type: 'text',
-                    text: `Failed to start mock server '${parsed.environment.name}': ${errorCode}`
-                  }
-                ],
-                isError: true
-              });
-            }
-
-            mockServer.once('started', onStarted);
-            mockServer.once('error', onError);
+            mockServer.once('started', handlers.onStarted);
+            mockServer.once('error', handlers.onError);
             mockServer.start();
           });
 
@@ -263,13 +270,14 @@ export default class Mcp extends Command {
       async () => {
         if (runningServers.size === 0) {
           return {
-            content: [{ type: 'text', text: 'No mock servers are currently running.' }]
+            content: [
+              { type: 'text', text: 'No mock servers are currently running.' }
+            ]
           };
         }
 
         const lines = Array.from(runningServers.entries()).map(
-          ([uuid, { name, port }]) =>
-            `- [${uuid}] ${name} (port: ${port})`
+          ([uuid, { name, port }]) => `- [${uuid}] ${name} (port: ${port})`
         );
 
         return {

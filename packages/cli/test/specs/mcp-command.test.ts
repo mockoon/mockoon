@@ -61,13 +61,13 @@ describe('MCP command', () => {
     const client = await createClient();
 
     try {
-      const result = await client.callTool({ name: 'list_mocks', arguments: {} });
+      const result = await client.callTool({
+        name: 'list_mocks',
+        arguments: {}
+      });
 
       ok(!result.isError);
-      ok(
-        Array.isArray(result.content) &&
-          result.content[0]?.type === 'text'
-      );
+      ok(Array.isArray(result.content) && result.content[0]?.type === 'text');
     } finally {
       await client.close();
     }
@@ -182,11 +182,12 @@ describe('MCP command', () => {
       strictEqual(result.isError, true);
       ok(
         Array.isArray(result.content) &&
-          (result.content[0] as any)?.text?.includes('No running mock server found')
+          (result.content[0] as any)?.text?.includes(
+            'No running mock server found'
+          )
       );
     } finally {
       await client.close();
     }
   });
 });
-
