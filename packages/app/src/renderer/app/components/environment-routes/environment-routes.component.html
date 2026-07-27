@@ -11,12 +11,81 @@
 @let deleteCurrentRouteResponseRequested =
   deleteCurrentRouteResponseRequested$ | async;
 @let databuckets = databuckets$ | async;
-@let defaultResponseTooltip = defaultResponseTooltip$ | async;
 @let bodyEditorConfig = bodyEditorConfig$ | async;
 @let effectiveContentType = effectiveContentType$ | async;
 @let activeRouteResponseLastLog = activeRouteResponseLastLog$ | async;
 @let externalLink = externalLink$ | async;
 @let bodyType = bodyType$ | async;
+
+<ng-template
+  #defaultFlagTemplate
+  let-routeResponse="routeResponse"
+  let-interactable="interactable"
+>
+  @if (activeRoute?.type === 'crud' && routeResponse.default) {
+    <span
+      class="px-2 text-primary"
+      [ngbTooltip]="
+        interactable
+          ? 'Response linked to the data bucket for CRUD operations'
+          : undefined
+      "
+    >
+      <app-svg icon="data" />
+    </span>
+  }
+  @if (activeRoute?.type === 'http' || activeRoute?.type === 'ws') {
+    @if (interactable) {
+      <button
+        type="button"
+        class="btn btn-link btn-xs btn-icon px-2 py-0"
+        [disabled]="!isActiveEnvironmentEditable"
+        (click)="
+          setDefaultRouteResponse(
+            routeResponse.default ? null : routeResponse.uuid,
+            $event
+          )
+        "
+        [class]="{
+          'text-primary':
+            routeResponse.default &&
+            !rulesNotUsingDefaultResponse.includes(activeRoute?.responseMode),
+          'text-muted':
+            !routeResponse.default ||
+            rulesNotUsingDefaultResponse.includes(activeRoute?.responseMode)
+        }"
+        [ngbTooltip]="
+          routeResponse.default
+            ? (defaultResponseTooltips[activeRoute?.responseMode] ??
+              'Default response is served when no rule matches')
+            : 'Make route response as default'
+        "
+      >
+        <app-svg
+          [icon]="routeResponse.default ? 'flag' : 'outlined_flag'"
+          [attr.icon]="routeResponse.default ? 'flag' : 'outlined_flag'"
+        />
+      </button>
+    } @else {
+      <span
+        class="px-2 text-primary"
+        [class]="{
+          'text-primary': !rulesNotUsingDefaultResponse.includes(
+            activeRoute?.responseMode
+          ),
+          'text-muted':
+            !routeResponse.default ||
+            rulesNotUsingDefaultResponse.includes(activeRoute?.responseMode)
+        }"
+      >
+        <app-svg
+          [icon]="routeResponse.default ? 'flag' : 'outlined_flag'"
+          [attr.icon]="routeResponse.default ? 'flag' : 'outlined_flag'"
+        />
+      </span>
+    }
+  }
+</ng-template>
 
 <div class="d-flex h-100">
   <app-routes-menu class="h-100" />
@@ -189,8 +258,19 @@
                         )
                       "
                     ></div>
+
+                    <div class="d-flex align-items-center ms-auto">
+                      <ng-container
+                        [ngTemplateOutlet]="defaultFlagTemplate"
+                        [ngTemplateOutletContext]="{
+                          routeResponse: activeRouteResponse,
+                          interactable: false
+                        }"
+                      />
+                    </div>
+
                     <div
-                      class="d-flex align-items-center badge badge-hollow fw-bold ms-auto"
+                      class="d-flex align-items-center badge badge-hollow fw-bold"
                     >
                       {{ activeRoute?.responses.length }}
                     </div>
@@ -260,54 +340,14 @@
                       "
                     >
                     </span>
-                    @if (
-                      activeRoute?.type === 'crud' && routeResponse.default
-                    ) {
-                      <span
-                        class="px-2 text-primary"
-                        ngbTooltip="Response linked to the data bucket for CRUD operations"
-                      >
-                        <app-svg icon="data" />
-                      </span>
-                    }
-                    @if (
-                      activeRoute?.type === 'http' || activeRoute?.type === 'ws'
-                    ) {
-                      @if (routeResponse.default) {
-                        <button
-                          type="button"
-                          class="btn btn-link btn-xs btn-icon px-2 py-0"
-                          [disabled]="!isActiveEnvironmentEditable"
-                          (click)="setDefaultRouteResponse(null, $event)"
-                          [class.text-primary]="
-                            !rulesNotUsingDefaultResponse.includes(
-                              activeRoute?.responseMode
-                            )
-                          "
-                          [class.text-muted]="
-                            rulesNotUsingDefaultResponse.includes(
-                              activeRoute?.responseMode
-                            )
-                          "
-                          [ngbTooltip]="defaultResponseTooltip"
-                        >
-                          <app-svg icon="flag" />
-                        </button>
-                      }
-                      @if (!routeResponse.default) {
-                        <button
-                          type="button"
-                          class="btn btn-link btn-xs btn-icon text-muted px-2 py-0"
-                          [disabled]="!isActiveEnvironmentEditable"
-                          (click)="
-                            setDefaultRouteResponse(routeResponse.uuid, $event)
-                          "
-                          ngbTooltip="Make route response as default"
-                        >
-                          <app-svg icon="outlined_flag" />
-                        </button>
-                      }
-                    }
+
+                    <ng-container
+                      [ngTemplateOutlet]="defaultFlagTemplate"
+                      [ngTemplateOutletContext]="{
+                        routeResponse,
+                        interactable: true
+                      }"
+                    />
                   </div>
                 }
               </div>

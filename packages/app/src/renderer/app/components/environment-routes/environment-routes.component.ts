@@ -1,4 +1,4 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -132,7 +132,8 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
     HeadersListComponent,
     RouteResponseRulesComponent,
     RouteCallbacksComponent,
-    AsyncPipe
+    AsyncPipe,
+    NgTemplateOutlet
   ]
 })
 export class EnvironmentRoutesComponent {
@@ -157,7 +158,6 @@ export class EnvironmentRoutesComponent {
   }>;
   public buildResponseLabel = buildResponseLabel;
   public effectiveContentType$: Observable<string>;
-  public defaultResponseTooltip$: Observable<string>;
   public routeHasErrors$: Observable<string>;
   public environmentsStatus$: Observable<EnvironmentsStatuses>;
   public activeTab$: Observable<TabsNameType>;
@@ -168,6 +168,14 @@ export class EnvironmentRoutesComponent {
   public scrollToBottom = this.uiService.scrollToBottom;
   public databuckets$: Observable<DropdownItems>;
   public externalLink$: Observable<string>;
+  public defaultResponseTooltips = {
+    [ResponseMode.RANDOM]: 'Default response is disabled in random mode',
+    [ResponseMode.SEQUENTIAL]:
+      'Default response is disabled in sequential mode',
+    [ResponseMode.DISABLE_RULES]:
+      'Default response is always served because rules are disabled',
+    [ResponseMode.FALLBACK]: 'Default response is disabled in fallback mode'
+  };
   public methods: DropdownItems = [
     {
       value: Methods.all,
@@ -249,24 +257,24 @@ export class EnvironmentRoutesComponent {
     {
       value: ResponseMode.RANDOM,
       icon: 'shuffle',
-      tooltip: 'Random response mode (will disable the rules)'
+      tooltip: 'Random response mode (rules are ignored)'
     },
     {
       value: ResponseMode.SEQUENTIAL,
       icon: 'repeat',
-      tooltip: 'Sequential response mode (will disable the rules)'
+      tooltip: 'Sequential response mode (rules are ignored)'
     },
     {
       value: ResponseMode.DISABLE_RULES,
       icon: 'rule',
-      tooltip: 'Disabled rules mode (default response only)',
+      tooltip: 'Rules disabled mode (default response only)',
       activeClass: 'text-warning'
     },
     {
       value: ResponseMode.FALLBACK,
       icon: 'low_priority',
       tooltip:
-        'Fallback response mode (does not return the default response if none of the rules match, will jump to the next route or use the proxy if configured)'
+        'Fallback response mode (if no rule matches, this route is skipped and Mockoon tries the next route or proxy if configured)'
     }
   ];
   // disables fallback mode for websockets.
@@ -508,23 +516,6 @@ export class EnvironmentRoutesComponent {
     this.environmentsStatus$ = this.store.select('environmentsStatus');
     this.activeTab$ = this.store.select('activeTab');
     this.bodyEditorConfig$ = this.store.select('bodyEditorConfig');
-
-    this.defaultResponseTooltip$ = this.activeRoute$.pipe(
-      filter((activeRoute) => !!activeRoute),
-      distinctUntilChanged(),
-      map((activeRoute) => {
-        if (
-          activeRoute.responseMode === ResponseMode.SEQUENTIAL ||
-          activeRoute.responseMode === ResponseMode.RANDOM
-        ) {
-          return 'Default response disabled by random or sequential responses';
-        } else if (activeRoute.responseMode === ResponseMode.DISABLE_RULES) {
-          return 'Default response always served as rules are disabled';
-        }
-
-        return 'Default response served if no rule matches';
-      })
-    );
 
     this.routeHasErrors$ = this.activeRoute$.pipe(
       filter((activeRoute) => !!activeRoute),
