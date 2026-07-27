@@ -167,6 +167,12 @@ export type ServerOptions = {
   maxFileSize?: number;
 
   /**
+   * Max request body size for all content types.
+   * Set to 0 to disable the limit.
+   */
+  maxRequestBodySize?: string | number;
+
+  /**
    * Public base URL used to:
    * - resolve relative callback URLs
    * - provide the value for the `baseUrl` templating helper
