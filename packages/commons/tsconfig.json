@@ -1,6 +1,8 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "rootDir": "./src",
+    "types": ["node"],
     "target": "ES2017",
     "module": "ESNext",
     "outDir": "./dist/esm",
