@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { DesktopMessages } from 'src/renderer/app/constants/desktop-messages.constants';
 import {
   MessageCodes,
@@ -11,7 +11,7 @@ import { ToastsService } from 'src/renderer/app/services/toasts.service';
 /**
  * Logger class that can be used as is or extended
  */
-@Injectable({ providedIn: 'root' })
+@Service()
 export class LoggerService {
   private mainApiService = inject(MainApiService);
   private toastService = inject(ToastsService);

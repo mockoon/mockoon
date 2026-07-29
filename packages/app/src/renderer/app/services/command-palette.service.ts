@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { Plans } from '@mockoon/cloud';
 import { Route, RouteType } from '@mockoon/commons';
 import { Observable, from, map } from 'rxjs';
@@ -17,7 +17,7 @@ import { clearLogsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class CommandPaletteService {
   private environmentsService = inject(EnvironmentsService);
   private uiService = inject(UIService);

@@ -18,12 +18,13 @@ const compressionLibs = {
 const fakeServer = () =>
   new Promise<Server>((resolve) => {
     const server = createServer((req, res) => {
-      const encoding = req.headers['accept-encoding'] as string;
+      const encoding = req.headers['accept-encoding'] as
+        'gzip' | 'deflate' | 'br' | 'zstd' | 'identity';
 
       res.statusCode = 200;
 
       if (encoding && encoding !== 'identity') {
-        (compressionLibs as any)[encoding](
+        compressionLibs[encoding](
           `${encoding}test`,
           (error: any, result: any) => {
             if (error) {
@@ -137,7 +138,7 @@ describe('Proxy to server with zipped content', () => {
   });
 
   testCases.forEach((testCase) => {
-    it(testCase.call.description as string, async () => {
+    it(testCase.call.description, async () => {
       await http.assertCallWithPort(testCase.call, 3004);
       await environmentsLogs.select(1);
       await environmentsLogs.switchTab('RESPONSE');

@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { fromEvent, race, timer } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
@@ -6,9 +6,7 @@ import { StorageService } from 'src/renderer/app/services/storage.service';
 import { updateUIStateAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class AppQuitService {
   private store = inject(Store);
   private storageService = inject(StorageService);

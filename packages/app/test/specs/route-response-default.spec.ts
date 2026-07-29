@@ -7,6 +7,8 @@ import routes from '../libs/routes';
 import utils from '../libs/utils';
 
 const firstRuleCall: HttpCall = {
+  description:
+    'Call /users/1 with GET method and no body and receive the default response (500)',
   path: '/users/1',
   method: 'GET',
   testedResponse: {
@@ -20,6 +22,8 @@ const firstRuleCallWithBody: HttpCall = {
 };
 
 const secondRuleCall: HttpCall = {
+  description:
+    'Call /users/1 with GET method and no body and receive the default response (200)',
   path: '/users/1',
   method: 'GET',
   testedResponse: {
