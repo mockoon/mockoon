@@ -1,10 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
@@ -14,8 +9,6 @@ import { ToolbarButtonConfig } from 'src/renderer/app/models/ui.model';
   selector: 'app-action-toolbar',
   templateUrl: './action-toolbar.component.html',
   styleUrls: ['./action-toolbar.component.scss'],
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SvgComponent, NgbTooltip, AsyncPipe]
 })
 export class ActionToolbarComponent {

@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -12,7 +12,6 @@ import { Config } from 'src/renderer/config';
 @Component({
   selector: 'app-self-hosting-instructions-modal',
   templateUrl: './self-hosting-instructions-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SvgComponent, AsyncPipe, NgbTooltip]
 })
 export class SelfHostingInstructionsModalComponent {

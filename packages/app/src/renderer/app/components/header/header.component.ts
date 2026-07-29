@@ -1,10 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject
-} from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { User } from '@mockoon/cloud';
 import { Environment } from '@mockoon/commons';
 import {
@@ -40,7 +35,6 @@ import { environment as env } from 'src/renderer/environments/environment';
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgbPopover,
     TourStepDirective,

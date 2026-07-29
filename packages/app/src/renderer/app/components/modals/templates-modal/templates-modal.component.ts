@@ -1,6 +1,5 @@
 import { AsyncPipe, NgTemplateOutlet, UpperCasePipe } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   DOCUMENT,
@@ -65,7 +64,6 @@ import { Config } from 'src/renderer/config';
   selector: 'app-templates-modal',
   templateUrl: './templates-modal.component.html',
   styleUrls: ['./templates-modal.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     SvgComponent,
     EditorComponent,

@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import {
   NgbModal,
   NgbModalOptions,
@@ -84,7 +84,7 @@ type ModalWithoutPayload = Exclude<
   | 'selfHostingInstructions'
 >;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class UIService {
   private store = inject(Store);
   private eventsService = inject(EventsService);

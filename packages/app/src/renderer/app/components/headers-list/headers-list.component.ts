@@ -1,6 +1,5 @@
 import { AsyncPipe } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
@@ -41,7 +40,6 @@ import { Store } from 'src/renderer/app/stores/store';
 @Component({
   selector: 'app-headers-list',
   templateUrl: 'headers-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     ReactiveFormsModule,

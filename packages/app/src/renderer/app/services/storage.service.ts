@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Environment } from '@mockoon/commons';
 import { BehaviorSubject, EMPTY, from, Observable, of } from 'rxjs';
 import {
@@ -14,7 +14,7 @@ import {
   Settings
 } from 'src/shared/models/settings.model';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class StorageService {
   private mainApiService = inject(MainApiService);
   private loggerService = inject(LoggerService);

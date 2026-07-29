@@ -5,12 +5,7 @@ import {
   TitleCasePipe,
   UpperCasePipe
 } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit
-} from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { GetContentType, isContentTypeApplicationJson } from '@mockoon/commons';
 import { NgbCollapse, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
@@ -74,7 +69,6 @@ type logsDropdownMenuPayload = { logUuid: string };
   selector: 'app-environment-logs',
   templateUrl: 'environment-logs.component.html',
   styleUrls: ['environment-logs.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DatePipe],
   imports: [
     NgbTooltip,

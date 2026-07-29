@@ -1,5 +1,5 @@
 import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
@@ -69,7 +69,6 @@ type dropdownMenuPayload = { environmentUuid: string; syncStatus: boolean };
   selector: 'app-environments-menu',
   templateUrl: './environments-menu.component.html',
   styleUrls: ['./environments-menu.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgbPopover,
     TourStepDirective,

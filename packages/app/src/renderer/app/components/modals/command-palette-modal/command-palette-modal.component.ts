@@ -1,6 +1,5 @@
 import { AsyncPipe } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   ElementRef,
@@ -44,7 +43,6 @@ import { Config } from 'src/renderer/config';
 @Component({
   selector: 'app-command-palette-modal',
   templateUrl: './command-palette-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     SvgComponent,
     FormsModule,

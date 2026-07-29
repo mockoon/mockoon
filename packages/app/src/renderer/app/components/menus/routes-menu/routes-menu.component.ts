@@ -1,6 +1,5 @@
 import { AsyncPipe, NgTemplateOutlet, UpperCasePipe } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   HostListener,
@@ -92,7 +91,6 @@ type folderDropdownMenuPayload = { folder: Folder; folderUuid: string };
   selector: 'app-routes-menu',
   templateUrl: './routes-menu.component.html',
   styleUrls: ['./routes-menu.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgbPopover,
     TourStepDirective,

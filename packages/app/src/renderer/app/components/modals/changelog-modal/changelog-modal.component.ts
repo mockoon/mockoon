@@ -1,11 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject
-} from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MarkdownComponent } from 'ngx-markdown';
 import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, startWith } from 'rxjs/operators';
@@ -16,7 +11,6 @@ import { SpinnerComponent } from '../../spinner.component';
 @Component({
   selector: 'app-changelog-modal',
   templateUrl: './changelog-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MarkdownComponent, AsyncPipe, SpinnerComponent]
 })
 export class ChangelogModalComponent implements OnInit {

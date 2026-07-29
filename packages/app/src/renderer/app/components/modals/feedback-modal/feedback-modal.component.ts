@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, tap } from 'rxjs';
@@ -13,7 +13,6 @@ import { Store } from 'src/renderer/app/stores/store';
   selector: 'app-feedback-modal',
   templateUrl: './feedback-modal.component.html',
   styleUrls: ['./feedback-modal.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, SvgComponent, AsyncPipe]
 })
 export class FeedbackModalComponent {

@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import {
   Environment,
   HighestMigrationId,
@@ -9,7 +9,7 @@ import {
 import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class MigrationService {
   private settingsService = inject(SettingsService);
   private loggerService = inject(LoggerService);

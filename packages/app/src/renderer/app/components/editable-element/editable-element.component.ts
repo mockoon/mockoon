@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -25,7 +24,6 @@ import {
   selector: 'app-editable-element',
   templateUrl: 'editable-element.component.html',
   styleUrls: ['editable-element.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

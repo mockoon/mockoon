@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-spinner',
@@ -8,8 +8,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
     role="status"
   >
     <span class="visually-hidden">Loading...</span>
-  </div>`,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  </div>`
 })
 export class SpinnerComponent {
   public size = input('16');

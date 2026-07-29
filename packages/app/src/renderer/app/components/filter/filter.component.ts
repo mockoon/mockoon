@@ -1,11 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostListener,
-  inject,
-  input
-} from '@angular/core';
+import { Component, HostListener, inject, input } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
@@ -28,7 +22,6 @@ import { Store } from 'src/renderer/app/stores/store';
 @Component({
   selector: 'app-filter',
   templateUrl: 'filter.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     ReactiveFormsModule,
