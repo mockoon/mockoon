@@ -367,7 +367,7 @@ Running the command in a terminal will print the configuration snippet to add to
 
 **Extra mock directories**:
 
-By default, the MCP server looks for Mockoon mock files in the default desktop app storage directory (`%APPDATA%\Mockoon\storage` on Windows, `~/Library/Application Support/Mockoon/storage` on macOS, `~/.config/Mockoon/storage` on Linux).
+By default, the MCP server looks for Mockoon mock files in the default desktop app storage directory (`%APPDATA%\mockoon\storage` on Windows, `~/Library/Application Support/mockoon/storage` on macOS, `~/.config/mockoon/storage` on Linux).
 
 To include mock files from additional directories, set the `MOCKOON_DATA_DIRS` environment variable to a semicolon-separated list of paths in your MCP client configuration:
 

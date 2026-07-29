@@ -1,4 +1,4 @@
-﻿import { Environment } from '@mockoon/commons';
+import { Environment } from '@mockoon/commons';
 import {
   createLoggerInstance,
   listenServerEvents,
@@ -17,13 +17,13 @@ import { getDirname } from '../libs/utils.js';
 
 /**
  * Returns the default directory where the Mockoon desktop app stores mock files.
- * Windows: %APPDATA%\Mockoon\storage
- * macOS: ~/Library/Application Support/Mockoon/storage
- * Linux: ~/.config/Mockoon/storage
+ * Windows: %APPDATA%\mockoon\storage
+ * macOS: ~/Library/Application Support/mockoon/storage
+ * Linux: ~/.config/mockoon/storage
  */
 function getMockoonStorageDir(): string {
   if (process.platform === 'win32') {
-    return join(process.env['APPDATA'] ?? homedir(), 'Mockoon', 'storage');
+    return join(process.env['APPDATA'] ?? homedir(), 'mockoon', 'storage');
   }
 
   if (process.platform === 'darwin') {
@@ -31,12 +31,12 @@ function getMockoonStorageDir(): string {
       homedir(),
       'Library',
       'Application Support',
-      'Mockoon',
+      'mockoon',
       'storage'
     );
   }
 
-  return join(homedir(), '.config', 'Mockoon', 'storage');
+  return join(homedir(), '.config', 'mockoon', 'storage');
 }
 
 /**
@@ -93,7 +93,7 @@ export default class Mcp extends Command {
   public async run(): Promise<void> {
     if (process.stdin.isTTY) {
       const config = `{
-  "mcpServers": {
+  "servers": {
     "mockoon": {
       "command": "npx",
       "args": ["-y", "@mockoon/cli", "mcp"]
