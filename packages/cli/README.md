@@ -30,6 +30,7 @@ The CLI supports the same features as the main application: [templating system](
   - [Dockerize command](#dockerize-command)
   - [Import command](#import-command)
   - [Export command](#export-command)
+  - [MCP command](#mcp-command)
   - [Help command](#help-command)
 - [Use the GitHub Action](#use-the-github-action)
 - [Docker image](#docker-image)
@@ -125,6 +126,7 @@ Mockoon's CLI has been tested on Node.js versions 18, 20, 22 and 24.
 - [`import`](#import-command)
 - [`export`](#export-command)
 - [`validate`](#validate-command)
+- [`mcp`](#mcp-command)
 - [`help`](#help-command)
 
 ### `start` command
@@ -344,6 +346,52 @@ Invalid environment: ~/data2.json
 ```
 
 > ⚠️ This command does not validate the OpenAPI specification files. OpenAPI files are validated by the [start command](#start-command) when you run it with an OpenAPI file as the `--data` parameter.
+
+### `mcp` command
+
+Starts a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that exposes Mockoon mocks to AI assistants (Claude, GitHub Copilot, Cursor, etc.).
+
+**Usage**:
+`$ mockoon-cli mcp`
+
+Running the command in a terminal will print the configuration snippet to add to your MCP client.
+
+**Available MCP tools**:
+
+| Tool                  | Description                                                    |
+| --------------------- | -------------------------------------------------------------- |
+| `list_mocks`          | List all local Mockoon mock files                              |
+| `start_mock`          | Start a Mockoon mock server from a local mock file             |
+| `stop_mock`           | Stop a running mock server by UUID                             |
+| `list_running_mocks`  | List all mock servers currently running in the MCP session     |
+
+**Extra mock directories**:
+
+By default, the MCP server looks for Mockoon mock files in the default desktop app storage directory (`%APPDATA%\Mockoon\storage` on Windows, `~/Library/Application Support/Mockoon/storage` on macOS, `~/.config/Mockoon/storage` on Linux).
+
+To include mock files from additional directories, set the `MOCKOON_DATA_DIRS` environment variable to a semicolon-separated list of paths in your MCP client configuration:
+
+```json
+{
+  "servers": {
+    "mockoon": {
+      "command": "mockoon-cli",
+      "args": ["mcp"],
+      "env": {
+        "MOCKOON_DATA_DIRS": "/path/to/dir1;/path/to/dir2"
+      }
+    }
+  }
+}
+```
+
+Mocks with the same UUID found in multiple directories are only listed once (the first occurrence wins).
+
+**Examples**:
+
+```bash
+$ mockoon-cli mcp
+```
 
 ### `help` command
 
