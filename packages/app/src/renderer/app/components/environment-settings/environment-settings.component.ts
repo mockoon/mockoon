@@ -11,13 +11,13 @@ import { Environment, EnvironmentDefault } from '@mockoon/commons';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, combineLatest, merge } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
+import { RadioComponent } from 'src/renderer/app/components/custom-form-elements/radio.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TitleSeparatorComponent } from 'src/renderer/app/components/title-separator/title-separator.component';
-import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import { InputNumberDirective } from 'src/renderer/app/directives/input-number.directive';
 import { ValidPathDirective } from 'src/renderer/app/directives/valid-path.directive';
 import { buildApiUrl } from 'src/renderer/app/libs/utils.lib';
-import { ToggleItems } from 'src/renderer/app/models/common.model';
+import { RadioItems } from 'src/renderer/app/models/common.model';
 import { EnvironmentStatus } from 'src/renderer/app/models/store.model';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
@@ -35,8 +35,8 @@ import { Config } from 'src/renderer/config';
     ValidPathDirective,
     SvgComponent,
     NgbTooltip,
-    ToggleComponent,
-    AsyncPipe
+    AsyncPipe,
+    RadioComponent
   ]
 })
 export class EnvironmentSettingsComponent {
@@ -50,7 +50,7 @@ export class EnvironmentSettingsComponent {
   public activeEnvironmentForm: UntypedFormGroup;
   public Infinity = Infinity;
   public adminApiDocsUrl = Config.docs.adminApi;
-  public certTypes: ToggleItems = [
+  public certTypes: RadioItems = [
     {
       value: 'CERT',
       label: 'CERT'

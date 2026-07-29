@@ -8,11 +8,11 @@
     <div class="rules d-flex">
       @if (form.get('rules').value.length > 1) {
         <div class="rules-operator d-flex flex-column justify-content-center">
-          <app-toggle
+          <app-radio
             prefix="rules-operators"
             formControlName="rulesOperator"
             [items]="rulesOperators"
-            [uncheckable]="false"
+            [nullable]="false"
           />
         </div>
         <div class="brackets"></div>
@@ -44,7 +44,7 @@
                 [dragId]="ruleIndex"
                 (dropped)="reorderRules($event)"
               >
-                <app-custom-select
+                <app-select
                   class="overflow-hidden me-2"
                   formControlName="target"
                   [enableCustomInput]="false"
@@ -80,14 +80,13 @@
                     "
                   />
                 </div>
-                <app-toggle
+                <app-checkbox
                   class="me-2"
-                  [uncheckable]="true"
                   formControlName="invert"
                   [prefix]="'rule' + ruleIndex + 'invert'"
-                  [items]="rulesInvert"
+                  [item]="rulesInvert"
                 />
-                <app-custom-select
+                <app-select
                   class="me-2"
                   formControlName="operator"
                   [enableCustomInput]="false"

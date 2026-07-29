@@ -47,7 +47,6 @@ import { FilterComponent } from 'src/renderer/app/components/filter/filter.compo
 import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
 
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
-import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import { demoTemplates } from 'src/renderer/app/constants/demo-templates';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
@@ -59,6 +58,7 @@ import { UIService } from 'src/renderer/app/services/ui.service';
 import { setActiveTemplatesTabAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
+import { CheckboxComponent } from '../../custom-form-elements/checkbox.component';
 
 @Component({
   selector: 'app-templates-modal',
@@ -71,10 +71,10 @@ import { Config } from 'src/renderer/config';
     ReactiveFormsModule,
     NgTemplateOutlet,
     NgbTooltip,
-    ToggleComponent,
     AsyncPipe,
     UpperCasePipe,
     SpinnerComponent,
+    CheckboxComponent,
     forwardRef(() => FilterComponent)
   ]
 })

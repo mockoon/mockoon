@@ -1,9 +1,6 @@
-@let selectedItem = selectedItem$ | async;
-@let filteredItems = filteredItems$ | async;
-
 <div class="d-flex">
   <div
-    id="{{ dropdownId }}-dropdown"
+    id="{{ dropdownId() }}-dropdown"
     class="flex-fill mw0"
     ngbDropdown
     #dropdown="ngbDropdown"
@@ -15,28 +12,30 @@
       class="btn btn-custom dropdown-toggle"
       role="button"
       ngbDropdownToggle
-      [disabled]="customValue.disabled"
+      [disabled]="disabled()"
     >
-      @if (selectedItem?.value !== null) {
+      @if (selectedItem().value !== null) {
         <div class="dropdown-toggle-label">
-          @if (selectedItem?.label) {
-            <span [class]="selectedItem?.classes">{{
-              selectedItem.label
+          @if (selectedItem().label) {
+            <span [class]="selectedItem().classes">{{
+              selectedItem().label
             }}</span>
           }
-          @if (!selectedItem?.label) {
+          @if (!selectedItem().label) {
             <span
-              [class]="placeholderClasses ? placeholderClasses : 'text-muted'"
-              >{{ placeholder }}</span
+              [class]="
+                placeholderClasses() ? placeholderClasses() : 'text-muted'
+              "
+              >{{ placeholder() }}</span
             >
           }
         </div>
       }
     </button>
     <div
-      id="{{ dropdownId }}-dropdown-menu"
+      id="{{ dropdownId() }}-dropdown-menu"
       class="dropdown-menu {{
-        enableCustomInput ? 'dropdown-menu-with-fixed-search' : ''
+        enableCustomInput() ? 'dropdown-menu-with-fixed-search' : ''
       }}"
       [style]="{
         'min-width': dropdownElement.getBoundingClientRect().width + 'px',
@@ -48,22 +47,22 @@
       }"
       ngbDropdownMenu
     >
-      @if (enableCustomInput) {
+      @if (enableCustomInput()) {
         <div class="custom-value">
           <input
             #customValueInput
             type="text"
-            [placeholder]="customInputPlaceholder"
+            [placeholder]="customInputPlaceholder()"
             class="form-control"
-            [formControl]="customValue"
+            [formField]="customValue"
             (keydown)="enterCustomValue($event)"
-            [mask]="validation.mask"
-            [patterns]="validation.maskPatterns"
+            [mask]="validation()?.mask"
+            [patterns]="validation()?.maskPatterns"
           />
         </div>
       }
       <div class="dropdown-menu-content">
-        @for (item of filteredItems; track item.value || item.label) {
+        @for (item of filteredItems(); track item.value || item.label) {
           @if (item.category) {
             <h6 class="dropdown-header">
               {{ item.label }}
@@ -74,11 +73,11 @@
               #dropdownMenuItems
               type="button"
               class="btn dropdown-item d-flex"
-              [class]="{ 'ps-4': hasCategory }"
+              [class]="{ 'ps-4': hasCategory() }"
               ngbDropdownItem
               (click)="setValue(item)"
               (keydown)="itemKeydown(item, $event)"
-              [disabled]="disabledList?.includes(item.value)"
+              [disabled]="disabledList()?.includes(item.value)"
             >
               <span class="text-truncate" [class]="item.classes">{{
                 item.label
@@ -87,13 +86,13 @@
           }
         } @empty {
           <div class="message message-md text-start p-btn">
-            {{ emptyListMessage }}
+            {{ emptyListMessage() }}
           </div>
         }
       </div>
     </div>
   </div>
-  @if (clearable && selectedItem?.value !== defaultClearValue) {
+  @if (clearable() && selectedItem().value !== defaultClearValue()) {
     <button
       type="button"
       (click)="clearValue()"

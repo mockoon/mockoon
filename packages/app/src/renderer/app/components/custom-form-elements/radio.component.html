@@ -1,0 +1,55 @@
+<div
+  class="btn-group btn-group-sm h-100"
+  role="radiogroup"
+  [attr.aria-labelledby]="label() ? prefix() + '-label' : null"
+>
+  @if (label()) {
+    <button id="{{ prefix() }}-label" class="btn btn-custom px-3" disabled>
+      {{ label() }}
+    </button>
+  }
+
+  @for (item of items(); track item.value) {
+    <input
+      id="{{ prefix() }}-{{ item.value }}-input"
+      class="btn-check"
+      type="radio"
+      [name]="prefix()"
+      [value]="item.value"
+      autocomplete="off"
+      [checked]="item.value === value()"
+      [disabled]="disabled()"
+      [attr.aria-disabled]="disabled() || readonly() ? true : null"
+      [attr.aria-readonly]="readonly() ? true : null"
+      [attr.aria-labelledby]="prefix() + '-' + item.value"
+      [attr.aria-checked]="item.value === value()"
+      (click)="onValueChange(item, $event)"
+    />
+    <label
+      id="{{ prefix() }}-{{ item.value }}"
+      for="{{ prefix() }}-{{ item.value }}-input"
+      class="btn btn-custom px-2 d-flex align-items-center"
+      [class]="{
+        'btn-primary': item.value === value(),
+        active: item.value === value()
+      }"
+      [ngbTooltip]="item.tooltip"
+      [class]="
+        item.value === value()
+          ? item.activeClass
+            ? item.activeClass
+            : 'text-primary'
+          : ''
+      "
+    >
+      @if (item.icon) {
+        <app-svg
+          [icon]="item.icon"
+          size="{{ item.iconSize ?? 16 }}"
+          [class]="{ 'me-2': !!item.label }"
+        />
+      }
+      {{ item.label }}
+    </label>
+  }
+</div>

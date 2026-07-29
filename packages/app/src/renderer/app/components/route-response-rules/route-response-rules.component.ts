@@ -29,9 +29,8 @@ import {
 } from 'rxjs/operators';
 import { StableTrackBy } from 'src/renderer/app/classes/stable-track-by';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
-import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
+import { CheckboxComponent } from 'src/renderer/app/components/custom-form-elements/checkbox.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
-import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import {
   headerNames,
   headerValues
@@ -40,12 +39,15 @@ import { Texts } from 'src/renderer/app/constants/texts.constant';
 import { DraggableDirective } from 'src/renderer/app/directives/draggable.directive';
 import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directive';
 import {
+  CheckboxItem,
   DropdownItems,
-  ToggleItems
+  RadioItems
 } from 'src/renderer/app/models/common.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { moveItemToTargetIndex } from 'src/renderer/app/stores/reducer-utils';
 import { Store } from 'src/renderer/app/stores/store';
+import { RadioComponent } from '../custom-form-elements/radio.component';
+import { SelectComponent } from '../custom-form-elements/select.component';
 
 @Component({
   selector: 'app-route-response-rules',
@@ -54,14 +56,15 @@ import { Store } from 'src/renderer/app/stores/store';
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    ToggleComponent,
     DraggableDirective,
     DropzoneDirective,
-    CustomSelectComponent,
     NgbTypeahead,
     NgbTooltip,
     SvgComponent,
-    AsyncPipe
+    AsyncPipe,
+    CheckboxComponent,
+    RadioComponent,
+    SelectComponent
   ]
 })
 export class RouteResponseRulesComponent {
@@ -136,7 +139,7 @@ export class RouteResponseRulesComponent {
     method: ['null', 'empty_array', 'array_includes', 'valid_json_schema'],
     templating: ['empty_array', 'array_includes']
   };
-  public rulesOperators: ToggleItems = [
+  public rulesOperators: RadioItems = [
     {
       value: 'OR',
       label: 'OR'
@@ -146,9 +149,10 @@ export class RouteResponseRulesComponent {
       label: 'AND'
     }
   ];
-  public rulesInvert: ToggleItems = [
-    { icon: 'priority_high', tooltip: 'Invert condition' }
-  ];
+  public rulesInvert: CheckboxItem = {
+    icon: 'priority_high',
+    tooltip: 'Invert condition'
+  };
   public deleteRuleRequested$ = new TimedBoolean();
   public texts = Texts;
   private searchers = new Map<

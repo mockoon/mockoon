@@ -21,13 +21,13 @@ import { Observable } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { StableTrackBy } from 'src/renderer/app/classes/stable-track-by';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
-import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { Texts } from 'src/renderer/app/constants/texts.constant';
 import { InputNumberDirective } from 'src/renderer/app/directives/input-number.directive';
 import { DropdownItems } from 'src/renderer/app/models/common.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { Store } from 'src/renderer/app/stores/store';
+import { SelectComponent } from '../custom-form-elements/select.component';
 
 @Component({
   selector: 'app-route-callbacks',
@@ -36,11 +36,11 @@ import { Store } from 'src/renderer/app/stores/store';
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    CustomSelectComponent,
     NgbTooltip,
     SvgComponent,
     InputNumberDirective,
-    AsyncPipe
+    AsyncPipe,
+    SelectComponent
   ]
 })
 export class RouteCallbacksComponent {
