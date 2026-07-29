@@ -2,7 +2,8 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "ES2019",
-    "module": "commonjs",
+    "module": "Node16",
+    "moduleResolution": "Node16",
     "outDir": "./dist",
     "skipLibCheck": true,
     "useUnknownInCatchVariables": true
