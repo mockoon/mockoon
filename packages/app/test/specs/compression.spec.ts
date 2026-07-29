@@ -23,14 +23,17 @@ const fakeServer = () =>
       res.statusCode = 200;
 
       if (encoding && encoding !== 'identity') {
-        compressionLibs[encoding](`${encoding}test`, (error, result) => {
-          if (error) {
-            throw error;
+        (compressionLibs as any)[encoding](
+          `${encoding}test`,
+          (error: any, result: any) => {
+            if (error) {
+              throw error;
+            }
+            res.setHeader('Content-Encoding', encoding);
+            res.write(result);
+            res.end();
           }
-          res.setHeader('Content-Encoding', encoding);
-          res.write(result);
-          res.end();
-        });
+        );
       } else {
         res.write('test');
         res.end();
@@ -134,7 +137,7 @@ describe('Proxy to server with zipped content', () => {
   });
 
   testCases.forEach((testCase) => {
-    it(testCase.call.description, async () => {
+    it(testCase.call.description as string, async () => {
       await http.assertCallWithPort(testCase.call, 3004);
       await environmentsLogs.select(1);
       await environmentsLogs.switchTab('RESPONSE');
