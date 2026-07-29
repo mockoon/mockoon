@@ -58,7 +58,6 @@
   "devDependencies": {
     "@types/mustache": "4.2.6",
     "eslint-config-oclif": "6.0.179",
-    "eslint-config-oclif-typescript": "3.1.14",
     "oclif": "4.23.29"
   },
   "engines": {
