@@ -32,8 +32,7 @@ export const createLoggerInstance = (
   fileTransportOptions?: FileTransportOptions | null
 ): Logger => {
   const transportsInstances: (
-    | FileTransportInstance
-    | ConsoleTransportInstance
+    FileTransportInstance | ConsoleTransportInstance
   )[] = [
     new logsTransports.Console({
       handleExceptions: true,

@@ -171,8 +171,7 @@ export class EnvironmentsMenuComponent {
   };
 
   public localEnvironmentDropdownMenuItems: (
-    | DropdownMenuItem
-    | DropdownMenuSeparator
+    DropdownMenuItem | DropdownMenuSeparator
   )[] = [
     ...this.commonDropdownMenuItems,
     this.copyConfigurationDropdownMenuItems,
@@ -225,8 +224,7 @@ export class EnvironmentsMenuComponent {
       })
     );
   public cloudEnvironmentDropdownMenuItems: (
-    | DropdownMenuItem
-    | DropdownMenuSeparator
+    DropdownMenuItem | DropdownMenuSeparator
   )[] = [
     ...this.commonDropdownMenuItems,
     {

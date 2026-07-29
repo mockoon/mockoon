@@ -509,13 +509,9 @@ export class OpenApiConverter {
 
               let contentTypeHeaders: string[] = [];
               let schema:
-                | OpenAPIV2.SchemaObject
-                | OpenAPIV3.SchemaObject
-                | undefined;
+                OpenAPIV2.SchemaObject | OpenAPIV3.SchemaObject | undefined;
               let examples:
-                | OpenAPIV2.ExampleObject
-                | OpenAPIV3.ExampleObject
-                | undefined;
+                OpenAPIV2.ExampleObject | OpenAPIV3.ExampleObject | undefined;
 
               if (version === 'SWAGGER') {
                 contentTypeHeaders =
