@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 
@@ -16,7 +10,6 @@ import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
   selector: 'app-title-separator',
   templateUrl: './title-separator.component.html',
   styleUrls: ['./title-separator.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgbTooltip, SvgComponent]
 })
 export class TitleSeparatorComponent {

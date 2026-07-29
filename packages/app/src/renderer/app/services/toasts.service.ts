@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { generateUUID } from '@mockoon/commons';
 import { ToastTypes } from 'src/renderer/app/models/toasts.model';
 import {
@@ -7,7 +7,7 @@ import {
 } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ToastsService {
   private store = inject(Store);
 

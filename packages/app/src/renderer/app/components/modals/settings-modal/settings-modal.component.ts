@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   ReactiveFormsModule,
@@ -25,7 +25,6 @@ import { FileWatcherOptions, Settings } from 'src/shared/models/settings.model';
   selector: 'app-settings-modal',
   templateUrl: './settings-modal.component.html',
   styleUrls: ['settings-modal.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     TitleSeparatorComponent,

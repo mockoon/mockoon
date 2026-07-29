@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -10,7 +10,6 @@ import { UIService } from 'src/renderer/app/services/ui.service';
 @Component({
   selector: 'app-confirm-modal',
   templateUrl: './confirm-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SvgComponent, AsyncPipe]
 })
 export class ConfirmModalComponent {

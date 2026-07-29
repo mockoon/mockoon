@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
@@ -62,7 +62,6 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
   selector: 'app-environment-callbacks',
   templateUrl: './environment-callbacks.component.html',
   styleUrls: ['./environment-callbacks.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CallbacksMenuComponent,
     FormsModule,

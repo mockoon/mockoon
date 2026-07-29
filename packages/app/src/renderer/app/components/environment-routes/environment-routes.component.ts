@@ -1,5 +1,5 @@
 import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
@@ -106,7 +106,6 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
   selector: 'app-environment-routes',
   templateUrl: './environment-routes.component.html',
   styleUrls: ['./environment-routes.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     RoutesMenuComponent,
     NgbPopover,

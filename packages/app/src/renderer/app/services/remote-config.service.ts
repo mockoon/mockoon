@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { RemoteConfigData } from '@mockoon/cloud';
 import { EMPTY, from, Observable } from 'rxjs';
 import { catchError, filter, switchMap, tap } from 'rxjs/operators';
@@ -9,7 +9,7 @@ import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { environment } from 'src/renderer/environments/environment';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class RemoteConfigService {
   private httpClient = inject(HttpClient);
   private userService = inject(UserService);

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 
 @Component({
@@ -8,7 +8,6 @@ import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
     <small>Offline, read-only mode</small>
   </div>`,
   styleUrls: ['./offline-banner.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SvgComponent]
 })
 export class OfflineBannerComponent {}

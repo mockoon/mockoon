@@ -21,7 +21,6 @@ configs[1].rules = {
       style: 'kebab-case'
     }
   ],
-  '@angular-eslint/prefer-on-push-component-change-detection': 'error',
   '@angular-eslint/prefer-standalone': 'off',
   // this should be reenabled once we use strictNullChecks
   '@typescript-eslint/prefer-nullish-coalescing': 'off'

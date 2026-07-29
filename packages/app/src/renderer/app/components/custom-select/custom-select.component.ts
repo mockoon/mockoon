@@ -1,6 +1,5 @@
 import { AsyncPipe } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   forwardRef,
@@ -52,7 +51,6 @@ import {
       multi: true
     }
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgbDropdown,
     NgbDropdownToggle,

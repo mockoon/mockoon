@@ -1,6 +1,5 @@
 import { AsyncPipe } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   HostListener,
@@ -55,7 +54,6 @@ type dropdownMenuPayload = { databucketUuid: string };
   selector: 'app-databuckets-menu',
   templateUrl: './databuckets-menu.component.html',
   styleUrls: ['./databuckets-menu.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgbTooltip,
     SvgComponent,

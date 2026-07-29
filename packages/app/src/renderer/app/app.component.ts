@@ -1,11 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostListener,
-  OnInit,
-  inject
-} from '@angular/core';
+import { Component, HostListener, OnInit, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Environment } from '@mockoon/commons';
 import { NgbToast } from '@ng-bootstrap/ng-bootstrap';
@@ -57,7 +51,6 @@ import { OfflineBannerComponent } from './components/offline-banner/offline-bann
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgbToast,
     EnvironmentsMenuComponent,

@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import {
   Environment,
   IsEqual,
@@ -29,7 +29,7 @@ import {
   Settings
 } from 'src/shared/models/settings.model';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SettingsService {
   private store = inject(Store);
   private storageService = inject(StorageService);

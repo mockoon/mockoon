@@ -1,4 +1,4 @@
-import { Injectable, NgZone, inject } from '@angular/core';
+import { NgZone, Service, inject } from '@angular/core';
 import { combineLatest } from 'rxjs';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
@@ -11,7 +11,7 @@ import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { FileWatcherOptions } from 'src/shared/models/settings.model';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class MainApiListenerService {
   private environmentsService = inject(EnvironmentsService);
   private eventsService = inject(EventsService);

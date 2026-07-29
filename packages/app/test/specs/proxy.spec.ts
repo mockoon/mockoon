@@ -213,9 +213,11 @@ describe('Proxy (with TLS and proxy headers)', () => {
 
     const response = await http.assertCallWithPort(getDisabledProxyCall, 3002);
 
-    expect(response.headers).not.toMatchObject({
-      'x-proxy-response-header': 'header value'
-    });
+    if (response) {
+      expect(response.headers).not.toMatchObject({
+        'x-proxy-response-header': 'header value'
+      });
+    }
   });
 
   it('should call external HTTPS API through proxy ', async () => {

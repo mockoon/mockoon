@@ -1,6 +1,5 @@
 import { AsyncPipe, LowerCasePipe, UpperCasePipe } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   HostListener,
@@ -52,7 +51,6 @@ type dropdownMenuPayload = { callbackUuid: string };
   selector: 'app-callbacks-menu',
   templateUrl: './callbacks-menu.component.html',
   styleUrls: ['./callbacks-menu.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgbTooltip,
     SvgComponent,

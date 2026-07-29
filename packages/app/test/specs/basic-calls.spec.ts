@@ -45,6 +45,7 @@ const testCases: HttpCall[] = [
 ];
 
 const prefixTestCase: HttpCall = {
+  description: 'Call GET /api/answer with prefix',
   path: '/api/answer',
   method: 'GET',
   testedResponse: {

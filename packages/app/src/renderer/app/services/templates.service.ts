@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import {
   Template,
   TemplateGenerateOptions,
@@ -23,7 +23,7 @@ import { updateUserAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class TemplatesService {
   private httpClient = inject(HttpClient);
   private userService = inject(UserService);

@@ -1,4 +1,4 @@
-import { Injectable, TemplateRef, inject } from '@angular/core';
+import { Service, TemplateRef, inject } from '@angular/core';
 import { BuildHTTPRoute } from '@mockoon/commons';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { Subject } from 'rxjs';
@@ -11,7 +11,7 @@ import {
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class TourService {
   private store = inject(Store);
   private environmentService = inject(EnvironmentsService);

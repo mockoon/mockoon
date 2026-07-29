@@ -1,7 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   OnInit,
   TemplateRef,
@@ -15,7 +14,6 @@ import { TourService } from 'src/renderer/app/services/tour.service';
 @Component({
   selector: 'app-tour',
   templateUrl: 'tour.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SvgComponent, AsyncPipe]
 })
 export class TourComponent implements OnInit, AfterViewInit {

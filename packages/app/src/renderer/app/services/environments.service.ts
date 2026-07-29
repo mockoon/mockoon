@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import {
   EnvironmentsListPayload,
   getEnvironmentByteSize
@@ -143,9 +143,7 @@ import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class EnvironmentsService {
   private dataService = inject(DataService);
   private eventsService = inject(EventsService);

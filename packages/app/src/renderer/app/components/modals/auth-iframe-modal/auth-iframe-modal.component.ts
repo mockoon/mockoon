@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostListener,
-  inject
-} from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
@@ -14,7 +9,6 @@ import { Config } from 'src/renderer/config';
 @Component({
   selector: 'app-auth-iframe-modal',
   templateUrl: './auth-iframe-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, ReactiveFormsModule, SpinnerComponent],
   host: { class: 'position-relative' }
 })

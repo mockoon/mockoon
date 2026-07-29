@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import {
   DownSyncActions,
   GetFullEnvironmentSyncAction,
@@ -44,7 +44,7 @@ import {
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SyncPayloadsService {
   private store = inject(Store);
   private environmentsService = inject(EnvironmentsService);

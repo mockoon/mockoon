@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import {
   BaseSyncAction,
   ConnectedPayload,
@@ -51,7 +51,7 @@ import {
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SyncService {
   private userService = inject(UserService);
   private store = inject(Store);

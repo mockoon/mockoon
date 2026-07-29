@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { User } from '@mockoon/cloud';
 import {
   Auth,
@@ -35,7 +35,7 @@ import {
 import { Store, storeDefaultState } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class UserService {
   private httpClient = inject(HttpClient);
   private store = inject(Store);

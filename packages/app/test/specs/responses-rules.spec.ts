@@ -24,6 +24,7 @@ describe('Responses rules', () => {
     it('should route with multiple responses and no rules defined should return the first response', async () => {
       await utils.waitForAutosave();
       await http.assertCall({
+        description: 'Call the /users/1 endpoint and get a 500',
         path: '/users/1',
         method: 'GET',
         testedResponse: {
@@ -47,6 +48,7 @@ describe('Responses rules', () => {
       await utils.waitForAutosave();
 
       await http.assertCall({
+        description: 'Call the /users/10 endpoint and get a 200',
         path: '/users/10',
         method: 'GET',
         testedResponse: {
@@ -70,6 +72,7 @@ describe('Responses rules', () => {
       await utils.waitForAutosave();
 
       await http.assertCall({
+        description: 'Call the /users/10?userid=5 endpoint and get a 500',
         path: '/users/10?userid=5',
         method: 'GET',
         testedResponse: {
@@ -91,6 +94,8 @@ describe('Responses rules', () => {
       await utils.waitForAutosave();
 
       await http.assertCall({
+        description:
+          'Call the /users/1234 endpoint with Accept header and get a 500',
         path: '/users/1234',
         headers: { Accept: 'application/xhtml+xml' },
         method: 'GET',
@@ -577,6 +582,8 @@ describe('Responses rules', () => {
 
     it('should call the disabled rules endpoint and get a 204 as rules are fulfilled', async () => {
       await http.assertCall({
+        description:
+          'Call the /disable-rules endpoint and get a 204 as rules are fulfilled',
         path: '/disable-rules',
         method: 'GET',
         headers: {
@@ -595,6 +602,8 @@ describe('Responses rules', () => {
 
     it('should call the disabled rules endpoint and get a 202 as rules are disabled', async () => {
       await http.assertCall({
+        description:
+          'Call the /disable-rules endpoint and get a 202 as rules are disabled',
         path: '/disable-rules',
         method: 'GET',
         body: { test: 'value1' },
@@ -611,12 +620,16 @@ describe('Responses rules', () => {
 
     it('should call the request number endpoint twice and get different responses', async () => {
       await http.assertCall({
+        description:
+          'Call the /requestnumber endpoint and get the first response',
         path: '/requestnumber',
         method: 'GET',
         testedResponse: { body: 'res1' }
       });
 
       await http.assertCall({
+        description:
+          'Call the /requestnumber endpoint and get the second response',
         path: '/requestnumber',
         method: 'GET',
         testedResponse: { body: 'res2' }
@@ -629,6 +642,8 @@ describe('Responses rules', () => {
       await navigation.switchView('ENV_ROUTES');
 
       await http.assertCall({
+        description:
+          'Call the /mockoon-admin/state/purge endpoint to reset the state',
         path: '/mockoon-admin/state/purge',
         method: 'POST',
         headers: {
@@ -637,16 +652,22 @@ describe('Responses rules', () => {
       });
 
       await http.assertCall({
+        description:
+          'Call the /requestnumber endpoint and get the first response again',
         path: '/requestnumber',
         method: 'GET',
         testedResponse: { body: 'res1' }
       });
       await http.assertCall({
+        description:
+          'Call the /requestnumber endpoint and get the second response again',
         path: '/requestnumber',
         method: 'GET',
         testedResponse: { body: 'res2' }
       });
       await http.assertCall({
+        description:
+          'Call the /requestnumber endpoint and get the third response again',
         path: '/requestnumber',
         method: 'GET',
         testedResponse: { body: 'res3' }

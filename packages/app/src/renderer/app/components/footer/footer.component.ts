@@ -1,11 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnInit,
-  inject
-} from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { Plans } from '@mockoon/cloud';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, Observable, from, map } from 'rxjs';
@@ -27,7 +21,6 @@ import { Config } from 'src/renderer/config';
   selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgbTooltip, SvgComponent, AsyncPipe, SpinnerComponent]
 })
 export class FooterComponent implements OnInit {

@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
@@ -29,7 +29,6 @@ import { Store } from 'src/renderer/app/stores/store';
   selector: 'app-environment-databuckets',
   templateUrl: './environment-databuckets.component.html',
   styleUrls: ['./environment-databuckets.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DatabucketsMenuComponent,
     FormsModule,

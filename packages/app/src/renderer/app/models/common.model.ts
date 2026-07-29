@@ -1,7 +1,5 @@
 export type HeadersProperties =
-  | 'headers'
-  | 'proxyReqHeaders'
-  | 'proxyResHeaders';
+  'headers' | 'proxyReqHeaders' | 'proxyResHeaders';
 
 export type DropdownItem<T = string | number> = {
   category?: true;

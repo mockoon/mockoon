@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { OpenDialogOptions } from 'electron';
 import { from, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
@@ -6,9 +6,7 @@ import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { updateSettingsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class DialogsService {
   private store = inject(Store);
   private mainApiService = inject(MainApiService);

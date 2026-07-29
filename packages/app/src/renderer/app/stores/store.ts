@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { DeployInstance, RemoteConfigData } from '@mockoon/cloud';
 import {
   Callback,
@@ -88,7 +88,7 @@ export const storeDefaultState: StoreType = {
   }
 };
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class Store {
   private store$ = new BehaviorSubject<StoreType>(storeDefaultState);
   /**

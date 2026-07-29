@@ -2,7 +2,7 @@ export type HttpCallResponse = {
   body?: string | { contains: string } | RegExp;
   status?: number;
   statusMessage?: string;
-  headers?: Record<string, string | string[]>;
+  headers?: Record<string, string | string[] | undefined>;
   cert?: {
     issuer: {
       C?: string;
@@ -11,21 +11,15 @@ export type HttpCallResponse = {
       ST?: string;
     };
   };
+  [key: string]: any;
 };
 
 export type HttpCall = {
-  description?: string;
+  description: string;
   protocol?: 'http' | 'https';
   path: string;
   method:
-    | 'GET'
-    | 'POST'
-    | 'PUT'
-    | 'PATCH'
-    | 'HEAD'
-    | 'OPTIONS'
-    | 'DELETE'
-    | 'PURGE';
+    'GET' | 'POST' | 'PUT' | 'PATCH' | 'HEAD' | 'OPTIONS' | 'DELETE' | 'PURGE';
   headers?: Record<string, string | string[] | number>;
   cookie?: string;
   body?: any;

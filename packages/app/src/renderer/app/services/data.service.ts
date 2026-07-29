@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import {
   BINARY_BODY,
   Callback,
@@ -24,7 +24,7 @@ import { MigrationService } from 'src/renderer/app/services/migration.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { Store } from 'src/renderer/app/stores/store';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class DataService {
   private store = inject(Store);
   private migrationService = inject(MigrationService);

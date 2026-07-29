@@ -31,11 +31,7 @@ export type ViewsNameType =
   | 'ENV_CALLBACKS';
 
 export type TabsNameType =
-  | 'RESPONSE'
-  | 'HEADERS'
-  | 'RULES'
-  | 'SETTINGS'
-  | 'CALLBACKS';
+  'RESPONSE' | 'HEADERS' | 'RULES' | 'SETTINGS' | 'CALLBACKS';
 
 export type CallbackSettings = {
   activeTab: CallbackTabsNameType;
@@ -45,9 +41,7 @@ export type CallbackSettings = {
 export type EnvironmentLogsTabsNameType = 'REQUEST' | 'RESPONSE';
 
 export type TemplatesTabsName =
-  | 'LIST'
-  | 'GENERATE_TEMPLATE'
-  | 'GENERATE_ENDPOINT';
+  'LIST' | 'GENERATE_TEMPLATE' | 'GENERATE_ENDPOINT';
 
 export type EnvironmentStatus = {
   running: boolean;

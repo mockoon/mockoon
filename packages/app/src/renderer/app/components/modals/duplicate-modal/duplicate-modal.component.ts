@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Environment } from '@mockoon/commons';
 import { combineLatest, Observable } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
@@ -12,7 +12,6 @@ import { Store } from 'src/renderer/app/stores/store';
 @Component({
   selector: 'app-duplicate-modal',
   templateUrl: './duplicate-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [AsyncPipe]
 })
 export class DuplicateModalComponent {

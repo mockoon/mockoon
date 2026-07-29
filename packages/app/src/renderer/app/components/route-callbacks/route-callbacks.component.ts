@@ -1,11 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  inject,
-  Output
-} from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
@@ -39,7 +33,6 @@ import { Store } from 'src/renderer/app/stores/store';
   selector: 'app-route-callbacks',
   templateUrl: 'route-callbacks.component.html',
   styleUrls: ['./route-callbacks.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     ReactiveFormsModule,

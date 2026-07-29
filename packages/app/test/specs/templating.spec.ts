@@ -1051,6 +1051,8 @@ const testSuites: { name: string; tests: HttpCall[] }[] = [
 ];
 
 const fakerSeedingTest: HttpCall = {
+  description:
+    'Faker seeding should return the same value for the same seed and locale',
   path: '/fakerseed',
   method: 'GET',
   headers: { 'Content-Type': 'text/plain' },
@@ -1132,6 +1134,7 @@ describe('Templating', () => {
 
       await utils.waitForAutosave();
       await http.assertCall({
+        description: 'Root level default value (path not found)',
         path: '/bodyjson-rootlvl',
         method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
@@ -1148,6 +1151,7 @@ describe('Templating', () => {
       await routes.toggleDisableTemplating();
       await utils.waitForAutosave();
       await http.assertCall({
+        description: 'File content with disabled templating',
         path: '/file-templating',
         method: 'GET',
         headers: { 'Content-Type': 'text/plain' },

@@ -1,11 +1,6 @@
 import { AsyncPipe, LowerCasePipe, UpperCasePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormControl,
@@ -51,7 +46,6 @@ import { Config } from 'src/renderer/config';
   selector: 'app-openapi-import-modal',
   templateUrl: './openapi-import-modal.component.html',
   styleUrls: ['openapi-import-modal.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     EditorComponent,
     FormsModule,

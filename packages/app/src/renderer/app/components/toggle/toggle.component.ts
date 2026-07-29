@@ -1,6 +1,5 @@
 import { UpperCasePipe } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   forwardRef,
@@ -36,7 +35,6 @@ import { ToggleItem, ToggleItems } from 'src/renderer/app/models/common.model';
       multi: true
     }
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgbTooltip,
     FormsModule,

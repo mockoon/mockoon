@@ -1,5 +1,5 @@
 import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
@@ -69,7 +69,6 @@ type dropdownMenuPayload = { environmentUuid: string; syncStatus: boolean };
   selector: 'app-environments-menu',
   templateUrl: './environments-menu.component.html',
   styleUrls: ['./environments-menu.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgbPopover,
     TourStepDirective,
@@ -171,8 +170,7 @@ export class EnvironmentsMenuComponent {
   };
 
   public localEnvironmentDropdownMenuItems: (
-    | DropdownMenuItem
-    | DropdownMenuSeparator
+    DropdownMenuItem | DropdownMenuSeparator
   )[] = [
     ...this.commonDropdownMenuItems,
     this.copyConfigurationDropdownMenuItems,
@@ -225,8 +223,7 @@ export class EnvironmentsMenuComponent {
       })
     );
   public cloudEnvironmentDropdownMenuItems: (
-    | DropdownMenuItem
-    | DropdownMenuSeparator
+    DropdownMenuItem | DropdownMenuSeparator
   )[] = [
     ...this.commonDropdownMenuItems,
     {
