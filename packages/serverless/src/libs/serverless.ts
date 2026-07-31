@@ -71,7 +71,8 @@ export class MockoonServerless {
       disableTls: this.options.disableTls,
       maxTransactionLogs: this.options.maxTransactionLogs,
       enableRandomLatency: this.options.enableRandomLatency,
-      enableRouteMetadataHeaders: this.options.enableRouteMetadataHeaders
+      enableRouteMetadataHeaders: this.options.enableRouteMetadataHeaders,
+      maxRequestBodySize: this.options.maxRequestBodySize
     } as Partial<ServerOptions>;
     const server = new MockoonServer(this.environment, serverOptions);
     listenServerEvents(

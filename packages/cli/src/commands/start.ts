@@ -121,6 +121,11 @@ export default class Start extends Command {
       description: `Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: ${defaultMaxTransactionLogs}).`,
       default: defaultMaxTransactionLogs
     }),
+    'max-request-body-size': Flags.string({
+      description:
+        'Maximum request body size for all content types (default: 100MB). Set to 0 to disable the limit. You can use either a raw byte count or a human-readable string (e.g. 104857600, 100MB, 10 GB, or 1.5kb).',
+      default: '100MB'
+    }),
     'enable-random-latency': Flags.boolean({
       description:
         'Enable random latency from 0 to value specified in the route settings',
@@ -230,6 +235,7 @@ export default class Start extends Command {
           enableRandomLatency: userFlags['enable-random-latency'],
           enableRouteMetadataHeaders:
             userFlags['enable-route-metadata-headers'],
+          maxRequestBodySize: userFlags['max-request-body-size'],
           maxCallbackDepth: userFlags['max-callback-depth'],
           publicBaseUrl: userFlags['public-base-url'][index]
         });
@@ -297,6 +303,7 @@ export default class Start extends Command {
       maxTransactionLogs: parameters.maxTransactionLogs,
       enableRandomLatency: parameters.enableRandomLatency,
       enableRouteMetadataHeaders: parameters.enableRouteMetadataHeaders,
+      maxRequestBodySize: parameters.maxRequestBodySize,
       maxCallbackDepth: parameters.maxCallbackDepth,
       publicBaseUrl: parameters.publicBaseUrl
     });

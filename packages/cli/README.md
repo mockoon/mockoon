@@ -161,6 +161,7 @@ The mocks will run by default on the ports and hostnames specified in the files.
 |--admin-api-cors-origin | Allowed CORS origin(s) for the admin API (e.g. 'https://app.example.com'). Provide multiple times or comma-separated for multiple origins. Use '\*' to explicitly opt into wildcard CORS. When omitted, no CORS headers are emitted on admin API responses. Can also be set with `MOCKOON_ADMIN_API_CORS_ORIGIN`.|
 |--disable-tls | Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/)|
 |--max-transaction-logs | Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100)|
+|--max-request-body-size | Maximum request body size for all content types (default: 100MB). Set to 0 to disable the limit. You can use either a raw byte count or a human-readable string (e.g. 104857600, 100MB, 10 GB, or 1.5kb).|
 |--enable-random-latency | Randomize global and responses latencies between 0 and the specified value (default: false)|
 |--proxy | Override the environment's proxy settings (options: 'enabled' or 'disabled')|
 |--public-base-url | Public base URL used to resolve [relative callback URLs](https://mockoon.com/docs/latest/callbacks/overview/#configure-a-callback) and for the [`baseUrl` templating helper](https://mockoon.com/docs/latest/templating/mockoon-request-helpers/#baseurl) (e.g. https://api.example.com or http://localhost:3000). Must include the protocol and port if non-standard.|
@@ -181,6 +182,7 @@ $ mockoon-cli start --data ~/data.json --disable-routes route1 route2 folder1
 $ mockoon-cli start --data ~/data.json --disable-routes=*
 $ mockoon-cli start --data ~/data.json --disable-routes "*"
 $ mockoon-cli start --data ~/data.json --public-base-url https://api.example.com
+$ mockoon-cli start --data ~/data.json --max-request-body-size 100MB
 $ mockoon-cli start --data cloud://def01727-aeb7-4cf1-9172-e0c38f22b224 --token mkn_sk_1234567890abcdef
 ```
 

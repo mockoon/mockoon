@@ -25,11 +25,14 @@ import {
   dedupSlashes,
   defaultEnvironmentVariablesPrefix,
   defaultMaxCallbackDepth,
+  defaultMaxFileSize,
+  defaultMaxRequestBodySize,
   defaultMaxTransactionLogs,
   deterministicStringify,
   generateSecureToken,
   generateUUID,
   getLatency,
+  parseByteSize,
   pathMatch,
   pathMatchErrorBuilder,
   preparePath,
@@ -133,12 +136,14 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     enableRandomLatency: false,
     enableRouteMetadataHeaders: false,
     maxFileUploads: 10,
-    maxFileSize: 10 * 1024 * 1024, // 10MB
+    maxFileSize: defaultMaxFileSize,
+    maxRequestBodySize: defaultMaxRequestBodySize,
     maxCallbackDepth: defaultMaxCallbackDepth
   };
   private transactionLogs: Transaction[] = [];
   private effectiveRestRoutes: Route[] = [];
   private effectiveWebSocketRoutes: Route[] = [];
+  private maxRequestBodySize: number;
 
   constructor(
     private environment: Environment,
@@ -152,6 +157,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       envVarsPrefix: options.envVarsPrefix ?? defaultEnvironmentVariablesPrefix,
       maxCallbackDepth: options.maxCallbackDepth ?? defaultMaxCallbackDepth
     };
+
+    this.maxRequestBodySize = parseByteSize(
+      this.options.maxRequestBodySize ?? defaultMaxRequestBodySize
+    );
 
     if (this.options.adminApiAuthToken) {
       this.adminApiAuthToken = this.options.adminApiAuthToken;
@@ -276,6 +285,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     app.disable('etag');
 
     app.use(this.removeExpectHeader);
+    app.use(this.logRequest);
 
     // This middleware is required to parse the body for createAdminEndpoint requests
     app.use(this.parseBody);
@@ -338,7 +348,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     app.use(this.delayResponse);
     app.use(this.deduplicateRequestSlashes);
     app.use(cookieParser());
-    app.use(this.logRequest);
     app.use(this.setResponseHeaders);
 
     this.createRestRoutes(app);
@@ -627,12 +636,46 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     // body was already parsed (e.g. by firebase), 'data' event will not be emitted (⚠️ request.body will always be an empty object in Firebase Functions, we have to check rawBody too)
     if (!!request.body && request.rawBody) {
+      if (
+        this.maxRequestBodySize !== 0 &&
+        request.rawBody.length > this.maxRequestBodySize
+      ) {
+        this.sendError(response, 'Payload too large', 413);
+
+        return;
+      }
+
       this.processRawBody(request, next, [request.rawBody], requestContentType);
     } else {
       const rawBody: Buffer[] = [];
+      let rawBodySize = 0;
+      let bodyTooLarge = false;
 
-      request.on('data', (chunk) => {
-        rawBody.push(Buffer.from(chunk, 'binary'));
+      request.on('data', (chunk: Buffer) => {
+        if (bodyTooLarge) {
+          return;
+        }
+
+        rawBodySize += chunk.length;
+
+        if (
+          this.maxRequestBodySize !== 0 &&
+          rawBodySize > this.maxRequestBodySize
+        ) {
+          bodyTooLarge = true;
+          rawBody.length = 0;
+          // Do not destroy the socket immediately: let the 413 response flush
+          // while we keep ignoring any remaining request chunks.
+          response.once('finish', () => {
+            request.destroy();
+          });
+          response.set('Connection', 'close');
+          this.sendError(response, 'Payload too large', 413);
+
+          return;
+        }
+
+        rawBody.push(chunk);
       });
 
       // Use `once` to guarantee the body is processed and `next()` is called a
@@ -641,6 +684,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       // would otherwise dispatch the whole routing pipeline twice and lead to a
       // double response send (ERR_HTTP_HEADERS_SENT).
       request.once('end', () => {
+        if (bodyTooLarge) {
+          return;
+        }
+
         this.processRawBody(request, next, rawBody, requestContentType);
       });
     }
@@ -660,6 +707,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     next: NextFunction
   ) => {
     response.on('close', () => {
+      if (request.path.startsWith('/mockoon-admin')) {
+        return;
+      }
+
       const transaction = CreateTransaction(request, response);
 
       this.emit('transaction-complete', transaction);

@@ -204,6 +204,59 @@ export const generateSecureToken = (byteLength = 32): string => {
 };
 
 /**
+ * Parse a byte size from either a raw byte count or a human-readable string.
+ * Accepts values like `104857600`, `100MB`, `10 GB`, or `1.5kb`.
+ * Returns 0 when the input is empty/undefined.
+ */
+export const parseByteSize = (rawValue?: string | number): number => {
+  const validate = (value: number): number => {
+    if (!Number.isFinite(value) || value < 0) {
+      throw new Error('Byte size must be a finite, non-negative number.');
+    }
+
+    return value;
+  };
+
+  if (rawValue == null) {
+    return 0;
+  }
+
+  if (typeof rawValue === 'number') {
+    return validate(rawValue);
+  }
+
+  const value = rawValue.trim();
+
+  if (value.length === 0) {
+    return 0;
+  }
+
+  if (/^\d+$/.test(value)) {
+    return validate(Number(value));
+  }
+
+  const sizeMatch = value.match(/^([0-9]+(?:\.[0-9]+)?)\s*(b|kb|mb|gb|tb)$/i);
+
+  if (!sizeMatch) {
+    throw new Error(
+      `Invalid byte size: ${rawValue}. Use a raw byte value like 104857600 or a human-readable unit like 100MB.`
+    );
+  }
+
+  const amount = Number(sizeMatch[1]);
+  const unit = sizeMatch[2].toLowerCase();
+  const multipliers: Record<string, number> = {
+    b: 1,
+    kb: 1024,
+    mb: 1024 * 1024,
+    gb: 1024 * 1024 * 1024,
+    tb: 1024 * 1024 * 1024 * 1024
+  };
+
+  return validate(Math.round(amount * multipliers[unit]));
+};
+
+/**
  * Return a random integer
  *
  * @param a

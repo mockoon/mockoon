@@ -1,6 +1,10 @@
 import { strictEqual } from 'node:assert';
 import { describe, it } from 'node:test';
-import { express5PathConvert, generateSecureToken } from '../../src';
+import {
+  express5PathConvert,
+  generateSecureToken,
+  parseByteSize
+} from '../../src';
 
 describe('generateSecureToken', () => {
   it('should generate a 64-char hex token by default', () => {
@@ -26,6 +30,75 @@ describe('generateSecureToken', () => {
   it('should enforce a minimum of one byte', () => {
     strictEqual(generateSecureToken(0).length, 2);
     strictEqual(generateSecureToken(-42).length, 2);
+  });
+});
+
+describe('parseByteSize', () => {
+  it('should default empty values to zero', () => {
+    strictEqual(parseByteSize(), 0);
+    strictEqual(parseByteSize(''), 0);
+    strictEqual(parseByteSize('   '), 0);
+  });
+
+  it('should accept raw byte counts as numbers', () => {
+    strictEqual(parseByteSize(104857600), 104857600);
+  });
+
+  it('should accept raw byte counts as strings', () => {
+    strictEqual(parseByteSize('104857600'), 104857600);
+  });
+
+  it('should accept human-readable megabytes', () => {
+    strictEqual(parseByteSize('100MB'), 100 * 1024 * 1024);
+    strictEqual(parseByteSize('100 mb'), 100 * 1024 * 1024);
+  });
+
+  it('should accept other binary units', () => {
+    strictEqual(parseByteSize('1.5kb'), 1536);
+    strictEqual(parseByteSize('2GB'), 2 * 1024 * 1024 * 1024);
+  });
+
+  it('should reject invalid values', () => {
+    try {
+      parseByteSize('ten megabytes');
+      strictEqual(false, true);
+    } catch (error) {
+      strictEqual(error instanceof Error, true);
+    }
+  });
+
+  it('should reject non-finite numeric values', () => {
+    try {
+      parseByteSize(Number.NaN);
+      strictEqual(false, true);
+    } catch (error) {
+      strictEqual(error instanceof Error, true);
+    }
+
+    try {
+      parseByteSize(Number.POSITIVE_INFINITY);
+      strictEqual(false, true);
+    } catch (error) {
+      strictEqual(error instanceof Error, true);
+    }
+  });
+
+  it('should reject negative numeric values', () => {
+    try {
+      parseByteSize(-1);
+      strictEqual(false, true);
+    } catch (error) {
+      strictEqual(error instanceof Error, true);
+    }
+  });
+
+  it('should reject parsed non-finite values from oversized numbers', () => {
+    try {
+      parseByteSize('9'.repeat(500));
+      strictEqual(false, true);
+    } catch (error) {
+      strictEqual(error instanceof Error, true);
+    }
   });
 });
 

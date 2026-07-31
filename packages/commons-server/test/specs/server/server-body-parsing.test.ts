@@ -182,6 +182,90 @@ describe('Server body parsing', () => {
       strictEqual(request.rawBody?.toString('utf8'), '');
     });
   });
+
+  describe('Oversized body socket handling', () => {
+    it('should destroy request socket only after sending 413', () => {
+      const server = new MockoonServer(environment, {
+        maxRequestBodySize: 4
+      });
+      const request = new EventEmitter() as RequestLike;
+      request.headers = {};
+      request.header = () => 'application/octet-stream';
+
+      let destroyCalled = false;
+      request.destroy = () => {
+        destroyCalled = true;
+
+        return request;
+      };
+
+      const response = new EventEmitter() as ResponseLike;
+      response.set = () => response;
+      response.status = () => response;
+      response.send = () => response;
+
+      (server as any).parseBody(request, response, () => {
+        throw new Error('next should not be called for oversized body');
+      });
+
+      request.emit('data', Buffer.from('12345'));
+      request.emit('end');
+
+      strictEqual(destroyCalled, false);
+
+      response.emit('finish');
+
+      strictEqual(destroyCalled, true);
+    });
+  });
+
+  describe('Request body size limit', () => {
+    let server: MockoonServer;
+
+    before((_context, done) => {
+      server = new MockoonServer(
+        {
+          ...environment,
+          uuid: 'a1176212-0a15-4f4a-9af4-03c0f0f902a1',
+          port: 3011
+        },
+        {
+          maxRequestBodySize: 32
+        }
+      );
+
+      server.on('started', () => {
+        done();
+      });
+
+      server.start();
+    });
+
+    it('should reject request bodies larger than the configured maximum with 413', async () => {
+      const transactionPromise = new Promise<any>((resolve) => {
+        server.once('transaction-complete', (transaction) => {
+          resolve(transaction);
+        });
+      });
+
+      const response = await fetch('http://localhost:3011/no-route', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/octet-stream'
+        },
+        body: 'x'.repeat(64)
+      });
+      const transaction = await transactionPromise;
+
+      strictEqual(response.status, 413);
+      strictEqual(await response.text(), 'Payload too large');
+      strictEqual(transaction.response.statusCode, 413);
+    });
+
+    after(() => {
+      server.stop();
+    });
+  });
 });
 
 type RequestLike = EventEmitter & {
@@ -190,4 +274,11 @@ type RequestLike = EventEmitter & {
   stringBody?: string;
   body?: unknown;
   header(name: string): string | undefined;
+  destroy(): RequestLike;
+};
+
+type ResponseLike = EventEmitter & {
+  set(name: string, value: string): ResponseLike;
+  status(code: number): ResponseLike;
+  send(content: string): ResponseLike;
 };
