@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostBinding,
-  Input
-} from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 
 /**
  * Simple SVG component (KISS!)
@@ -21,8 +16,7 @@ import {
 @Component({
   selector: 'app-svg',
   templateUrl: './svg.component.html',
-  styleUrls: ['./svg.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./svg.component.scss']
 })
 export class SvgComponent {
   @Input()

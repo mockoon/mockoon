@@ -78,11 +78,11 @@
     <div class="mb-3">
       <div class="input-group align-items-center">
         <label class="col-form-label pe-2">Instance visibility</label>
-        <app-toggle
+        <app-radio
           prefix="instance-visibility"
           formControlName="visibility"
           [items]="visibilityToggle"
-          [uncheckable]="false"
+          [nullable]="false"
         />
         <div class="input-group-text">
           <app-svg
@@ -97,7 +97,7 @@
       <div class="mb-3">
         <div class="input-group">
           <label class="col-form-label pe-2">Region</label>
-          <app-custom-select
+          <app-select
             class="col-2"
             formControlName="region"
             [enableCustomInput]="false"

@@ -144,7 +144,7 @@
       <div class="mb-3">
         <div class="input-group">
           <label class="col-form-label pe-2"> Locale </label>
-          <app-custom-select
+          <app-select
             class="col-3"
             formControlName="fakerLocale"
             [enableCustomInput]="false"
@@ -258,7 +258,8 @@
       <div class="mb-3">
         <div class="input-group file-watcher-input-group">
           <label class="col-form-label pe-2"> Environment files watcher </label>
-          <app-custom-select
+
+          <app-select
             class="col-2"
             formControlName="fileWatcherEnabled"
             [enableCustomInput]="false"

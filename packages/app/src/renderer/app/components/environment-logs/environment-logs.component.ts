@@ -19,6 +19,7 @@ import {
   startWith
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
+import { RadioComponent } from 'src/renderer/app/components/custom-form-elements/radio.component';
 import {
   DropdownMenuComponent,
   DropdownMenuItem
@@ -26,7 +27,6 @@ import {
 import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
 import { FilterComponent } from 'src/renderer/app/components/filter/filter.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
-import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
 import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
@@ -35,7 +35,7 @@ import {
   GetEditorModeFromContentType,
   textFilter
 } from 'src/renderer/app/libs/utils.lib';
-import { ToggleItems } from 'src/renderer/app/models/common.model';
+import { RadioItems } from 'src/renderer/app/models/common.model';
 import {
   EnvironmentLog,
   EnvironmentLogOrigin
@@ -84,7 +84,7 @@ type logsDropdownMenuPayload = { logUuid: string };
     LowerCasePipe,
     TitleCasePipe,
     DatePipe,
-    ToggleComponent
+    RadioComponent
   ]
 })
 export class EnvironmentLogsComponent implements OnInit {
@@ -178,7 +178,7 @@ export class EnvironmentLogsComponent implements OnInit {
       hidden$: () => this.isEnvCloud$.pipe(map((isCloud) => !isCloud))
     }
   ];
-  public logOrigins: ToggleItems = [
+  public logOrigins: RadioItems = [
     {
       value: 'all',
       label: 'All'

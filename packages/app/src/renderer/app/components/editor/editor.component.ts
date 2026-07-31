@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -41,8 +40,7 @@ declare const ace: any;
       useExisting: forwardRef(() => EditorComponent),
       multi: true
     }
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  ]
 })
 export class EditorComponent
   implements ControlValueAccessor, OnInit, OnDestroy

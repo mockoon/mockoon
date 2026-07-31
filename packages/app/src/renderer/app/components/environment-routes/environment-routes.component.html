@@ -100,7 +100,7 @@
       >
         <div class="route-path-grid-{{ activeRoute?.type }}">
           @if (activeRoute?.type === 'http') {
-            <app-custom-select
+            <app-select
               formControlName="method"
               [enableCustomInput]="false"
               [items]="methods"
@@ -158,7 +158,7 @@
         </div>
         @if (activeRoute && activeRoute.type === 'ws') {
           <div class="d-flex mt-2">
-            <app-toggle
+            <app-radio
               prefix="streaming-modes"
               formControlName="streamingMode"
               [items]="streamingModes"
@@ -353,7 +353,7 @@
               </div>
             </div>
           </div>
-          <app-toggle
+          <app-radio
             class="ms-2"
             prefix="response-modes"
             formControlName="responseMode"
@@ -527,7 +527,7 @@
                   @if (
                     activeRoute?.type === 'crud' && activeRouteResponse?.default
                   ) {
-                    <app-custom-select
+                    <app-select
                       class="me-2"
                       formControlName="databucketID"
                       [enableCustomInput]="false"
@@ -536,8 +536,6 @@
                       emptyListMessage="No databucket defined"
                       placeholder="Select a databucket for CRUD operations"
                       placeholderClasses="text-warning"
-                      [clearable]="false"
-                      [defaultClearValue]="''"
                     />
                   }
                   @if (
@@ -557,7 +555,7 @@
                     (activeRoute?.type === 'crud' &&
                       !activeRouteResponse?.default)
                   ) {
-                    <app-custom-select
+                    <app-select
                       formControlName="statusCode"
                       customInputPlaceholder="Custom status code (100-999)"
                       emptyListMessage="Press enter for custom status code"
@@ -606,12 +604,12 @@
                 (activeRoute.type === 'crud' && !activeRouteResponse?.default)
               ) {
                 <div class="pt-5 pb-4 d-flex justify-content-center">
-                  <app-toggle
+                  <app-radio
                     prefix="body-type"
                     formControlName="bodyType"
                     label="Body"
                     [items]="bodyType"
-                    [uncheckable]="false"
+                    [nullable]="false"
                   />
                 </div>
                 <!-- body editor -->
@@ -702,7 +700,7 @@
                 <!-- body: databucket -->
                 @if (activeRouteResponse?.bodyType === 'DATABUCKET') {
                   <div class="route-responses-databucket px-2">
-                    <app-custom-select
+                    <app-select
                       formControlName="databucketID"
                       [enableCustomInput]="false"
                       [items]="databuckets"

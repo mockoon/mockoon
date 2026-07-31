@@ -36,12 +36,12 @@
       </button>
     }
     @if (!isWeb && isEnvCloud) {
-      <app-toggle
+      <app-radio
         prefix="log-origins"
         label="Filter by origin"
         [formControl]="logsOrigin"
         [items]="logOrigins"
-        [uncheckable]="false"
+        [nullable]="false"
       />
     }
   </div>

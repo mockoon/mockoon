@@ -44,7 +44,7 @@ class Routes {
   private activeMenuEntrySelector = '.routes-menu .nav-item .nav-link.active';
 
   public get bodyTypeToggle() {
-    return $('app-toggle[formControlName=bodyType]');
+    return $('app-radio[formControlName=bodyType]');
   }
 
   public get documentationInput() {
@@ -155,7 +155,7 @@ class Routes {
   }
 
   public get bodyDataBucketSelect() {
-    return $('app-custom-select[formcontrolname="databucketID"]');
+    return $('app-select[formcontrolname="databucketID"]');
   }
 
   public get idPropertyDataBucketSelect() {
@@ -200,19 +200,19 @@ class Routes {
 
   public getResponseRuleTarget(index: number) {
     return $(
-      `app-route-response-rules .rule-item:nth-of-type(${index})  [formcontrolname="target"]`
+      `app-route-response-rules .rule-item:nth-of-type(${index}) [formcontrolname="target"]`
     );
   }
 
   public getResponseRuleModifier(index: number) {
     return $(
-      `app-route-response-rules .rule-item:nth-of-type(${index})  input[formcontrolname="modifier"]`
+      `app-route-response-rules .rule-item:nth-of-type(${index}) input[formcontrolname="modifier"]`
     );
   }
 
   public getResponseRuleInvert(index: number) {
     return $(
-      `app-route-response-rules .rule-item:nth-of-type(${index})  app-toggle[formcontrolname="invert"]`
+      `app-route-response-rules .rule-item:nth-of-type(${index}) app-checkbox[formcontrolname="invert"]`
     );
   }
 

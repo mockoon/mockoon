@@ -8,7 +8,6 @@ import {
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, merge } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
-import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TitleSeparatorComponent } from 'src/renderer/app/components/title-separator/title-separator.component';
 import { FakerLocales } from 'src/renderer/app/constants/faker.constants';
@@ -20,6 +19,7 @@ import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { FileWatcherOptions, Settings } from 'src/shared/models/settings.model';
+import { SelectComponent } from '../../custom-form-elements/select.component';
 
 @Component({
   selector: 'app-settings-modal',
@@ -31,7 +31,7 @@ import { FileWatcherOptions, Settings } from 'src/shared/models/settings.model';
     SvgComponent,
     NgbTooltip,
     InputNumberDirective,
-    CustomSelectComponent
+    SelectComponent
   ]
 })
 export class SettingsModalComponent {

@@ -53,7 +53,7 @@ import {
   tap
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
-import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
+import { RadioComponent } from 'src/renderer/app/components/custom-form-elements/radio.component';
 import {
   DropdownMenuComponent,
   DropdownMenuItem
@@ -65,7 +65,6 @@ import { RoutesMenuComponent } from 'src/renderer/app/components/menus/routes-me
 import { RouteCallbacksComponent } from 'src/renderer/app/components/route-callbacks/route-callbacks.component';
 import { RouteResponseRulesComponent } from 'src/renderer/app/components/route-response-rules/route-response-rules.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
-import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import { statusCodeValidation } from 'src/renderer/app/constants/masks.constants';
 import {
   StatusCodes,
@@ -86,7 +85,7 @@ import {
 } from 'src/renderer/app/libs/utils.lib';
 import {
   DropdownItems,
-  ToggleItems
+  RadioItems
 } from 'src/renderer/app/models/common.model';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
@@ -99,6 +98,7 @@ import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
+import { SelectComponent } from '../custom-form-elements/select.component';
 
 type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
 
@@ -112,12 +112,10 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
     TourStepDirective,
     FormsModule,
     ReactiveFormsModule,
-    CustomSelectComponent,
     ValidPathDirective,
     FocusOnEventDirective,
     NgbTooltip,
     SvgComponent,
-    ToggleComponent,
     InputNumberDirective,
     NgbDropdown,
     NgbDropdownToggle,
@@ -132,7 +130,9 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
     RouteResponseRulesComponent,
     RouteCallbacksComponent,
     AsyncPipe,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    RadioComponent,
+    SelectComponent
   ]
 })
 export class EnvironmentRoutesComponent {
@@ -252,7 +252,7 @@ export class EnvironmentRoutesComponent {
       classes: 'color-method-unlock'
     }
   ];
-  public responseModes: ToggleItems = [
+  public responseModes: RadioItems = [
     {
       value: ResponseMode.RANDOM,
       icon: 'shuffle',
@@ -277,10 +277,10 @@ export class EnvironmentRoutesComponent {
     }
   ];
   // disables fallback mode for websockets.
-  public responseModesForWs: ToggleItems = this.responseModes.filter(
+  public responseModesForWs: RadioItems = this.responseModes.filter(
     (m) => m.value !== ResponseMode.FALLBACK
   );
-  public streamingModes: ToggleItems = [
+  public streamingModes: RadioItems = [
     {
       value: StreamingMode.UNICAST,
       icon: 'events',
@@ -292,7 +292,7 @@ export class EnvironmentRoutesComponent {
       tooltip: 'Broadcast streaming'
     }
   ];
-  public bodyType$: Observable<ToggleItems> = this.store
+  public bodyType$: Observable<RadioItems> = this.store
     .selectIsActiveEnvCloud()
     .pipe(
       map((isEnvCloud) => [

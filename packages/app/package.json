@@ -17,7 +17,7 @@
   },
   "funding": "https://mockoon.com/sponsor-us/",
   "browserslist": [
-    "Chrome >= 111"
+    "Chrome >= 119"
   ],
   "main": "./dist/app.js",
   "scripts": {

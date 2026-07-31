@@ -112,7 +112,7 @@ class Utils {
   ) {
     await this.assertElementText(
       $(
-        `app-custom-select[formcontrolname="${targetControlName}"] .dropdown-toggle-label`
+        `app-select[formcontrolname="${targetControlName}"] .dropdown-toggle-label`
       ),
       expected
     );
