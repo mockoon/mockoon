@@ -3,6 +3,7 @@ import { Component, Input, OnInit, inject } from '@angular/core';
 import { Plans } from '@mockoon/cloud';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, Observable, from, map } from 'rxjs';
+import { PlanIndicatorComponent } from 'src/renderer/app/components/plan-indicator/plan-indicator.component';
 import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import {
@@ -21,7 +22,13 @@ import { Config } from 'src/renderer/config';
   selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
-  imports: [NgbTooltip, SvgComponent, AsyncPipe, SpinnerComponent]
+  imports: [
+    NgbTooltip,
+    SvgComponent,
+    AsyncPipe,
+    SpinnerComponent,
+    PlanIndicatorComponent
+  ]
 })
 export class FooterComponent implements OnInit {
   private store = inject(Store);
@@ -39,6 +46,9 @@ export class FooterComponent implements OnInit {
   public generatingEndpoint$ = this.templateService.generatingEndpoint$;
   public releaseUrl = Config.releasePublicURL;
   public showFeedback$ = this.store
+    .select('user')
+    .pipe(map((user) => !!user && user.plan !== Plans.FREE));
+  public hasPlan$ = this.store
     .select('user')
     .pipe(map((user) => !!user && user.plan !== Plans.FREE));
   public version = Config.appVersion;

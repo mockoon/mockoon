@@ -213,9 +213,7 @@
           <h6 class="dropdown-header d-flex flex-column">
             <div class="d-flex align-items-center">
               <div class="pe-2">{{ user?.email }}</div>
-              <div class="badge text-bg-warning">
-                {{ planLabels[user?.plan] }} plan
-              </div>
+              <app-plan-indicator />
             </div>
           </h6>
         </div>

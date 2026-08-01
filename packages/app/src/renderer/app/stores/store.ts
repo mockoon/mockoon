@@ -1,4 +1,5 @@
-import { Service } from '@angular/core';
+import { Service, Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { DeployInstance, RemoteConfigData } from '@mockoon/cloud';
 import {
   Callback,
@@ -109,6 +110,23 @@ export class Store {
     return this.store$.asObservable().pipe(
       map((store) => (path ? store?.[path] : store)),
       distinctUntilChanged()
+    );
+  }
+
+  /**
+   * Select store element as signal
+   *
+   * @param path
+   * @returns
+   */
+  public selectSignal<T extends keyof StoreType>(
+    path?: T
+  ): Signal<StoreType[T]> {
+    return toSignal(
+      this.store$.asObservable().pipe(
+        map((store) => (path ? store?.[path] : store)),
+        distinctUntilChanged()
+      )
     );
   }
 
