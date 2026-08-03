@@ -48,7 +48,7 @@ export class TemplatesService {
    * Get the list of available templates
    */
   public getTemplatesList(): Observable<TemplateListItem[]> {
-    return this.settingsService.selectApiURL().pipe(
+    return this.settingsService.selectApiUrl().pipe(
       switchMap((apiUrl) =>
         this.httpClient.get<Template[]>(`${apiUrl}templates`)
       ),
@@ -67,7 +67,7 @@ export class TemplatesService {
     if (!this.templateCache.has(cacheKey)) {
       this.templateCache.set(
         cacheKey,
-        this.settingsService.selectApiURL().pipe(
+        this.settingsService.selectApiUrl().pipe(
           switchMap((apiUrl) =>
             this.httpClient.get<Template>(`${apiUrl}templates/${id}`)
           ),
@@ -93,7 +93,7 @@ export class TemplatesService {
     this.lastTemplatePrompt$.next(prompt);
 
     return this.userService.getToken().pipe(
-      withLatestFrom(this.settingsService.selectApiURL()),
+      withLatestFrom(this.settingsService.selectApiUrl()),
       switchMap(([token, apiUrl]) =>
         this.httpClient
           .get<{ data: string }>(`${apiUrl}templates/generate`, {
@@ -145,7 +145,7 @@ export class TemplatesService {
     this.lastEndpointPrompt$.next(prompt);
 
     return this.userService.getToken().pipe(
-      withLatestFrom(this.settingsService.selectApiURL()),
+      withLatestFrom(this.settingsService.selectApiUrl()),
       switchMap(([token, apiUrl]) =>
         this.httpClient
           .get<{ data: Route }>(`${apiUrl}templates/generate`, {

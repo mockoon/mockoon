@@ -3,7 +3,7 @@ import file from '../libs/file';
 import modals from '../libs/modals';
 import utils from '../libs/utils';
 
-const Config = SharedConfig({ apiURL: '', websiteURL: '' });
+const Config = SharedConfig({ defaultApiUrl: '', websiteUrl: '' });
 
 describe('Changelog modal', () => {
   describe('should show changelog modal if last changelog shown is from older version', () => {

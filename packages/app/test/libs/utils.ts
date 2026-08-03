@@ -2,7 +2,7 @@ import { Key } from 'webdriverio';
 import { ToastTypes } from '../../src/renderer/app/models/toasts.model';
 import { SharedConfig } from '../../src/shared/shared-config';
 
-const Config = SharedConfig({ apiURL: '', websiteURL: '' });
+const Config = SharedConfig({ defaultApiUrl: '', websiteUrl: '' });
 
 export enum DropdownMenuEnvironmentActions {
   DUPLICATE_TO_CLOUD = 1,

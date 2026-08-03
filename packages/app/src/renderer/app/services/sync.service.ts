@@ -207,7 +207,7 @@ export class SyncService {
       .pipe(
         tap((confirmed) => {
           if (!confirmed) {
-            window.location.href = Config.websiteURL;
+            window.location.href = Config.websiteUrl;
           }
 
           this.migrationApproval = confirmed;

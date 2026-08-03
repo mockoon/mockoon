@@ -143,28 +143,28 @@ export class SettingsService {
    * Get the API URL with settings override priority for desktop app.
    * Fallback to the shared config value.
    */
-  public selectApiURL(): Observable<string> {
+  public selectApiUrl(): Observable<string> {
     return this.store.select('settings').pipe(
       filter((settings) => !!settings),
-      map((settings) => settings.apiURL?.trim()),
+      map((settings) => settings.apiUrl?.trim()),
       first(),
-      map((configuredApiURL) => {
-        if (configuredApiURL) {
-          if (!configuredApiURL.endsWith('/')) {
-            configuredApiURL += '/';
+      map((configuredApiUrl) => {
+        if (configuredApiUrl) {
+          if (!configuredApiUrl.endsWith('/')) {
+            configuredApiUrl += '/';
           }
 
           if (
-            !configuredApiURL.startsWith('http://') &&
-            !configuredApiURL.startsWith('https://')
+            !configuredApiUrl.startsWith('http://') &&
+            !configuredApiUrl.startsWith('https://')
           ) {
-            configuredApiURL = `https://${configuredApiURL}`;
+            configuredApiUrl = `https://${configuredApiUrl}`;
           }
 
-          return configuredApiURL;
+          return configuredApiUrl;
         }
 
-        return Config.apiURL;
+        return Config.defaultApiUrl;
       })
     );
   }
@@ -172,12 +172,12 @@ export class SettingsService {
   /**
    * Check if a desktop custom API URL override is configured in settings.
    */
-  public selectIsApiURLOverridden(): Observable<boolean> {
+  public selectIsApiUrlOverridden(): Observable<boolean> {
     return this.store.select('settings').pipe(
       filter((settings) => !!settings),
-      map((settings) => settings.apiURL?.trim()),
+      map((settings) => settings.apiUrl?.trim()),
       first(),
-      map((configuredApiURL) => !Config.isWeb && !!configuredApiURL)
+      map((configuredApiUrl) => !Config.isWeb && !!configuredApiUrl)
     );
   }
 

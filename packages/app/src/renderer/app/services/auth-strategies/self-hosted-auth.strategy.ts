@@ -1,5 +1,15 @@
-import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable, of, take, tap, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import {
+  BehaviorSubject,
+  catchError,
+  Observable,
+  of,
+  switchMap,
+  take,
+  tap,
+  throwError
+} from 'rxjs';
 import {
   AuthState,
   AuthStrategy
@@ -14,6 +24,7 @@ export class SelfHostedAuthStrategy implements AuthStrategy {
   private uiService = inject(UIService);
   private mainApiService = inject(MainApiService);
   private settingsService = inject(SettingsService);
+  private httpClient = inject(HttpClient);
 
   private authState$ = new BehaviorSubject<AuthState>(null);
   private token: string | null = null;
@@ -37,10 +48,23 @@ export class SelfHostedAuthStrategy implements AuthStrategy {
       return throwError(() => new Error('INVALID_TOKEN'));
     }
 
-    this.token = normalizedToken;
-    this.authState$.next({ authenticated: true });
+    return this.settingsService.selectApiUrl().pipe(
+      switchMap((apiUrl) =>
+        this.httpClient.post(`${apiUrl}auth/verify`, {
+          token: normalizedToken
+        })
+      ),
+      tap(() => {
+        this.token = normalizedToken;
+        this.authState$.next({ authenticated: true });
+      }),
+      catchError((error) => {
+        this.token = null;
+        this.authState$.next(null);
 
-    return of(null);
+        return throwError(() => error);
+      })
+    );
   }
 
   public getToken() {
@@ -55,11 +79,11 @@ export class SelfHostedAuthStrategy implements AuthStrategy {
     }
 
     this.settingsService
-      .selectApiURL()
+      .selectApiUrl()
       .pipe(
         take(1),
-        tap((apiURL) => {
-          this.mainApiService.send('APP_AUTH', `${apiURL}login`);
+        tap((apiUrl) => {
+          this.mainApiService.send('APP_AUTH', `${apiUrl}login`);
         })
       )
       .subscribe();

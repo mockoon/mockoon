@@ -11,7 +11,7 @@ import {
 
 export const SettingsDefault: Settings = {
   welcomeShown: false,
-  apiURL: '',
+  apiUrl: '',
   maxLogsPerEnvironment: Config.defaultMaxLogsPerEnvironment,
   truncateRouteName: true,
   mainMenuSize: Config.defaultMainMenuSize,
@@ -43,7 +43,7 @@ export const SettingsDefault: Settings = {
 
 export const SettingsSchema = Joi.object<Settings, true>({
   welcomeShown: Joi.boolean().failover(SettingsDefault.welcomeShown).required(),
-  apiURL: Joi.string().allow('').failover(SettingsDefault.apiURL).required(),
+  apiUrl: Joi.string().allow('').failover(SettingsDefault.apiUrl).required(),
   maxLogsPerEnvironment: Joi.number()
     .min(1)
     .max(Config.maxLogsPerEnvironmentLimit)

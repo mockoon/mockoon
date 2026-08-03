@@ -68,7 +68,7 @@ export class DeployService {
         filter((user) => !!user),
         first()
       ),
-      this.settingsService.selectApiURL(),
+      this.settingsService.selectApiUrl(),
       this.userService.getToken().pipe(filter((token) => !!token))
     ]).pipe(
       switchMap(([user, apiUrl, token]) => {

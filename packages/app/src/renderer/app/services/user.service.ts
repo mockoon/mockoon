@@ -110,9 +110,9 @@ export class UserService {
     this.lastUserRefresh = now;
 
     return this.getToken().pipe(
-      withLatestFrom(this.settingsService.selectApiURL()),
-      switchMap(([token, apiURL]) =>
-        this.httpClient.get(`${apiURL}user`, {
+      withLatestFrom(this.settingsService.selectApiUrl()),
+      switchMap(([token, apiUrl]) =>
+        this.httpClient.get(`${apiUrl}user`, {
           headers: { Authorization: `Bearer ${token}` }
         })
       ),
@@ -265,7 +265,7 @@ export class UserService {
         this.resetUserData();
 
         if (this.isWeb) {
-          window.location.href = Config.websiteURL;
+          window.location.href = Config.websiteUrl;
         }
       })
     );
@@ -273,11 +273,11 @@ export class UserService {
 
   private selectAuthStrategy(): Observable<AuthStrategy> {
     return this.settingsService
-      .selectIsApiURLOverridden()
+      .selectIsApiUrlOverridden()
       .pipe(
-        switchMap((isApiURLOverridden) =>
+        switchMap((isApiUrlOverridden) =>
           of(
-            isApiURLOverridden
+            isApiUrlOverridden
               ? this.selfHostedAuthStrategy
               : this.firebaseAuthStrategy
           )
@@ -287,10 +287,10 @@ export class UserService {
 
   public sendFeedback(message: string) {
     return this.getToken().pipe(
-      withLatestFrom(this.settingsService.selectApiURL()),
-      switchMap(([token, apiURL]) =>
+      withLatestFrom(this.settingsService.selectApiUrl()),
+      switchMap(([token, apiUrl]) =>
         this.httpClient.post(
-          `${apiURL}user/feedback`,
+          `${apiUrl}user/feedback`,
           { message },
           {
             headers: { Authorization: `Bearer ${token}` }

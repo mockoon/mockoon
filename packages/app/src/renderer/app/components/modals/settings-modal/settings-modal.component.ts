@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -6,8 +7,16 @@ import {
   UntypedFormGroup
 } from '@angular/forms';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, merge } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { Observable, merge, of } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+  switchMap,
+  tap
+} from 'rxjs/operators';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TitleSeparatorComponent } from 'src/renderer/app/components/title-separator/title-separator.component';
 import { FakerLocales } from 'src/renderer/app/constants/faker.constants';
@@ -39,6 +48,7 @@ export class SettingsModalComponent {
   private settingsService = inject(SettingsService);
   private store = inject(Store);
   private uiService = inject(UIService);
+  private httpClient = inject(HttpClient);
   public settings$: Observable<Settings>;
   public Infinity = Infinity;
   public fakerLocales: DropdownItems = FakerLocales;
@@ -58,7 +68,7 @@ export class SettingsModalComponent {
 
     this.settingsForm = this.formBuilder.group({
       truncateRouteName: [SettingsDefault.truncateRouteName],
-      apiURL: [SettingsDefault.apiURL],
+      apiUrl: [SettingsDefault.apiUrl],
       maxLogsPerEnvironment: [SettingsDefault.maxLogsPerEnvironment],
       fakerLocale: [SettingsDefault.fakerLocale],
       fakerSeed: [SettingsDefault.fakerSeed],
@@ -70,6 +80,23 @@ export class SettingsModalComponent {
       enableRandomLatency: [SettingsDefault.enableRandomLatency],
       displayLogsIsoTimestamp: [SettingsDefault.displayLogsIsoTimestamp]
     });
+
+    this.settingsForm
+      .get('apiUrl')
+      .valueChanges.pipe(
+        map((value) => value?.toString().trim() ?? ''),
+        debounceTime(500),
+        distinctUntilChanged(),
+        filter((value) => !!value),
+        switchMap((value) => this.validateApiUrl(value)),
+        tap((isValid) => {
+          if (!isValid) {
+            this.settingsForm.get('apiUrl').setErrors({ invalidApiUrl: true });
+          }
+        }),
+        takeUntilDestroyed()
+      )
+      .subscribe();
 
     // send new activeEnvironmentForm values to the store, one by one
     merge(
@@ -96,7 +123,7 @@ export class SettingsModalComponent {
           this.settingsForm.setValue(
             {
               truncateRouteName: settings.truncateRouteName,
-              apiURL: settings.apiURL,
+              apiUrl: settings.apiUrl,
               maxLogsPerEnvironment: settings.maxLogsPerEnvironment,
               fakerLocale: settings.fakerLocale,
               fakerSeed: settings.fakerSeed,
@@ -124,6 +151,26 @@ export class SettingsModalComponent {
    */
   public settingsUpdated(settingNewValue: string, settingName: keyof Settings) {
     this.settingsService.updateSettings({ [settingName]: settingNewValue });
+  }
+
+  private validateApiUrl(apiUrl: string): Observable<boolean> {
+    let normalizedApiUrl = apiUrl?.trim() ?? '';
+
+    if (!normalizedApiUrl) {
+      return of(false);
+    }
+
+    if (
+      !normalizedApiUrl.startsWith('http://') &&
+      !normalizedApiUrl.startsWith('https://')
+    ) {
+      normalizedApiUrl = `https://${normalizedApiUrl}`;
+    }
+
+    return this.httpClient.get(normalizedApiUrl).pipe(
+      map(() => true),
+      catchError(() => of(false))
+    );
   }
 
   public close() {

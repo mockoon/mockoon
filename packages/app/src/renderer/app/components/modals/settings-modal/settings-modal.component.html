@@ -41,7 +41,7 @@
           class="form-control col-1"
           id="settings-api-url"
           placeholder="https://api.mockoon.com/"
-          formControlName="apiURL"
+          formControlName="apiUrl"
         />
         <div class="input-group-text">
           <app-svg icon="info" [ngbTooltip]="apiUrlTooltip" />
@@ -52,6 +52,18 @@
               (https://api.mockoon.com/).
             </div>
           </ng-template>
+        </div>
+        <div class="input-group-text text-warning">
+          <small>
+            @if (settingsForm.get('apiUrl').errors?.['invalidApiUrl']) {
+              <app-svg
+                icon="warning"
+                size="12"
+                class="text-warning"
+                ngbTooltip="Impossible to reach the self-hosted instance"
+              />
+            }
+          </small>
         </div>
       </div>
     </div>

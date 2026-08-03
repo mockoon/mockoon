@@ -37,15 +37,15 @@ export class RemoteConfigService {
   public fetchConfig(): Observable<RemoteConfigData> {
     return from(this.userService.getToken()).pipe(
       filter((token) => !!token),
-      withLatestFrom(this.settingsService.selectApiURL()),
-      switchMap(([token, apiURL]) => {
+      withLatestFrom(this.settingsService.selectApiUrl()),
+      switchMap(([token, apiUrl]) => {
         const headers = token
           ? new HttpHeaders().set('Authorization', `Bearer ${token}`)
           : undefined;
 
         return this.httpClient
           .post<RemoteConfigData>(
-            `${apiURL}remoteconfig`,
+            `${apiUrl}remoteconfig`,
             { version: Config.appVersion },
             {
               headers
