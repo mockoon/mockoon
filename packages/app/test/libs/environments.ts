@@ -1,6 +1,6 @@
 import { resolve } from 'path';
-import dialogs from '../libs/dialogs';
 import utils, { DropdownMenuEnvironmentActions } from '../libs/utils';
+import { mockOpenDialog, mockSaveDialog } from './electron-mocks';
 import navigation from './navigation';
 
 class Environments {
@@ -52,7 +52,7 @@ class Environments {
   }
 
   public async localAdd(environmentName: string) {
-    await dialogs.save(resolve(`./tmp/storage/${environmentName}.json`));
+    await mockSaveDialog(resolve(`./tmp/storage/${environmentName}.json`));
     await this.localAddBtn.click();
     await this.getAddMenuEntry(1).click();
     await utils.closeTooltip();
@@ -86,7 +86,7 @@ class Environments {
     environmentName: string,
     assertActive = true
   ): Promise<void> {
-    await dialogs.open(resolve(`./tmp/storage/${environmentName}.json`));
+    await mockOpenDialog(resolve(`./tmp/storage/${environmentName}.json`));
 
     await this.localAddBtn.click();
     await this.getAddMenuEntry(2).click();
@@ -137,8 +137,10 @@ class Environments {
   }
 
   public async stop(): Promise<void> {
-    await this.stopBtn.click();
-    await this.runningEnvironmentMenuEntry.waitForExist({ reverse: true });
+    if (await this.stopBtn.isExisting()) {
+      await this.stopBtn.click();
+      await this.runningEnvironmentMenuEntry.waitForExist({ reverse: true });
+    }
   }
 
   public async restart(): Promise<void> {
