@@ -4,6 +4,5 @@ export const planLabels: Record<Plans, string> = {
   FREE: 'Free',
   SOLO: 'Solo',
   TEAM: 'Team',
-  ENTERPRISE: 'Enterprise',
-  SELF_HOSTED: 'Self-hosted'
+  ENTERPRISE: 'Enterprise'
 };

@@ -1,15 +1,13 @@
 export enum PaidPlans {
   SOLO = 'SOLO',
   TEAM = 'TEAM',
-  ENTERPRISE = 'ENTERPRISE',
-  SELF_HOSTED = 'SELF_HOSTED'
+  ENTERPRISE = 'ENTERPRISE'
 }
 export enum Plans {
   FREE = 'FREE',
   SOLO = 'SOLO',
   TEAM = 'TEAM',
-  ENTERPRISE = 'ENTERPRISE',
-  SELF_HOSTED = 'SELF_HOSTED'
+  ENTERPRISE = 'ENTERPRISE'
 }
 
 export enum Frequency {
