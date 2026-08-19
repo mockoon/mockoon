@@ -116,9 +116,20 @@ export class SelfHostedAuthStrategy implements AuthStrategy {
   }
 
   public logout() {
+    const refreshToken = this.refreshToken;
+
     this.clearSession();
 
-    return of(null);
+    if (!refreshToken) {
+      return of(null);
+    }
+
+    return this.settingsService.selectApiUrl().pipe(
+      switchMap((apiUrl) =>
+        this.httpClient.post(`${apiUrl}auth/logout`, { refreshToken })
+      ),
+      catchError(() => of(null))
+    );
   }
 
   private refreshTokens(): Observable<string> {
