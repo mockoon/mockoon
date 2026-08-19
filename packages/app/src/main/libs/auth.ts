@@ -25,7 +25,7 @@ const authCallbackPage = `<!doctype html>
           <img src="https://mockoon.com/images/logo-eyes-sticker.png" alt="Mockoon logo" style="max-width: 140px;margin-top: 5vh;">
           <hr style="margin-top: 5vh; margin-bottom: 5vh; border: 0; border-top: 1px solid #323641;">
           <p style="margin:0;">Didn't work? Copy the token and paste it in the application.</p>
-          <code style="display: block; margin-top: 1vh; background-color: #323641; color: #b8bcc4; padding: 0.5em 1em; border-radius: 4px; max-width: 80%; box-sizing: border-box; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; margin: 1vh auto;user-select:all;">{{code}}</code>
+          <code style="display: block; margin-top: 1vh; background-color: #323641; color: #b8bcc4; padding: 0.5em 1em; border-radius: 4px; max-width: 80%; box-sizing: border-box; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; margin: 1vh auto;user-select:all;">{{token}}</code>
         </div>
       </div>
     </div>
@@ -58,11 +58,11 @@ export const startAuthCallbackServer = async (loginURL?: string) => {
   // Start a server to listen for the auth callback
   server = createServer((req, res) => {
     const { query } = urlParse(req.url ?? '', true);
-    const code: string = query['code'] as string;
+    const token: string = query['token'] as string;
 
     // Send the token to the renderer process
-    if (code) {
-      getMainWindow().webContents.send('APP_AUTH_CALLBACK', code);
+    if (token) {
+      getMainWindow().webContents.send('APP_AUTH_CALLBACK', token);
       stopAuthCallbackServer();
     }
 
@@ -71,7 +71,7 @@ export const startAuthCallbackServer = async (loginURL?: string) => {
       'Cache-Control': 'no-store'
     });
 
-    res.end(authCallbackPage.replace('{{code}}', code));
+    res.end(authCallbackPage.replace('{{token}}', token));
   });
 
   server.listen(0, '127.0.0.1', () => {
