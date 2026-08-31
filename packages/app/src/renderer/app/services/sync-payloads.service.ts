@@ -10,8 +10,10 @@ import {
 } from '@mockoon/cloud';
 import { Environment, deterministicStringify } from '@mockoon/commons';
 import { from } from 'rxjs';
+import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import {
   ActionTypes,
   Actions,
@@ -49,6 +51,8 @@ export class SyncPayloadsService {
   private store = inject(Store);
   private environmentsService = inject(EnvironmentsService);
   private mainApiService = inject(MainApiService);
+  private settingsService = inject(SettingsService);
+  private deployService = inject(DeployService);
 
   private recentActions: RecentActionsStore = {};
 
@@ -384,6 +388,11 @@ export class SyncPayloadsService {
           reducerAction = convertEnvironmentToLocalAction(
             syncAction.environmentUuid
           );
+        }
+
+        // for self-hosted version, refresh the running instances as a cloud deletion triggers the instance stop
+        if (this.settingsService.getIsSelfHosted()) {
+          this.deployService.getInstances(true).subscribe();
         }
         break;
       case SyncActionTypes.UPDATE_ENVIRONMENT:

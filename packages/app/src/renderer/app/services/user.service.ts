@@ -45,8 +45,8 @@ export class UserService {
    * Monitor auth token state and update the store
    */
   public init() {
-    return this.selectAuthStrategy().pipe(
-      switchMap((authStrategy) => authStrategy.observeAuthState()),
+    return this.observeAuthStrategy().pipe(
+      switchMap((authStrategy) => this.observeAuthState(authStrategy)),
       switchMap((authUser) => {
         if (authUser) {
           return this.getUserInfo(true);
@@ -60,8 +60,8 @@ export class UserService {
   }
 
   public authStateChanges() {
-    return this.selectAuthStrategy().pipe(
-      switchMap((authStrategy) => authStrategy.observeAuthState()),
+    return this.observeAuthStrategy().pipe(
+      switchMap((authStrategy) => this.observeAuthState(authStrategy)),
       filter((user) => !!user)
     );
   }
@@ -271,18 +271,30 @@ export class UserService {
     );
   }
 
-  private selectAuthStrategy(): Observable<AuthStrategy> {
+  /**
+   * Emits again when the user switches between the cloud and a self-hosted API
+   */
+  private observeAuthStrategy(): Observable<AuthStrategy> {
     return this.settingsService
-      .selectIsApiUrlOverridden()
+      .selectIsSelfHosted()
       .pipe(
-        switchMap((isApiUrlOverridden) =>
-          of(
-            isApiUrlOverridden
-              ? this.selfHostedAuthStrategy
-              : this.firebaseAuthStrategy
-          )
+        map((isApiUrlOverridden) =>
+          isApiUrlOverridden
+            ? this.selfHostedAuthStrategy
+            : this.firebaseAuthStrategy
         )
       );
+  }
+
+  /**
+   * An unreachable auth backend must not tear down the auth state monitoring
+   */
+  private observeAuthState(authStrategy: AuthStrategy) {
+    return authStrategy.observeAuthState().pipe(catchError(() => of(null)));
+  }
+
+  private selectAuthStrategy(): Observable<AuthStrategy> {
+    return this.observeAuthStrategy().pipe(take(1));
   }
 
   public sendFeedback(message: string) {

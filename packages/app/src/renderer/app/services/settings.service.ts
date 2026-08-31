@@ -170,15 +170,22 @@ export class SettingsService {
   }
 
   /**
-   * Check if a desktop custom API URL override is configured in settings.
+   * Check if a custom API URL override is configured in settings.
    */
-  public selectIsApiUrlOverridden(): Observable<boolean> {
+  public selectIsSelfHosted(): Observable<boolean> {
     return this.store.select('settings').pipe(
       filter((settings) => !!settings),
       map((settings) => settings.apiUrl?.trim()),
-      first(),
-      map((configuredApiUrl) => !Config.isWeb && !!configuredApiUrl)
+      map((configuredApiUrl) => !!configuredApiUrl),
+      distinctUntilChanged()
     );
+  }
+
+  /**
+   * Check if a custom API URL override is configured in settings.
+   */
+  public getIsSelfHosted(): boolean {
+    return !!this.store.get('settings').apiUrl?.trim();
   }
 
   /**
