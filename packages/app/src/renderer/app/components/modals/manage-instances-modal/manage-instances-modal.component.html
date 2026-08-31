@@ -6,6 +6,7 @@
 @let isCloudEnabled = isCloudEnabled$ | async;
 @let deployEnvList = deployEnvList$ | async;
 @let availableRegionsLabels = availableRegionsLabels$ | async;
+@let isSelfHosted = isSelfHosted$ | async;
 
 <div class="modal-header align-items-center">
   <h3 class="modal-title">Manage your instances</h3>
@@ -25,7 +26,9 @@
         <!-- align padding with modal body -->
         <th scope="col" class="ps-3">Status</th>
         <th scope="col">Name</th>
-        <th scope="col">Region</th>
+        @if (!isSelfHosted) {
+          <th scope="col">Region</th>
+        }
         <th scope="col">URL</th>
         <th scope="col">Visibility</th>
         <th scope="col">Live Update</th>
@@ -72,11 +75,13 @@
                 <span class="text-muted">{{ instance.name }}</span>
               }
             </td>
-            <td>
-              <span class="text-muted">{{
-                availableRegionsLabels?.[instance.region]
-              }}</span>
-            </td>
+            @if (!isSelfHosted) {
+              <td>
+                <span class="text-muted">{{
+                  availableRegionsLabels?.[instance.region]
+                }}</span>
+              </td>
+            }
             <td>
               <div class="d-flex align-items-center">
                 <a href="{{ instance.url }}" target="_blank">{{
