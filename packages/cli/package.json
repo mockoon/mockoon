@@ -58,7 +58,7 @@
   "devDependencies": {
     "@types/mustache": "4.2.6",
     "eslint-config-oclif": "6.0.179",
-    "oclif": "4.23.29"
+    "oclif": "4.23.30"
   },
   "engines": {
     "node": ">=18"
