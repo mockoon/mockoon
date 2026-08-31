@@ -107,6 +107,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - John
 - [John Michael Luy](https://github.com/jmluy)
 - Jonatan Gonzalez
+- [jpidelatorre](https://github.com/jpidelatorre)
 - Kelly Farris
 - [TestMu AI](https://www.testmuai.com/?utm_medium=sponsor&utm_source=mockoon)
 - [Localazy](https://localazy.com/register?ref=a9CiDC61gOac-azO)
