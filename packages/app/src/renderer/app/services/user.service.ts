@@ -259,15 +259,21 @@ export class UserService {
    * @returns
    */
   public logout() {
-    return this.selectAuthStrategy().pipe(
-      switchMap((authStrategy) => authStrategy.logout()),
-      tap(() => {
-        this.resetUserData();
+    const isSelfHosted = this.settingsService.getIsSelfHosted();
 
-        if (this.isWeb) {
-          window.location.href = Config.websiteUrl;
-        }
-      })
+    return this.settingsService.selectApiUrl().pipe(
+      switchMap((apiUrl) =>
+        this.selectAuthStrategy().pipe(
+          switchMap((authStrategy) => authStrategy.logout()),
+          tap(() => {
+            this.resetUserData();
+
+            if (this.isWeb) {
+              window.location.href = isSelfHosted ? apiUrl : Config.websiteUrl;
+            }
+          })
+        )
+      )
     );
   }
 

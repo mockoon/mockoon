@@ -98,21 +98,29 @@ export class SelfHostedAuthStrategy implements AuthStrategy {
   }
 
   public startLoginFlow() {
-    this.uiService.openModal('auth');
-
-    if (Config.isWeb) {
-      return;
-    }
-
     this.settingsService
       .selectApiUrl()
       .pipe(
         take(1),
         tap((apiUrl) => {
-          this.mainApiService.send('APP_AUTH', `${apiUrl}login`);
+          if (Config.isWeb) {
+            window.location.href = `${apiUrl}login?appRedirect=${encodeURIComponent(this.buildWebAppRedirectUrl())}`;
+          } else {
+            this.uiService.openModal('auth');
+
+            this.mainApiService.send('APP_AUTH', `${apiUrl}login`);
+          }
         })
       )
       .subscribe();
+  }
+
+  private buildWebAppRedirectUrl() {
+    const url = new URL(window.location.href);
+
+    url.searchParams.delete('token');
+
+    return url.toString();
   }
 
   public logout() {
