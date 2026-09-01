@@ -217,7 +217,11 @@
             </div>
           </h6>
         </div>
-        <a class="btn dropdown-item" href="{{ accountUrl }}" target="_blank">
+        <a
+          class="btn dropdown-item"
+          [href]="accountUrl$ | async"
+          target="_blank"
+        >
           <app-svg icon="account" class="pe-2" />
           My account
           <app-svg icon="open_in_new" class="ps-2" />

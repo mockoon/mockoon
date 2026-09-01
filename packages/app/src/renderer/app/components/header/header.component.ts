@@ -24,6 +24,7 @@ import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { SyncService } from 'src/renderer/app/services/sync.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -55,6 +56,7 @@ export class HeaderComponent implements OnInit {
   private environmentsService = inject(EnvironmentsService);
   private userService = inject(UserService);
   private remoteConfigService = inject(RemoteConfigService);
+  private settingsService = inject(SettingsService);
   private uiService = inject(UIService);
   private syncService = inject(SyncService);
   private toastsService = inject(ToastsService);
@@ -81,7 +83,7 @@ export class HeaderComponent implements OnInit {
   };
   public isDev = !env.production;
   public isWeb = Config.isWeb;
-  public accountUrl = Config.accountUrl;
+  public accountUrl$: Observable<string>;
 
   ngOnInit() {
     this.os$ = from(this.mainApiService.invoke('APP_GET_OS'));
@@ -90,6 +92,13 @@ export class HeaderComponent implements OnInit {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeEnvironmentState$ = this.store.selectActiveEnvironmentStatus();
     this.environmentLogs$ = this.store.selectActiveEnvironmentLogs();
+    this.accountUrl$ = this.store
+      .select('settings')
+      .pipe(
+        map((settings) =>
+          settings?.apiUrl ? `${settings.apiUrl}/profile` : Config.accountUrl
+        )
+      );
 
     this.tabs = [
       {
