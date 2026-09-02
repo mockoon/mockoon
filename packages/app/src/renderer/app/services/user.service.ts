@@ -246,6 +246,7 @@ export class UserService {
 
     const url = new URL(window.location.href);
 
+    url.searchParams.delete('apiUrl');
     url.searchParams.delete('token');
 
     window.history.replaceState({}, document.title, url.toString());

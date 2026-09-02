@@ -24,7 +24,7 @@ import { StorageService } from 'src/renderer/app/services/storage.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { updateSettingsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
-import { Config } from 'src/renderer/config';
+import { Config, getCallbackApiUrl } from 'src/renderer/config';
 import {
   EnvironmentsCategories,
   FileWatcherOptions,
@@ -68,7 +68,11 @@ export class SettingsService {
   public loadSettings(): Observable<any> {
     return this.storageService.loadSettings().pipe(
       tap((settings: Settings) => {
-        const validatedSchema = SettingsSchema.validate(settings);
+        const callbackApiUrl = getCallbackApiUrl();
+        const validatedSchema = SettingsSchema.validate({
+          ...settings,
+          apiUrl: settings.apiUrl?.trim() || callbackApiUrl
+        });
         this.updateSettings(validatedSchema.value);
         settings = validatedSchema.value;
 
