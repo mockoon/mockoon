@@ -249,5 +249,53 @@ describe('Server file serving', () => {
         )
       );
     });
+
+    it('should allow templated relative paths when the helper is in the middle of the file name', () => {
+      const server = new MockoonServer(environment, {
+        environmentDirectory: pathResolve('./test/data')
+      });
+
+      equal(
+        callGetSafeFilePath(
+          server,
+          `./static/file{{queryParam 'name'}}.json`,
+          buildRequest({ name: '1' })
+        ),
+        pathResolve('./test/data', 'static/file1.json')
+      );
+    });
+
+    it('should allow an absolute partially templated file path', () => {
+      const server = new MockoonServer(environment, {
+        environmentDirectory: pathResolve('./test/data')
+      });
+      const publicDir = pathResolve('./test/data/public');
+
+      equal(
+        callGetSafeFilePath(
+          server,
+          `${publicDir}\\file{{queryParam 'name'}}.json`,
+          buildRequest({ name: '1' })
+        ),
+        pathResolve(publicDir, 'file1.json')
+      );
+    });
+
+    it('should block templated paths escaping the static base when the helper is in the middle of the file name', () => {
+      const server = new MockoonServer(environment, {
+        environmentDirectory: pathResolve('./test/data')
+      });
+      const publicDir = pathResolve('./test/data/public');
+
+      throws(
+        () =>
+          callGetSafeFilePath(
+            server,
+            `${publicDir}/file{{queryParam 'name'}}.json`,
+            buildRequest({ name: '/../../secret' })
+          ),
+        /outside of the original static base directory/
+      );
+    });
   });
 });

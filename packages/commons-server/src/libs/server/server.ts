@@ -2385,7 +2385,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * Parse file paths and prevent path traversal
    *
    * If the path is absolute, it must stay within its original static base
-   * (before the first {{...}})
+   * directory (last folder separator before the first {{...}})
    * If the path is relative, it must stay within the environment base directory
    *
    * @param filePath
@@ -2419,8 +2419,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       return resolvePath(rawFilePath);
     }
 
-    // Extract static base from templated string (before first {{...}})
-    const staticBaseMatch = rawFilePath.match(/^([^{}]+)/);
+    // Extract static base directory from templated string (last folder separator before the first {{...}})
+    const staticBaseMatch = rawFilePath.match(/^([^{}]*\/)/);
     const staticBaseDir = staticBaseMatch?.[1]
       ? resolvePath(staticBaseMatch[1])
       : null;

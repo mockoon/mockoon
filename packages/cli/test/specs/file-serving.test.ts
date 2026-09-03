@@ -50,4 +50,20 @@ describe('File serving', () => {
 
     ok(responseBody.includes('filecontent'));
   });
+
+  it('should get a partially templated file when the helper is in the middle of the file name', async () => {
+    const { instance } = await spawnCli([
+      'start',
+      '--data',
+      './test/data/envs/file.json'
+    ]);
+
+    const responseBody = await (
+      await fetch('http://localhost:3000/testfile/1')
+    ).text();
+
+    instance.kill();
+
+    ok(responseBody.includes('filecontent'));
+  });
 });
