@@ -46,14 +46,18 @@ import { EventEmitter } from 'events';
 import express, { Application, NextFunction, Request, Response } from 'express';
 import { createReadStream, readFile, readFileSync, statSync } from 'fs';
 import type { RequestListener } from 'http';
-import { createServer as httpCreateServer, Server as httpServer } from 'http';
+import {
+  IncomingMessage,
+  createServer as httpCreateServer,
+  Server as httpServer
+} from 'http';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import {
   createServer as httpsCreateServer,
   Server as httpsServer
 } from 'https';
 import killable from 'killable';
-import { AddressInfo, isIPv6 } from 'node:net';
+import { AddressInfo, Socket, isIPv6 } from 'node:net';
 import { basename, extname, isAbsolute, parse, relative, resolve } from 'path';
 import { parse as qsParse } from 'qs';
 import rangeParser from 'range-parser';
@@ -95,6 +99,31 @@ import {
   messageToString,
   serveFileContentInWs
 } from './ws';
+
+/**
+ * Node's HTTP server hands over *any* request containing an "Upgrade" header
+ * (h2c, TLS, etc.) to the 'upgrade' event as soon as a listener is registered,
+ * and such requests can then no longer be handled as regular ones.
+ * Reporting the upgrade flag only for WebSocket requests keeps the other
+ * upgrade requests on the normal request path.
+ * See https://github.com/nodejs/node/issues/6339
+ */
+class WebSocketOnlyIncomingMessage extends IncomingMessage {
+  constructor(socket: Socket) {
+    super(socket);
+
+    Object.defineProperty(this, 'upgrade', {
+      configurable: true,
+      get: () =>
+        this.method === 'CONNECT' ||
+        (this.headers.upgrade?.toLowerCase() === 'websocket' &&
+          !!this.headers.connection?.toLowerCase().includes('upgrade')),
+      // ignore the value set by Node's HTTP parser
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      set: () => {}
+    });
+  }
+}
 
 /**
  * Create a server instance from an Environment object.
@@ -184,7 +213,10 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       try {
         this.tlsOptions = this.buildTLSOptions(this.environment);
 
-        this.serverInstance = httpsCreateServer(this.tlsOptions);
+        this.serverInstance = httpsCreateServer({
+          ...this.tlsOptions,
+          IncomingMessage: WebSocketOnlyIncomingMessage
+        });
       } catch (error: any) {
         if (error.code === 'ENOENT') {
           this.emit('error', ServerErrorCodes.CERT_FILE_NOT_FOUND, error);
@@ -193,7 +225,9 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         }
       }
     } else {
-      this.serverInstance = httpCreateServer();
+      this.serverInstance = httpCreateServer({
+        IncomingMessage: WebSocketOnlyIncomingMessage
+      });
     }
 
     // make serverInstance killable
@@ -959,7 +993,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     const urlParsed = parseUrl(req.url || '', true);
 
     // check if the request is a websocket upgrade request
-    if (req.headers.upgrade !== 'websocket') {
+    if (req.headers.upgrade?.toLowerCase() !== 'websocket') {
       socket.write(`HTTP/${req.httpVersion} 400 Bad Request\r\n`);
       socket.write('Content-Type: text/html\r\n');
       socket.write('Content-length: 72\r\n\r\n');
