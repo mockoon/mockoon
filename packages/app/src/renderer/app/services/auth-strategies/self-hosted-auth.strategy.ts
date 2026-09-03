@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import {
-  BehaviorSubject,
   catchError,
   finalize,
   map,
   Observable,
   of,
+  ReplaySubject,
   shareReplay,
   switchMap,
   take,
@@ -35,7 +35,7 @@ export class SelfHostedAuthStrategy implements AuthStrategy {
   private settingsService = inject(SettingsService);
   private httpClient = inject(HttpClient);
 
-  private authState$ = new BehaviorSubject<AuthState>(null);
+  private authState$ = new ReplaySubject<AuthState>(1);
   // the access token is short lived and kept in memory only, only the refresh token is persisted
   private accessToken: string | null = null;
   private refreshToken: string | null = null;
@@ -261,6 +261,7 @@ export class SelfHostedAuthStrategy implements AuthStrategy {
 
     if (!storedSession) {
       this.clearPersistedSession();
+      this.authState$.next(null);
 
       return;
     }
@@ -273,6 +274,7 @@ export class SelfHostedAuthStrategy implements AuthStrategy {
           // never send a refresh token to another backend than the one it was issued for
           if (apiUrl !== storedSession.apiUrl) {
             this.clearPersistedSession();
+            this.authState$.next(null);
 
             return of(null);
           }

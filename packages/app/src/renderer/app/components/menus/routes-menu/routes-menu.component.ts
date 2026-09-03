@@ -69,6 +69,7 @@ import {
 import { ToolbarButtonConfig } from 'src/renderer/app/models/ui.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
@@ -120,6 +121,8 @@ export class RoutesMenuComponent {
   private uiService = inject(UIService);
   private formBuilder = inject(UntypedFormBuilder);
   private mainApiService = inject(MainApiService);
+  private settingsService = inject(SettingsService);
+
   private routesMenu = viewChild<ElementRef<HTMLUListElement>>('routesMenu');
   private routeRows = viewChildren<ElementRef<HTMLAnchorElement>>('routeRow');
   public settings$: Observable<Settings>;
@@ -136,6 +139,7 @@ export class RoutesMenuComponent {
   public routesFilter$: Observable<string>;
   public isActiveEnvironmentEditable$ =
     this.store.selectIsActiveEnvironmentEditable();
+  public isSelfHosted$ = this.settingsService.selectIsSelfHosted();
   private manualDragEnabled$ = new BehaviorSubject(true);
   public dragEnabled$ = combineLatest([
     this.isActiveEnvironmentEditable$,

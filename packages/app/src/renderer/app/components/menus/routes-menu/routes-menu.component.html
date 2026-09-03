@@ -10,6 +10,7 @@
 @let dragEnabled = dragEnabled$ | async;
 @let selectedRoutes = (selectedRoutes$ | async) ?? [];
 @let hasSelection = selectedRoutes.length > 0;
+@let isSelfHosted = isSelfHosted$ | async;
 
 <div
   class="routes-menu d-flex flex-column h-100"
@@ -26,9 +27,11 @@
         <app-svg icon="add_box" />
       </button>
       <div class="dropdown-menu" id="routes-add-dropdown-menu" ngbDropdownMenu>
-        <button class="btn dropdown-item" (click)="addCRUDRouteTemplate()">
-          <app-svg icon="magic" class="me-1" /> Assistants and templates
-        </button>
+        @if (!isSelfHosted) {
+          <button class="btn dropdown-item" (click)="addCRUDRouteTemplate()">
+            <app-svg icon="magic" class="me-1" /> Assistants and templates
+          </button>
+        }
         <button class="btn dropdown-item" (click)="addCRUDRoute()">
           <app-svg icon="endpoints" class="me-1" /> CRUD route
         </button>
