@@ -32,7 +32,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@faker-js/faker": "9.9.0",
+    "@faker-js/faker": "10.6.0",
     "@jmespath-community/jmespath": "1.3.0",
     "@mockoon/commons": "9.8.0",
     "ajv": "8.20.0",
