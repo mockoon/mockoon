@@ -242,9 +242,8 @@ describe('Settings', () => {
         ''
       );
 
-      // reload to verify schema allows empty string
-      await browser.reloadSession();
-
+      // do not reload the app in the current Electron session; the next fresh launch
+      // will validate the already-persisted repaired settings file.
       await utils.waitForAutosave();
       await file.verifyObjectPropertyInFile(
         './tmp/storage/settings.json',

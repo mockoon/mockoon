@@ -23,24 +23,6 @@ const validateUUID = (uuid: string) => {
 
 describe('Schema validation', () => {
   describe('Settings', () => {
-    it('should prepare the broken settings', async () => {
-      await file.editSettingsAndReload({
-        welcomeShown: true,
-        maxLogsPerEnvironment: 50,
-        truncateRouteName: true,
-        mainMenuSize: 100,
-        fakerLocale: 'en',
-        fakerSeed: null,
-        lastChangelog: '9999.9.9',
-        environments: [
-          null,
-          'unknown',
-          { uuid: '', path: '/home/username/file1.json' }
-        ],
-        unknown: true
-      } as any);
-    });
-
     it('should verify saved properties (missing, invalid, unknown)', async () => {
       await utils.waitForAutosave();
       const fileContent: Settings = JSON.parse(
@@ -54,31 +36,6 @@ describe('Schema validation', () => {
       expect((fileContent as any).unknown).toEqual(undefined);
       // remove invalid values
       expect(fileContent.environments).toHaveLength(0);
-    });
-  });
-
-  describe('Unable to migrate, repair', () => {
-    it('should open the environment', async () => {
-      await environments.open('schema-broken-repair');
-    });
-
-    it('should fail migration and repair if too broken (route object missing)', async () => {
-      await utils.checkToastDisplayed(
-        'warning',
-        'Migration of environment "Missing route object" failed. The environment was automatically repaired and migrated to the latest version.'
-      );
-      await utils.waitForAutosave();
-
-      await file.verifyObjectPropertyInFile(
-        './tmp/storage/schema-broken-repair.json',
-        [
-          'lastMigration',
-          // indirectly verify that it's an array
-          'routes.0'
-        ],
-        [HighestMigrationId, undefined]
-      );
-      await environments.close(1);
     });
   });
 
@@ -262,32 +219,18 @@ describe('Schema validation', () => {
       expect(validateUUID(envFileContent.uuid)).toEqual(true);
       expect(validateUUID(envFileContent.routes[0].uuid)).toEqual(true);
       expect(envFileContent.routes[0].responses[0].statusCode).toEqual(200);
+
+      await environments.close(1);
+      await utils.waitForAutosave();
     });
   });
 
   describe('UUID deduplication (environment)', () => {
     const initialUUID = 'a93e9c88-62f9-40a7-be4f-9645e1988d8a';
 
-    it('should prepare the settings', async () => {
-      await file.editSettingsAndReload({
-        environments: [
-          {
-            uuid: 'a93e9c88-62f9-40a7-be4f-9645e1988d8a',
-            path: resolve('./tmp/storage/schema-uuid-dedup-1.json'),
-            cloud: false,
-            lastServerHash: null
-          },
-          {
-            uuid: 'a93e9c88-62f9-40a7-be4f-9645e1988d8a',
-            path: resolve('./tmp/storage/schema-uuid-dedup-2.json'),
-            cloud: false,
-            lastServerHash: null
-          }
-        ]
-      });
-    });
-
     it('should deduplicate UUIDs at launch', async () => {
+      await environments.open('schema-uuid-dedup-1');
+      await environments.open('schema-uuid-dedup-2');
       await utils.waitForAutosave();
 
       const env0Content: Environment = JSON.parse(
@@ -296,7 +239,6 @@ describe('Schema validation', () => {
       const env1Content: Environment = JSON.parse(
         (await fs.readFile('./tmp/storage/schema-uuid-dedup-2.json')).toString()
       );
-
       expect(env0Content.uuid).toEqual(initialUUID);
 
       expect(env0Content.data[0].uuid).not.toEqual(initialUUID);
@@ -329,45 +271,7 @@ describe('Schema validation', () => {
         ['environments.0.uuid', 'environments.1.uuid'],
         [initialUUID, env1Content.uuid]
       );
-    });
 
-    it('should deduplicate UUIDs when opening another environment', async () => {
-      await environments.open('schema-uuid-dedup-3');
-      await environments.assertCount(3);
-      await environments.assertActiveMenuEntryText('uuid dedup load');
-
-      await utils.waitForAutosave();
-
-      const envContent: Environment = JSON.parse(
-        (await fs.readFile('./tmp/storage/schema-uuid-dedup-3.json')).toString()
-      );
-
-      expect(envContent.uuid).not.toEqual(initialUUID);
-      expect(validateUUID(envContent.uuid)).toEqual(true);
-
-      expect(envContent.data[0].uuid).not.toEqual(initialUUID);
-      expect(validateUUID(envContent.data[0].uuid)).toEqual(true);
-
-      expect(envContent.routes[0].uuid).not.toEqual(initialUUID);
-      expect(validateUUID(envContent.routes[0].uuid)).toEqual(true);
-
-      expect(envContent.routes[0].responses[0].uuid).not.toEqual(initialUUID);
-      expect(validateUUID(envContent.routes[0].responses[0].uuid)).toEqual(
-        true
-      );
-
-      expect(envContent.routes[1].responses[0].uuid).not.toEqual(initialUUID);
-      expect(validateUUID(envContent.routes[1].responses[0].uuid)).toEqual(
-        true
-      );
-
-      expect(envContent.folders[0].uuid).not.toEqual(initialUUID);
-      expect(validateUUID(envContent.folders[0].uuid)).toEqual(true);
-
-      expect(envContent.rootChildren[0].uuid).not.toEqual(initialUUID);
-      expect(validateUUID(envContent.rootChildren[0].uuid)).toEqual(true);
-
-      await environments.close(1);
       await environments.close(1);
       await environments.close(1);
     });

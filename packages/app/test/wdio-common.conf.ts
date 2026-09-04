@@ -8,8 +8,8 @@ export const config: Partial<WebdriverIO.Config> = {
   logLevel: 'warn',
   runner: 'local',
   services: ['electron'],
-  beforeSession: async () => {
-    await bootstrap.init();
+  beforeSession: async (_config, _capabilities, specs) => {
+    await bootstrap.init(specs);
   },
   bail: 0,
   waitforTimeout: 10000,
