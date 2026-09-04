@@ -1,0 +1,32 @@
+{
+  "welcomeShown": true,
+  "maxLogsPerEnvironment": 50,
+  "truncateRouteName": true,
+  "mainMenuSize": 100,
+  "secondaryMenuSize": 200,
+  "fakerLocale": "en",
+  "fakerSeed": null,
+  "lastChangelog": "9999.9.9",
+  "environments": [
+    {
+      "uuid": "6f2d0c0b-cf7b-494d-9080-8d614bf761db",
+      "path": "wrongpath",
+      "cloud": false,
+      "lastServerHash": null
+    }
+  ],
+  "storagePrettyPrint": true,
+  "startEnvironmentsOnLoad": false,
+  "logTransactions": false,
+  "disabledRoutes": {},
+  "collapsedFolders": {},
+  "fileWatcherEnabled": "disabled",
+  "dialogWorkingDir": "",
+  "environmentsCategoriesOrder": ["local", "cloud"],
+  "environmentsCategoriesCollapsed": {
+    "local": false,
+    "cloud": false
+  },
+  "envVarsPrefix": "MOCKOON_",
+  "activeEnvironmentUuid": null
+}

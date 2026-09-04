@@ -7,7 +7,6 @@ import environments from '../libs/environments';
 import environmentsLogs from '../libs/environments-logs';
 import environmentsProxy from '../libs/environments-proxy';
 import environmentsSettings from '../libs/environments-settings';
-import file from '../libs/file';
 import headersUtils from '../libs/headers-utils';
 import http from '../libs/http';
 import modals from '../libs/modals';
@@ -2038,10 +2037,10 @@ describe('Documentation screenshots', () => {
           isFullScreen: false
         })
       );
-      await file.editSettingsAndReload({
+      /* await file.editSettings({
         mainMenuSize: 150,
         secondaryMenuSize: 250
-      });
+      }); */
       await environments.close(1);
       await environments.open('documentation');
 

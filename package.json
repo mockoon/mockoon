@@ -93,15 +93,15 @@
     "typescript-eslint": "8.67.0"
   },
   "allowScripts": {
-    "@firebase/util@1.15.1": true,
     "@parcel/watcher@2.6.0": true,
     "edgedriver@6.3.0": true,
     "electron-winstaller@5.4.0": true,
     "geckodriver@6.1.1": true,
     "msgpackr-extract@3.0.4": true,
-    "protobufjs@7.6.5": true,
     "unrs-resolver@1.12.2": true,
     "lmdb@3.5.4": true,
-    "esbuild@0.28.1": true
+    "@firebase/util@1.15.2": true,
+    "esbuild@0.28.1": true,
+    "protobufjs@7.6.6": true
   }
 }

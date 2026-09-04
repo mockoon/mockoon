@@ -1,12 +1,8 @@
 import { Environment, Environments } from '@mockoon/commons';
 import { objectGetPath } from '@mockoon/commons-server';
 import { promises as fs } from 'fs';
-import { Settings } from '../../src/shared/models/settings.model';
-import utils from '../libs/utils';
 
 class File {
-  private settingsPath = './tmp/storage/settings.json';
-
   public async editEnvironment(
     filePath: string,
     properties: Partial<Environment>
@@ -14,18 +10,6 @@ class File {
     let environment = JSON.parse((await fs.readFile(filePath)).toString());
     environment = { ...environment, ...properties };
     await fs.writeFile(filePath, JSON.stringify(environment));
-  }
-
-  public async editSettingsAndReload(properties: Partial<Settings>) {
-    // wait for eventual settings save before modifying the settings
-    await utils.waitForAutosave();
-    let settings = JSON.parse(
-      (await fs.readFile(this.settingsPath)).toString()
-    );
-    settings = { ...settings, ...properties };
-    await fs.writeFile(this.settingsPath, JSON.stringify(settings));
-    await browser.reloadSession();
-    await browser.pause(2000);
   }
 
   public async getObjectPropertyInFile(filePath: string, objectPath: string) {
