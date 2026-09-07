@@ -1537,7 +1537,21 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
                 servedDatabucket,
                 request,
                 response,
-                route.responses[0].crudKey
+                route.responses[0].crudKey,
+                (idTemplate) =>
+                  TemplateParser({
+                    shouldOmitDataHelper: false,
+                    content: idTemplate,
+                    environment: this.environment,
+                    processedDatabuckets: this.processedDatabuckets,
+                    globalVariables: this.globalVariables,
+                    request: fromExpressRequest(request),
+                    envVarsPrefix: this.options.envVarsPrefix,
+                    publicBaseUrl: this.options.publicBaseUrl
+                  }),
+                this.environment.data.find(
+                  (databucket) => databucket.uuid === servedDatabucket.uuid
+                )?.value
               );
             }
 
