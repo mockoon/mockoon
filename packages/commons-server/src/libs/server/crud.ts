@@ -11,6 +11,129 @@ import { convertPathToArray, fullTextSearch } from '../utils';
 
 export const crudRouteParamName = 'id';
 
+const templatingExpressionPattern =
+  '(?:\\{\\{\\{[\\s\\S]*?\\}\\}\\}|\\{\\{[\\s\\S]*?\\}\\})';
+
+/**
+ * Extract, from the raw (unparsed) databucket template, the templating expression
+ * used to generate the value of the CRUD key (e.g. `"id": "{{faker 'location.country'}}"`)
+ *
+ * @param databucketTemplate
+ * @param crudKey
+ * @returns
+ */
+export const extractIdTemplate = (
+  databucketTemplate: string,
+  crudKey: string
+): string | null => {
+  const pathSegments = convertPathToArray(crudKey);
+  const keyParts = Array.isArray(pathSegments)
+    ? pathSegments
+    : pathSegments.split('.');
+  const expressionMatcher = new RegExp(templatingExpressionPattern, 'g');
+  const structureTemplate = databucketTemplate.replace(
+    expressionMatcher,
+    (expression) => ' '.repeat(expression.length)
+  );
+  const tokenMatcher = /\{|\}|["']?([A-Za-z_$][\w$]*)["']?\s*:/g;
+  const objectPaths: string[][] = [];
+  let pendingPath: string[] | null = null;
+  let match: RegExpExecArray | null;
+
+  while ((match = tokenMatcher.exec(structureTemplate))) {
+    if (match[0] === '{') {
+      objectPaths.push(
+        pendingPath ?? objectPaths[objectPaths.length - 1] ?? []
+      );
+      pendingPath = null;
+    } else if (match[0] === '}') {
+      objectPaths.pop();
+      pendingPath = null;
+    } else {
+      const propertyPath = [
+        ...(objectPaths[objectPaths.length - 1] ?? []),
+        match[1]
+      ];
+      const idMatch = new RegExp(
+        `^\\s*"?(${templatingExpressionPattern}+)"?`
+      ).exec(databucketTemplate.slice(match.index + match[0].length));
+
+      if (idMatch && propertyPath.join('.') === keyParts.join('.')) {
+        return idMatch[1];
+      }
+
+      pendingPath = propertyPath;
+    }
+  }
+
+  return null;
+};
+
+/**
+ * Convert a generated id back to a number when it can be safely represented as one
+ *
+ * @param generatedId
+ * @returns
+ */
+const castGeneratedId = (generatedId: string): string | number => {
+  const trimmedId = generatedId.trim();
+
+  if (trimmedId === '') {
+    return '';
+  }
+
+  return String(Number(trimmedId)) === trimmedId
+    ? Number(trimmedId)
+    : trimmedId;
+};
+
+/**
+ * Generate the id of a new item from the templating expression used for the key
+ * in the databucket template, or by incrementing the highest numeric id present
+ * in the databucket (falling back to a random UUID)
+ *
+ * @param databucketValue
+ * @param crudKey
+ * @param templateParse
+ * @param databucketTemplate
+ * @returns
+ */
+const generateItemId = (
+  databucketValue: any[],
+  crudKey: string,
+  templateParse?: (content: string) => string,
+  databucketTemplate?: string
+): string | number => {
+  const idTemplate = databucketTemplate
+    ? extractIdTemplate(databucketTemplate, crudKey)
+    : null;
+
+  if (idTemplate && templateParse) {
+    try {
+      const generatedId = castGeneratedId(templateParse(idTemplate));
+
+      if (generatedId !== '') {
+        return generatedId;
+      }
+    } catch (_error) {
+      // fall back to the default id generation
+    }
+  }
+
+  // get highest id in the array
+  const highestId = databucketValue.reduce<number | null>((maxId, item) => {
+    const itemId = getPath(item, convertPathToArray(crudKey));
+
+    if (typeof itemId === 'number' && (maxId === null || itemId > maxId)) {
+      return itemId;
+    }
+
+    return maxId;
+  }, null);
+
+  return highestId !== null ? highestId + 1 : generateUUID();
+};
+
 /**
  * Find an item by its id in an array of objects or by its index in an array of primitives
  *
@@ -46,11 +169,15 @@ export const databucketActions = (
   databucket: ProcessedDatabucket,
   request: Request,
   response: Response,
-  routeCrudKey: RouteResponse['crudKey']
+  routeCrudKey: RouteResponse['crudKey'],
+  templateParse?: (content: string) => string,
+  databucketTemplate?: string
 ): any => {
   if (databucket.parsed) {
     response.set('Content-Type', 'application/json');
   }
+
+  const crudKey = routeCrudKey;
 
   const requestBody =
     request.body !== undefined ? request.body : request.stringBody || {};
@@ -130,11 +257,7 @@ export const databucketActions = (
 
     case 'getbyId': {
       if (Array.isArray(databucket.value)) {
-        const foundIndex = findItemIndex(
-          databucket.value,
-          request,
-          routeCrudKey
-        );
+        const foundIndex = findItemIndex(databucket.value, request, crudKey);
 
         if (foundIndex !== -1) {
           responseBody = databucket.value[foundIndex];
@@ -153,23 +276,17 @@ export const databucketActions = (
         if (
           typeof requestBody === 'object' &&
           requestBody != null &&
-          getPath(requestBody, convertPathToArray(routeCrudKey)) === undefined
+          getPath(requestBody, convertPathToArray(crudKey)) === undefined
         ) {
-          // get highest id in the array
-          const highestId = databucket.value.reduce((maxId, item) => {
-            const itemId = getPath(item, convertPathToArray(routeCrudKey));
-
-            if (typeof itemId === 'number' && itemId > maxId) {
-              return itemId;
-            }
-
-            return maxId;
-          }, null);
-
           setPath(
             requestBody,
-            convertPathToArray(routeCrudKey),
-            highestId !== null ? highestId + 1 : generateUUID()
+            convertPathToArray(crudKey),
+            generateItemId(
+              databucket.value,
+              crudKey,
+              templateParse,
+              databucketTemplate
+            )
           );
         }
 
@@ -193,11 +310,7 @@ export const databucketActions = (
 
     case 'updateById': {
       if (Array.isArray(databucket.value)) {
-        const indexToModify = findItemIndex(
-          databucket.value,
-          request,
-          routeCrudKey
-        );
+        const indexToModify = findItemIndex(databucket.value, request, crudKey);
 
         if (indexToModify !== -1) {
           if (
@@ -206,7 +319,7 @@ export const databucketActions = (
           ) {
             const currentItemId = getPath(
               databucket.value[indexToModify],
-              convertPathToArray(routeCrudKey)
+              convertPathToArray(crudKey)
             );
 
             databucket.value[indexToModify] = {
@@ -217,12 +330,11 @@ export const databucketActions = (
 
             // restore the id if it was not provided in the request body
             if (
-              getPath(requestBody, convertPathToArray(routeCrudKey)) ===
-              undefined
+              getPath(requestBody, convertPathToArray(crudKey)) === undefined
             ) {
               setPath(
                 databucket.value[indexToModify],
-                convertPathToArray(routeCrudKey),
+                convertPathToArray(crudKey),
                 currentItemId
               );
             }
@@ -269,11 +381,7 @@ export const databucketActions = (
 
     case 'updateMergeById': {
       if (Array.isArray(databucket.value)) {
-        const indexToModify = findItemIndex(
-          databucket.value,
-          request,
-          routeCrudKey
-        );
+        const indexToModify = findItemIndex(databucket.value, request, crudKey);
 
         if (indexToModify !== -1) {
           databucket.value[indexToModify] =
@@ -318,11 +426,7 @@ export const databucketActions = (
 
     case 'deleteById': {
       if (Array.isArray(databucket.value)) {
-        const indexToDelete = findItemIndex(
-          databucket.value,
-          request,
-          routeCrudKey
-        );
+        const indexToDelete = findItemIndex(databucket.value, request, crudKey);
 
         if (indexToDelete === -1) {
           response.status(404);
