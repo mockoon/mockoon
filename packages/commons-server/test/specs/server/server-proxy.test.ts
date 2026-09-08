@@ -42,6 +42,31 @@ describe('Server should handle proxy configuration', () => {
     deepEqual(body, {});
   });
 
+  it('should remove the secure flag from proxied cookies', async () => {
+    const response = await fetch('http://localhost:3001/test');
+    const cookies = response.headers.getSetCookie();
+
+    equal(cookies.length, 1);
+    equal(/(?:^|;\s*)secure(?=;|$)/i.test(cookies[0]), false);
+    equal(cookies[0].includes('session=abc'), true);
+  });
+
+  it('should continue removing the secure flag from proxied cookies after environment update when server remains HTTP', async () => {
+    proxyServer.updateEnvironment({
+      ...proxyEnv,
+      tlsOptions: { ...proxyEnv.tlsOptions, enabled: true }
+    });
+
+    const response = await fetch('http://localhost:3001/test');
+    const cookies = response.headers.getSetCookie();
+
+    equal(cookies.length, 1);
+    equal(/(?:^|;\s*)secure(?=;|$)/i.test(cookies[0]), false);
+    equal(cookies[0].includes('session=abc'), true);
+
+    proxyServer.updateEnvironment(proxyEnv);
+  });
+
   it('should return response when request matches', async () => {
     const response = await fetch('http://localhost:3001/test2?rule=match');
     equal(response.status, 200);

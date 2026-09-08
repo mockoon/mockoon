@@ -1666,7 +1666,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
             const hostname =
               this.options.publicBaseUrl ||
-              `${this.environment.tlsOptions.enabled ? 'https' : 'http'}://${isIPv6(serverAddress.address) ? `[${serverAddress.address}]` : serverAddress.address}:${serverAddress.port}`;
+              `${this.isTls() ? 'https' : 'http'}://${isIPv6(serverAddress.address) ? `[${serverAddress.address}]` : serverAddress.address}:${serverAddress.port}`;
             url = `${hostname}${this.environment.endpointPrefix ? '/' + this.environment.endpointPrefix : ''}${url}`;
           }
 
@@ -2095,6 +2095,12 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
           }
         },
         proxyRes: (proxyRes, request, response) => {
+          if (!this.isTls() && proxyRes.headers['set-cookie']) {
+            proxyRes.headers['set-cookie'] = proxyRes.headers['set-cookie'].map(
+              (cookie) => cookie.replace(/;\s*secure(?=;|$)/gi, '')
+            );
+          }
+
           const buffers: Buffer[] = [];
           proxyRes.on('data', (chunk) => {
             buffers.push(chunk);
@@ -2397,6 +2403,20 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     }
 
     return tlsOptions;
+  }
+
+  /**
+   * Check if the server is running over TLS (HTTPS).
+   * Falls back to environment configuration when serverInstance is not yet created.
+   */
+  private isTls(): boolean {
+    if (this.serverInstance) {
+      return this.serverInstance instanceof httpsServer;
+    }
+
+    return Boolean(
+      this.environment.tlsOptions?.enabled && !this.options.disableTls
+    );
   }
 
   /**
