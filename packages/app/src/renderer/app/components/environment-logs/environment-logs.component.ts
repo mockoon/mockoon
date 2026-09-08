@@ -224,7 +224,7 @@ export class EnvironmentLogsComponent implements OnInit {
         if (search) {
           result = result.filter((log) =>
             textFilter(
-              `${log.method} ${log.url} ${log.response.status} ${log.response.statusMessage} ${log.request.query} ${this.datePipe.transform(log.timestampMs, this.dateFormat)} ${log.proxied ? 'proxied' : ''}`,
+              `${log.method} ${log.url} ${log.response.status} ${log.response.statusMessage} ${log.request.query} ${this.datePipe.transform(log.timestampMs, this.dateFormat)} ${log.proxied ? 'proxied' : ''} ${log.request.body} ${log.response.body} ${JSON.stringify(log.request.headers)} ${JSON.stringify(log.response.headers)}`,
               search
             )
           );
