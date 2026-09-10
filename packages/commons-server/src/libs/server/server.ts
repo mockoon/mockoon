@@ -6,7 +6,6 @@ import {
   Environment,
   FileExtensionsWithTemplating,
   GetContentType,
-  GetRouteResponseContentType,
   Header,
   IsValidURL,
   MimeTypesWithTemplating,
@@ -1478,10 +1477,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
     // add route latency if any
     setTimeout(() => {
-      const contentType = GetRouteResponseContentType(
-        this.environment,
-        triggeredRouteResponse
-      );
       const routeContentType = GetContentType(triggeredRouteResponse.headers);
 
       // set http code
@@ -1508,10 +1503,6 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         // serve inline body or databucket
       } else {
         let templateParse = true;
-
-        if (contentType.includes('application/json')) {
-          response.set('Content-Type', 'application/json');
-        }
 
         // serve inline body as default
         let content: any = triggeredRouteResponse.body;
@@ -1834,7 +1825,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       // execute callbacks after generating the template, to be able to use the eventual templating variables in the callback
       this.executeCallbacks(routeResponse, request, response);
 
-      response.send(content);
+      this.sendResponse(response, content);
     } catch (error: any) {
       this.emit('error', ServerErrorCodes.ROUTE_SERVING_ERROR, error, {
         routePath: route.endpoint,
@@ -1846,6 +1837,75 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
         format(ServerMessages.ROUTE_SERVING_ERROR, error.message)
       );
     }
+  }
+
+  /**
+   * Send the response body. If the Content-Type header explicitly specifies a charset,
+   * convert the content to a Buffer with the corresponding character encoding so Express
+   * does not overwrite the user-specified charset with utf-8.
+   *
+   * @param response
+   * @param content
+   */
+  private sendResponse(response: Response, content: string) {
+    const contentTypeHeader = (response.getHeader('Content-Type') ||
+      response.getHeader('content-type')) as string | undefined;
+
+    if (contentTypeHeader && /;\s*charset\s*=/i.test(contentTypeHeader)) {
+      const encoding = this.getBufferEncoding(contentTypeHeader);
+      response.send(Buffer.from(content, encoding));
+    } else {
+      response.send(content);
+    }
+  }
+
+  /**
+   * Determine the buffer encoding from the Content-Type header charset, defaulting to utf-8
+   *
+   * @param contentType
+   */
+  private getBufferEncoding(contentType: string): BufferEncoding {
+    const match = contentType.match(/;\s*charset\s*=\s*"?([^;"]+)"?/i);
+
+    if (match?.[1]) {
+      const charset = match[1].trim().toLowerCase();
+
+      if (
+        [
+          'iso-8859-1',
+          'latin1',
+          'binary',
+          'windows-1252',
+          'iso88591',
+          'iso_8859_1',
+          'iso_8859-1'
+        ].includes(charset)
+      ) {
+        return 'latin1';
+      }
+
+      if (['utf-8', 'utf8'].includes(charset)) {
+        return 'utf-8';
+      }
+
+      if (['ascii', 'us-ascii'].includes(charset)) {
+        return 'ascii';
+      }
+
+      if (
+        ['utf-16le', 'utf16le', 'ucs-2', 'ucs2', 'utf-16', 'utf16'].includes(
+          charset
+        )
+      ) {
+        return 'utf16le';
+      }
+
+      if (Buffer.isEncoding(charset)) {
+        return charset as BufferEncoding;
+      }
+    }
+
+    return 'utf-8';
   }
 
   /**
@@ -1939,7 +1999,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
             // execute callbacks after generating the file content, to be able to use the eventual templating variables in the callback
             this.executeCallbacks(routeResponse, request, response);
 
-            response.send(fileContent);
+            this.sendResponse(response, fileContent);
           } catch (error: any) {
             fileServingError(error);
           }
