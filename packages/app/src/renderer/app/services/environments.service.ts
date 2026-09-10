@@ -501,6 +501,7 @@ export class EnvironmentsService {
     options?: {
       environment?: Environment;
       insertAfterIndex?: number;
+      filePath?: string;
       promptSave?: boolean;
       cloud?: boolean;
       setActive?: boolean;
@@ -511,6 +512,7 @@ export class EnvironmentsService {
       ...{
         environment: null,
         insertAfterIndex: null,
+        filePath: null,
         promptSave: true,
         cloud: false,
         setActive: false
@@ -520,7 +522,9 @@ export class EnvironmentsService {
 
     let filePath$: Observable<string>;
 
-    if (options.promptSave) {
+    if (options.filePath) {
+      filePath$ = of(options.filePath);
+    } else if (options.promptSave) {
       filePath$ = this.dialogsService.showSaveDialog(
         'Save your new environment'
       );
@@ -647,27 +651,44 @@ export class EnvironmentsService {
    */
   public newEnvironmentFromURL(url: string) {
     if (url) {
-      this.loggerService.logMessage('info', 'NEW_ENVIRONMENT_FROM_URL', {
-        url
-      });
+      return this.dialogsService
+        .showSaveDialog('Save your new environment')
+        .pipe(
+          filter((filePath) => !!filePath),
+          switchMap((filePath) => {
+            this.loggerService.logMessage('info', 'NEW_ENVIRONMENT_FROM_URL', {
+              url
+            });
 
-      return this.http.get(url, { responseType: 'text' }).pipe(
-        map<string, Environment>((data) => JSON.parse(data)),
-        switchMap((environment: Environment) => this.verifyData(environment)),
-        switchMap((environment: Environment) => {
-          const migratedEnvironment =
-            this.dataService.migrateAndValidateEnvironment(environment);
+            return this.http.get(url, { responseType: 'text' }).pipe(
+              map<string, Environment>((data) => JSON.parse(data)),
+              switchMap((environment: Environment) =>
+                this.verifyData(environment)
+              ),
+              switchMap((environment: Environment) => {
+                const migratedEnvironment =
+                  this.dataService.migrateAndValidateEnvironment(environment);
 
-          return this.addEnvironment({ environment: migratedEnvironment });
-        }),
-        catchError((error) => {
-          this.loggerService.logMessage('error', 'NEW_ENVIRONMENT_URL_ERROR', {
-            error
-          });
+                return this.addEnvironment({
+                  environment: migratedEnvironment,
+                  filePath,
+                  promptSave: false
+                });
+              })
+            );
+          }),
+          catchError((error) => {
+            this.loggerService.logMessage(
+              'error',
+              'NEW_ENVIRONMENT_URL_ERROR',
+              {
+                error
+              }
+            );
 
-          return EMPTY;
-        })
-      );
+            return EMPTY;
+          })
+        );
     }
 
     return EMPTY;
