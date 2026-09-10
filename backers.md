@@ -45,13 +45,6 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
       <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/coderabbit.png">
       <img src="https://mockoon.com/images/sponsors/light/coderabbit.png" alt="CodeRabbit logo" />
       </picture>
-  </a><br/><br/>
-  <a href="https://www.swiftproxy.net/?ref=mockoon">
-      <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/swiftproxy.png">
-      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/swiftproxy.png">
-      <img src="https://mockoon.com/images/sponsors/light/swiftproxy.png" alt="SwiftProxy logo" />
-      </picture>
   </a><br/><br/><a href="https://www.testmuai.com/?utm_medium=sponsor&utm_source=mockoon">
       <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/testmuai.png">
