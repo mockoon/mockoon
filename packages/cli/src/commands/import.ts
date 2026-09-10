@@ -27,6 +27,11 @@ export default class Import extends Command {
       char: 'p',
       description: 'Prettify output',
       default: false
+    }),
+    'disable-external-refs': Flags.boolean({
+      description:
+        'Disable fetching of external HTTP/HTTPS $ref references when importing OpenAPI specifications',
+      default: false
     })
   };
 
@@ -34,7 +39,9 @@ export default class Import extends Command {
     const { flags: userFlags } = await this.parse(Import);
 
     try {
-      const parsedEnvironment = await parseDataFile(userFlags.input);
+      const parsedEnvironment = await parseDataFile(userFlags.input, {
+        disableExternalRefs: userFlags['disable-external-refs']
+      });
 
       const data: string = JSON.stringify(
         parsedEnvironment.environment,

@@ -198,4 +198,29 @@ describe('Import command', () => {
 
     await rm('./tmp/import-url-file-prettified.json');
   });
+  it('should import with --disable-external-refs flag', async () => {
+    await spawnCli([
+      'import',
+      '--input',
+      './test/data/openapi/petstore.yaml',
+      '--output',
+      './tmp/import-yaml-file-no-ext-refs.json',
+      '--disable-external-refs'
+    ]);
+
+    const importedFile = await readFile(
+      './tmp/import-yaml-file-no-ext-refs.json'
+    );
+    const importedContent = importedFile.toString();
+    const importedJson = clearAllUuids(JSON.parse(importedContent));
+    const expectedFile = await readFile(
+      './test/data/envs/petstore-imported.json'
+    );
+    const expectedContent = clearAllUuids(JSON.parse(expectedFile.toString()));
+
+    ok(!importedContent.includes('\n'));
+    deepStrictEqual(importedJson, expectedContent);
+
+    await rm('./tmp/import-yaml-file-no-ext-refs.json');
+  });
 });

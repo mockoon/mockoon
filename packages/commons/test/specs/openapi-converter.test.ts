@@ -1,4 +1,4 @@
-import { strictEqual } from 'node:assert';
+import { deepStrictEqual, strictEqual } from 'node:assert';
 import { readFile } from 'node:fs/promises';
 import { before, describe, it } from 'node:test';
 import { OpenApiConverter } from '../../src';
@@ -296,5 +296,101 @@ describe('OpenAPI converter', () => {
 }`;
 
     strictEqual(route?.responses[0].body, expectedBody);
+  });
+
+  it('should extract all unique external $ref URLs', () => {
+    const openApiConverter = new OpenApiConverter();
+    const specWithRefs = JSON.stringify({
+      openapi: '3.0.0',
+      info: { title: 'Test', version: '1.0.0' },
+      paths: {
+        '/test': {
+          get: {
+            responses: {
+              '200': {
+                description: 'OK',
+                content: {
+                  'application/json': {
+                    schema: {
+                      $ref: 'https://example.com/schemas/user.json'
+                    }
+                  }
+                }
+              },
+              '400': {
+                description: 'Error',
+                content: {
+                  'application/json': {
+                    schema: {
+                      $ref: 'https://example.com/schemas/user.json'
+                    }
+                  }
+                }
+              },
+              '500': {
+                description: 'Server Error',
+                content: {
+                  'application/json': {
+                    schema: {
+                      $ref: 'http://internal.service/error.json#/definitions/error'
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      components: {
+        schemas: {
+          Local: {
+            $ref: '#/components/schemas/Other'
+          }
+        }
+      }
+    });
+
+    const refs = openApiConverter.extractExternalRefs(specWithRefs);
+
+    deepStrictEqual(refs, [
+      'https://example.com/schemas/user.json',
+      'http://internal.service/error.json#/definitions/error'
+    ]);
+  });
+
+  it('should not fetch external refs when disableExternalRefs is true', async () => {
+    const openApiConverter = new OpenApiConverter();
+    const specWithExternalRef = JSON.stringify({
+      openapi: '3.0.0',
+      info: { title: 'Test External Ref Disabled', version: '1.0.0' },
+      paths: {
+        '/test': {
+          get: {
+            responses: {
+              '200': {
+                description: 'OK',
+                content: {
+                  'application/json': {
+                    schema: {
+                      $ref: 'http://127.0.0.1:99999/nonexistent.json'
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // Without disableExternalRefs, this would fail attempting to fetch non-existent endpoint
+    const environment = await openApiConverter.convertFromOpenAPI(
+      specWithExternalRef,
+      undefined,
+      { disableExternalRefs: true }
+    );
+
+    strictEqual(environment?.name, 'Test External Ref Disabled');
+    strictEqual(environment?.routes.length, 1);
   });
 });
