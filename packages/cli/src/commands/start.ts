@@ -158,6 +158,11 @@ export default class Start extends Command {
     'max-callback-depth': Flags.integer({
       description: `Maximum call stack depth for route responses with callback functions (default: ${defaultMaxCallbackDepth})`,
       default: defaultMaxCallbackDepth
+    }),
+    'disable-external-refs': Flags.boolean({
+      description:
+        'Disable fetching of external HTTP/HTTPS $ref references when loading OpenAPI specifications',
+      default: false
     })
   };
 
@@ -199,7 +204,8 @@ export default class Start extends Command {
           {
             port: userFlags.port[index],
             hostname: userFlags.hostname[index],
-            proxy: userFlags.proxy as 'enabled' | 'disabled'
+            proxy: userFlags.proxy as 'enabled' | 'disabled',
+            disableExternalRefs: userFlags['disable-external-refs']
           },
           userFlags.repair,
           userFlags.token
@@ -255,7 +261,8 @@ export default class Start extends Command {
                 {
                   port: userFlags.port[index],
                   hostname: userFlags.hostname[index],
-                  proxy: userFlags.proxy as 'enabled' | 'disabled'
+                  proxy: userFlags.proxy as 'enabled' | 'disabled',
+                  disableExternalRefs: userFlags['disable-external-refs']
                 },
                 userFlags.repair,
                 userFlags.token

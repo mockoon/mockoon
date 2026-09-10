@@ -41,14 +41,17 @@ export class OpenApiConverter {
    * File loading is not done here to keep this library compatible with browser usage.
    *
    * @param spec - raw specification string
+   * @param port - optional port override
+   * @param options - optional converter options (e.g. disableExternalRefs)
    * @throws {Error}
    */
   public async convertFromOpenAPI(
     spec: string,
-    port?: number
+    port?: number,
+    options: { disableExternalRefs?: boolean } = {}
   ): Promise<Environment | null> {
     const parsedSpec = this.parseJsonOrYaml(spec);
-    const schema = await this.dereference(parsedSpec);
+    const schema = await this.dereference(parsedSpec, options);
 
     if (this.isSwagger(schema)) {
       return this.convertFromSwagger(schema, port);
@@ -211,14 +214,81 @@ export class OpenApiConverter {
   }
 
   /**
+   * Extract all external (HTTP/HTTPS) $ref URLs from an OpenAPI specification
+   *
+   * @param spec - raw specification string or parsed specification object
+   * @returns Array of unique external $ref URLs
+   */
+  public extractExternalRefs(spec: string | any): string[] {
+    let parsedSpec: any;
+
+    if (typeof spec === 'string') {
+      try {
+        parsedSpec = this.parseJsonOrYaml(spec);
+      } catch {
+        return [];
+      }
+    } else {
+      parsedSpec = spec;
+    }
+
+    if (!parsedSpec || typeof parsedSpec !== 'object') {
+      return [];
+    }
+
+    const externalRefs = new Set<string>();
+    const visited = new Set<any>();
+
+    const crawl = (current: any) => {
+      if (
+        current === null ||
+        typeof current !== 'object' ||
+        visited.has(current)
+      ) {
+        return;
+      }
+
+      visited.add(current);
+
+      if (Array.isArray(current)) {
+        for (const item of current) {
+          crawl(item);
+        }
+
+        return;
+      }
+
+      if (typeof current.$ref === 'string') {
+        const ref = current.$ref.trim();
+
+        if (ref.startsWith('http://') || ref.startsWith('https://')) {
+          externalRefs.add(ref);
+        }
+      }
+
+      for (const key of Object.keys(current)) {
+        crawl(current[key]);
+      }
+    };
+
+    crawl(parsedSpec);
+
+    return Array.from(externalRefs);
+  }
+
+  /**
    * Dereference all $ref in an OpenAPI specification
    * Handles both internal (#/components/schemas/...) and external (URL) references
    * Includes circular dependency detection and caching
    *
    * @param parsedSpec - The parsed OpenAPI specification
+   * @param options - Options for dereferencing (e.g. disableExternalRefs)
    * @returns Promise<any> - The dereferenced schema
    */
-  public async dereference(parsedSpec: any): Promise<any> {
+  public async dereference(
+    parsedSpec: any,
+    options: { disableExternalRefs?: boolean } = {}
+  ): Promise<any> {
     const externalCache = new Map<string, any>();
     const internalCache = new Map<string, any>();
     const dereferenceCache = new Map<string, any>();
@@ -277,6 +347,10 @@ export class OpenApiConverter {
 
     const processRef = async (refPath: string) => {
       if (refPath.startsWith('http://') || refPath.startsWith('https://')) {
+        if (options.disableExternalRefs) {
+          return null;
+        }
+
         // External URL reference
         const [url, fragment] = refPath.split('#');
         const externalSchema = await fetchExternalRef(url);

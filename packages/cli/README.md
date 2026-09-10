@@ -168,6 +168,7 @@ The mocks will run by default on the ports and hostnames specified in the files.
 |-k, --token | Access token used to fetch cloud-hosted Mockoon environments (see  [access token documentation](https://mockoon.com/cloud/docs/access-tokens/))|
 |--max-callback-depth | Maximum call stack depth for route responses with callbacks (default: 100)|
 |--enable-route-metadata-headers | Add [route metadata headers](https://mockoon.com/docs/latest/response-configuration/response-headers/#mockoon-response-headers) to responses (UUID and response metadata) (default: false)|
+|--disable-external-refs | Disable fetching of external HTTP/HTTPS `$ref` references when loading OpenAPI specifications (default: false)|
 |-h, --help | Show CLI help|
 
 **Examples**:
@@ -281,6 +282,7 @@ Note: This command is similar to the app's import feature, but it will not impor
 |-i, --input [required] |Path or URL to your Swagger v2/OpenAPI v3 file|
 |-o, --output [required] |Generated Mockoon path and name (e.g. `./environment.json`)|
 |-p, --prettify |Prettify output|
+|--disable-external-refs |Disable fetching of external HTTP/HTTPS `$ref` references when importing OpenAPI specifications (default: false)|
 |-h, --help |Show CLI help|
 
 **Examples**:

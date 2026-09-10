@@ -150,6 +150,21 @@ export class OpenapiImportModalComponent {
       }
     })
   );
+  public externalRefs$: Observable<string[]> = this.importForm
+    .get('content')
+    .valueChanges.pipe(
+      startWith(this.importForm.get('content').value),
+      debounceTime(250),
+      map((content) => {
+        if (!content?.trim()) {
+          return [];
+        }
+
+        const converter = new OpenApiConverter();
+
+        return converter.extractExternalRefs(content);
+      })
+    );
   public isWeb = Config.isWeb;
   public choiceForm = form(signal<Record<string, boolean>>({}));
 
