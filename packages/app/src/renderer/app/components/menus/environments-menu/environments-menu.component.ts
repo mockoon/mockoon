@@ -271,6 +271,7 @@ export class EnvironmentsMenuComponent {
               (user) => !user || user?.plan === 'FREE' || user?.plan === 'SOLO'
             )
           ),
+      hidden$: () => this.settingsService.selectIsSelfHosted(),
       disabledLabel$: () =>
         of('Self-host with CLI (Team and Enterprise plans only)'),
       action: ({ environmentUuid }: dropdownMenuPayload) => {

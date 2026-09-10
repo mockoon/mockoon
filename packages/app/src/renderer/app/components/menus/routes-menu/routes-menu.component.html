@@ -5,7 +5,6 @@
 @let collapsedFolders = collapsedFolders$ | async;
 @let settings = settings$ | async;
 @let routesFilter = routesFilter$ | async;
-@let isActiveEnvironmentCloud = isActiveEnvironmentCloud$ | async;
 @let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
 @let dragEnabled = dragEnabled$ | async;
 @let selectedRoutes = (selectedRoutes$ | async) ?? [];
@@ -38,11 +37,9 @@
         <button class="btn dropdown-item" (click)="addHTTPRoute()">
           <app-svg icon="endpoint" class="me-1" /> HTTP route
         </button>
-        @if (!isActiveEnvironmentCloud) {
-          <button class="btn dropdown-item" (click)="addWebSocketRoute()">
-            <app-svg icon="websocket" class="me-1" /> WebSocket
-          </button>
-        }
+        <button class="btn dropdown-item" (click)="addWebSocketRoute()">
+          <app-svg icon="websocket" class="me-1" /> WebSocket
+        </button>
         <button class="btn dropdown-item" (click)="addFolder()">
           <app-svg icon="folder" class="me-1" /> Folder
         </button>

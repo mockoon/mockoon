@@ -127,7 +127,6 @@ export class RoutesMenuComponent {
   private routeRows = viewChildren<ElementRef<HTMLAnchorElement>>('routeRow');
   public settings$: Observable<Settings>;
   public activeEnvironment$: Observable<Environment>;
-  public isActiveEnvironmentCloud$ = this.store.selectIsActiveEnvCloud();
   public environments$: Observable<Environments> =
     this.store.select('environments');
   public rootFolder$: Observable<FullFolder>;

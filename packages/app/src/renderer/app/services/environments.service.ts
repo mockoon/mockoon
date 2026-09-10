@@ -1347,9 +1347,8 @@ export class EnvironmentsService {
     }
   ) {
     const activeEnvironment = this.store.getActiveEnvironment();
-    const isActiveEnvCloud = this.store.getIsActiveEnvCloud();
 
-    if (activeEnvironment && !isActiveEnvCloud) {
+    if (activeEnvironment) {
       this.store.update(
         addRouteAction(
           activeEnvironment.uuid,
