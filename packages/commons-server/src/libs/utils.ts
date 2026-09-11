@@ -728,3 +728,210 @@ export const parseRequestMessage = (
 export const isValidStatusCode = (statusCode: number): boolean => {
   return Number.isInteger(statusCode) && statusCode >= 100 && statusCode <= 999;
 };
+
+interface FormPathStep {
+  type: 'object' | 'array';
+  key: string | number;
+  nextType?: 'object' | 'array';
+  append?: boolean;
+  last?: boolean;
+}
+
+const DANGEROUS_KEYS_REGEX =
+  /(^|\[|\.)(__proto__|constructor|prototype)(\]|\.|$)/;
+
+const RE_FIRST_KEY = /^[^[]*/;
+const RE_DIGIT_PATH = /^\[(\d+)\]/;
+const RE_NORMAL_PATH = /^\[([^\]]+)\]/;
+
+const parseFormPath = (key: string): FormPathStep[] => {
+  const failure = (): FormPathStep[] => [{ type: 'object', key, last: true }];
+
+  const firstKeyMatch = RE_FIRST_KEY.exec(key);
+  const firstKey = firstKeyMatch ? firstKeyMatch[0] : '';
+  if (!firstKey) {
+    return failure();
+  }
+
+  const len = key.length;
+  let pos = firstKey.length;
+  let tail: FormPathStep = { type: 'object', key: firstKey };
+  const steps: FormPathStep[] = [tail];
+
+  while (pos < len) {
+    if (key[pos] === '[' && key[pos + 1] === ']') {
+      pos += 2;
+      tail.append = true;
+      if (pos !== len) {
+        return failure();
+      }
+      continue;
+    }
+
+    const digitMatch = RE_DIGIT_PATH.exec(key.substring(pos));
+    if (digitMatch !== null) {
+      pos += digitMatch[0].length;
+      tail.nextType = 'array';
+      tail = { type: 'array', key: parseInt(digitMatch[1], 10) };
+      steps.push(tail);
+      continue;
+    }
+
+    const normalMatch = RE_NORMAL_PATH.exec(key.substring(pos));
+    if (normalMatch !== null) {
+      pos += normalMatch[0].length;
+      tail.nextType = 'object';
+      tail = { type: 'object', key: normalMatch[1] };
+      steps.push(tail);
+      continue;
+    }
+
+    return failure();
+  }
+
+  tail.last = true;
+
+  return steps;
+};
+
+const getFormValueType = (
+  value: any
+): 'undefined' | 'array' | 'object' | 'scalar' => {
+  if (value === undefined) {
+    return 'undefined';
+  }
+  if (Array.isArray(value)) {
+    return 'array';
+  }
+  if (typeof value === 'object' && value !== null) {
+    return 'object';
+  }
+
+  return 'scalar';
+};
+
+const setLastFormValue = (
+  context: Record<string, any>,
+  step: FormPathStep,
+  currentValue: any,
+  entryValue: any
+): Record<string, any> => {
+  switch (getFormValueType(currentValue)) {
+    case 'undefined':
+      if (step.append) {
+        context[step.key] = [entryValue];
+      } else {
+        context[step.key] = entryValue;
+      }
+      break;
+    case 'array':
+      context[step.key].push(entryValue);
+      break;
+    case 'object':
+      return setLastFormValue(
+        currentValue,
+        { type: 'object', key: '', last: true },
+        Object.prototype.hasOwnProperty.call(currentValue, '')
+          ? currentValue['']
+          : undefined,
+        entryValue
+      );
+    case 'scalar':
+      context[step.key] = [context[step.key], entryValue];
+      break;
+  }
+
+  return context;
+};
+
+const setStepFormValue = (
+  context: Record<string, any>,
+  step: FormPathStep,
+  currentValue: any,
+  entryValue: any
+): any => {
+  if (step.last) {
+    return setLastFormValue(context, step, currentValue, entryValue);
+  }
+
+  switch (getFormValueType(currentValue)) {
+    case 'undefined':
+      if (step.nextType === 'array') {
+        context[step.key] = [];
+      } else {
+        context[step.key] = {};
+      }
+
+      return context[step.key];
+    case 'object':
+      return context[step.key];
+    case 'array': {
+      if (step.nextType === 'array') {
+        return currentValue;
+      }
+
+      const obj: Record<string, any> = {};
+      context[step.key] = obj;
+      currentValue.forEach((item: any, i: number) => {
+        if (item !== undefined) {
+          obj[String(i)] = item;
+        }
+      });
+
+      return obj;
+    }
+    case 'scalar': {
+      const obj: Record<string, any> = {};
+      obj[''] = currentValue;
+      context[step.key] = obj;
+
+      return obj;
+    }
+  }
+};
+
+/**
+ * Append a field key-value pair to a target object supporting nested bracket notation
+ * (e.g. key[subkey], key[], key[0]). Safe against prototype pollution.
+ *
+ * @param store - The target object to append property into
+ * @param key - The field key path
+ * @param value - The value to append
+ */
+export const appendField = (
+  store: Record<string, any>,
+  key: string,
+  value: any
+): void => {
+  if (!store || typeof store !== 'object' || !key || typeof key !== 'string') {
+    return;
+  }
+
+  if (DANGEROUS_KEYS_REGEX.test(key)) {
+    return;
+  }
+
+  const steps = parseFormPath(key);
+
+  for (const step of steps) {
+    if (
+      step.key === '__proto__' ||
+      step.key === 'constructor' ||
+      step.key === 'prototype'
+    ) {
+      return;
+    }
+  }
+
+  steps.reduce((context, step) => {
+    if (!context || typeof context !== 'object') {
+      return context;
+    }
+
+    const current = Object.prototype.hasOwnProperty.call(context, step.key)
+      ? context[step.key]
+      : undefined;
+
+    return setStepFormValue(context, step, current, value);
+  }, store);
+};

@@ -37,7 +37,6 @@
     "@mockoon/commons": "9.8.0",
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
-    "append-field": "1.0.0",
     "busboy": "1.6.0",
     "cookie-parser": "1.4.7",
     "date-fns": "4.4.0",

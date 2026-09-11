@@ -5,6 +5,7 @@ import { deepStrictEqual, equal, strictEqual } from 'node:assert';
 import { afterEach, describe, it } from 'node:test';
 import { major } from 'semver';
 import {
+  appendField,
   DecompressBody,
   FromBase64,
   FromBase64URL,
@@ -539,6 +540,121 @@ describe('Utils', () => {
       strictEqual(result5, 'swimming');
       strictEqual(result6, 'value');
       strictEqual(result7, 'deepValue');
+    });
+  });
+
+  describe('appendField', () => {
+    it('should append simple key-value pairs', () => {
+      const store: Record<string, any> = {};
+      appendField(store, 'field1', 'value1');
+      appendField(store, 'field2', 'value2');
+
+      deepStrictEqual(store, {
+        field1: 'value1',
+        field2: 'value2'
+      });
+    });
+
+    it('should handle duplicate keys as arrays', () => {
+      const store: Record<string, any> = {};
+      appendField(store, 'field', 'value1');
+      appendField(store, 'field', 'value2');
+      appendField(store, 'field', 'value3');
+
+      deepStrictEqual(store, {
+        field: ['value1', 'value2', 'value3']
+      });
+    });
+
+    it('should handle empty bracket array notation', () => {
+      const store: Record<string, any> = {};
+      appendField(store, 'tags[]', 'tag1');
+      appendField(store, 'tags[]', 'tag2');
+
+      deepStrictEqual(store, {
+        tags: ['tag1', 'tag2']
+      });
+    });
+
+    it('should handle nested object notation', () => {
+      const store: Record<string, any> = {};
+      appendField(store, 'user[name]', 'Alice');
+      appendField(store, 'user[address][city]', 'Paris');
+
+      deepStrictEqual(store, {
+        user: {
+          name: 'Alice',
+          address: {
+            city: 'Paris'
+          }
+        }
+      });
+    });
+
+    it('should handle array index notation', () => {
+      const store: Record<string, any> = {};
+      appendField(store, 'items[0]', 'first');
+      appendField(store, 'items[1]', 'second');
+
+      deepStrictEqual(store, {
+        items: ['first', 'second']
+      });
+    });
+
+    it('should handle complex nested structures with arrays and objects', () => {
+      const store: Record<string, any> = {};
+      appendField(store, 'users[0][name]', 'Alice');
+      appendField(store, 'users[0][roles][]', 'admin');
+      appendField(store, 'users[0][roles][]', 'user');
+      appendField(store, 'users[1][name]', 'Bob');
+
+      deepStrictEqual(store, {
+        users: [{ name: 'Alice', roles: ['admin', 'user'] }, { name: 'Bob' }]
+      });
+    });
+
+    it('should prevent prototype pollution via __proto__, constructor, and prototype', () => {
+      const store: Record<string, any> = {};
+
+      appendField(store, '__proto__[polluted]', 'pwned');
+      appendField(store, 'constructor[prototype][polluted]', 'pwned');
+      appendField(store, 'user[__proto__][polluted]', 'pwned');
+      appendField(store, '__proto__.polluted', 'pwned');
+      appendField(store, 'prototype[polluted]', 'pwned');
+
+      strictEqual(({} as any).polluted, undefined);
+      strictEqual(
+        Object.prototype.hasOwnProperty.call(store, '__proto__'),
+        false
+      );
+      strictEqual(
+        Object.prototype.hasOwnProperty.call(store, 'constructor'),
+        false
+      );
+      strictEqual(
+        Object.prototype.hasOwnProperty.call(store, 'prototype'),
+        false
+      );
+    });
+
+    it('should safely handle built-in Object prototype keys as fields', () => {
+      const store: Record<string, any> = {};
+      appendField(store, 'toString', 'customToString');
+      appendField(store, 'hasOwnProperty', 'customHasOwnProperty');
+
+      strictEqual(store.toString, 'customToString');
+      strictEqual(store.hasOwnProperty, 'customHasOwnProperty');
+      strictEqual(typeof {}.toString, 'function');
+      strictEqual(typeof {}.hasOwnProperty, 'function');
+    });
+
+    it('should gracefully handle invalid inputs', () => {
+      const store: Record<string, any> = {};
+      appendField(null as any, 'key', 'value');
+      appendField(store, '', 'value');
+      appendField(store, null as any, 'value');
+
+      deepStrictEqual(store, {});
     });
   });
 });
