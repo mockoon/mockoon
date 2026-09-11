@@ -1,3 +1,4 @@
+import { randomBytes } from 'crypto';
 import { shell } from 'electron';
 import { createServer, Server } from 'http';
 import { AddressInfo } from 'net';
@@ -7,6 +8,7 @@ import { parse as urlParse } from 'url';
 
 let server: Server | undefined;
 let authCallbackServerTimeout: NodeJS.Timeout | undefined;
+let authState: string | undefined;
 const authCallbackServerTimeoutMs = 5 * 60 * 1000;
 
 const authCallbackPage = `<!doctype html>
@@ -36,6 +38,8 @@ const authCallbackPage = `<!doctype html>
  * Stop the auth callback server
  */
 export function stopAuthCallbackServer() {
+  authState = undefined;
+
   if (authCallbackServerTimeout) {
     clearTimeout(authCallbackServerTimeout);
     authCallbackServerTimeout = undefined;
@@ -55,10 +59,23 @@ export const startAuthCallbackServer = async (loginURL?: string) => {
   // Close the server if already started
   stopAuthCallbackServer();
 
+  authState = randomBytes(24).toString('hex');
+
   // Start a server to listen for the auth callback
   server = createServer((req, res) => {
     const { query } = urlParse(req.url ?? '', true);
     const token: string = query['token'] as string;
+    const state: string = query['state'] as string;
+
+    if (!authState || !state || state !== authState) {
+      res.writeHead(400, {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Cache-Control': 'no-store'
+      });
+      res.end('Invalid or missing authentication state.');
+
+      return;
+    }
 
     // Send the token to the renderer process
     if (token) {
@@ -83,8 +100,15 @@ export const startAuthCallbackServer = async (loginURL?: string) => {
       return;
     }
 
-    shell.openExternal(
-      `${loginURL || Config.loginURL}?appRedirect=http://127.0.0.1:${(server.address() as AddressInfo).port}`
+    const targetUrl = new URL(loginURL || Config.loginURL);
+    targetUrl.searchParams.set(
+      'appRedirect',
+      `http://127.0.0.1:${(server.address() as AddressInfo).port}`
     );
+    if (authState) {
+      targetUrl.searchParams.set('state', authState);
+    }
+
+    shell.openExternal(targetUrl.toString());
   });
 };
