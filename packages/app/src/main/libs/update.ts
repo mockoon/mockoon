@@ -1,6 +1,11 @@
 import { spawn } from 'child_process';
+import { createHash } from 'crypto';
 import { app, BrowserWindow, shell } from 'electron';
-import { createWriteStream, promises as fsPromises } from 'fs';
+import {
+  createReadStream,
+  createWriteStream,
+  promises as fsPromises
+} from 'fs';
 import { join as pathJoin } from 'path';
 import { gt as semverGt } from 'semver';
 import { Config } from 'src/main/config';
@@ -9,8 +14,39 @@ import { Readable } from 'stream';
 import { finished } from 'stream/promises';
 import { ReadableStream } from 'stream/web';
 
+interface ReleaseResponse {
+  tag: string;
+  digest?: string;
+}
+
 let updateAvailableVersion: string;
 const isNotPortable = !process.env['PORTABLE_EXECUTABLE_DIR'];
+
+/**
+ * Verify file SHA-256 checksum against expected hash
+ */
+const verifyFileSha256 = async (
+  filePath: string,
+  expectedHash: string
+): Promise<boolean> => {
+  try {
+    const hash = createHash('sha256');
+    const stream = createReadStream(filePath);
+
+    for await (const chunk of stream) {
+      hash.update(chunk);
+    }
+
+    const computedHash = hash.digest('hex');
+    const normalizedExpected = expectedHash.replace(/^sha256:/i, '').trim();
+
+    return computedHash.toLowerCase() === normalizedExpected.toLowerCase();
+  } catch (error: any) {
+    logError(`[MAIN][UPDATE] Error computing file checksum: ${error.message}`);
+
+    return false;
+  }
+};
 
 /**
  * Tell the renderer that an update is available.
@@ -29,7 +65,7 @@ const notifyUpdate = (mainWindow: BrowserWindow, version: string) => {
 
 export const checkForUpdate = async (mainWindow: BrowserWindow) => {
   const userDataPath = app.getPath('userData');
-  let releaseResponse: { tag: string };
+  let releaseResponse: ReleaseResponse;
 
   try {
     // try to remove existing old update
@@ -63,13 +99,36 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
       const binaryFilename = `mockoon.setup.${latestVersion}.exe`;
       const updateFilePath = pathJoin(userDataPath, binaryFilename);
 
-      try {
-        await fsPromises.access(updateFilePath);
-        logInfo('[MAIN][UPDATE] Binary file already downloaded');
-        notifyUpdate(mainWindow, latestVersion);
-        updateAvailableVersion = latestVersion;
+      if (!releaseResponse.digest) {
+        logError(
+          '[MAIN][UPDATE] No sha256 found in release metadata. Aborting update for security.'
+        );
 
         return;
+      }
+
+      try {
+        await fsPromises.access(updateFilePath);
+        logInfo(
+          '[MAIN][UPDATE] Binary file already downloaded, verifying checksum'
+        );
+        const isValid = await verifyFileSha256(
+          updateFilePath,
+          releaseResponse.digest
+        );
+
+        if (isValid) {
+          logInfo('[MAIN][UPDATE] Existing binary file checksum verified');
+          notifyUpdate(mainWindow, latestVersion);
+          updateAvailableVersion = latestVersion;
+
+          return;
+        } else {
+          logError(
+            '[MAIN][UPDATE] Existing binary file checksum mismatch. Deleting file.'
+          );
+          await fsPromises.unlink(updateFilePath);
+        }
       } catch (_error) {}
 
       logInfo('[MAIN][UPDATE] Downloading binary file');
@@ -89,13 +148,33 @@ export const checkForUpdate = async (mainWindow: BrowserWindow) => {
           )
         );
 
-        logInfo('[MAIN][UPDATE] Binary file ready');
+        logInfo('[MAIN][UPDATE] Download finished, verifying checksum');
+        const isValid = await verifyFileSha256(
+          updateFilePath,
+          releaseResponse.digest
+        );
+
+        if (!isValid) {
+          logError(
+            '[MAIN][UPDATE] Downloaded binary checksum mismatch! Deleting file.'
+          );
+          try {
+            await fsPromises.unlink(updateFilePath);
+          } catch (_e) {}
+
+          return;
+        }
+
+        logInfo('[MAIN][UPDATE] Binary file verified and ready');
         notifyUpdate(mainWindow, latestVersion);
         updateAvailableVersion = latestVersion;
       } catch (error: any) {
         logError(
           `[MAIN][UPDATE] Error while downloading the binary: ${error.message}`
         );
+        try {
+          await fsPromises.unlink(updateFilePath);
+        } catch (_e) {}
       }
     } else {
       notifyUpdate(mainWindow, latestVersion);

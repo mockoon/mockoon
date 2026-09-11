@@ -41,7 +41,7 @@ about: Checklist for releases (maintainers use only)
 
 **API:**
 
-- [ ] Update desktop latest version in `/releases/desktop/stable.json`
+- [ ] Update desktop latest version and checksum in `/releases/desktop/stable.json`
 - [ ] Merge release branch on main
 - [ ] Wait for deployment and purge cache on CF
 
