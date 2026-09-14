@@ -208,7 +208,12 @@ export class SettingsService {
    * Check if a custom API URL override is configured in settings.
    */
   public getIsSelfHosted(): boolean {
-    return !!this.store.get('settings').apiUrl?.trim();
+    const apiUrl = this.store.get('settings').apiUrl?.trim();
+
+    return (
+      (this.normalizeApiUrl(apiUrl) ?? Config.defaultApiUrl) !==
+      Config.defaultApiUrl
+    );
   }
 
   /**

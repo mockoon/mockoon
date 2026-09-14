@@ -93,11 +93,7 @@ export class SettingsModalComponent {
 
   constructor() {
     effect(() => {
-      if (
-        this.settingsForm().dirty() &&
-        this.settingsForm().valid() &&
-        !this.settingsForm().pending()
-      ) {
+      if (this.settingsForm().dirty()) {
         this.settingsService.updateSettings(this.settingsForm().value());
       }
 
