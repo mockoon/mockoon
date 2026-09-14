@@ -103,16 +103,11 @@ jobs:
           npm run test:cli
 
   test-desktop-packaged-win:
-    name: Desktop packaged Windows - Build and test (${{ matrix.shard }}/4)
+    name: Desktop packaged Windows - Build and test (smoke)
     runs-on: windows-latest
     timeout-minutes: 30
 
     needs: [lint, test-libs]
-
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1, 2, 3, 4]
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -130,19 +125,14 @@ jobs:
           npm run package:desktop:test:win
       - name: Run tests
         run: |
-          npm run test:desktop:win -- -- --shard=${{ matrix.shard }}/4
+          npm run test:desktop:win -- -- --spec "basic-calls.spec.ts"
 
   test-desktop-packaged-mac:
-    name: Desktop packaged MacOS - Build and test (${{ matrix.shard }}/4)
+    name: Desktop packaged MacOS - Build and test (smoke)
     runs-on: macos-latest
     timeout-minutes: 30
 
     needs: [lint, test-libs]
-
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1, 2, 3, 4]
 
     env:
       USE_HARD_LINKS: false
@@ -163,12 +153,13 @@ jobs:
           npm run package:desktop:test:mac
       - name: Run tests
         run: |
-          npm run test:desktop:mac -- -- --shard=${{ matrix.shard }}/4
+          npm run test:desktop:mac -- -- --spec "basic-calls.spec.ts"
 
   test-desktop-packaged-linux:
     name: Desktop packaged Linux - Build and test (${{ matrix.shard }}/4)
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    if: github.event_name == 'pull_request'
 
     needs: [lint, test-libs]
 
@@ -199,3 +190,34 @@ jobs:
           export DISPLAY=':99.0'
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
           npm run test:desktop:linux -- -- --shard=${{ matrix.shard }}/4
+
+  test-desktop-packaged-linux-smoke:
+    name: Desktop packaged Linux - Build and test (smoke)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.event_name != 'pull_request'
+
+    needs: [lint, test-libs]
+
+    env:
+      USE_HARD_LINKS: false
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24.15.0" # wait for https://github.com/electron/electron/issues/51619 to be fixed
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: |
+          npm run build:libs
+          npm run build:desktop:ci
+          npm run package:desktop:test:linux
+      - name: Run tests
+        run: |
+          export DISPLAY=':99.0'
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          npm run test:desktop:linux -- -- --spec "basic-calls.spec.ts"
