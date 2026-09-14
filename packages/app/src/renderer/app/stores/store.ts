@@ -126,7 +126,8 @@ export class Store {
       this.store$.asObservable().pipe(
         map((store) => (path ? store?.[path] : store)),
         distinctUntilChanged()
-      )
+      ),
+      { requireSync: true }
     );
   }
 

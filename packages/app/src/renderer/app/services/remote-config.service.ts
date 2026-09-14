@@ -2,13 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { RemoteConfigData } from '@mockoon/cloud';
 import { EMPTY, from, Observable } from 'rxjs';
-import {
-  catchError,
-  filter,
-  switchMap,
-  tap,
-  withLatestFrom
-} from 'rxjs/operators';
+import { catchError, filter, switchMap, tap } from 'rxjs/operators';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { updateRemoteConfigAction } from 'src/renderer/app/stores/actions';
@@ -37,22 +31,25 @@ export class RemoteConfigService {
   public fetchConfig(): Observable<RemoteConfigData> {
     return from(this.userService.getToken()).pipe(
       filter((token) => !!token),
-      withLatestFrom(this.settingsService.selectApiUrl()),
-      switchMap(([token, apiUrl]) => {
-        const headers = token
-          ? new HttpHeaders().set('Authorization', `Bearer ${token}`)
-          : undefined;
+      switchMap((token) =>
+        this.settingsService.selectApiUrl().pipe(
+          switchMap((apiUrl) => {
+            const headers = token
+              ? new HttpHeaders().set('Authorization', `Bearer ${token}`)
+              : undefined;
 
-        return this.httpClient
-          .post<RemoteConfigData>(
-            `${apiUrl}remoteconfig`,
-            { version: Config.appVersion },
-            {
-              headers
-            }
-          )
-          .pipe(catchError(() => EMPTY));
-      }),
+            return this.httpClient
+              .post<RemoteConfigData>(
+                `${apiUrl}remoteconfig`,
+                { version: Config.appVersion },
+                {
+                  headers
+                }
+              )
+              .pipe(catchError(() => EMPTY));
+          })
+        )
+      ),
       tap((config) => {
         this.store.update(updateRemoteConfigAction(config));
       })

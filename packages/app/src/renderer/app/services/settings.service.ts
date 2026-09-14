@@ -148,40 +148,59 @@ export class SettingsService {
    * Fallback to the shared config value.
    */
   public selectApiUrl(): Observable<string> {
+    return this.selectApiUrlChanges().pipe(first());
+  }
+
+  public selectApiUrlChanges(): Observable<string> {
     return this.store.select('settings').pipe(
       filter((settings) => !!settings),
       map((settings) => settings.apiUrl?.trim()),
-      first(),
-      map((configuredApiUrl) => {
-        if (configuredApiUrl) {
-          if (!configuredApiUrl.endsWith('/')) {
-            configuredApiUrl += '/';
-          }
-
-          if (
-            !configuredApiUrl.startsWith('http://') &&
-            !configuredApiUrl.startsWith('https://')
-          ) {
-            configuredApiUrl = `https://${configuredApiUrl}`;
-          }
-
-          return configuredApiUrl;
-        }
-
-        return Config.defaultApiUrl;
-      })
+      map(
+        (configuredApiUrl) =>
+          this.normalizeApiUrl(configuredApiUrl) ?? Config.defaultApiUrl
+      ),
+      distinctUntilChanged()
     );
+  }
+
+  private normalizeApiUrl(apiUrl?: string | null) {
+    if (!apiUrl) {
+      return null;
+    }
+
+    try {
+      const normalizedApiUrl = new URL(
+        /^https?:\/\//i.test(apiUrl) ? apiUrl : `https://${apiUrl}`
+      );
+
+      if (
+        normalizedApiUrl.protocol === 'http:' &&
+        !(
+          normalizedApiUrl.hostname === 'localhost' ||
+          normalizedApiUrl.hostname.endsWith('.localhost') ||
+          ['127.0.0.1', '[::1]'].includes(normalizedApiUrl.hostname)
+        )
+      ) {
+        return null;
+      }
+
+      normalizedApiUrl.pathname = normalizedApiUrl.pathname.replace(
+        /\/?$/,
+        '/'
+      );
+
+      return normalizedApiUrl.toString();
+    } catch {
+      return null;
+    }
   }
 
   /**
    * Check if a custom API URL override is configured in settings.
    */
   public selectIsSelfHosted(): Observable<boolean> {
-    return this.store.select('settings').pipe(
-      filter((settings) => !!settings),
-      map((settings) => settings.apiUrl?.trim()),
-      map((configuredApiUrl) => !!configuredApiUrl),
-      distinctUntilChanged()
+    return this.selectApiUrlChanges().pipe(
+      map((apiUrl) => apiUrl !== Config.defaultApiUrl)
     );
   }
 

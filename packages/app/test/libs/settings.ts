@@ -70,10 +70,13 @@ class Settings {
   }
 
   public async assertDropdownSettingValue(
-    settingName: 'fileWatcherEnabled',
+    settingName: SettingNames,
     value: string
   ): Promise<void> {
-    await utils.assertDropdownValue(settingName, value);
+    await utils.assertElementText(
+      $(`app-select[dropdownId="${settingName}"] .dropdown-toggle-label`),
+      value
+    );
   }
 
   private getSettingInput(settingName: SettingNames) {

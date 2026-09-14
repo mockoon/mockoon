@@ -1352,8 +1352,6 @@ export class EnvironmentsService {
   /**
    * Add a new WS route and save it in the store
    *
-   * ⚠️ WS are currently disabled for cloud environments
-   *
    * @param folderId
    * @param options
    */
@@ -1608,21 +1606,6 @@ export class EnvironmentsService {
     targetEnvironmentUuid: string
   ) {
     const routeToDuplicate = this.store.getRouteByUUID(routeUuid);
-    const isTargetEnvCloud = this.store
-      .get('settings')
-      .environments.some(
-        (environment) =>
-          environment.uuid === targetEnvironmentUuid && environment.cloud
-      );
-
-    // WS routes are not supported in cloud environments for now
-    if (
-      routeToDuplicate &&
-      isTargetEnvCloud &&
-      routeToDuplicate.type === RouteType.WS
-    ) {
-      return;
-    }
 
     if (routeToDuplicate) {
       let newRoute: Route = CloneObject(routeToDuplicate);

@@ -39,10 +39,17 @@ export class SelfHostedAuthStrategy implements AuthStrategy {
   // the access token is short lived and kept in memory only, only the refresh token is persisted
   private accessToken: string | null = null;
   private refreshToken: string | null = null;
+  private sessionApiUrl: string | null = null;
   private refreshTimeout: ReturnType<typeof setTimeout> | null = null;
   private refreshInFlight$: Observable<string> | null = null;
 
   constructor() {
+    this.settingsService.selectApiUrlChanges().subscribe((apiUrl) => {
+      if (this.sessionApiUrl && this.sessionApiUrl !== apiUrl) {
+        this.clearSession();
+      }
+    });
+
     this.restoreSessionFromStorage();
   }
 
@@ -177,6 +184,7 @@ export class SelfHostedAuthStrategy implements AuthStrategy {
   }
 
   private applyTokens(apiUrl: string, tokens: AuthTokens) {
+    this.sessionApiUrl = apiUrl;
     this.accessToken = tokens.accessToken;
     this.refreshToken = tokens.refreshToken;
 
@@ -215,6 +223,7 @@ export class SelfHostedAuthStrategy implements AuthStrategy {
     this.clearScheduledRefresh();
     this.accessToken = null;
     this.refreshToken = null;
+    this.sessionApiUrl = null;
     this.clearPersistedSession();
     this.authState$.next(null);
   }

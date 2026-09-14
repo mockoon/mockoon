@@ -13,6 +13,7 @@ import {
   from,
   Observable,
   of,
+  retry,
   switchMap,
   throwError
 } from 'rxjs';
@@ -45,7 +46,7 @@ export class FirebaseAuthStrategy implements AuthStrategy {
   });
 
   public observeAuthState(): Observable<AuthState> {
-    return this.authState$;
+    return this.authState$.pipe(retry({ delay: 1000 }));
   }
 
   public reloadUser() {

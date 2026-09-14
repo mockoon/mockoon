@@ -14,8 +14,7 @@ import {
   map,
   shareReplay,
   switchMap,
-  tap,
-  withLatestFrom
+  tap
 } from 'rxjs';
 import { DeepPartial } from 'src/renderer/app/libs/utils.lib';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
@@ -93,41 +92,47 @@ export class TemplatesService {
     this.lastTemplatePrompt$.next(prompt);
 
     return this.userService.getToken().pipe(
-      withLatestFrom(this.settingsService.selectApiUrl()),
-      switchMap(([token, apiUrl]) =>
-        this.httpClient
-          .get<{ data: string }>(`${apiUrl}templates/generate`, {
-            params: {
-              q: prompt,
-              type: 'template',
-              options: options.join(',')
-            },
-            headers: new HttpHeaders().set('Authorization', `Bearer ${token}`)
-          })
-          .pipe(
-            map((response) => response.data),
-            tap((template) => {
-              this.generatingTemplate$.next('DONE');
-              this.lastGeneratedTemplate$.next(template);
+      switchMap((token) =>
+        this.settingsService.selectApiUrl().pipe(
+          switchMap((apiUrl) =>
+            this.httpClient
+              .get<{ data: string }>(`${apiUrl}templates/generate`, {
+                params: {
+                  q: prompt,
+                  type: 'template',
+                  options: options.join(',')
+                },
+                headers: new HttpHeaders().set(
+                  'Authorization',
+                  `Bearer ${token}`
+                )
+              })
+              .pipe(
+                map((response) => response.data),
+                tap((template) => {
+                  this.generatingTemplate$.next('DONE');
+                  this.lastGeneratedTemplate$.next(template);
 
-              this.store.update(
-                updateUserAction({
-                  templatesQuotaUsed:
-                    this.store.get('user').templatesQuotaUsed + 1
+                  this.store.update(
+                    updateUserAction({
+                      templatesQuotaUsed:
+                        this.store.get('user').templatesQuotaUsed + 1
+                    })
+                  );
+                }),
+                catchError(() => {
+                  this.generatingTemplate$.next('NONE');
+
+                  this.toastsService.addToast(
+                    'warning',
+                    'Something went wrong. Please try again later or review your subscription status in your account page.'
+                  );
+
+                  return EMPTY;
                 })
-              );
-            }),
-            catchError(() => {
-              this.generatingTemplate$.next('NONE');
-
-              this.toastsService.addToast(
-                'warning',
-                'Something went wrong. Please try again later or review your subscription status in your account page.'
-              );
-
-              return EMPTY;
-            })
+              )
           )
+        )
       )
     );
   }
@@ -145,41 +150,47 @@ export class TemplatesService {
     this.lastEndpointPrompt$.next(prompt);
 
     return this.userService.getToken().pipe(
-      withLatestFrom(this.settingsService.selectApiUrl()),
-      switchMap(([token, apiUrl]) =>
-        this.httpClient
-          .get<{ data: Route }>(`${apiUrl}templates/generate`, {
-            params: {
-              q: prompt,
-              type: 'endpoint',
-              options: options.join(',')
-            },
-            headers: new HttpHeaders().set('Authorization', `Bearer ${token}`)
-          })
-          .pipe(
-            map((response) => response.data),
-            tap((endpoint) => {
-              this.generatingEndpoint$.next('DONE');
-              this.lastGeneratedEndpoint$.next(endpoint);
+      switchMap((token) =>
+        this.settingsService.selectApiUrl().pipe(
+          switchMap((apiUrl) =>
+            this.httpClient
+              .get<{ data: Route }>(`${apiUrl}templates/generate`, {
+                params: {
+                  q: prompt,
+                  type: 'endpoint',
+                  options: options.join(',')
+                },
+                headers: new HttpHeaders().set(
+                  'Authorization',
+                  `Bearer ${token}`
+                )
+              })
+              .pipe(
+                map((response) => response.data),
+                tap((endpoint) => {
+                  this.generatingEndpoint$.next('DONE');
+                  this.lastGeneratedEndpoint$.next(endpoint);
 
-              this.store.update(
-                updateUserAction({
-                  templatesQuotaUsed:
-                    this.store.get('user').templatesQuotaUsed + 1
+                  this.store.update(
+                    updateUserAction({
+                      templatesQuotaUsed:
+                        this.store.get('user').templatesQuotaUsed + 1
+                    })
+                  );
+                }),
+                catchError(() => {
+                  this.generatingEndpoint$.next('NONE');
+
+                  this.toastsService.addToast(
+                    'warning',
+                    'Something went wrong. Please try again later or review your subscription status in your account page.'
+                  );
+
+                  return EMPTY;
                 })
-              );
-            }),
-            catchError(() => {
-              this.generatingEndpoint$.next('NONE');
-
-              this.toastsService.addToast(
-                'warning',
-                'Something went wrong. Please try again later or review your subscription status in your account page.'
-              );
-
-              return EMPTY;
-            })
+              )
           )
+        )
       )
     );
   }

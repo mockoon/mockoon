@@ -260,7 +260,7 @@ describe('Databuckets selection in responses', () => {
       method: 'GET',
       path: '/databucket',
       testedResponse: {
-        body: '{"response":"Hayley"}'
+        body: '{"response":"Georgianna"}'
       }
     });
     await http.assertCall({

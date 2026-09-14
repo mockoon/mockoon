@@ -204,9 +204,9 @@ export class UserService {
     const callbackToken = this.getWebAuthTokenFromUrl();
 
     if (callbackToken) {
-      this.clearWebAuthTokenFromUrl();
-
-      return this.webAuthCallbackHandler(callbackToken);
+      return this.webAuthCallbackHandler(callbackToken).pipe(
+        tap(() => this.clearWebAuthTokenFromUrl())
+      );
     }
 
     return this.selectAuthStrategy()
