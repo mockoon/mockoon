@@ -79,7 +79,7 @@
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "@stylistic/eslint-plugin": "5.10.0",
-    "@types/node": "24.13.3",
+    "@types/node": "24.13.4",
     "concurrently": "10.0.5",
     "eslint": "10.10.0",
     "eslint-config-prettier": "10.1.8",
@@ -88,20 +88,20 @@
     "glob-bin": "1.1.0",
     "prettier": "3.9.6",
     "prettier-plugin-organize-imports": "4.3.0",
-    "tsx": "4.23.12",
+    "tsx": "4.23.13",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.69.0"
+    "typescript-eslint": "8.70.0"
   },
   "allowScripts": {
     "@parcel/watcher@2.6.0": true,
-    "edgedriver@6.3.0": true,
     "electron-winstaller@5.4.0": true,
     "geckodriver@6.1.1": true,
     "msgpackr-extract@3.0.4": true,
     "unrs-resolver@1.12.2": true,
-    "lmdb@3.5.4": true,
-    "@firebase/util@1.15.2": true,
-    "esbuild@0.28.1": true,
-    "protobufjs@7.6.6": true
+    "protobufjs@7.6.6": true,
+    "@firebase/util@1.15.3": true,
+    "edgedriver@6.3.1": true,
+    "esbuild@0.28.2": true,
+    "lmdb@3.5.6": true
   }
 }
