@@ -888,7 +888,7 @@ const setStepFormValue = (
       if (step.nextType === 'array') {
         context[step.key] = [];
       } else {
-        context[step.key] = Object.create(null);
+        context[step.key] = {};
       }
 
       return context[step.key];
@@ -899,7 +899,7 @@ const setStepFormValue = (
         return currentValue;
       }
 
-      const obj: Record<string, any> = Object.create(null);
+      const obj: Record<string, any> = {};
       context[step.key] = obj;
       currentValue.forEach((item: any, i: number) => {
         if (item !== undefined) {
@@ -910,7 +910,7 @@ const setStepFormValue = (
       return obj;
     }
     case 'scalar': {
-      const obj: Record<string, any> = Object.create(null);
+      const obj: Record<string, any> = {};
       obj[''] = currentValue;
       context[step.key] = obj;
 
