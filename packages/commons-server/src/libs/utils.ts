@@ -810,12 +810,21 @@ const getFormValueType = (
   return 'scalar';
 };
 
+const isDangerousPropertyKey = (propertyKey: unknown): boolean =>
+  propertyKey === '__proto__' ||
+  propertyKey === 'constructor' ||
+  propertyKey === 'prototype';
+
 const setLastFormValue = (
   context: Record<string, any>,
   step: FormPathStep,
   currentValue: any,
   entryValue: any
 ): Record<string, any> => {
+  if (isDangerousPropertyKey(step.key)) {
+    return context;
+  }
+
   switch (getFormValueType(currentValue)) {
     case 'undefined':
       if (step.append) {
@@ -850,6 +859,10 @@ const setStepFormValue = (
   currentValue: any,
   entryValue: any
 ): any => {
+  if (isDangerousPropertyKey(step.key)) {
+    return context;
+  }
+
   if (step.last) {
     return setLastFormValue(context, step, currentValue, entryValue);
   }
