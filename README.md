@@ -58,15 +58,15 @@ Linux:
 - [_Snap store_](https://snapcraft.io/mockoon): `snap install mockoon`.
 - [_AUR_](https://aur.archlinux.org/packages/mockoon-bin): `yay -S mockoon-bin`.
 
-## Install the CLI
+## Install the CLI and Docker image
 
-Mockoon CLI is available as an [NPM package](https://www.npmjs.com/package/@mockoon/cli). Please check our [dedicated documentation](https://github.com/mockoon/mockoon/blob/main/packages/cli/README.md) to learn how to install and use it.
+Mockoon CLI is available as an [NPM package](https://www.npmjs.com/package/@mockoon/cli) and as an official [Docker image](https://hub.docker.com/r/mockoon/cli) (`mockoon/cli`). Please check our [CLI documentation](https://github.com/mockoon/mockoon/blob/main/packages/cli/README.md) and [Docker documentation](https://github.com/mockoon/mockoon/tree/main/packages/cli#docker-image) to learn how to install and use them.
 
 ## Use in cloud functions and serverless environments
 
-Mockoon's Serverless [NPM package](https://www.npmjs.com/package/@mockoon/serverless) provides an easy way to run Mockoon's mock APIs in cloud functions and serverless environments: AWS Lambda, GCP Functions, Firebase Functions, etc.
+To run Mockoon in cloud functions and serverless environments (AWS Lambda, Google Cloud Run, AWS Fargate, Azure Container Apps, etc.), we recommend running the official **[Mockoon CLI Docker image](https://hub.docker.com/r/mockoon/cli)** (`mockoon/cli`). Please check our [Docker documentation](https://github.com/mockoon/mockoon/tree/main/packages/cli#docker-image) for setup guides.
 
-Please check our [dedicated documentation](https://github.com/mockoon/mockoon/blob/main/packages/serverless/README.md) to learn how to use it.
+> *Note: The legacy `@mockoon/serverless` package is deprecated. See the [serverless package documentation](https://github.com/mockoon/mockoon/blob/main/packages/serverless/README.md) for migration information.*
 
 ## Support us!
 

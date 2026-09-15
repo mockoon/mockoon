@@ -13,11 +13,25 @@
   <h1>@Mockoon/serverless</h1>
 </div>
 
+> ⚠️ **DEPRECATION NOTICE**: `@mockoon/serverless` is deprecated and will be removed in a future major version. We recommend using the **[Mockoon CLI Docker image](https://hub.docker.com/r/mockoon/cli)** (`mockoon/cli`) or `@mockoon/cli` in containerized serverless runtimes (AWS Lambda container images, Google Cloud Run, AWS Fargate, Azure Container Apps, etc.).
+>
+> 📖 See the [Mockoon CLI Docker documentation](https://github.com/mockoon/mockoon/tree/main/packages/cli#docker-image) for setup instructions.
+
 Mockoon's Serverless package provides an easy way to run Mockoon's mock APIs in cloud functions and serverless environments: AWS Lambda, GCP Functions, Firebase Functions, etc.
 
 The Serverless package supports the same features as the main [application](https://github.com/mockoon/mockoon/blob/main/packages/app) and [CLI](https://github.com/mockoon/mockoon/blob/main/packages/cli) (with some limitations, see below): [templating system](https://mockoon.com/docs/latest/templating/overview/), [proxy mode](https://mockoon.com/docs/latest/server-configuration/proxy-mode/), [route response rules](https://mockoon.com/docs/latest/route-responses/dynamic-rules/), etc.
 
-## Using this package
+## Migration to Docker image (`mockoon/cli`)
+
+Instead of maintaining custom serverless wrapper functions, we recommend running Mockoon's official Docker image in containerized serverless services:
+
+```bash
+docker run -d -p 3000:3000 mockoon/cli:latest --data https://raw.githubusercontent.com/mockoon/mock-samples/main/samples/generate-mock-data.json --port 3000
+```
+
+For more details on running Mockoon with Docker, check out our [Docker documentation](https://github.com/mockoon/mockoon/tree/main/packages/cli#docker-image).
+
+## Using this package (Deprecated)
 
 ### Installation
 
