@@ -17,6 +17,10 @@ type ServerlessOptions = Partial<ServerOptions> & {
   adminApiAuthToken?: string;
 };
 
+/**
+ * @deprecated `@mockoon/serverless` is deprecated and will be removed in a future major version.
+ * Please use the Mockoon CLI Docker image (`mockoon/cli`) instead: https://github.com/mockoon/mockoon/tree/main/packages/cli#docker-image
+ */
 export class MockoonServerless {
   private options: ServerlessOptions = {
     logTransaction: false,
@@ -34,6 +38,11 @@ export class MockoonServerless {
     private environment: Environment,
     options: Partial<ServerOptions>
   ) {
+    process.emitWarning(
+      '[@mockoon/serverless] This package is deprecated and will be removed in a future major version. Please migrate to the Mockoon CLI Docker image (mockoon/cli). See https://github.com/mockoon/mockoon/tree/main/packages/cli#docker-image',
+      'DeprecationWarning'
+    );
+
     if (!environment) {
       throw new Error('No environment data provided');
     }
@@ -57,6 +66,7 @@ export class MockoonServerless {
    * Returns an Express request listener that can be used in serverless environments
    * and with the serverless-http library.
    *
+   * @deprecated `@mockoon/serverless` is deprecated. Use the Mockoon CLI Docker image instead.
    * @returns
    */
   public requestListener(): RequestListener {
@@ -88,6 +98,7 @@ export class MockoonServerless {
   /**
    * Returns a serverless-http wrapped request listener for AWS Lambda.
    *
+   * @deprecated `@mockoon/serverless` is deprecated. Use the Mockoon CLI Docker image instead.
    * @returns
    */
   public awsHandler(): ServerlessHttp.Handler {
@@ -97,6 +108,7 @@ export class MockoonServerless {
   /**
    * Returns a request listener for Google Cloud Functions.
    *
+   * @deprecated `@mockoon/serverless` is deprecated. Use the Mockoon CLI Docker image instead.
    * @returns
    */
   public firebaseApp(): RequestListener {
@@ -106,6 +118,7 @@ export class MockoonServerless {
   /**
    * Returns a serverless-http wrapped request listener for Netlify.
    *
+   * @deprecated `@mockoon/serverless` is deprecated. Use the Mockoon CLI Docker image instead.
    * @returns
    */
   public netlifyHandler(): RequestListener {

@@ -67,7 +67,6 @@ Mockoon is using a monorepo setup (with NPM workspaces). We have 6 packages in t
 **Applications**:
 
 - _@mockoon/cli_; the CLI built with Oclif
-- _@mockoon/serverless_; the package to run Mockoon as a serverless function (AWS lambda, etc.)
 - _@mockoon/app_: the desktop application built with Electron and Angular (for the renderer process), and the web app (only the Angular part).
 
 ## Build and run the applications locally during development
@@ -126,16 +125,14 @@ ESLint rules and Prettier code styling are enforced by the continuous integratio
 Some unit and integration tests are present in the 4 packages. First you need to build the following 4 packages:
 
 1. `npm run build:libs`.
-2. `npm run build:serverless`.
-3. `npm run build:cli`.
-4. `npm run build:desktop:ci`.
+2. `npm run build:cli`.
+3. `npm run build:desktop:ci`.
 
 After the packages are build, you can run the tests necessary to your changes:
 
 - `npm run test:commons`
 - `npm run test:commons-server`
 - `npm run test:libs` (includes `commons` and `commons-server`)
-- `npm run test:serverless`
 - `npm run test:cli`
 
 To run the desktop application tests, first you need to package the application for your platform. Run one of the following commands:
@@ -191,9 +188,9 @@ Binaries will be saved as Actions artifacts.
 
 4. Publish the release (remove the "pre-release" label).
 
-**Libs' process (commons, commons-server, serverless, CLI):**
+**Libs' process (commons, commons-server, CLI):**
 
-Create a `libs-vx.x.x` tag to automatically release all the libraries on NPM (commons, commons-server, serverless, CLI).
+Create a `libs-vx.x.x` tag to automatically release all the libraries on NPM (commons, commons-server, CLI).
 
 > /!\\ Do not create a **GitHub release** for the libs, as desktop versions <=1.19.0 relies on https://api.github.com/repos/mockoon/mockoon/releases/latest to get the latest release version. As we are using a monorepo, this would mess up the legacy auto update from the desktop application.
 
