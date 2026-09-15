@@ -740,12 +740,24 @@ interface FormPathStep {
 const DANGEROUS_KEYS_REGEX =
   /(^|\[|\.)(__proto__|constructor|prototype)(\]|\.|$)/;
 
+const MAX_ARRAY_INDEX = 10000;
 const RE_FIRST_KEY = /^[^[]*/;
 const RE_DIGIT_PATH = /^\[(\d+)\]/;
 const RE_NORMAL_PATH = /^\[([^\]]+)\]/;
 
+const isDangerousPropertyKey = (propertyKey: unknown): boolean =>
+  propertyKey === '__proto__' ||
+  propertyKey === 'constructor' ||
+  propertyKey === 'prototype';
+
 const parseFormPath = (key: string): FormPathStep[] => {
-  const failure = (): FormPathStep[] => [{ type: 'object', key, last: true }];
+  const failure = (): FormPathStep[] => {
+    if (isDangerousPropertyKey(key)) {
+      return [];
+    }
+
+    return [{ type: 'object', key, last: true }];
+  };
 
   const firstKeyMatch = RE_FIRST_KEY.exec(key);
   const firstKey = firstKeyMatch ? firstKeyMatch[0] : '';
@@ -770,9 +782,15 @@ const parseFormPath = (key: string): FormPathStep[] => {
 
     const digitMatch = RE_DIGIT_PATH.exec(key.substring(pos));
     if (digitMatch !== null) {
+      const index = parseInt(digitMatch[1], 10);
+
+      if (!Number.isSafeInteger(index) || index > MAX_ARRAY_INDEX) {
+        return failure();
+      }
+
       pos += digitMatch[0].length;
       tail.nextType = 'array';
-      tail = { type: 'array', key: parseInt(digitMatch[1], 10) };
+      tail = { type: 'array', key: index };
       steps.push(tail);
       continue;
     }
@@ -810,11 +828,6 @@ const getFormValueType = (
   return 'scalar';
 };
 
-const isDangerousPropertyKey = (propertyKey: unknown): boolean =>
-  propertyKey === '__proto__' ||
-  propertyKey === 'constructor' ||
-  propertyKey === 'prototype';
-
 const setLastFormValue = (
   context: Record<string, any>,
   step: FormPathStep,
@@ -837,14 +850,17 @@ const setLastFormValue = (
       context[step.key].push(entryValue);
       break;
     case 'object':
-      return setLastFormValue(
-        currentValue,
-        { type: 'object', key: '', last: true },
-        Object.prototype.hasOwnProperty.call(currentValue, '')
-          ? currentValue['']
-          : undefined,
-        entryValue
-      );
+      if (Object.prototype.hasOwnProperty.call(currentValue, '')) {
+        return setLastFormValue(
+          currentValue,
+          { type: 'object', key: '', last: true },
+          currentValue[''],
+          entryValue
+        );
+      }
+
+      context[step.key] = [currentValue, entryValue];
+      break;
     case 'scalar':
       context[step.key] = [context[step.key], entryValue];
       break;
@@ -872,7 +888,7 @@ const setStepFormValue = (
       if (step.nextType === 'array') {
         context[step.key] = [];
       } else {
-        context[step.key] = {};
+        context[step.key] = Object.create(null);
       }
 
       return context[step.key];
@@ -883,7 +899,7 @@ const setStepFormValue = (
         return currentValue;
       }
 
-      const obj: Record<string, any> = {};
+      const obj: Record<string, any> = Object.create(null);
       context[step.key] = obj;
       currentValue.forEach((item: any, i: number) => {
         if (item !== undefined) {
@@ -894,7 +910,7 @@ const setStepFormValue = (
       return obj;
     }
     case 'scalar': {
-      const obj: Record<string, any> = {};
+      const obj: Record<string, any> = Object.create(null);
       obj[''] = currentValue;
       context[step.key] = obj;
 

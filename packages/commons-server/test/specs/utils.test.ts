@@ -591,6 +591,21 @@ describe('Utils', () => {
       });
     });
 
+    it('should preserve repeated nested object values as arrays', () => {
+      const store: Record<string, any> = {};
+      const firstFile = { filename: 'first.txt', size: 1 };
+      const secondFile = { filename: 'second.txt', size: 2 };
+
+      appendField(store, 'user[file]', firstFile);
+      appendField(store, 'user[file]', secondFile);
+
+      deepStrictEqual(store, {
+        user: {
+          file: [firstFile, secondFile]
+        }
+      });
+    });
+
     it('should handle array index notation', () => {
       const store: Record<string, any> = {};
       appendField(store, 'items[0]', 'first');
@@ -646,6 +661,15 @@ describe('Utils', () => {
       strictEqual(store.hasOwnProperty, 'customHasOwnProperty');
       strictEqual(typeof {}.toString, 'function');
       strictEqual(typeof {}.hasOwnProperty, 'function');
+    });
+
+    it('should reject or safely handle excessively large array indices without allocating huge sparse arrays', () => {
+      const store: Record<string, any> = {};
+      appendField(store, 'items[4294967294]', 'hugeIndex');
+
+      strictEqual(Array.isArray(store.items), false);
+      strictEqual(store.items, undefined);
+      strictEqual(store['items[4294967294]'], 'hugeIndex');
     });
 
     it('should gracefully handle invalid inputs', () => {
