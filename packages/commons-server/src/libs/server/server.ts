@@ -38,7 +38,6 @@ import {
   routesFromFolder,
   stringIncludesArrayItems
 } from '@mockoon/commons';
-import appendField from 'append-field';
 import busboy from 'busboy';
 import cookieParser from 'cookie-parser';
 import { EventEmitter } from 'events';
@@ -74,6 +73,7 @@ import { ServerRequest, fromExpressRequest, fromWsRequest } from '../requests';
 import { ResponseRulesInterpreter } from '../response-rules-interpreter';
 import { TemplateParser } from '../template-parser';
 import {
+  appendField,
   CreateCallbackInvocation,
   CreateInFlightRequest,
   CreateTransaction,

@@ -156,6 +156,84 @@ describe('Server body parsing', () => {
       });
     });
 
+    it('should parse nested fields and arrays in multipart form data', async () => {
+      const boundary = '----testboundary123';
+      const body = [
+        `--${boundary}`,
+        'Content-Disposition: form-data; name="user[name]"',
+        '',
+        'Alice',
+        `--${boundary}`,
+        'Content-Disposition: form-data; name="user[address][city]"',
+        '',
+        'Paris',
+        `--${boundary}`,
+        'Content-Disposition: form-data; name="tags[]"',
+        '',
+        'tag1',
+        `--${boundary}`,
+        'Content-Disposition: form-data; name="tags[]"',
+        '',
+        'tag2',
+        `--${boundary}--`
+      ].join('\r\n');
+
+      const data = await (
+        await fetch('http://localhost:3010/test', {
+          method: 'POST',
+          headers: {
+            'Content-Type': `multipart/form-data; boundary=${boundary}`
+          },
+          body
+        })
+      ).json();
+
+      deepEqual(data, {
+        user: {
+          name: 'Alice',
+          address: {
+            city: 'Paris'
+          }
+        },
+        tags: ['tag1', 'tag2']
+      });
+    });
+
+    it('should ignore dangerous prototype pollution field names and prevent Object.prototype pollution', async () => {
+      const boundary = '----pocboundary123456';
+      const body = [
+        `--${boundary}`,
+        'Content-Disposition: form-data; name="__proto__[polluted]"',
+        '',
+        'PWNED_VIA_HTTP_MULTIPART',
+        `--${boundary}`,
+        'Content-Disposition: form-data; name="constructor[prototype][polluted2]"',
+        '',
+        'PWNED_VIA_CONSTRUCTOR',
+        `--${boundary}`,
+        'Content-Disposition: form-data; name="safeField"',
+        '',
+        'safeValue',
+        `--${boundary}--`
+      ].join('\r\n');
+
+      const data = await (
+        await fetch('http://localhost:3010/test', {
+          method: 'POST',
+          headers: {
+            'Content-Type': `multipart/form-data; boundary=${boundary}`
+          },
+          body
+        })
+      ).json();
+
+      strictEqual(({} as any).polluted, undefined);
+      strictEqual(({} as any).polluted2, undefined);
+      deepEqual(data, {
+        safeField: 'safeValue'
+      });
+    });
+
     after(() => {
       server.stop();
     });
