@@ -2,7 +2,7 @@ import { Key } from 'webdriverio';
 import { ToastTypes } from '../../src/renderer/app/models/toasts.model';
 import { SharedConfig } from '../../src/shared/shared-config';
 
-const Config = SharedConfig({ apiURL: '', websiteURL: '' });
+const Config = SharedConfig({ defaultApiUrl: '', websiteUrl: '' });
 
 export enum DropdownMenuEnvironmentActions {
   DUPLICATE_TO_CLOUD = 1,
@@ -62,7 +62,7 @@ class Utils {
 
   public async setElementValue(
     element: ReturnType<WebdriverIO.Browser['$']>,
-    value: string
+    value: string | number
   ): Promise<void> {
     // ensure we unfocus previously selected fields (on Linux, using setValue, previous fields with typeaheads may still show the menu and not be immediately unfocused)
     await element.click();

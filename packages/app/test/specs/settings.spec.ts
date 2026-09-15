@@ -76,7 +76,7 @@ describe('Settings', () => {
   describe('Environment log entries maximum', () => {
     it('should modify the limit and verify the settings file', async () => {
       await settings.open();
-      await settings.setSettingValue('settings-log-max-count', '1000');
+      await settings.setSettingValue('settings-log-max-count', 1000);
       await modals.close();
 
       await utils.waitForAutosave();
@@ -105,7 +105,7 @@ describe('Settings', () => {
 
     it('should change Faker.js settings and verify persistence', async () => {
       await settings.open();
-      await settings.setSettingValue('settings-faker-seed', '1234');
+      await settings.setSettingValue('settings-faker-seed', 1234);
       await settings.setDropdownSettingValue('settings-faker-locale', 22);
 
       await modals.close();

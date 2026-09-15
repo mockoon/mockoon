@@ -13,6 +13,7 @@ import { EMPTY, Observable, forkJoin, from } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TeamPresenceComponent } from 'src/renderer/app/components/team-presence/team-presence.component';
+import { planLabels } from 'src/renderer/app/constants/user.constant';
 import { TourStepDirective } from 'src/renderer/app/directives/tour-step.directive';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
@@ -23,6 +24,7 @@ import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { SyncService } from 'src/renderer/app/services/sync.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -30,6 +32,7 @@ import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { environment as env } from 'src/renderer/environments/environment';
+import { PlanIndicatorComponent } from '../plan-indicator/plan-indicator.component';
 
 @Component({
   selector: 'app-header',
@@ -44,7 +47,8 @@ import { environment as env } from 'src/renderer/environments/environment';
     NgbDropdown,
     NgbDropdownToggle,
     NgbDropdownMenu,
-    AsyncPipe
+    AsyncPipe,
+    PlanIndicatorComponent
   ]
 })
 export class HeaderComponent implements OnInit {
@@ -52,6 +56,7 @@ export class HeaderComponent implements OnInit {
   private environmentsService = inject(EnvironmentsService);
   private userService = inject(UserService);
   private remoteConfigService = inject(RemoteConfigService);
+  private settingsService = inject(SettingsService);
   private uiService = inject(UIService);
   private syncService = inject(SyncService);
   private toastsService = inject(ToastsService);
@@ -71,19 +76,14 @@ export class HeaderComponent implements OnInit {
     icon: string;
     count$?: Observable<number>;
   }[];
-  public planLabels = {
-    FREE: 'Free',
-    SOLO: 'Solo',
-    TEAM: 'Team',
-    ENTERPRISE: 'Enterprise'
-  };
+  public planLabels = planLabels;
   public tourIds = {
     ENV_LOGS: 'tour-environment-logs',
     ENV_PROXY: 'tour-environment-proxy'
   };
   public isDev = !env.production;
   public isWeb = Config.isWeb;
-  public accountUrl = Config.accountUrl;
+  public accountUrl$: Observable<string>;
 
   ngOnInit() {
     this.os$ = from(this.mainApiService.invoke('APP_GET_OS'));
@@ -92,6 +92,13 @@ export class HeaderComponent implements OnInit {
     this.activeEnvironment$ = this.store.selectActiveEnvironment();
     this.activeEnvironmentState$ = this.store.selectActiveEnvironmentStatus();
     this.environmentLogs$ = this.store.selectActiveEnvironmentLogs();
+    this.accountUrl$ = this.store
+      .select('settings')
+      .pipe(
+        map((settings) =>
+          settings?.apiUrl ? `${settings.apiUrl}/profile` : Config.accountUrl
+        )
+      );
 
     this.tabs = [
       {
@@ -212,7 +219,7 @@ export class HeaderComponent implements OnInit {
   }
 
   public refreshAuthToken() {
-    this.userService.getIdToken(true).subscribe();
+    this.userService.getToken(true).subscribe();
   }
 
   /**

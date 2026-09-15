@@ -1109,7 +1109,7 @@ describe('Templating', () => {
     it('should open and start the environment', async () => {
       await environments.open('templating');
       await settings.open();
-      await settings.setSettingValue('settings-faker-seed', '1');
+      await settings.setSettingValue('settings-faker-seed', 1);
       await modals.close();
       await utils.waitForAutosave();
       await environments.start();
@@ -1168,7 +1168,7 @@ describe('Templating', () => {
       await environments.close(1);
       await environments.open('templating');
       await settings.open();
-      await settings.setSettingValue('settings-faker-seed', '1');
+      await settings.setSettingValue('settings-faker-seed', 1);
       await settings.setDropdownSettingValue('settings-faker-locale', 17);
       await modals.close();
       await utils.waitForAutosave();

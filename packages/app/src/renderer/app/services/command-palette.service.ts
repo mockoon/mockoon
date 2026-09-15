@@ -352,6 +352,7 @@ export class CommandPaletteService {
     const environmentDescriptors = this.store.get('settings').environments;
     const isUserConnectedAndPaid = this.store.get('user')?.plan !== Plans.FREE;
     const isSyncConnected = this.store.get('sync')?.status;
+    const isNotSelfHosted = !this.settingsService.getIsSelfHosted();
 
     const commonCommands: Commands = [
       {
@@ -625,7 +626,8 @@ export class CommandPaletteService {
           this.uiService.openModal('templates');
         },
         score: 1,
-        enabled: hasActiveEnvironment && isActiveEnvironmentEditable
+        enabled:
+          hasActiveEnvironment && isActiveEnvironmentEditable && isNotSelfHosted
       },
       {
         id: 'ENVIRONMENT_TOGGLE_RECORDING',

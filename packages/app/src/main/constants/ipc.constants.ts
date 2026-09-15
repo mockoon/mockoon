@@ -11,8 +11,7 @@ export const IPCMainListenerChannels = [
   'APP_SHOW_FILE',
   'APP_SHOW_FOLDER',
   'APP_ZOOM',
-  'APP_AUTH',
-  'APP_AUTH_STOP_SERVER'
+  'APP_AUTH'
 ];
 
 export const IPCMainHandlerChannels = [

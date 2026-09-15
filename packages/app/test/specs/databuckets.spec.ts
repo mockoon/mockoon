@@ -14,7 +14,7 @@ describe('Databuckets navigation and deletion', () => {
   it('should open and start the environment', async () => {
     await environments.open('databuckets');
     await settings.open();
-    await settings.setSettingValue('settings-faker-seed', '1');
+    await settings.setSettingValue('settings-faker-seed', 1);
     await modals.close();
   });
 
