@@ -750,6 +750,19 @@ const isDangerousPropertyKey = (propertyKey: unknown): boolean =>
   propertyKey === 'constructor' ||
   propertyKey === 'prototype';
 
+const setFormProperty = (
+  context: Record<string | number, any>,
+  key: string | number,
+  value: any
+) => {
+  Object.defineProperty(context, key, {
+    configurable: true,
+    enumerable: true,
+    value,
+    writable: true
+  });
+};
+
 const parseFormPath = (key: string): FormPathStep[] => {
   const failure = (): FormPathStep[] => {
     if (isDangerousPropertyKey(key)) {
@@ -797,9 +810,15 @@ const parseFormPath = (key: string): FormPathStep[] => {
 
     const normalMatch = RE_NORMAL_PATH.exec(key.substring(pos));
     if (normalMatch !== null) {
+      const segmentKey = normalMatch[1];
+
+      if (isDangerousPropertyKey(segmentKey)) {
+        return failure();
+      }
+
       pos += normalMatch[0].length;
       tail.nextType = 'object';
-      tail = { type: 'object', key: normalMatch[1] };
+      tail = { type: 'object', key: segmentKey };
       steps.push(tail);
       continue;
     }
@@ -841,9 +860,9 @@ const setLastFormValue = (
   switch (getFormValueType(currentValue)) {
     case 'undefined':
       if (step.append) {
-        context[step.key] = [entryValue];
+        setFormProperty(context, step.key, [entryValue]);
       } else {
-        context[step.key] = entryValue;
+        setFormProperty(context, step.key, entryValue);
       }
       break;
     case 'array':
@@ -859,10 +878,10 @@ const setLastFormValue = (
         );
       }
 
-      context[step.key] = [currentValue, entryValue];
+      setFormProperty(context, step.key, [currentValue, entryValue]);
       break;
     case 'scalar':
-      context[step.key] = [context[step.key], entryValue];
+      setFormProperty(context, step.key, [context[step.key], entryValue]);
       break;
   }
 
@@ -886,9 +905,9 @@ const setStepFormValue = (
   switch (getFormValueType(currentValue)) {
     case 'undefined':
       if (step.nextType === 'array') {
-        context[step.key] = [];
+        setFormProperty(context, step.key, []);
       } else {
-        context[step.key] = {};
+        setFormProperty(context, step.key, {});
       }
 
       return context[step.key];
@@ -900,7 +919,7 @@ const setStepFormValue = (
       }
 
       const obj: Record<string, any> = {};
-      context[step.key] = obj;
+      setFormProperty(context, step.key, obj);
       currentValue.forEach((item: any, i: number) => {
         if (item !== undefined) {
           obj[String(i)] = item;
@@ -912,7 +931,7 @@ const setStepFormValue = (
     case 'scalar': {
       const obj: Record<string, any> = {};
       obj[''] = currentValue;
-      context[step.key] = obj;
+      setFormProperty(context, step.key, obj);
 
       return obj;
     }
