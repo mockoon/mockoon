@@ -20,7 +20,7 @@ describe('Callbacks navigation and deletion', () => {
   it('should open the environment', async () => {
     await environments.open('callbacks');
     await settings.open();
-    await settings.setSettingValue('settings-faker-seed', '1');
+    await settings.setSettingValue('settings-faker-seed', 1);
     await modals.close();
   });
 

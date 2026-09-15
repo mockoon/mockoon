@@ -1,10 +1,5 @@
 import { Component, effect, inject, signal } from '@angular/core';
-import {
-  debounce,
-  form,
-  FormField,
-  validateHttp
-} from '@angular/forms/signals';
+import { form, FormField, validateHttp } from '@angular/forms/signals';
 import { IsEqual } from '@mockoon/commons';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
@@ -54,9 +49,8 @@ export class SettingsModalComponent {
   public settingsForm = form(
     signal<Settings>(SettingsDefault),
     (schemaPath) => {
-      debounce(schemaPath, 300);
-
       validateHttp(schemaPath.apiUrl, {
+        debounce: 300,
         request: ({ value }) => {
           const apiUrl = value();
 

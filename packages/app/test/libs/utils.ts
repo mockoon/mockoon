@@ -62,7 +62,7 @@ class Utils {
 
   public async setElementValue(
     element: ReturnType<WebdriverIO.Browser['$']>,
-    value: string
+    value: string | number
   ): Promise<void> {
     // ensure we unfocus previously selected fields (on Linux, using setValue, previous fields with typeaheads may still show the menu and not be immediately unfocused)
     await element.click();

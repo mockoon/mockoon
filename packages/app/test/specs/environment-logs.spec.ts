@@ -423,7 +423,7 @@ describe('Environment logs', () => {
 
       it('should changes log setting', async () => {
         await settings.open();
-        await settings.setSettingValue('settings-log-max-count', '10');
+        await settings.setSettingValue('settings-log-max-count', 10);
         await modals.close();
       });
 

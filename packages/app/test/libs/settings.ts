@@ -48,7 +48,7 @@ class Settings {
 
   public async setSettingValue(
     settingName: SettingNames,
-    value: string
+    value: string | number
   ): Promise<void> {
     const setting = this.getSettingInput(settingName);
     await utils.setElementValue(setting, value);
