@@ -71,7 +71,7 @@ export class SettingsService {
         const callbackApiUrl = getCallbackApiUrl();
         const validatedSchema = SettingsSchema.validate({
           ...settings,
-          apiUrl: settings.apiUrl?.trim() || callbackApiUrl
+          apiUrl: settings?.apiUrl?.trim() || callbackApiUrl
         });
         this.updateSettings(validatedSchema.value);
         settings = validatedSchema.value;
