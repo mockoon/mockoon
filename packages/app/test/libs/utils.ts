@@ -301,6 +301,12 @@ class Utils {
     await $('.toast:last-of-type').click();
   }
 
+  public async clickToastAction() {
+    const actionBtn = $('.toast:last-of-type button');
+    await actionBtn.waitForExist();
+    await actionBtn.click();
+  }
+
   public makeString(length: number): string {
     let result = '';
     const characters =

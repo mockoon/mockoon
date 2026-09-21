@@ -169,6 +169,7 @@ export interface AddRouteSyncAction extends BaseSyncAction {
   environmentUuid: string;
   route: Route;
   parentId: string | 'root';
+  insertAfterUuid?: string;
 }
 
 /**
@@ -207,6 +208,7 @@ export interface AddFolderSyncAction extends BaseSyncAction {
   environmentUuid: string;
   folder: Folder;
   parentId: string | 'root';
+  insertAfterUuid?: string;
 }
 
 /**
