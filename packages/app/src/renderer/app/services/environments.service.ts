@@ -1323,7 +1323,7 @@ export class EnvironmentsService {
   private getRouteOrFolderInsertPosition(
     environment: Environment,
     uuid: string
-  ): { parentId: string | 'root'; insertAfterUuid?: string } {
+  ): { parentId: string | 'root'; insertAfterUuid?: string | null } {
     if (environment.rootChildren.some((child) => child.uuid === uuid)) {
       const index = environment.rootChildren.findIndex(
         (child) => child.uuid === uuid
@@ -1332,7 +1332,7 @@ export class EnvironmentsService {
       return {
         parentId: 'root',
         insertAfterUuid:
-          index > 0 ? environment.rootChildren[index - 1].uuid : undefined
+          index > 0 ? environment.rootChildren[index - 1].uuid : null
       };
     }
 
@@ -1348,7 +1348,7 @@ export class EnvironmentsService {
       return {
         parentId: parentFolder.uuid,
         insertAfterUuid:
-          index > 0 ? parentFolder.children[index - 1].uuid : undefined
+          index > 0 ? parentFolder.children[index - 1].uuid : null
       };
     }
 
@@ -1361,11 +1361,15 @@ export class EnvironmentsService {
   private getInsertAfterUuid<T extends { uuid: string }>(
     items: T[],
     uuid: string
-  ): string | undefined {
+  ): string | null | undefined {
     const itemIndex = items.findIndex((item) => item.uuid === uuid);
 
-    if (itemIndex <= 0) {
+    if (itemIndex === -1) {
       return undefined;
+    }
+
+    if (itemIndex === 0) {
+      return null;
     }
 
     return items[itemIndex - 1]?.uuid;

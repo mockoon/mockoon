@@ -169,7 +169,7 @@ export interface AddRouteSyncAction extends BaseSyncAction {
   environmentUuid: string;
   route: Route;
   parentId: string | 'root';
-  insertAfterUuid?: string;
+  insertAfterUuid?: string | null;
 }
 
 /**
@@ -208,7 +208,7 @@ export interface AddFolderSyncAction extends BaseSyncAction {
   environmentUuid: string;
   folder: Folder;
   parentId: string | 'root';
-  insertAfterUuid?: string;
+  insertAfterUuid?: string | null;
 }
 
 /**
@@ -238,7 +238,7 @@ export interface AddRouteResponseSyncAction extends BaseSyncAction {
   environmentUuid: string;
   routeUuid: string;
   routeResponse: RouteResponse;
-  insertAfterUuid?: string;
+  insertAfterUuid?: string | null;
 }
 
 /**
@@ -279,7 +279,7 @@ export interface AddDatabucketSyncAction extends BaseSyncAction {
   type: SyncActionTypes.ADD_DATABUCKET;
   environmentUuid: string;
   databucket: DataBucket;
-  insertAfterUuid?: string;
+  insertAfterUuid?: string | null;
 }
 
 /**
@@ -317,7 +317,7 @@ export interface AddCallbackSyncAction extends BaseSyncAction {
   type: SyncActionTypes.ADD_CALLBACK;
   environmentUuid: string;
   callback: Callback;
-  insertAfterUuid?: string;
+  insertAfterUuid?: string | null;
 }
 
 /**

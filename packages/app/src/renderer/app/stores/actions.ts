@@ -505,7 +505,7 @@ export const addFolderAction = (
   folder: Folder,
   parentId: string | 'root',
   uiReset: boolean,
-  insertAfterUuid?: string
+  insertAfterUuid?: string | null
 ) =>
   ({
     type: ActionTypes.ADD_FOLDER,
@@ -565,7 +565,7 @@ export const addRouteAction = (
   route: Route,
   parentId: string | 'root',
   uiReset: boolean,
-  insertAfterUuid?: string
+  insertAfterUuid?: string | null
 ) =>
   ({
     type: ActionTypes.ADD_ROUTE,
@@ -652,7 +652,7 @@ export const addRouteResponseAction = (
   routeUuid: string,
   routeResponse: RouteResponse,
   uiReset: boolean,
-  insertAfterUuid?: string
+  insertAfterUuid?: string | null
 ) =>
   ({
     type: ActionTypes.ADD_ROUTE_RESPONSE,
@@ -740,7 +740,7 @@ export const addDatabucketAction = (
   environmentUuid: string,
   databucket: DataBucket,
   uiReset: boolean,
-  insertAfterUuid?: string
+  insertAfterUuid?: string | null
 ) =>
   ({
     type: ActionTypes.ADD_DATABUCKET,
@@ -762,7 +762,7 @@ export const addCallbackAction = (
   environmentUuid: string,
   callback: Callback,
   uiReset: boolean,
-  insertAfterUuid?: string
+  insertAfterUuid?: string | null
 ) =>
   ({
     type: ActionTypes.ADD_CALLBACK,
