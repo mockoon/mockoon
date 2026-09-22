@@ -213,4 +213,13 @@ export class AppComponent implements OnInit {
   public removeToast(toastUUID: string) {
     this.toastService.removeToast(toastUUID);
   }
+
+  /**
+   * Execute the toast action and remove the toast
+   */
+  public executeToastAction(event: MouseEvent, toast: Toast) {
+    event.stopPropagation();
+    toast.action?.action();
+    this.removeToast(toast.UUID);
+  }
 }
