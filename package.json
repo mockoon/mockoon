@@ -79,7 +79,7 @@
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "@stylistic/eslint-plugin": "5.10.0",
-    "@types/node": "24.13.4",
+    "@types/node": "24.13.5",
     "concurrently": "10.0.5",
     "eslint": "10.10.0",
     "eslint-config-prettier": "10.1.8",
