@@ -1038,7 +1038,8 @@ export const environmentReducer = (
             return addFolderMutator(
               environment,
               action.folder,
-              action.parentId
+              action.parentId,
+              action.insertAfterUuid
             );
           }
 
@@ -1135,7 +1136,8 @@ export const environmentReducer = (
           newEnvironment = addRouteMutator(
             environment,
             newRoute,
-            action.parentId
+            action.parentId,
+            action.insertAfterUuid
           );
 
           return newEnvironment;
