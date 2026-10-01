@@ -395,7 +395,9 @@ export class EnvironmentsMenuComponent {
     [SyncErrors.VERSION_TOO_OLD]:
       'your Mockoon version is too old, please update.',
     [SyncDisconnectReasons.ROOM_INCOMPATIBLE_VERSION]:
-      'your sync space was updated and is not compatible with your current version of Mockoon, please update.'
+      'your sync space was updated and is not compatible with your current version of Mockoon, please update.',
+    [SyncDisconnectReasons.LICENSE_EXPIRED]:
+      'your Mockoon Pro license has expired.'
   };
 
   private localDropdownMenuStaticItems: DropdownMenuElement[] = [
