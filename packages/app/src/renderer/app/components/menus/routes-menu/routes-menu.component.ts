@@ -135,6 +135,7 @@ export class RoutesMenuComponent {
   public isActiveEnvironmentEditable$ =
     this.store.selectIsActiveEnvironmentEditable();
   public isSelfHosted$ = this.settingsService.selectIsSelfHosted();
+  public isConnected$ = this.store.select('user').pipe(map((user) => !!user));
   private manualDragEnabled$ = new BehaviorSubject(true);
   public dragEnabled$ = combineLatest([
     this.isActiveEnvironmentEditable$,

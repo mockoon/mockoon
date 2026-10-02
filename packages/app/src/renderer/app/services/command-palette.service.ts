@@ -348,6 +348,7 @@ export class CommandPaletteService {
     const hasActiveCallback = !!activeCallback;
     const activeCallbackUuid = activeCallback?.uuid;
     const environmentDescriptors = this.store.get('settings').environments;
+    const isUserConnected = !!this.store.get('user');
     const isUserConnectedAndPaid = this.store.get('user')?.plan !== Plans.FREE;
     const isSyncConnected = this.store.get('sync')?.status;
     const isNotSelfHosted = !this.settingsService.getIsSelfHosted();
@@ -625,7 +626,10 @@ export class CommandPaletteService {
         },
         score: 1,
         enabled:
-          hasActiveEnvironment && isActiveEnvironmentEditable && isNotSelfHosted
+          hasActiveEnvironment &&
+          isActiveEnvironmentEditable &&
+          isNotSelfHosted &&
+          isUserConnected
       },
       {
         id: 'ENVIRONMENT_TOGGLE_RECORDING',
