@@ -116,7 +116,9 @@
                 "
               />
               <div>
-                <h5 class="mb-0">{{ isWeb ? 'APIs' : 'Remote environment' }}</h5>
+                <h5 class="mb-0">
+                  {{ isWeb ? 'APIs' : 'Remote environment' }}
+                </h5>
                 <small class="text-muted"
                   >Real-time sync and team collaboration</small
                 >
@@ -168,9 +170,9 @@
             >
               <app-svg icon="warning" class="me-2 flex-shrink-0" size="16" />
               <div>
-                Remote environment quota reached ({{ cloudEnvironmentsCount }}/{{
-                  user?.cloudSyncItemsQuota
-                }}).
+                Remote environment quota reached ({{
+                  cloudEnvironmentsCount
+                }}/{{ user?.cloudSyncItemsQuota }}).
                 <a [href]="proPlansURL" target="_blank" class="alert-link"
                   >Upgrade plan</a
                 >.
