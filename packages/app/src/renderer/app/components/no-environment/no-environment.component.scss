@@ -1,0 +1,10 @@
+:host {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+}
+
+.no-environment-content {
+  max-width: 760px;
+}
