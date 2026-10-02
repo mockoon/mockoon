@@ -288,29 +288,32 @@ class Routes {
     await $('#routes-add-dropdown .dropdown-toggle').click();
   }
 
-  public async openTemplates(): Promise<void> {
-    await $('#routes-add-dropdown .dropdown-toggle').click();
-    await $('#routes-add-dropdown-menu .dropdown-item:nth-child(1)').click();
-  }
-
   public async addCRUDRoute(): Promise<void> {
     await $('#routes-add-dropdown .dropdown-toggle').click();
-    await $('#routes-add-dropdown-menu .dropdown-item:nth-child(2)').click();
+    await $(
+      `#routes-add-dropdown-menu .dropdown-item:nth-child(${RoutesMenuActions.ADD_CRUD_ROUTE})`
+    ).click();
   }
 
   public async addHTTPRoute(): Promise<void> {
     await $('#routes-add-dropdown .dropdown-toggle').click();
-    await $('#routes-add-dropdown-menu .dropdown-item:nth-child(3)').click();
+    await $(
+      `#routes-add-dropdown-menu .dropdown-item:nth-child(${RoutesMenuActions.ADD_HTTP_ROUTE})`
+    ).click();
   }
 
   public async addWebSocketRoute(): Promise<void> {
     await $('#routes-add-dropdown .dropdown-toggle').click();
-    await $('#routes-add-dropdown-menu .dropdown-item:nth-child(4)').click();
+    await $(
+      `#routes-add-dropdown-menu .dropdown-item:nth-child(${RoutesMenuActions.ADD_WS_ROUTE})`
+    ).click();
   }
 
   public async addFolder(): Promise<void> {
     await $('#routes-add-dropdown .dropdown-toggle').click();
-    await $('#routes-add-dropdown-menu .dropdown-item:nth-child(5)').click();
+    await $(
+      `#routes-add-dropdown-menu .dropdown-item:nth-child(${RoutesMenuActions.ADD_FOLDER})`
+    ).click();
   }
 
   public async selectTemplateTab(index: 1 | 2 | 3): Promise<void> {
