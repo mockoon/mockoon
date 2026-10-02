@@ -19,11 +19,7 @@ import {
   ReorderAction,
   ReorderableContainers
 } from '@mockoon/commons';
-import {
-  NgbCollapse,
-  NgbPopover,
-  NgbTooltip
-} from '@ng-bootstrap/ng-bootstrap';
+import { NgbCollapse, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, Observable, combineLatest, merge, of } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -46,7 +42,6 @@ import { DraggableDirective } from 'src/renderer/app/directives/draggable.direct
 import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directive';
 import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
 import { ScrollWhenActiveDirective } from 'src/renderer/app/directives/scroll-to-active.directive';
-import { TourStepDirective } from 'src/renderer/app/directives/tour-step.directive';
 import { buildApiUrl } from 'src/renderer/app/libs/utils.lib';
 import { EnvironmentsStatuses } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
@@ -70,8 +65,6 @@ type dropdownMenuPayload = { environmentUuid: string; syncStatus: boolean };
   templateUrl: './environments-menu.component.html',
   styleUrls: ['./environments-menu.component.scss'],
   imports: [
-    NgbPopover,
-    TourStepDirective,
     DraggableDirective,
     DropzoneDirective,
     SvgComponent,

@@ -15,10 +15,7 @@
 @let instanceUrls = instanceUrls$ | async;
 @let dragEnabled = dragEnabled$ | async;
 
-<div
-  class="environments-menu d-flex flex-column h-100"
-  appTourStep="tour-environments-menu"
->
+<div class="environments-menu d-flex flex-column h-100">
   @for (
     category of categories;
     track category.id;

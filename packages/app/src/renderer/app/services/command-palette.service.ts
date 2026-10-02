@@ -11,7 +11,6 @@ import {
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
-import { TourService } from 'src/renderer/app/services/tour.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { clearLogsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
@@ -22,7 +21,6 @@ export class CommandPaletteService {
   private environmentsService = inject(EnvironmentsService);
   private uiService = inject(UIService);
   private store = inject(Store);
-  private tourService = inject(TourService);
   private mainApiService = inject(MainApiService);
   private settingsService = inject(SettingsService);
 
@@ -732,15 +730,6 @@ export class CommandPaletteService {
         },
         score: 1,
         enabled: true
-      },
-      {
-        id: 'TOUR_START',
-        label: 'Take the tour',
-        action: () => {
-          this.tourService.start();
-        },
-        score: 1,
-        enabled: hasAtLeastOneEnvironment
       },
       {
         id: 'IMPORT_CLOUD_OPENAPI',
