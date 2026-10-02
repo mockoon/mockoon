@@ -163,7 +163,6 @@ export class EnvironmentRoutesComponent {
   public scrollToBottom = this.uiService.scrollToBottom;
   public databuckets$: Observable<DropdownItems>;
   public externalLink$: Observable<string>;
-  public hasRoutes$: Observable<boolean>;
   public defaultResponseTooltips = {
     [ResponseMode.RANDOM]: 'Default response is disabled in random mode',
     [ResponseMode.SEQUENTIAL]:
@@ -385,9 +384,6 @@ export class EnvironmentRoutesComponent {
     this.activeEnvironment$ = this.store.selectActiveEnvironment().pipe(
       filter((activeEnvironment) => !!activeEnvironment),
       distinctUntilChanged()
-    );
-    this.hasRoutes$ = this.activeEnvironment$.pipe(
-      map((activeEnvironment) => activeEnvironment.routes.length > 0)
     );
     this.activeRoute$ = this.store.selectActiveRoute();
     this.activeRouteResponses$ = this.activeRoute$.pipe(
@@ -680,18 +676,6 @@ export class EnvironmentRoutesComponent {
    */
   public addRouteResponse() {
     this.environmentsService.addRouteResponse();
-  }
-
-  public addHTTPRoute() {
-    this.environmentsService.addHTTPRoute('root');
-  }
-
-  public addCRUDRoute() {
-    this.environmentsService.addCRUDRoute('root');
-  }
-
-  public addWebSocketRoute() {
-    this.environmentsService.addWebSocketRoute('root');
   }
 
   /**

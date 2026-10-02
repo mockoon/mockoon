@@ -94,48 +94,11 @@
         </div>
       </ng-container>
     } @else {
-      @if (hasDatabuckets) {
-        <p class="message mt-4">No databucket selected</p>
-      } @else {
-        <div
-          class="flex-fill d-flex flex-column align-items-center justify-content-center p-4 overflow-auto"
-        >
-          <div class="empty-state-content w-100">
-            <div class="text-center mb-4">
-              <h3 class="message mb-1 text-white">No databucket defined</h3>
-              <p class="text-muted mb-0">
-                Create a data bucket to store and generate reusable mock data
-              </p>
-            </div>
-
-            <div class="row g-3 justify-content-center">
-              <div class="col-12">
-                <div
-                  class="border border-secondary border-opacity-25 rounded p-3 h-100 d-flex flex-column"
-                >
-                  <div class="d-flex flex-column gap-2 flex-fill">
-                    <button
-                      type="button"
-                      class="btn btn-custom text-start d-flex align-items-center p-2"
-                      [disabled]="!isActiveEnvironmentEditable"
-                      (click)="addDatabucket()"
-                    >
-                      <app-svg icon="data" size="20" class="me-3 text-muted" />
-                      <div class="flex-fill">
-                        <div class="fw-bold">New databucket</div>
-                        <div class="small text-muted">
-                          Create a data bucket with JSON data or templating
-                          helpers
-                        </div>
-                      </div>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
+      <p class="message mt-4">
+        {{
+          hasDatabuckets ? 'No databucket selected' : 'No databucket defined'
+        }}
+      </p>
     }
   </div>
 </div>

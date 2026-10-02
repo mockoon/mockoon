@@ -268,53 +268,9 @@
         </div>
       }
     } @else {
-      @if (hasCallbacks) {
-        <p class="message mt-4">No callback selected</p>
-      } @else {
-        <div
-          class="flex-fill d-flex flex-column align-items-center justify-content-center p-4 overflow-auto"
-        >
-          <div class="empty-state-content w-100">
-            <div class="text-center mb-4">
-              <h3 class="message mb-1 text-white">No callback defined</h3>
-              <p class="text-muted mb-0">
-                Create a callback to trigger automated HTTP requests on route
-                execution
-              </p>
-            </div>
-
-            <div class="row g-3 justify-content-center">
-              <div class="col-12">
-                <div
-                  class="border border-secondary border-opacity-25 rounded p-3 h-100 d-flex flex-column"
-                >
-                  <div class="d-flex flex-column gap-2 flex-fill">
-                    <button
-                      type="button"
-                      class="btn btn-custom text-start d-flex align-items-center p-2"
-                      [disabled]="!isActiveEnvironmentEditable"
-                      (click)="addCallback()"
-                    >
-                      <app-svg
-                        icon="call_made"
-                        size="20"
-                        class="me-3 text-muted"
-                      />
-                      <div class="flex-fill">
-                        <div class="fw-bold">New callback</div>
-                        <div class="small text-muted">
-                          Define external HTTP calls triggered after route
-                          responses
-                        </div>
-                      </div>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
+      <p class="message mt-4">
+        {{ hasCallbacks ? 'No callback selected' : 'No callbacks defined' }}
+      </p>
     }
   </div>
 </div>

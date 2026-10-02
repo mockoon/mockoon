@@ -27,7 +27,6 @@ import { EnvironmentSettingsComponent } from 'src/renderer/app/components/enviro
 import { FooterComponent } from 'src/renderer/app/components/footer/footer.component';
 import { HeaderComponent } from 'src/renderer/app/components/header/header.component';
 import { EnvironmentsMenuComponent } from 'src/renderer/app/components/menus/environments-menu/environments-menu.component';
-import { NoEnvironmentComponent } from 'src/renderer/app/components/no-environment/no-environment.component';
 import { ViewsNameType } from 'src/renderer/app/models/store.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
 import { AppQuitService } from 'src/renderer/app/services/app-quit.services';
@@ -63,8 +62,7 @@ import { OfflineBannerComponent } from './components/offline-banner/offline-bann
     EnvironmentSettingsComponent,
     FooterComponent,
     AsyncPipe,
-    OfflineBannerComponent,
-    NoEnvironmentComponent
+    OfflineBannerComponent
   ]
 })
 export class AppComponent implements OnInit {

@@ -16,7 +16,6 @@
 @let activeRouteResponseLastLog = activeRouteResponseLastLog$ | async;
 @let externalLink = externalLink$ | async;
 @let bodyType = bodyType$ | async;
-@let hasRoutes = hasRoutes$ | async;
 
 <ng-template
   #defaultFlagTemplate
@@ -865,90 +864,7 @@
         </div>
       }
     } @else {
-      @if (hasRoutes) {
-        <p class="message mt-4">No route selected</p>
-      } @else {
-        <div
-          class="flex-fill d-flex flex-column align-items-center justify-content-center p-4 overflow-auto"
-        >
-          <div class="empty-state-content w-100">
-            <div class="text-center mb-4">
-              <h3 class="message mb-1 text-white">No route defined</h3>
-              <p class="text-muted mb-0">
-                Create a new route to start mocking API responses
-              </p>
-            </div>
-
-            <div class="row g-3 justify-content-center">
-              <div class="col-12">
-                <div
-                  class="border border-secondary border-opacity-25 rounded p-3 h-100 d-flex flex-column"
-                >
-                  <div class="d-flex flex-column gap-2 flex-fill">
-                    <button
-                      type="button"
-                      class="btn btn-custom text-start d-flex align-items-center p-2"
-                      [disabled]="!isActiveEnvironmentEditable"
-                      (click)="addHTTPRoute()"
-                    >
-                      <app-svg
-                        icon="endpoint"
-                        size="20"
-                        class="me-3 text-muted"
-                      />
-                      <div class="flex-fill">
-                        <div class="fw-bold">HTTP route</div>
-                        <div class="small text-muted">
-                          Mock REST or custom HTTP endpoints
-                        </div>
-                      </div>
-                    </button>
-
-                    <button
-                      type="button"
-                      class="btn btn-custom text-start d-flex align-items-center p-2"
-                      [disabled]="!isActiveEnvironmentEditable"
-                      (click)="addCRUDRoute()"
-                    >
-                      <app-svg
-                        icon="endpoints"
-                        size="20"
-                        class="me-3 text-muted"
-                      />
-                      <div class="flex-fill">
-                        <div class="fw-bold">CRUD route</div>
-                        <div class="small text-muted">
-                          Create a mock REST resource with auto-generated
-                          endpoints
-                        </div>
-                      </div>
-                    </button>
-
-                    <button
-                      type="button"
-                      class="btn btn-custom text-start d-flex align-items-center p-2"
-                      [disabled]="!isActiveEnvironmentEditable"
-                      (click)="addWebSocketRoute()"
-                    >
-                      <app-svg
-                        icon="websocket"
-                        size="20"
-                        class="me-3 text-muted"
-                      />
-                      <div class="flex-fill">
-                        <div class="fw-bold">WebSocket route</div>
-                        <div class="small text-muted">
-                          Mock WebSocket connections and streaming messages
-                        </div>
-                      </div>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
+      <p class="message mt-4">No route defined</p>
     }
   </div>
 </div>
