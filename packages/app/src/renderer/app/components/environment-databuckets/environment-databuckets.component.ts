@@ -141,4 +141,7 @@ export class EnvironmentDatabucketsComponent {
         });
       });
   }
+  public addDatabucket() {
+    this.environmentsService.addDatabucket();
+  }
 }

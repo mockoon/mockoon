@@ -390,4 +390,8 @@ export class EnvironmentCallbacksComponent {
   ) {
     this.environmentsService.navigateToCallbackUsageInRoute(route, response);
   }
+
+  public addCallback() {
+    this.environmentsService.addCallback();
+  }
 }
