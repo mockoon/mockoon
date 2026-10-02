@@ -4,16 +4,13 @@
 @let isQuotaReached = isQuotaReached$ | async;
 @let displayCloudOfflineAlert = displayCloudOfflineAlert$ | async;
 @let cloudEnvironmentsCount = cloudEnvironmentsCount$ | async;
-@let os = os$ | async;
-@let isMac = os === 'darwin';
-@let shortcutPrefix = isMac ? 'Cmd' : 'Ctrl';
 
 <div
   class="flex-fill d-flex flex-column align-items-center justify-content-center p-4 overflow-auto"
 >
-  <div class="no-environment-content w-100">
+  <div class="empty-state-content-lg w-100">
     <div class="text-center mb-4">
-      <h3 class="mb-1 text-white">No environment opened</h3>
+      <h3 class="message mb-1 text-white">No environment opened</h3>
       <p class="text-muted mb-0">
         Create a new mock API environment or open an existing one to get started
       </p>
@@ -51,9 +48,6 @@
                     Create a blank local mock API
                   </div>
                 </div>
-                <span class="badge badge-hollow ms-2"
-                  >{{ shortcutPrefix }}+N</span
-                >
               </button>
 
               <button
@@ -68,9 +62,6 @@
                     Open an existing JSON data file
                   </div>
                 </div>
-                <span class="badge badge-hollow ms-2"
-                  >{{ shortcutPrefix }}+O</span
-                >
               </button>
 
               <button

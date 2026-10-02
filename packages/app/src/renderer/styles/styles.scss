@@ -205,6 +205,23 @@ $status-code-colors:
   }
 }
 
+.empty-state-content {
+  max-width: 520px;
+
+  &-lg {
+    max-width: 760px;
+  }
+
+  &,
+  &-lg {
+    h3.message {
+      font-size: $h4-font-size;
+      font-weight: $font-weight-normal;
+      color: $white;
+    }
+  }
+}
+
 .success-message {
   font-size: 0.8rem;
   color: $success;
