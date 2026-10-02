@@ -11,12 +11,9 @@
 @let hasSelection = selectedRoutes.length > 0;
 @let isSelfHosted = isSelfHosted$ | async;
 
-<div
-  class="routes-menu d-flex flex-column h-100"
-  appTourStep="tour-routes-menu"
->
+<div class="routes-menu d-flex flex-column h-100">
   <div class="d-flex w-100 py-2 align-items-center">
-    <div ngbDropdown id="routes-add-dropdown" appTourStep="tour-route-add">
+    <div ngbDropdown id="routes-add-dropdown">
       <button
         class="btn btn-link dropdown-toggle dropdown-toggle-icon"
         type="button"

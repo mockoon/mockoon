@@ -39,7 +39,6 @@ import {
   NgbDropdownItem,
   NgbDropdownMenu,
   NgbDropdownToggle,
-  NgbPopover,
   NgbTooltip
 } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, combineLatest, from, merge } from 'rxjs';
@@ -75,7 +74,6 @@ import { DraggableDirective } from 'src/renderer/app/directives/draggable.direct
 import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directive';
 import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.directive';
 import { InputNumberDirective } from 'src/renderer/app/directives/input-number.directive';
-import { TourStepDirective } from 'src/renderer/app/directives/tour-step.directive';
 import { ValidPathDirective } from 'src/renderer/app/directives/valid-path.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import {
@@ -108,8 +106,6 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
   styleUrls: ['./environment-routes.component.scss'],
   imports: [
     RoutesMenuComponent,
-    NgbPopover,
-    TourStepDirective,
     FormsModule,
     ReactiveFormsModule,
     ValidPathDirective,

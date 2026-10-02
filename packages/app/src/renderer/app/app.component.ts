@@ -27,7 +27,7 @@ import { EnvironmentSettingsComponent } from 'src/renderer/app/components/enviro
 import { FooterComponent } from 'src/renderer/app/components/footer/footer.component';
 import { HeaderComponent } from 'src/renderer/app/components/header/header.component';
 import { EnvironmentsMenuComponent } from 'src/renderer/app/components/menus/environments-menu/environments-menu.component';
-import { TourComponent } from 'src/renderer/app/components/tour/tour.component';
+import { NoEnvironmentComponent } from 'src/renderer/app/components/no-environment/no-environment.component';
 import { ViewsNameType } from 'src/renderer/app/models/store.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
 import { AppQuitService } from 'src/renderer/app/services/app-quit.services';
@@ -41,7 +41,6 @@ import { ServerService } from 'src/renderer/app/services/server.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { SyncService } from 'src/renderer/app/services/sync.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
-import { TourService } from 'src/renderer/app/services/tour.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
@@ -63,9 +62,9 @@ import { OfflineBannerComponent } from './components/offline-banner/offline-bann
     EnvironmentProxyComponent,
     EnvironmentSettingsComponent,
     FooterComponent,
-    TourComponent,
     AsyncPipe,
-    OfflineBannerComponent
+    OfflineBannerComponent,
+    NoEnvironmentComponent
   ]
 })
 export class AppComponent implements OnInit {
@@ -78,7 +77,6 @@ export class AppComponent implements OnInit {
   private appQuitService = inject(AppQuitService);
   private userService = inject(UserService);
   private title = inject(Title);
-  private tourService = inject(TourService);
   private remoteConfigService = inject(RemoteConfigService);
   private syncService = inject(SyncService);
   private deployService = inject(DeployService);
@@ -145,16 +143,6 @@ export class AppComponent implements OnInit {
     ) {
       event.preventDefault();
       this.uiService.openModal('commandPalette');
-    }
-
-    if (this.tourService.isInProgress()) {
-      if (event.key === 'ArrowLeft') {
-        this.tourService.previous();
-      } else if (event.key === 'ArrowRight') {
-        this.tourService.next();
-      } else if (event.key === 'Escape') {
-        this.tourService.stop();
-      }
     }
   }
 

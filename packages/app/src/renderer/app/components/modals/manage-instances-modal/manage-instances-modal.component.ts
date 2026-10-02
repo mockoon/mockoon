@@ -59,7 +59,6 @@ export class ManageInstancesModalComponent implements OnInit {
     );
   public environmentList$: Observable<Record<string, true>>;
   public user$ = this.store.select('user');
-  public accountUrl = Config.accountUrl;
   public isCloudEnabled$ = this.user$.pipe(
     map((user) => user && user.plan !== 'FREE')
   );
@@ -82,7 +81,7 @@ export class ManageInstancesModalComponent implements OnInit {
       )
     );
   public isSelfHosted$ = this.settingsService.selectIsSelfHosted();
-  public cloudPlansURL = Config.cloudPlansURL;
+  public proPlansURL = Config.proPlansURL;
   public instancesDropdownMenuItems: DropdownMenuItem[] = [
     {
       label: 'Manage deployment',

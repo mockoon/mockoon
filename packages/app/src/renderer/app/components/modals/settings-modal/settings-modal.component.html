@@ -28,7 +28,10 @@
     </div>
   </div>
 
-  <app-title-separator heading="Self-hosted Mockoon Cloud API" icon="cloud" />
+  <app-title-separator
+    heading="Self-hosted Mockoon Pro instance"
+    icon="cloud"
+  />
 
   <div class="ps-4">
     <div class="mb-3">
@@ -47,7 +50,7 @@
           <app-svg icon="info" [ngbTooltip]="apiUrlTooltip" />
           <ng-template #apiUrlTooltip>
             <div>
-              Override the default API URL to use a self-hosted Mockoon Cloud
+              Override the default API URL to use a self-hosted Mockoon Pro
               instance. The URL must contain the protocol (http or https), port,
               if applicable, and no trailing slash. Example:
               https://mockoon.company.com or http://localhost:6000

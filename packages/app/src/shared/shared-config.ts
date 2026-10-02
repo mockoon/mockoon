@@ -15,7 +15,7 @@ export const SharedConfig = (options: {
   isWeb?: boolean;
 }) => {
   const docsUrl = `${options.websiteUrl}docs/latest/`;
-  const cloudDocsUrl = `${options.websiteUrl}cloud/docs/`;
+  const proDocsUrl = `${options.websiteUrl}pro/docs/`;
 
   return {
     isWeb: options.isWeb,
@@ -31,25 +31,15 @@ export const SharedConfig = (options: {
     releasePublicURL: `${options.websiteUrl}releases/`,
     docs: {
       adminApi: `${docsUrl}admin-api/overview/`,
-      templating: `${docsUrl}templating/overview/`,
-      proxy: `${docsUrl}server-configuration/proxy-mode/`,
-      cors: `${docsUrl}server-configuration/cors/`,
-      https: `${docsUrl}server-configuration/serving-over-tls/`,
-      headers: `${docsUrl}response-configuration/response-headers/`,
-      rules: `${docsUrl}route-responses/multiple-responses/`,
-      hostname: `${docsUrl}server-configuration/listening-hostname/`,
-      faq: `${options.websiteUrl}faq/`,
-      cloudOverview: `${cloudDocsUrl}about/`,
-      cloudDeploy: `${cloudDocsUrl}api-mock-cloud-deployments/`,
-      cloudSync: `${cloudDocsUrl}data-synchronization-team-collaboration/`,
-      cloudDeployCliPull: `${cloudDocsUrl}api-mock-cloud-deployments/#self-host-with-the-cli`
+      proDeploy: `${proDocsUrl}features/api-mock-deployments/`,
+      cloudDeployCliPull: `${proDocsUrl}api-mock-cloud-deployments/#self-host-with-the-cli`
     },
     // URLs should not be used directly in desktop app (but there is a redirection for the web app in user service). Instead use the flow methods in the user service
     appAuthURL: `${options.websiteUrl}app-auth/`,
     loginURL: `${options.websiteUrl}login/`,
     accountUrl: `${options.websiteUrl}account/subscription/`,
     accountAuthenticationUrl: `${options.websiteUrl}account/access-tokens/`,
-    cloudPlansURL: `${options.websiteUrl}cloud/`,
+    proPlansURL: `${options.websiteUrl}pro/`,
     maxPromptLength: 500,
     defaultMaxLogsPerEnvironment: defaultMaxTransactionLogs,
     maxLogsPerEnvironmentLimit: 1_000,

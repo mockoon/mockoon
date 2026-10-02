@@ -64,7 +64,7 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         { type: 'separator' },
         {
           id: 'MENU_NEW_CLOUD_ENVIRONMENT',
-          label: 'New cloud environment',
+          label: 'New remote environment',
           accelerator: 'CmdOrCtrl+Shift+N',
           click: () => {
             mainWindow.webContents.send('APP_MENU', 'NEW_CLOUD_ENVIRONMENT');
@@ -321,12 +321,6 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
         }
       },
       { type: 'separator' },
-      {
-        label: 'Take the tour',
-        click: () => {
-          mainWindow.webContents.send('APP_MENU', 'TOUR_START');
-        }
-      },
       {
         label: `Release notes v${Config.appVersion}`,
         click: () => {

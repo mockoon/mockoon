@@ -189,7 +189,7 @@ export class Store {
    * @returns
    */
   public getIsEnvironmentEditable(environmentUuid: string): boolean {
-    const foundEnvironment = this.store$.value.settings.environments.find(
+    const foundEnvironment = this.store$.value.settings?.environments?.find(
       (environment) => environment.uuid === environmentUuid
     );
 
@@ -461,9 +461,10 @@ export class Store {
     return this.store$.asObservable().pipe(
       map((store) => {
         const user = store.user;
-        const cloudEnvironments = store.settings.environments.filter(
-          (environmentDescriptor) => environmentDescriptor.cloud
-        );
+        const cloudEnvironments =
+          store.settings?.environments?.filter(
+            (environmentDescriptor) => environmentDescriptor.cloud
+          ) ?? [];
 
         return user && cloudEnvironments.length >= user.cloudSyncItemsQuota;
       })
@@ -729,9 +730,9 @@ export class Store {
   }
 
   public getEnvironmentPath(environmentUUID: string): string {
-    return this.store$.value.settings.environments.find(
+    return this.store$.value.settings?.environments?.find(
       (descriptor) => descriptor.uuid === environmentUUID
-    ).path;
+    )?.path;
   }
 
   /**
