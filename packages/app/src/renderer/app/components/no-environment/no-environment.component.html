@@ -4,9 +4,6 @@
 @let isQuotaReached = isQuotaReached$ | async;
 @let displayCloudOfflineAlert = displayCloudOfflineAlert$ | async;
 @let cloudEnvironmentsCount = cloudEnvironmentsCount$ | async;
-@let os = os$ | async;
-@let isMac = os === 'darwin';
-@let shortcutPrefix = isMac ? 'Cmd' : 'Ctrl';
 
 <div
   class="flex-fill d-flex flex-column align-items-center justify-content-center p-4 overflow-auto"
@@ -51,9 +48,6 @@
                     Create a blank local mock API
                   </div>
                 </div>
-                <span class="badge badge-hollow ms-2"
-                  >{{ shortcutPrefix }}+N</span
-                >
               </button>
 
               <button
@@ -68,9 +62,6 @@
                     Open an existing JSON data file
                   </div>
                 </div>
-                <span class="badge badge-hollow ms-2"
-                  >{{ shortcutPrefix }}+O</span
-                >
               </button>
 
               <button

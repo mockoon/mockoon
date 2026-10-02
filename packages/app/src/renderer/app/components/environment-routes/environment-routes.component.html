@@ -17,9 +17,6 @@
 @let externalLink = externalLink$ | async;
 @let bodyType = bodyType$ | async;
 @let hasRoutes = hasRoutes$ | async;
-@let os = os$ | async;
-@let isMac = os === 'darwin';
-@let shortcutPrefix = isMac ? 'Cmd' : 'Ctrl';
 
 <ng-template
   #defaultFlagTemplate
@@ -905,9 +902,6 @@
                           Mock REST or custom HTTP endpoints
                         </div>
                       </div>
-                      <span class="badge badge-hollow ms-2"
-                        >{{ shortcutPrefix }}+Shift+R</span
-                      >
                     </button>
 
                     <button

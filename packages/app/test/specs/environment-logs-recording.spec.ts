@@ -63,8 +63,6 @@ describe('Environment logs recording', () => {
     await routes.assertMenuEntryText(1, '/test2');
 
     await environments.assertActiveMenuEntryText('Empty 2');
-
-    await environments.select(1);
   });
 
   it('should verify only one route was created in first environment', async () => {

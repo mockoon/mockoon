@@ -32,7 +32,7 @@ export const SharedConfig = (options: {
     docs: {
       adminApi: `${docsUrl}admin-api/overview/`,
       proDeploy: `${proDocsUrl}features/api-mock-deployments/`,
-      cloudDeployCliPull: `${proDocsUrl}api-mock-cloud-deployments/#self-host-with-the-cli`
+      cloudDeployCliPull: `${options.websiteUrl}cloud/docs/api-mock-cloud-deployments/#self-host-with-the-cli`
     },
     // URLs should not be used directly in desktop app (but there is a redirection for the web app in user service). Instead use the flow methods in the user service
     appAuthURL: `${options.websiteUrl}app-auth/`,

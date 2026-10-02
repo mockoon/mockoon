@@ -7,7 +7,6 @@ import {
   combineLatest,
   delay,
   distinctUntilChanged,
-  from,
   map,
   of,
   startWith,
@@ -15,7 +14,6 @@ import {
 } from 'rxjs';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
-import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
@@ -32,7 +30,6 @@ export class NoEnvironmentComponent {
   private uiService = inject(UIService);
   private store = inject(Store);
   private userService = inject(UserService);
-  private mainApiService = inject(MainApiService);
 
   public isWeb = Config.isWeb;
   public proPlansURL = Config.proPlansURL;
@@ -69,9 +66,6 @@ export class NoEnvironmentComponent {
       return of(true).pipe(delay(6000 - elapsed));
     }),
     startWith(false)
-  );
-  public os$: Observable<string> = from(
-    this.mainApiService.invoke('APP_GET_OS')
   );
   public cloudEnvironmentsCount$: Observable<number> = this.store
     .select('settings')

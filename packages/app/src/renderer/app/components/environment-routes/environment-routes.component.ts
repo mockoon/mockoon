@@ -164,9 +164,6 @@ export class EnvironmentRoutesComponent {
   public databuckets$: Observable<DropdownItems>;
   public externalLink$: Observable<string>;
   public hasRoutes$: Observable<boolean>;
-  public os$: Observable<string> = from(
-    this.mainApiService.invoke('APP_GET_OS')
-  );
   public defaultResponseTooltips = {
     [ResponseMode.RANDOM]: 'Default response is disabled in random mode',
     [ResponseMode.SEQUENTIAL]:
