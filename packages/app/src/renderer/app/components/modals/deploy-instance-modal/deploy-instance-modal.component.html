@@ -11,7 +11,7 @@
       Manage {{ environment?.name }} deployment<br />
       <small class="text-muted h6">
         Modify your cloud instance configuration (<a
-          href="{{ cloudDeploy }}"
+          href="{{ proDeploy }}"
           target="_blank"
           >documentation</a
         >):
@@ -20,7 +20,7 @@
       Deploy {{ environment?.name }}<br />
       <small class="text-muted h6"
         >Configure your cloud instance (<a
-          href="{{ cloudDeploy }}"
+          href="{{ proDeploy }}"
           target="_blank"
           >documentation</a
         >):</small
@@ -166,14 +166,6 @@
           user?.deployInstancesQuota
         }})
       </p>
-      <a
-        class="btn btn-link btn-icon text-primary ps-2"
-        href="{{ accountUrl }}"
-        target="_blank"
-      >
-        My account
-        <app-svg icon="open_in_new" class="ps-1" size="12" />
-      </a>
     </div>
   }
   <div class="ms-auto d-flex align-items-center">

@@ -113,7 +113,7 @@ export class EnvironmentsMenuComponent {
   public user$ = this.store.select('user');
   public sync$ = this.store.select('sync');
   public categories$: Observable<typeof this.categories>;
-  public cloudPlansURL = Config.cloudPlansURL;
+  public proPlansURL = Config.proPlansURL;
   public isCloudEnabled$: Observable<boolean>;
   public isConnected$ = this.user$.pipe(map((user) => !!user));
   public syncAlert$: Observable<string>;
@@ -127,7 +127,7 @@ export class EnvironmentsMenuComponent {
   };
   public commonDropdownMenuItems: DropdownMenuItem[] = [
     {
-      label: this.isWeb ? 'Duplicate' : 'Duplicate to the cloud',
+      label: this.isWeb ? 'Duplicate' : 'Duplicate to remote',
       icon: this.isWeb ? 'content_copy' : 'cloud',
       twoSteps: false,
       disabled$: () =>
@@ -227,7 +227,7 @@ export class EnvironmentsMenuComponent {
               return 'Manage deployment';
             }
 
-            return this.isWeb ? 'Deploy' : 'Deploy to the cloud';
+            return 'Deploy';
           })
         ),
       icon: ({ environmentUuid }: dropdownMenuPayload) =>
@@ -303,7 +303,7 @@ export class EnvironmentsMenuComponent {
             }
           },
           {
-            label: 'Delete from cloud and convert to local',
+            label: 'Delete from remote and convert to local',
             icon: 'cloud_remove',
             twoSteps: false,
             disabled$: () =>
@@ -318,7 +318,7 @@ export class EnvironmentsMenuComponent {
           }
         ]),
     {
-      label: this.isWeb ? 'Delete' : 'Delete from cloud and close',
+      label: this.isWeb ? 'Delete' : 'Delete from remote and close',
       icon: this.isWeb ? 'delete' : 'cloud_remove',
       twoSteps: false,
       disabled$: () =>
@@ -346,7 +346,7 @@ export class EnvironmentsMenuComponent {
 
   public cloudDropdownMenuItems: DropdownMenuElement[] = [
     {
-      label: 'New cloud environment',
+      label: 'New remote environment',
       icon: 'cloud_add',
       twoSteps: false,
       action: () => {
@@ -357,7 +357,7 @@ export class EnvironmentsMenuComponent {
     ...(!this.isWeb
       ? [
           {
-            label: 'New cloud environment from local file',
+            label: 'New remote environment from local file',
             icon: 'folder_open',
             twoSteps: false,
             action: () => {
@@ -370,7 +370,7 @@ export class EnvironmentsMenuComponent {
         ]
       : []),
     {
-      label: 'New cloud environment from OpenAPI/Swagger',
+      label: 'New remote environment from OpenAPI/Swagger',
       icon: 'description',
       twoSteps: false,
       action: () => {
@@ -549,7 +549,7 @@ export class EnvironmentsMenuComponent {
     this.categories = [
       {
         id: 'cloud',
-        label: this.isWeb ? 'APIs' : 'Cloud',
+        label: this.isWeb ? 'APIs' : 'Remote',
         collapsed: false
       }
     ];

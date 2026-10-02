@@ -75,8 +75,7 @@ export class DeployInstanceModalComponent {
     map((existingInstance) => !!existingInstance)
   );
   public user$ = this.store.select('user');
-  public accountUrl = Config.accountUrl;
-  public cloudDeploy = Config.docs.cloudDeploy;
+  public proDeploy = Config.docs.proDeploy;
   public isWeb = Config.isWeb;
   public stopInstanceRequested = signal(false);
   public optionsForm = this.formBuilder.group({

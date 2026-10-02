@@ -355,7 +355,7 @@ export class CommandPaletteService {
     const commonCommands: Commands = [
       {
         id: 'NEW_CLOUD_ENVIRONMENT',
-        label: 'Create a New Cloud Environment',
+        label: 'Create a New Remote Environment',
         action: () => {
           this.environmentsService.addCloudEnvironment(null, true).subscribe();
         },
@@ -733,7 +733,7 @@ export class CommandPaletteService {
       },
       {
         id: 'IMPORT_CLOUD_OPENAPI',
-        label: 'New cloud environment from OpenAPI/Swagger',
+        label: 'New remote environment from OpenAPI/Swagger',
         action: () => {
           this.uiService.openModal('openApiImport', {
             mode: 'import',
@@ -966,7 +966,7 @@ export class CommandPaletteService {
         },
         {
           id: 'CONVERT_ENVIRONMENT_TO_CLOUD',
-          label: 'Convert Current Local Environment to Cloud',
+          label: 'Convert Current Local Environment to Remote',
           action: () => {
             this.environmentsService
               .convertCurrentEnvironmentToCloud()
@@ -981,7 +981,7 @@ export class CommandPaletteService {
       commonCommands.push({
         id: 'NEW_CLOUD_ENVIRONMENT_CLIPBOARD',
         label:
-          "Create a New Cloud Environment From Clipboard (Mockoon's JSON format)",
+          "Create a New Remote Environment From Clipboard (Mockoon's JSON format)",
         action: () => {
           this.environmentsService
             .newEnvironmentFromClipboard(true)
