@@ -12,11 +12,11 @@ import utils, {
 } from '../libs/utils';
 
 export enum RoutesMenuActions {
-  OPEN_TEMPLATES = 1,
-  ADD_CRUD_ROUTE = 2,
-  ADD_HTTP_ROUTE = 3,
-  ADD_WS_ROUTE = 4,
-  ADD_FOLDER = 5
+  // templates and assistants are not displayed when offline
+  ADD_CRUD_ROUTE = 1,
+  ADD_HTTP_ROUTE = 2,
+  ADD_WS_ROUTE = 3,
+  ADD_FOLDER = 4
 }
 class Routes {
   private rulesTargetIndexes: Record<ResponseRuleTargets, number> = {
