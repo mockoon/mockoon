@@ -1,0 +1,28 @@
+.connection-option {
+  align-items: flex-start;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 6px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 250px;
+  padding: 24px;
+
+  &.connection-option-primary {
+    border-color: rgba(var(--bs-primary-rgb), 0.45);
+    background-color: rgba(var(--bs-primary-rgb), 0.04);
+  }
+
+  h5 {
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin-bottom: 24px;
+  }
+}
+
+.connection-option-icon {
+  font-size: 28px;
+  margin-bottom: 18px;
+}

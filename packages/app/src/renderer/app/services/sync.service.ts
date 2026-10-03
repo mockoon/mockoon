@@ -9,6 +9,7 @@ import {
   Plans,
   ServerAcknowledgment,
   SyncActions,
+  SyncDisconnectReasons,
   SyncErrors,
   SyncMessageTypes,
   SyncPresence,
@@ -233,6 +234,12 @@ export class SyncService {
         } else if (error.message === SyncErrors.VERSION_TOO_OLD) {
           this.store.update(
             updateSyncAction({ offlineReason: SyncErrors.VERSION_TOO_OLD })
+          );
+        } else if (error.message === SyncDisconnectReasons.LICENSE_EXPIRED) {
+          this.store.update(
+            updateSyncAction({
+              offlineReason: SyncDisconnectReasons.LICENSE_EXPIRED
+            })
           );
         }
 

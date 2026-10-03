@@ -5,10 +5,7 @@ import { Store } from 'src/renderer/app/stores/store';
 
 @Component({
   selector: 'app-plan-indicator',
-  template: `<div
-    class="badge text-bg-warning"
-    ngbTooltip="Your current cloud plan"
-  >
+  template: `<div class="badge text-bg-warning" ngbTooltip="Your current plan">
     {{ currentPlan() }}
   </div>`,
   host: {

@@ -6,7 +6,7 @@
 @let os = os$ | async;
 
 <div class="header d-flex align-items-center">
-  <div appTourStep="tour-environment-start">
+  <div>
     <!-- Web interface is focused on deploying to the cloud and managing the instance -->
     @if (isWeb) {
       @if (user) {
@@ -134,7 +134,7 @@
 
   <ul class="nav nav-tabs">
     @for (tab of tabs; track tab.id) {
-      <li class="nav-item" [appTourStep]="tourIds[tab.id]">
+      <li class="nav-item">
         <a
           class="nav-link d-flex align-items-center"
           [class]="{
@@ -237,8 +237,7 @@
       } @else {
         <button class="btn dropdown-item" (click)="login()">
           <app-svg icon="login" class="pe-2" />
-          Sign in
-          <app-svg icon="open_in_new" class="ps-2" />
+          Connect
         </button>
       }
       <button class="btn dropdown-item" (click)="openSettings()">

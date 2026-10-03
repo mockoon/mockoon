@@ -1,0 +1,49 @@
+<div class="modal-header">
+  <h4 class="modal-title">Connect to Mockoon</h4>
+</div>
+<div class="modal-body">
+  <div class="row g-3">
+    <div class="col-12 col-sm-6 d-flex">
+      <section class="connection-option connection-option-primary">
+        <app-svg icon="cloud" class="connection-option-icon text-primary" />
+        <h5>Mockoon Pro</h5>
+        <p class="text-muted">
+          Connect to your organization's private Mockoon Pro instance,
+          self-hosted or managed by Mockoon.<br />
+          Learn more about
+          <a [href]="proPlansURL" target="_blank">Mockoon Pro</a>.
+        </p>
+        <button
+          type="button"
+          class="btn btn-primary w-100 mt-auto"
+          (click)="configureSelfHosted()"
+        >
+          Configure instance
+        </button>
+      </section>
+    </div>
+
+    <div class="col-12 col-sm-6 d-flex">
+      <section class="connection-option">
+        <app-svg icon="account" class="connection-option-icon text-secondary" />
+        <h5>Legacy Mockoon Cloud</h5>
+        <p class="text-muted">
+          Sign in to an existing Mockoon Cloud account. Available to existing
+          customers only.
+        </p>
+        <button
+          type="button"
+          class="btn btn-outline-secondary w-100 mt-auto"
+          (click)="connectLegacyCloud()"
+        >
+          Sign in to Mockoon Cloud
+        </button>
+      </section>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary modal-close" (click)="close()">
+    Cancel
+  </button>
+</div>

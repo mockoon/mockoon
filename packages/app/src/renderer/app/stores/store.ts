@@ -459,6 +459,7 @@ export class Store {
    */
   public selectIsQuotaReached() {
     return this.store$.asObservable().pipe(
+      filter((store) => !!store.settings),
       map((store) => {
         const user = store.user;
         const cloudEnvironments = store.settings.environments.filter(

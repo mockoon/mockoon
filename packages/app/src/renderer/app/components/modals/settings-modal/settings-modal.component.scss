@@ -8,6 +8,30 @@ input[type='number']::-webkit-outer-spin-button {
   margin: 0;
 }
 
+.self-hosted-settings {
+  border: 1px solid transparent;
+  border-radius: 6px;
+  margin: 0 -12px;
+  padding: 0 12px;
+}
+
+.self-hosted-settings-highlighted {
+  animation: highlight-self-hosted-settings 2.5s ease-out;
+}
+
+@keyframes highlight-self-hosted-settings {
+  0%,
+  55% {
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+    border-color: rgba(var(--bs-primary-rgb), 0.5);
+  }
+
+  100% {
+    background-color: transparent;
+    border-color: transparent;
+  }
+}
+
 .log-body {
   label {
     margin-bottom: 0;

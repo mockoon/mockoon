@@ -4,7 +4,6 @@ import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
-import { TourService } from 'src/renderer/app/services/tour.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
@@ -19,7 +18,6 @@ export class MainApiListenerService {
   private zone = inject(NgZone);
   private userService = inject(UserService);
   private uiService = inject(UIService);
-  private tourService = inject(TourService);
   private mainApiService = inject(MainApiService);
 
   public init() {
@@ -89,9 +87,6 @@ export class MainApiListenerService {
               break;
             case 'OPEN_SETTINGS':
               this.uiService.openModal('settings');
-              break;
-            case 'TOUR_START':
-              this.tourService.start();
               break;
             case 'OPEN_CHANGELOG':
               this.uiService.openModal('changelog');

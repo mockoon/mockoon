@@ -158,10 +158,8 @@
       } @else {
         <tr>
           <td colspan="7" class="text-center text-muted">
-            <a [href]="cloudPlansURL" target="_blank"
-              >Subscribe to Mockoon Cloud</a
-            >
-            to deploy cloud environments.
+            <a [href]="proPlansURL" target="_blank">Upgrade to Mockoon Pro</a>
+            to deploy remote environments.
           </td>
         </tr>
       }
@@ -183,14 +181,6 @@
           user?.deployInstancesQuota
         }})
       </p>
-      <a
-        class="btn btn-link btn-icon text-primary ps-2"
-        href="{{ accountUrl }}"
-        target="_blank"
-      >
-        My account
-        <app-svg icon="open_in_new" class="ps-1" size="12" />
-      </a>
     </div>
   }
   <div class="ms-auto d-flex align-items-center">

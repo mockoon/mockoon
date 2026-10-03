@@ -11,7 +11,6 @@ import {
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
-import { TourService } from 'src/renderer/app/services/tour.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { clearLogsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
@@ -22,7 +21,6 @@ export class CommandPaletteService {
   private environmentsService = inject(EnvironmentsService);
   private uiService = inject(UIService);
   private store = inject(Store);
-  private tourService = inject(TourService);
   private mainApiService = inject(MainApiService);
   private settingsService = inject(SettingsService);
 
@@ -350,6 +348,7 @@ export class CommandPaletteService {
     const hasActiveCallback = !!activeCallback;
     const activeCallbackUuid = activeCallback?.uuid;
     const environmentDescriptors = this.store.get('settings').environments;
+    const isUserConnected = !!this.store.get('user');
     const isUserConnectedAndPaid = this.store.get('user')?.plan !== Plans.FREE;
     const isSyncConnected = this.store.get('sync')?.status;
     const isNotSelfHosted = !this.settingsService.getIsSelfHosted();
@@ -357,7 +356,7 @@ export class CommandPaletteService {
     const commonCommands: Commands = [
       {
         id: 'NEW_CLOUD_ENVIRONMENT',
-        label: 'Create a New Cloud Environment',
+        label: 'Create a New Remote Environment',
         action: () => {
           this.environmentsService.addCloudEnvironment(null, true).subscribe();
         },
@@ -627,7 +626,10 @@ export class CommandPaletteService {
         },
         score: 1,
         enabled:
-          hasActiveEnvironment && isActiveEnvironmentEditable && isNotSelfHosted
+          hasActiveEnvironment &&
+          isActiveEnvironmentEditable &&
+          isNotSelfHosted &&
+          isUserConnected
       },
       {
         id: 'ENVIRONMENT_TOGGLE_RECORDING',
@@ -734,17 +736,8 @@ export class CommandPaletteService {
         enabled: true
       },
       {
-        id: 'TOUR_START',
-        label: 'Take the tour',
-        action: () => {
-          this.tourService.start();
-        },
-        score: 1,
-        enabled: hasAtLeastOneEnvironment
-      },
-      {
         id: 'IMPORT_CLOUD_OPENAPI',
-        label: 'New cloud environment from OpenAPI/Swagger',
+        label: 'New remote environment from OpenAPI/Swagger',
         action: () => {
           this.uiService.openModal('openApiImport', {
             mode: 'import',
@@ -977,7 +970,7 @@ export class CommandPaletteService {
         },
         {
           id: 'CONVERT_ENVIRONMENT_TO_CLOUD',
-          label: 'Convert Current Local Environment to Cloud',
+          label: 'Convert Current Local Environment to Remote',
           action: () => {
             this.environmentsService
               .convertCurrentEnvironmentToCloud()
@@ -992,7 +985,7 @@ export class CommandPaletteService {
       commonCommands.push({
         id: 'NEW_CLOUD_ENVIRONMENT_CLIPBOARD',
         label:
-          "Create a New Cloud Environment From Clipboard (Mockoon's JSON format)",
+          "Create a New Remote Environment From Clipboard (Mockoon's JSON format)",
         action: () => {
           this.environmentsService
             .newEnvironmentFromClipboard(true)
