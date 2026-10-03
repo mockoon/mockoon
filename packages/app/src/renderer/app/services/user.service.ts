@@ -140,6 +140,12 @@ export class UserService {
    * Open the auth modal and send the APP_AUTH event to the main process
    */
   public startLoginFlow() {
+    if (!this.isWeb && !this.settingsService.getIsSelfHosted()) {
+      this.uiService.openModal('connection');
+
+      return;
+    }
+
     this.selectAuthStrategy()
       .pipe(
         take(1),
@@ -148,6 +154,10 @@ export class UserService {
         })
       )
       .subscribe();
+  }
+
+  public startLegacyCloudLoginFlow() {
+    this.firebaseAuthStrategy.startLoginFlow();
   }
 
   /**

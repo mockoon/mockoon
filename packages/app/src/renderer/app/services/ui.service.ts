@@ -9,6 +9,7 @@ import { AuthModalComponent } from 'src/renderer/app/components/modals/auth-moda
 import { ChangelogModalComponent } from 'src/renderer/app/components/modals/changelog-modal/changelog-modal.component';
 import { CommandPaletteModalComponent } from 'src/renderer/app/components/modals/command-palette-modal/command-palette-modal.component';
 import { ConfirmModalComponent } from 'src/renderer/app/components/modals/confirm-modal/confirm-modal.component';
+import { ConnectionModalComponent } from 'src/renderer/app/components/modals/connection-modal/connection-modal.component';
 import { DeployInstanceModalComponent } from 'src/renderer/app/components/modals/deploy-instance-modal/deploy-instance-modal.component';
 import { DuplicateModalComponent } from 'src/renderer/app/components/modals/duplicate-modal/duplicate-modal.component';
 import { EditorModalComponent } from 'src/renderer/app/components/modals/editor-modal/editor-modal.component';
@@ -51,6 +52,7 @@ const commonConfigs: Record<
 
 type ModalNames =
   | 'commandPalette'
+  | 'connection'
   | 'settings'
   | 'feedback'
   | 'changelog'
@@ -116,6 +118,10 @@ export class UIService {
         backdropClass: 'modal-backdrop-transparent'
       }
     },
+    connection: {
+      component: ConnectionModalComponent,
+      options: commonConfigs.large
+    },
     settings: {
       component: SettingsModalComponent,
       options: commonConfigs.large
@@ -174,6 +180,7 @@ export class UIService {
   };
   private modalsInstances: Record<ModalNames, NgbModalRef> = {
     commandPalette: null,
+    connection: null,
     settings: null,
     feedback: null,
     changelog: null,
