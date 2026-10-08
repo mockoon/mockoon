@@ -80,7 +80,7 @@ You can also directly load Mockoon's environment file from a URL. To do so, prov
 $ mockoon-cli start --data https://domain.com/your-environment-file.json
 ```
 
-### Run a cloud-hosted Mockoon environment
+### Run a Mockoon Cloud environment
 
 Since v9.5.0, you can also run a cloud-hosted Mockoon environment directly from the CLI by providing the cloud URL as the `data` parameter:
 
@@ -88,13 +88,13 @@ Since v9.5.0, you can also run a cloud-hosted Mockoon environment directly from 
 $ mockoon-cli start --data cloud://{UUID} --token {TOKEN}
 ```
 
-Where `{UUID}` is your environment's UUID and `{TOKEN}` is your Mockoon Cloud [access token](https://mockoon.com/cloud/docs/access-tokens/).
+Where `{UUID}` is your environment's UUID and `{TOKEN}` is your legacy Mockoon Cloud [access token](https://mockoon.com/cloud/docs/access-tokens/).
 
 The application will provide you with the necessary **commands and instructions** to set up and run the mock on your own servers in the environment dropdown menu:
 
 ![application dialog showing instructions to pull a cloud environment](https://mockoon.com/images/docs/repo/cli/cli-pull-instructions.png)
 
-Learn more about self-hosting cloud environments in the [official Mockoon Cloud documentation](https://mockoon.com/cloud/docs/api-mock-cloud-deployments/#self-host-with-the-cli).
+This command is retained for existing Mockoon Cloud customers. New team deployments should use [Mockoon Pro](https://mockoon.com/pro/docs/self-hosting/installation/).
 
 
 ### Use an OpenAPI specification file
@@ -144,7 +144,7 @@ The mocks will run by default on the ports and hostnames specified in the files.
 **Options**:
 |Flag|Description|
 |-|-|
-|-d, --data |[required] Path(s) or URL(s) to your Mockoon file(s). Supports cloud URLs (e.g. `cloud://`, [see above](#run-a-cloud-hosted-mockoon-environment)).|
+|-d, --data |[required] Path(s) or URL(s) to your Mockoon file(s). Supports cloud URLs (e.g. `cloud://`, [see above](#run-a-mockoon-cloud-environment)).|
 |-p, --port |Override environment(s) port(s)|
 |-l, --hostname |Override default listening hostname(s)|
 |-c, --faker-locale | Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see below.)|
@@ -165,7 +165,7 @@ The mocks will run by default on the ports and hostnames specified in the files.
 |--enable-random-latency | Randomize global and responses latencies between 0 and the specified value (default: false)|
 |--proxy | Override the environment's proxy settings (options: 'enabled' or 'disabled')|
 |--public-base-url | Public base URL used to resolve [relative callback URLs](https://mockoon.com/docs/latest/callbacks/overview/#configure-a-callback) and for the [`baseUrl` templating helper](https://mockoon.com/docs/latest/templating/mockoon-request-helpers/#baseurl) (e.g. https://api.example.com or http://localhost:3000). Must include the protocol and port if non-standard.|
-|-k, --token | Access token used to fetch cloud-hosted Mockoon environments (see  [access token documentation](https://mockoon.com/cloud/docs/access-tokens/))|
+|-k, --token | Access token used to fetch legacy Mockoon Cloud environments (see [access token documentation](https://mockoon.com/cloud/docs/access-tokens/))|
 |--max-callback-depth | Maximum call stack depth for route responses with callbacks (default: 100)|
 |--enable-route-metadata-headers | Add [route metadata headers](https://mockoon.com/docs/latest/response-configuration/response-headers/#mockoon-response-headers) to responses (UUID and response metadata) (default: false)|
 |--disable-external-refs | Disable fetching of external HTTP/HTTPS `$ref` references when loading OpenAPI specifications (default: false)|
@@ -615,7 +615,7 @@ You will find Mockoon's [documentation](https://mockoon.com/docs/latest/about/) 
 
 ## Support us!
 
-Mockoon is proudly **independent** and **open-source**, maintained without external funding. We rely on both **sponsorships** and **Mockoon Cloud subscriptions** to keep improving the project and building new features. A **big thank you** to the companies below for supporting our work and helping us grow (and all the [sponsors](https://github.com/mockoon/mockoon/blob/main/backers.md) who helped this project over time!):
+Mockoon is proudly **independent** and **open-source**, maintained without external funding. We rely on both **sponsorships** and **Mockoon Pro licenses** to keep improving the project and building new features. A **big thank you** to the companies below for supporting our work and helping us grow (and all the [sponsors](https://github.com/mockoon/mockoon/blob/main/backers.md) who helped this project over time!):
 
 ### Platinum
 
@@ -669,26 +669,27 @@ Mockoon is proudly **independent** and **open-source**, maintained without exter
   </a>
 </div>
 
-If you'd like to **support Mockoon** as well, you can **become a sponsor** or **subscribe to Mockoon Cloud**, every contribution helps keep the project alive and evolving. Thank you!
+If you'd like to **support Mockoon** as well, you can **become a sponsor** or **purchase Mockoon Pro licenses**. Every contribution helps keep the project alive and evolving. Thank you!
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
-<a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsor-btn.png?" width="250" alt="sponsor button" /></a>
+<a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsors-btn.png" width="250" alt="sponsor button" /></a>
 </div>
 
-## Subscribe to Mockoon Cloud
+## Discover Mockoon Pro
 
-With advanced features for solo developers and teams, Mockoon Cloud supercharges your API development:
+Mockoon Pro is a private, self-hosted platform for teams that need to keep their API mocking workflows and data under their control:
 
-- ☁️ [cloud deployments](https://mockoon.com/cloud/docs/api-mock-cloud-deployments/)
-- 🔄️ [data synchronization and real-time collaboration](https://mockoon.com/cloud/docs/data-synchronization-team-collaboration/)
-- 🤖 [AI powered API mocking](https://mockoon.com/ai-powered-api-mocking/)
-- 📃 Access to dozens of [ready-to-use JSON templates](https://mockoon.com/templates/).
-- 💬 Priority support and training.
+- [Deploy on-premises, in a private cloud, or on an isolated network](https://mockoon.com/pro/docs/self-hosting/installation/)
+- [Synchronize data and collaborate in real time](https://mockoon.com/pro/docs/features/data-synchronization-team-collaboration/)
+- [Deploy and manage mock API instances](https://mockoon.com/pro/docs/features/api-mock-deployments/)
+- [Use the embedded web application](https://mockoon.com/pro/docs/clients/embedded-web-application/)
+- [Manage users with local authentication or OIDC SSO](https://mockoon.com/pro/docs/misc/authentication/)
+- [Review administrative and workspace events in the audit trail](https://mockoon.com/pro/docs/misc/audit-trail/)
 
-Upgrade today and take your API development to the next level.
+Start a free trial or learn more about [Mockoon Pro](https://mockoon.com/pro/).
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
-<a href="https://mockoon.com/cloud/"><img src="https://mockoon.com/images/cloud-btn.png?" width="250" alt="cloud button" /></a>
+<a href="https://mockoon.com/pro/"><img src="https://mockoon.com/images/pro-btn.png" width="250" alt="pro button" /></a>
 </div>
 
 ## Support/feedback

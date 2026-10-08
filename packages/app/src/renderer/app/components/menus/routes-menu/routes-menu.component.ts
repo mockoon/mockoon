@@ -29,7 +29,6 @@ import {
   NgbDropdown,
   NgbDropdownMenu,
   NgbDropdownToggle,
-  NgbPopover,
   NgbTooltip
 } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, Observable, combineLatest, merge } from 'rxjs';
@@ -53,7 +52,6 @@ import { DraggableDirective } from 'src/renderer/app/directives/draggable.direct
 import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directive';
 import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
 import { ScrollWhenActiveDirective } from 'src/renderer/app/directives/scroll-to-active.directive';
-import { TourStepDirective } from 'src/renderer/app/directives/tour-step.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import {
   buildFullPath,
@@ -93,8 +91,6 @@ type folderDropdownMenuPayload = { folder: Folder; folderUuid: string };
   templateUrl: './routes-menu.component.html',
   styleUrls: ['./routes-menu.component.scss'],
   imports: [
-    NgbPopover,
-    TourStepDirective,
     NgbDropdown,
     NgbDropdownToggle,
     SvgComponent,
@@ -139,6 +135,7 @@ export class RoutesMenuComponent {
   public isActiveEnvironmentEditable$ =
     this.store.selectIsActiveEnvironmentEditable();
   public isSelfHosted$ = this.settingsService.selectIsSelfHosted();
+  public isConnected$ = this.store.select('user').pipe(map((user) => !!user));
   private manualDragEnabled$ = new BehaviorSubject(true);
   public dragEnabled$ = combineLatest([
     this.isActiveEnvironmentEditable$,

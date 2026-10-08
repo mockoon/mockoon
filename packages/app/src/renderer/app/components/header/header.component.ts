@@ -6,7 +6,6 @@ import {
   NgbDropdown,
   NgbDropdownMenu,
   NgbDropdownToggle,
-  NgbPopover,
   NgbTooltip
 } from '@ng-bootstrap/ng-bootstrap';
 import { EMPTY, Observable, forkJoin, from } from 'rxjs';
@@ -14,7 +13,6 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TeamPresenceComponent } from 'src/renderer/app/components/team-presence/team-presence.component';
 import { planLabels } from 'src/renderer/app/constants/user.constant';
-import { TourStepDirective } from 'src/renderer/app/directives/tour-step.directive';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
   EnvironmentStatus,
@@ -24,7 +22,6 @@ import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { RemoteConfigService } from 'src/renderer/app/services/remote-config.service';
-import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { SyncService } from 'src/renderer/app/services/sync.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -39,8 +36,6 @@ import { PlanIndicatorComponent } from '../plan-indicator/plan-indicator.compone
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   imports: [
-    NgbPopover,
-    TourStepDirective,
     NgbTooltip,
     SvgComponent,
     TeamPresenceComponent,
@@ -56,7 +51,6 @@ export class HeaderComponent implements OnInit {
   private environmentsService = inject(EnvironmentsService);
   private userService = inject(UserService);
   private remoteConfigService = inject(RemoteConfigService);
-  private settingsService = inject(SettingsService);
   private uiService = inject(UIService);
   private syncService = inject(SyncService);
   private toastsService = inject(ToastsService);
@@ -77,10 +71,6 @@ export class HeaderComponent implements OnInit {
     count$?: Observable<number>;
   }[];
   public planLabels = planLabels;
-  public tourIds = {
-    ENV_LOGS: 'tour-environment-logs',
-    ENV_PROXY: 'tour-environment-proxy'
-  };
   public isDev = !env.production;
   public isWeb = Config.isWeb;
   public accountUrl$: Observable<string>;

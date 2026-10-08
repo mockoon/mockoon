@@ -1,9 +1,9 @@
-Thank you to all the supporters who donated over time, and all the ones who wanted to remain anonymous!
+  Thank you to all the supporters who donated over time, and all the ones who wanted to remain anonymous!
 
 You can join them by visiting our Sponsor page on [GitHub Sponsors](https://github.com/sponsors/mockoon)
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
-<a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsor-btn.png?" width="250" alt="sponsor button" /></a>
+<a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsors-btn.png" width="250" alt="sponsor button" /></a>
 </div>
 
 # Our sponsors

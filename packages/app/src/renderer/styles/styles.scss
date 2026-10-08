@@ -363,11 +363,6 @@ $status-code-colors:
   }
 }
 
-.tour-highlight {
-  pointer-events: none;
-  user-select: none;
-}
-
 .warning-backdrop {
   position: absolute;
   width: 100%;
@@ -375,13 +370,6 @@ $status-code-colors:
   z-index: $zindex-modal-backdrop;
   background-color: $modal-backdrop-bg;
   opacity: 0.4;
-}
-
-.tour-backdrop {
-  position: fixed;
-  z-index: $zindex-modal-backdrop;
-  background-color: $modal-backdrop-bg;
-  opacity: 0.8;
 }
 
 .dropdown-toggle-no-caret {

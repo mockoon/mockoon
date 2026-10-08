@@ -15,10 +15,7 @@
 @let instanceUrls = instanceUrls$ | async;
 @let dragEnabled = dragEnabled$ | async;
 
-<div
-  class="environments-menu d-flex flex-column h-100"
-  appTourStep="tour-environments-menu"
->
+<div class="environments-menu d-flex flex-column h-100">
   @for (
     category of categories;
     track category.id;
@@ -424,16 +421,14 @@
       } @empty {
         @if (isCloud) {
           @if (isCloudEnabled) {
-            <div class="message message-sm m-2">No cloud environment</div>
+            <div class="message message-sm m-2">No remote environment</div>
           } @else {
             <div class="message message-sm m-2">
               @if (!isConnected) {
-                <a href="#" (click)="login($event)">Log in</a> or
+                <a href="#" (click)="login($event)">Connect</a> or
               }
-              <a [href]="cloudPlansURL" target="_blank"
-                >Subscribe to Mockoon Cloud</a
-              >
-              to create and deploy cloud environments
+              <a [href]="proPlansURL" target="_blank">Upgrade to Mockoon Pro</a>
+              to create and deploy remote environments
             </div>
           }
         } @else {

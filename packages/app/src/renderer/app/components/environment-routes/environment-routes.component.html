@@ -93,11 +93,7 @@
   <div class="d-flex flex-column flex-fill mh0">
     @if (activeRoute) {
       <!-- Method + endpoint + warning + delete -->
-      <div
-        [formGroup]="activeRouteForm"
-        class="p-2 pb-3 border-bottom"
-        appTourStep="tour-route-config"
-      >
+      <div [formGroup]="activeRouteForm" class="p-2 pb-3 border-bottom">
         <div class="route-path-grid-{{ activeRoute?.type }}">
           @if (activeRoute?.type === 'http') {
             <app-select
@@ -207,7 +203,6 @@
         <div
           id="route-responses-buttons"
           class="p-2 pt-3"
-          appTourStep="tour-route-response-add"
           [formGroup]="activeRouteForm"
         >
           <!-- Route responses button (add / randomize) -->
@@ -360,7 +355,6 @@
             [items]="
               activeRoute.type === 'ws' ? responseModesForWs : responseModes
             "
-            appTourStep="tour-route-response-modes"
           />
         </div>
         @if (activeRouteResponse) {
@@ -402,7 +396,7 @@
                 activeRoute?.type === 'ws' ||
                 (activeRoute?.type === 'crud' && !activeRouteResponse?.default)
               ) {
-                <li class="nav-item" appTourStep="tour-route-response-rules">
+                <li class="nav-item">
                   <a
                     class="nav-link d-flex align-items-center"
                     [class]="{ active: activeTab === 'RULES' }"
@@ -506,10 +500,7 @@
         <!-- RESPONSE & BODY tab -->
         @if (activeTab === 'RESPONSE') {
           <ng-container [formGroup]="activeRouteResponseForm">
-            <div
-              class="d-flex flex-column flex-fill mh0"
-              appTourStep="tour-route-response-config"
-            >
+            <div class="d-flex flex-column flex-fill mh0">
               <!-- http: status code + latency, crud: databucket id + latency (if default response), otherwise same as http -->
               <div class="mt-3 mx-2">
                 <div

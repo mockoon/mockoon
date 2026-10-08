@@ -315,14 +315,6 @@
       >
         Quota used ({{ user?.templatesQuotaUsed }}/{{ user?.templatesQuota }})
       </p>
-      <a
-        class="btn btn-link btn-icon text-primary ps-2"
-        href="{{ accountUrl }}"
-        target="_blank"
-      >
-        My account
-        <app-svg icon="open_in_new" class="ps-1" size="12" />
-      </a>
     </div>
   }
   <div class="ms-auto">
@@ -376,12 +368,8 @@
       (activeTemplatesTab === 'GENERATE_TEMPLATE' ||
         activeTemplatesTab === 'GENERATE_ENDPOINT')
     ) {
-      <a
-        class="btn btn-warning ms-2"
-        href="{{ cloudPlansURL }}"
-        target="_blank"
-      >
-        Discover our Cloud plans
+      <a class="btn btn-warning ms-2" href="{{ proPlansURL }}" target="_blank">
+        Discover our Pro plans
       </a>
     }
   </div>
