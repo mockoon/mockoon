@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Mockoon
+Comment=Create mock APIs in seconds
+Exec=mockoon
+Terminal=false
+Type=Application
+Icon=com.mockoon.app
+StartupWMClass=Mockoon
+Categories=Development;
+Keywords=mock;api;rest;http;
