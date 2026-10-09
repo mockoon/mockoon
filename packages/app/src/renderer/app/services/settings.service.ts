@@ -82,7 +82,10 @@ export class SettingsService {
           this.updateSettings({ lastChangelog: Config.appVersion });
         }
 
-        if (!settings.welcomeShown) {
+        if (
+          !settings.welcomeShown &&
+          (!Config.isWeb || (Config.isWeb && !settings.apiUrl))
+        ) {
           this.uiService.openModal('welcome');
         }
       })
