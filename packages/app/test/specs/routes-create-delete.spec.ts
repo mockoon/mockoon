@@ -120,4 +120,20 @@ describe('Create and delete routes', () => {
       await routes.assertBatchBarVisible(false);
     });
   });
+
+  describe('Undo deleted route', () => {
+    it('should create a fresh environment and add a route', async () => {
+      await environments.localAdd('test-env-undo');
+      await routes.addHTTPRoute();
+      await routes.assertCount(2);
+    });
+
+    it('should delete a route, verify toast is displayed, click undo and verify route is restored', async () => {
+      await routes.remove(2);
+      await routes.assertCount(1);
+      await utils.checkToastDisplayed('warning', 'deleted');
+      await utils.clickToastAction();
+      await routes.assertCount(2);
+    });
+  });
 });
