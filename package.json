@@ -90,7 +90,7 @@
     "prettier-plugin-organize-imports": "4.3.0",
     "tsx": "4.23.15",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.70.0"
+    "typescript-eslint": "8.71.0"
   },
   "allowScripts": {
     "@parcel/watcher@2.6.0": true,
