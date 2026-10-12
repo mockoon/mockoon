@@ -47,7 +47,7 @@
   "dependencies": {
     "@mockoon/commons": "9.9.0",
     "@mockoon/commons-server": "9.9.0",
-    "@modelcontextprotocol/sdk": "1.31.0",
+    "@modelcontextprotocol/sdk": "1.32.0",
     "@oclif/core": "4.14.0",
     "@oclif/plugin-help": "6.3.0",
     "chokidar": "4.0.3",
