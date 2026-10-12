@@ -5,10 +5,16 @@ updates:
     cooldown:
       default-days: 7
     versioning-strategy: increase
-    directory: "/"
+    directories:
+      - "/"
+      - "/packages/*"
     schedule:
       interval: "weekly"
     groups:
+      security-updates:
+        applies-to: security-updates
+        patterns:
+          - "*"
       angular:
         patterns:
           - "@angular*"
