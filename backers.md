@@ -141,6 +141,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Vetle Økland
 - Victor Castro
 - Volker Richert
+- [Will (wwestrop)](https://github.com/wwestrop)
 - Xutzin
 - Yuemuc
 
