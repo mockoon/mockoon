@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { RemoteConfigData } from '@mockoon/cloud';
-import { EMPTY, from, Observable } from 'rxjs';
-import { catchError, filter, switchMap, tap } from 'rxjs/operators';
+import { EMPTY, from, merge, Observable } from 'rxjs';
+import { catchError, filter, skip, switchMap, tap } from 'rxjs/operators';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { updateRemoteConfigAction } from 'src/renderer/app/stores/actions';
@@ -20,9 +20,21 @@ export class RemoteConfigService {
    * Monitor auth state and fetch the remote config
    */
   public init() {
-    return this.userService
-      .authStateChanges()
-      .pipe(switchMap(() => this.fetchConfig()));
+    return merge(
+      // drop the previous backend's sync URL so the sync socket never reuses it
+      this.settingsService.selectApiUrlChanges().pipe(
+        skip(1),
+        tap(() =>
+          this.store.update(
+            updateRemoteConfigAction({ cloudSyncUrl: undefined })
+          )
+        ),
+        switchMap(() => EMPTY)
+      ),
+      this.userService
+        .authStateChanges()
+        .pipe(switchMap(() => this.fetchConfig()))
+    );
   }
 
   /**

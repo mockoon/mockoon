@@ -77,9 +77,13 @@ export class SyncService {
     this.setDeviceId();
 
     return this.store.selectRemoteConfig('cloudSyncUrl').pipe(
-      filter((cloudSyncUrl) => !!cloudSyncUrl),
+      distinctUntilChanged(),
       tap((cloudSyncUrl) => {
-        if (!this.socket) {
+        // the URL changes when switching between the cloud and a self-hosted instance
+        this.socket?.disconnect();
+        this.socket?.removeAllListeners();
+
+        if (cloudSyncUrl) {
           this.socket = io(cloudSyncUrl, {
             transports: ['websocket'],
             query: {
@@ -93,7 +97,8 @@ export class SyncService {
           });
         }
       }),
-      mergeMap(() =>
+      filter((cloudSyncUrl) => !!cloudSyncUrl),
+      switchMap(() =>
         merge(
           this.initListeners(),
           // ⚠️ do not filter the user early as we want to disconnect the socket if the user logs out
