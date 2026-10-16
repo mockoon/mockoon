@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.mockoon.app</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <name>Mockoon</name>
+  <summary>Create mock APIs in seconds</summary>
+  <description>
+    <p>
+      Mockoon is the easiest and quickest way to run mock APIs locally.
+      No remote deployment, no account required, open source.
+    </p>
+    <p>
+      It helps you to create mock APIs in seconds with an intuitive and easy-to-use interface.
+      Runs wherever you want: locally, on your server or in the CI environment (CLI).
+    </p>
+  </description>
+  <launchable type="desktop-id">com.mockoon.app.desktop</launchable>
+  <url type="homepage">https://mockoon.com</url>
+  <url type="bugtracker">https://github.com/mockoon/mockoon/issues</url>
+  <url type="help">https://mockoon.com/docs</url>
+  <developer_name>Mockoon</developer_name>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://mockoon.com/images/hero-repo.png</image>
+    </screenshot>
+  </screenshots>
+  <content_rating type="oars-1.1" />
+  <releases>
+    <!-- Release entries to be added automatically or manually -->
+  </releases>
+</component>
