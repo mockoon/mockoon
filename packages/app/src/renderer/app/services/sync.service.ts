@@ -66,6 +66,7 @@ export class SyncService {
   private timeDifference: number;
   private serverMigrationDone = false;
   private migrationApproval: boolean;
+  private refreshPromptShown = false;
 
   /**
    * Initialize the socket connection.
@@ -321,6 +322,23 @@ export class SyncService {
     ).pipe(
       tap((payload) => {
         this.store.update(updateSyncAction({ offlineReason: payload.reason }));
+
+        if (
+          Config.isWeb &&
+          !this.refreshPromptShown &&
+          payload.reason === SyncDisconnectReasons.ROOM_INCOMPATIBLE_VERSION
+        ) {
+          this.refreshPromptShown = true;
+
+          this.uiService
+            .showConfirmDialog({
+              title: 'New version available',
+              text: 'Refresh the web app to update to the latest version and reconnect.',
+              confirmButtonText: 'Refresh',
+              cancelable: false
+            })
+            .subscribe(() => window.location.reload());
+        }
       })
     );
   }

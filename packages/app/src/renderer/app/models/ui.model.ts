@@ -18,6 +18,7 @@ export type ConfirmModalPayload = {
   text: string;
   confirmButtonText?: string;
   cancelButtonText?: string;
+  cancelable?: boolean;
   sub?: string;
   subIcon?: string;
   subIconClass?: string;
