@@ -181,7 +181,6 @@ export class EnvironmentsMenuComponent {
         });
       }
     },
-    ...this.environmentSourceService.environmentMenuItems,
     { separator: true },
     {
       label: 'Show data file in explorer/finder',
@@ -208,7 +207,10 @@ export class EnvironmentsMenuComponent {
       action: ({ environmentUuid }: dropdownMenuPayload) => {
         this.environmentsService.closeEnvironment(environmentUuid).subscribe();
       }
-    }
+    },
+    // keep source items last so upstream menu indexes stay stable
+    { separator: true },
+    ...this.environmentSourceService.environmentMenuItems
   ];
   private hasDeployment$ = (environmentUuid: string) =>
     this.store.select('deployInstances').pipe(
