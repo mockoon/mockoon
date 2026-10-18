@@ -1,0 +1,35 @@
+@let environment = environment$ | async;
+
+<div class="modal-header">
+  <h4 class="modal-title">
+    "{{ environment?.name }}" has local changes
+    <br />
+    <small class="text-muted h6">
+      Refreshing from the source URL will replace them. You can export your
+      changes first to propose them in the source repository.
+    </small>
+  </h4>
+</div>
+<div class="modal-footer">
+  <button
+    type="button"
+    id="environmentRefreshExport"
+    class="btn btn-primary me-2"
+    (click)="exportAndRefresh(environment?.uuid)"
+    [disabled]="!environment"
+  >
+    Export and refresh
+  </button>
+  <button
+    type="button"
+    id="environmentRefreshOverwrite"
+    class="btn btn-danger me-2"
+    (click)="overwrite(environment?.uuid)"
+    [disabled]="!environment"
+  >
+    Overwrite
+  </button>
+  <button type="button" class="btn btn-secondary modal-close" (click)="close()">
+    Cancel
+  </button>
+</div>

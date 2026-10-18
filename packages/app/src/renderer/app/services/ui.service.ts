@@ -13,6 +13,8 @@ import { ConnectionModalComponent } from 'src/renderer/app/components/modals/con
 import { DeployInstanceModalComponent } from 'src/renderer/app/components/modals/deploy-instance-modal/deploy-instance-modal.component';
 import { DuplicateModalComponent } from 'src/renderer/app/components/modals/duplicate-modal/duplicate-modal.component';
 import { EditorModalComponent } from 'src/renderer/app/components/modals/editor-modal/editor-modal.component';
+import { EnvironmentRefreshModalComponent } from 'src/renderer/app/components/modals/environment-refresh-modal/environment-refresh-modal.component';
+import { EnvironmentUrlModalComponent } from 'src/renderer/app/components/modals/environment-url-modal/environment-url-modal.component';
 import { FeedbackModalComponent } from 'src/renderer/app/components/modals/feedback-modal/feedback-modal.component';
 import { ManageInstancesModalComponent } from 'src/renderer/app/components/modals/manage-instances-modal/manage-instances-modal.component';
 import { OpenapiImportModalComponent } from 'src/renderer/app/components/modals/openapi-import-modal/openapi-import-modal.component';
@@ -65,6 +67,8 @@ type ModalNames =
   | 'editor'
   | 'manageInstances'
   | 'openApiImport'
+  | 'environmentUrl'
+  | 'environmentRefresh'
   | 'selfHostingInstructions';
 type ModalWithPayload = Extract<
   ModalNames,
@@ -73,6 +77,7 @@ type ModalWithPayload = Extract<
   | 'manageInstances'
   | 'confirm'
   | 'openApiImport'
+  | 'environmentRefresh'
   | 'selfHostingInstructions'
 >;
 type ModalWithoutPayload = Exclude<
@@ -81,6 +86,7 @@ type ModalWithoutPayload = Exclude<
   | 'editor'
   | 'manageInstances'
   | 'confirm'
+  | 'environmentRefresh'
   | 'selfHostingInstructions'
 >;
 
@@ -96,6 +102,7 @@ export class UIService {
     manageInstances: new BehaviorSubject<ManageInstancesModalPayload>(null),
     confirm: new BehaviorSubject<ConfirmModalPayload>(null),
     openApiImport: new BehaviorSubject<OpenApiImportModalPayload>(null),
+    environmentRefresh: new BehaviorSubject<string>(null),
     selfHostingInstructions: new BehaviorSubject<string>(null)
   };
   private modals: Record<
@@ -175,6 +182,14 @@ export class UIService {
           ? commonConfigs.extraLarge
           : commonConfigs.large
     },
+    environmentUrl: {
+      component: EnvironmentUrlModalComponent,
+      options: commonConfigs.medium
+    },
+    environmentRefresh: {
+      component: EnvironmentRefreshModalComponent,
+      options: commonConfigs.medium
+    },
     manageInstances: {
       component: ManageInstancesModalComponent,
       options: commonConfigs.extraLarge
@@ -198,6 +213,8 @@ export class UIService {
     deploy: null,
     editor: null,
     openApiImport: null,
+    environmentUrl: null,
+    environmentRefresh: null,
     manageInstances: null,
     selfHostingInstructions: null
   };
@@ -247,7 +264,7 @@ export class UIService {
   public openModal(modalName: 'editor', payload: EditorModalPayload): void;
   public openModal(modalName: 'confirm', payload: ConfirmModalPayload): void;
   public openModal(
-    modalName: 'deploy' | 'selfHostingInstructions',
+    modalName: 'deploy' | 'selfHostingInstructions' | 'environmentRefresh',
     payload: string
   ): void;
   public openModal(

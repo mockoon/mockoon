@@ -44,6 +44,7 @@ import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column
 import { ScrollWhenActiveDirective } from 'src/renderer/app/directives/scroll-to-active.directive';
 import { buildApiUrl } from 'src/renderer/app/libs/utils.lib';
 import { EnvironmentsStatuses } from 'src/renderer/app/models/store.model';
+import { EnvironmentSourceService } from 'src/renderer/app/services/environment-source.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
@@ -90,6 +91,7 @@ export class EnvironmentsMenuComponent {
   private syncService = inject(SyncService);
   private uiService = inject(UIService);
   private userService = inject(UserService);
+  private environmentSourceService = inject(EnvironmentSourceService);
 
   public activeEnvironment$: Observable<Environment>;
   public environments$: Observable<Environments>;
@@ -179,6 +181,7 @@ export class EnvironmentsMenuComponent {
         });
       }
     },
+    ...this.environmentSourceService.environmentMenuItems,
     { separator: true },
     {
       label: 'Show data file in explorer/finder',
@@ -423,6 +426,7 @@ export class EnvironmentsMenuComponent {
         });
       }
     },
+    ...this.environmentSourceService.newEnvironmentMenuItems,
     {
       separator: true
     }

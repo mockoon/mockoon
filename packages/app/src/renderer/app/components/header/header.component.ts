@@ -10,6 +10,7 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { EMPTY, Observable, forkJoin, from } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
+import { EnvironmentExportButtonComponent } from 'src/renderer/app/components/environment-export-button/environment-export-button.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TeamPresenceComponent } from 'src/renderer/app/components/team-presence/team-presence.component';
 import { planLabels } from 'src/renderer/app/constants/user.constant';
@@ -43,7 +44,8 @@ import { PlanIndicatorComponent } from '../plan-indicator/plan-indicator.compone
     NgbDropdownToggle,
     NgbDropdownMenu,
     AsyncPipe,
-    PlanIndicatorComponent
+    PlanIndicatorComponent,
+    EnvironmentExportButtonComponent
   ]
 })
 export class HeaderComponent implements OnInit {

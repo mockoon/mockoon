@@ -61,6 +61,14 @@ export const createMenu = (mainWindow: BrowserWindow): Menu => {
             mainWindow.webContents.send('APP_MENU', 'DUPLICATE_ENVIRONMENT');
           }
         },
+        {
+          id: 'MENU_EXPORT_ENVIRONMENT',
+          label: 'Export current environment…',
+          accelerator: 'CmdOrCtrl+Shift+E',
+          click: () => {
+            mainWindow.webContents.send('APP_MENU', 'EXPORT_ENVIRONMENT');
+          }
+        },
         { type: 'separator' },
         {
           id: 'MENU_NEW_CLOUD_ENVIRONMENT',
@@ -361,6 +369,7 @@ export const updateMenuState = (state: MenuStateUpdatePayload) => {
     ['MENU_CLOSE_ENVIRONMENT'],
     state.hasActiveEnvironment && !state.isActiveEnvironmentCloud
   );
+  toggleMenuItems(['MENU_EXPORT_ENVIRONMENT'], state.hasActiveEnvironment);
   toggleMenuItems(
     ['MENU_PREVIOUS_ROUTE', 'MENU_NEXT_ROUTE'],
     state.hasActiveEnvironment && state.activeEnvironmentRoutesCount > 0

@@ -1,9 +1,11 @@
 import { ServerErrorCodes } from '@mockoon/commons';
+import { EnvironmentSourceMessageCodes } from 'src/renderer/app/constants/environment-source-messages.constants';
 
 export type MessageLevels = 'error' | 'info';
 export type MessageParams = Record<string, any>;
 export type MessageCodes =
   | keyof typeof ServerErrorCodes
+  | EnvironmentSourceMessageCodes
   | 'INITIALIZING_APP'
   | 'UNKNOWN_ERROR'
   | 'OPENAPI_EXPORT'

@@ -8,6 +8,8 @@ export type EnvironmentDescriptor = {
   cloud: boolean;
   // last hash seen on the server
   lastServerHash: string | null;
+  sourceUrl?: string | null;
+  sourceHash?: string | null;
 };
 
 export enum FileWatcherOptions {

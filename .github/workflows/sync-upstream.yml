@@ -1,0 +1,116 @@
+name: Sync upstream
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: false
+
+env:
+  UPSTREAM_OWNER: mockoon
+  UPSTREAM_REPO: mockoon/mockoon
+  UPSTREAM_BRANCH: main
+  BASE_BRANCH: main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.BASE_BRANCH }}
+          fetch-depth: 0
+      - name: Check upstream changes
+        id: upstream
+        run: |
+          git remote add upstream "https://github.com/${UPSTREAM_REPO}.git"
+          git fetch upstream "${UPSTREAM_BRANCH}"
+          echo "behind=$(git rev-list --count "HEAD..upstream/${UPSTREAM_BRANCH}")" >> "$GITHUB_OUTPUT"
+      - name: Test merge
+        id: merge
+        if: steps.upstream.outputs.behind != '0'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git merge --no-edit "upstream/${UPSTREAM_BRANCH}"; then
+            echo "conflicts=" >> "$GITHUB_OUTPUT"
+          else
+            {
+              echo "conflicts<<EOF"
+              git diff --name-only --diff-filter=U | sed 's/^/- `/; s/$/`/'
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+            git merge --abort
+          fi
+      - name: Use Node.js
+        if: steps.upstream.outputs.behind != '0' && steps.merge.outputs.conflicts == ''
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Build merged code
+        id: build
+        if: steps.upstream.outputs.behind != '0' && steps.merge.outputs.conflicts == ''
+        continue-on-error: true
+        run: |
+          npm ci
+          npm run build:libs
+          npm run build:desktop:dev
+      - name: Open or update sync pull request
+        if: steps.upstream.outputs.behind != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BEHIND: ${{ steps.upstream.outputs.behind }}
+          CONFLICTS: ${{ steps.merge.outputs.conflicts }}
+          BUILD: ${{ steps.build.outcome }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -n "${CONFLICTS}" ]; then
+            STATUS="⚠️ Merge conflicts in:
+          ${CONFLICTS}
+
+          Resolve them locally:
+
+          \`\`\`bash
+          git fetch upstream
+          git checkout ${BASE_BRANCH}
+          git merge upstream/${UPSTREAM_BRANCH}
+          # resolve conflicts, then
+          npm install && npm run build:libs && npm run build:desktop:dev
+          git commit
+          git push origin ${BASE_BRANCH}
+          \`\`\`"
+          elif [ "${BUILD}" = "success" ]; then
+            STATUS="✅ Merges cleanly and the desktop app builds."
+          else
+            STATUS="❌ Merges cleanly but the build fails, see the [workflow run](${RUN_URL})."
+          fi
+
+          BODY="Brings ${BEHIND} new commit(s) from [${UPSTREAM_REPO}](https://github.com/${UPSTREAM_REPO}) into \`${BASE_BRANCH}\`.
+
+          ${STATUS}
+
+          Merge with **Create a merge commit** (not squash or rebase) to keep the upstream history.
+
+          _Checked by the [Sync upstream workflow run](${RUN_URL})._"
+
+          PR_NUMBER=$(gh pr list --base "${BASE_BRANCH}" --state open --json number,headRefName,headRepositoryOwner \
+            --jq ".[] | select(.headRepositoryOwner.login == \"${UPSTREAM_OWNER}\" and .headRefName == \"${UPSTREAM_BRANCH}\") | .number")
+
+          if [ -n "${PR_NUMBER}" ]; then
+            gh pr edit "${PR_NUMBER}" --body "${BODY}"
+          else
+            gh pr create \
+              --base "${BASE_BRANCH}" \
+              --head "${UPSTREAM_OWNER}:${UPSTREAM_BRANCH}" \
+              --title "Sync upstream ${UPSTREAM_REPO}" \
+              --body "${BODY}"
+          fi

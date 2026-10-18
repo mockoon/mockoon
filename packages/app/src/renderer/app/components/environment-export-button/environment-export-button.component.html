@@ -1,0 +1,10 @@
+<button
+  id="header-btn-export"
+  class="btn btn-link"
+  type="button"
+  ngbTooltip="Export environment JSON"
+  (click)="export()"
+  [disabled]="!environmentUuid()"
+>
+  <app-svg icon="file_download" size="20" />
+</button>

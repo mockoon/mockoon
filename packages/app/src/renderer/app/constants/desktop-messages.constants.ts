@@ -1,3 +1,4 @@
+import { EnvironmentSourceMessages } from 'src/renderer/app/constants/environment-source-messages.constants';
 import {
   MessageCodes,
   MessageParams
@@ -30,6 +31,7 @@ export const DesktopMessages: Record<
       toastType: ToastTypes;
     })
 > = {
+  ...EnvironmentSourceMessages,
   INITIALIZING_APP: () => ({
     message: 'Initializing application',
     log: true,

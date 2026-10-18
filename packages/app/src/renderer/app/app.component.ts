@@ -4,6 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { Environment } from '@mockoon/commons';
 import { NgbToast } from '@ng-bootstrap/ng-bootstrap';
 import {
+  EMPTY,
   Observable,
   auditTime,
   combineLatest,
@@ -31,6 +32,7 @@ import { ViewsNameType } from 'src/renderer/app/models/store.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
 import { AppQuitService } from 'src/renderer/app/services/app-quit.services';
 import { DeployService } from 'src/renderer/app/services/deploy.service';
+import { EnvironmentSourceService } from 'src/renderer/app/services/environment-source.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { MainApiListenerService } from 'src/renderer/app/services/main-api-listener.service';
@@ -67,6 +69,7 @@ import { OfflineBannerComponent } from './components/offline-banner/offline-bann
 })
 export class AppComponent implements OnInit {
   private environmentsService = inject(EnvironmentsService);
+  private environmentSourceService = inject(EnvironmentSourceService);
   private store = inject(Store);
   private toastService = inject(ToastsService);
   private uiService = inject(UIService);
@@ -148,7 +151,16 @@ export class AppComponent implements OnInit {
     this.settingsService.monitorSettings().subscribe();
     this.settingsService.loadSettings().subscribe();
     this.settingsService.saveSettings().subscribe();
-    this.environmentsService.loadEnvironments().subscribe();
+    this.environmentsService
+      .loadEnvironments()
+      .pipe(
+        switchMap(() =>
+          environment.web
+            ? EMPTY
+            : this.environmentSourceService.refreshAllEnvironmentsFromURL()
+        )
+      )
+      .subscribe();
     this.environmentsService.saveEnvironments().subscribe();
     this.environmentsService.listenServerTransactions().subscribe();
     this.appQuitService.init().subscribe();

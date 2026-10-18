@@ -2711,7 +2711,7 @@ export class EnvironmentsService {
    * @param environment
    * @returns
    */
-  private verifyData(environment: Environment): Observable<Environment> {
+  public verifyData(environment: Environment): Observable<Environment> {
     if (!environment || typeof environment !== 'object') {
       this.loggerService.logMessage('error', 'ENVIRONMENT_INVALID');
 

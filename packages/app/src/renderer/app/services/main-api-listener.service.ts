@@ -1,6 +1,7 @@
 import { NgZone, Service, inject } from '@angular/core';
 import { combineLatest } from 'rxjs';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
+import { EnvironmentSourceService } from 'src/renderer/app/services/environment-source.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
@@ -13,6 +14,7 @@ import { FileWatcherOptions } from 'src/shared/models/settings.model';
 @Service()
 export class MainApiListenerService {
   private environmentsService = inject(EnvironmentsService);
+  private environmentSourceService = inject(EnvironmentSourceService);
   private eventsService = inject(EventsService);
   private store = inject(Store);
   private zone = inject(NgZone);
@@ -57,6 +59,13 @@ export class MainApiListenerService {
               break;
             case 'DUPLICATE_ENVIRONMENT':
               this.environmentsService.duplicateEnvironment().subscribe();
+              break;
+            case 'EXPORT_ENVIRONMENT':
+              this.environmentSourceService
+                .exportEnvironmentForSource(
+                  this.store.get('activeEnvironmentUUID')
+                )
+                .subscribe();
               break;
             case 'CLOSE_ENVIRONMENT':
               this.environmentsService.closeEnvironment().subscribe();
@@ -107,7 +116,7 @@ export class MainApiListenerService {
                   .subscribe();
                 break;
               case 'load-environment':
-                this.environmentsService
+                this.environmentSourceService
                   .newEnvironmentFromURL(parameters.url)
                   .subscribe();
                 break;

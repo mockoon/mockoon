@@ -74,7 +74,9 @@ export const SettingsSchema = Joi.object<Settings, true>({
         uuid: Joi.string().uuid().required(),
         path: Joi.string().required(),
         cloud: Joi.boolean().failover(false).required(),
-        lastServerHash: Joi.string().allow(null).failover(null).required()
+        lastServerHash: Joi.string().allow(null).failover(null).required(),
+        sourceUrl: Joi.string().allow(null).failover(null).optional(),
+        sourceHash: Joi.string().allow(null).failover(null).optional()
       }),
       Joi.any().strip()
     )

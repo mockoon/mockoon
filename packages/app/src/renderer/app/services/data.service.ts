@@ -37,9 +37,13 @@ export class DataService {
    * using the schema.
    *
    * @param environment
+   * @param ignoredEnvironmentUuid
    * @returns
    */
-  public migrateAndValidateEnvironment(environment: Environment): Environment {
+  public migrateAndValidateEnvironment(
+    environment: Environment,
+    ignoredEnvironmentUuid?: string
+  ): Environment {
     let migratedEnvironment: Environment;
 
     try {
@@ -57,7 +61,11 @@ export class DataService {
     let validatedEnvironment =
       EnvironmentSchema.validate(migratedEnvironment).value;
 
-    validatedEnvironment = this.deduplicateUUIDs(validatedEnvironment);
+    validatedEnvironment = this.deduplicateUUIDs(
+      validatedEnvironment,
+      false,
+      ignoredEnvironmentUuid
+    );
     validatedEnvironment = repairRefs(validatedEnvironment);
 
     this.settingsService.cleanDisabledRoutes(validatedEnvironment);
@@ -276,11 +284,13 @@ export class DataService {
    *
    * @param newEnvironment
    * @param environments
+   * @param ignoredEnvironmentUuid
    * @returns
    */
   public deduplicateUUIDs(
     newEnvironment: Environment,
-    force = false
+    force = false,
+    ignoredEnvironmentUuid?: string
   ): Environment {
     const UUIDs = new Set();
     const environments = this.store.get('environments');
@@ -288,6 +298,10 @@ export class DataService {
 
     if (!force) {
       environments.forEach((environment) => {
+        if (environment.uuid === ignoredEnvironmentUuid) {
+          return;
+        }
+
         UUIDs.add(environment.uuid);
 
         environment.data.forEach((data) => {
