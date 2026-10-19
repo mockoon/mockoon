@@ -12,7 +12,10 @@
       (hide)="removeToast(toast.UUID)"
       (click)="removeToast(toast.UUID)"
     >
-      {{ toast.message }}
+      <div class="toast-content">
+        <app-svg [icon]="toast.type === 'success' ? 'info' : toast.type" />
+        <span>{{ toast.message }}</span>
+      </div>
     </ngb-toast>
   }
 </div>
