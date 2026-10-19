@@ -2425,16 +2425,13 @@ export class EnvironmentsService {
             triggerBrowserDownload(filePath, data);
           })
         : switchMap((filePath) =>
-            from(
-              this.mainApiService.invoke('APP_WRITE_FILE', filePath, data)
-            ).pipe(
-              tap(() => {
-                this.loggerService.logMessage('info', 'EXPORT_SUCCESS', {
-                  environmentName: environment.name
-                });
-              })
-            )
-          )
+            from(this.mainApiService.invoke('APP_WRITE_FILE', filePath, data))
+          ),
+      tap(() => {
+        this.loggerService.logMessage('info', 'EXPORT_SUCCESS', {
+          environmentName: environment.name
+        });
+      })
     );
   }
 
@@ -2632,20 +2629,13 @@ export class EnvironmentsService {
               triggerBrowserDownload(filePath, data);
             })
           : switchMap(({ data, filePath }) =>
-              from(
-                this.mainApiService.invoke('APP_WRITE_FILE', filePath, data)
-              ).pipe(
-                tap(() => {
-                  this.loggerService.logMessage(
-                    'info',
-                    'OPENAPI_EXPORT_SUCCESS',
-                    {
-                      environmentName: activeEnvironment.name
-                    }
-                  );
-                })
-              )
+              from(this.mainApiService.invoke('APP_WRITE_FILE', filePath, data))
             ),
+        tap(() => {
+          this.loggerService.logMessage('info', 'OPENAPI_EXPORT_SUCCESS', {
+            environmentName: activeEnvironment.name
+          });
+        }),
         catchError((error) => {
           this.loggerService.logMessage('error', 'OPENAPI_EXPORT_ERROR', {
             error,

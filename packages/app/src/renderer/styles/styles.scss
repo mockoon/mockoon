@@ -161,32 +161,51 @@ $status-code-colors:
 .toasts-container {
   z-index: 5000;
   position: absolute;
-  width: 250px;
-  top: calc($spacer / 2) + 2rem;
+  width: 280px;
+  bottom: calc($spacer / 2) + 2rem;
   right: calc($spacer / 2);
 }
+
 .toast {
   word-break: break-word;
+  cursor: pointer;
+
+  + .toast {
+    margin-top: calc($spacer / 2);
+  }
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: calc($spacer / 2);
+
+  app-svg {
+    flex: 0 0 auto;
+  }
 }
 
 .toast-success {
-  .toast-body {
-    background-color: $green;
-    border-color: lighten($green, 10%);
+  border-left: 2px solid lighten($cyan, 15%);
+
+  app-svg {
+    color: lighten($cyan, 15%);
   }
 }
 
 .toast-warning {
-  .toast-body {
-    background-color: $orange;
-    border-color: lighten($orange, 10%);
+  border-left: 2px solid $orange;
+
+  app-svg {
+    color: $orange;
   }
 }
 
 .toast-error {
-  .toast-body {
-    background-color: $red;
-    border-color: lighten($red, 10%);
+  border-left: 2px solid $red;
+
+  app-svg {
+    color: $red;
   }
 }
 
