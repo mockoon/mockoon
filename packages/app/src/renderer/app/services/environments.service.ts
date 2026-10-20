@@ -1108,9 +1108,10 @@ export class EnvironmentsService {
       );
 
       if (this.isWeb) {
-        // permanently delete from the web app
         this.store.update(
-          removeEnvironmentAction(deletedCloudEnvironment.uuid)
+          removeEnvironmentAction(deletedCloudEnvironment.uuid),
+          true,
+          false
         );
 
         this.mainApiService.invoke(

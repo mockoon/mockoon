@@ -406,15 +406,17 @@
                 [iconFaded]="true"
                 [noYPadding]="true"
               />
-              <app-team-presence
-                [presence]="sync?.presence"
-                [user]="user"
-                [displaySelf]="false"
-                filterBy="environmentUuid"
-                [filterContext]="environment.uuid"
-                size="16"
-                [showTooltipList]="false"
-              />
+              @if (isCloud) {
+                <app-team-presence
+                  [presence]="sync?.presence"
+                  [user]="user"
+                  [displaySelf]="false"
+                  filterBy="environmentUuid"
+                  [filterContext]="environment.uuid"
+                  size="16"
+                  [showTooltipList]="false"
+                />
+              }
             </div>
           </a>
         </li>
