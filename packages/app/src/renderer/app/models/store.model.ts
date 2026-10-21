@@ -2,7 +2,8 @@ import {
   DeployInstance,
   RemoteConfigData,
   SyncPresence,
-  User
+  User,
+  Workspace
 } from '@mockoon/cloud';
 import {
   Environments,
@@ -109,6 +110,8 @@ export type StoreType = {
     alert: string | null;
   };
   deployInstances: DeployInstance[];
+  workspaces: Workspace[];
+  environmentWorkspaceIds: Record<string, number>;
   /**
    * Processed databuckets data per environment, indexed by databucket UUID
    */

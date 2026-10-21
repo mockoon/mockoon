@@ -14,6 +14,7 @@
 @let deployInstances = deployInstances$ | async;
 @let instanceUrls = instanceUrls$ | async;
 @let dragEnabled = dragEnabled$ | async;
+@let workspaceMenu = workspaceMenu$ | async;
 
 <div class="environments-menu d-flex flex-column h-100">
   @for (
@@ -140,17 +141,74 @@
         </div>
       </div>
 
-      <div class="overflow-auto flex-fill" [ngbCollapse]="category.collapsed">
-        <ng-container
-          [ngTemplateOutlet]="environmentListTemplate"
-          [ngTemplateOutletContext]="{
-            isCloud: category.id === 'cloud',
-            environments: environments[category.id],
-            activeEnvironment: activeEnvironment,
-            environmentsStatus: environmentsStatus,
-            dragContainer: category.id + 'Environments'
-          }"
-        />
+      <div class="flex-fill overflow-hidden" [ngbCollapse]="category.collapsed">
+        <div class="d-flex flex-column h-100 overflow-hidden">
+          @if (category.id === 'cloud' && workspaceMenu.multiple) {
+            <div class="d-flex flex-shrink-0 gap-1 p-2 text-truncate">
+              <div class="w-50" ngbDropdown #dropdownElement>
+                <div
+                  role="button"
+                  class="badge text-bg-custom p-2 text-truncate"
+                  ngbDropdownToggle
+                >
+                  <div class="dropdown-toggle-label">
+                    <span class="text-truncate">
+                      @if (workspaceMenu.selectedWorkspace) {
+                        {{ workspaceMenu.selectedWorkspace.name }}
+                      } @else {
+                        All workspaces
+                      }
+                    </span>
+                  </div>
+                </div>
+                <div
+                  class="dropdown-menu"
+                  ngbDropdownMenu
+                  [style]="{
+                    'min-width':
+                      dropdownElement.getBoundingClientRect().width + 'px',
+                    'max-width':
+                      dropdownElement.getBoundingClientRect().right * 2 + 'px'
+                  }"
+                >
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    ngbDropdownItem
+                    (click)="filterByWorkspace(null)"
+                  >
+                    <span class="text-truncate">All workspaces</span>
+                  </button>
+                  @for (
+                    workspace of workspaceMenu.workspaces;
+                    track workspace.id
+                  ) {
+                    <button
+                      type="button"
+                      class="dropdown-item d-flex align-items-center justify-content-between"
+                      ngbDropdownItem
+                      (click)="filterByWorkspace(workspace.id)"
+                    >
+                      <span class="flex-grow-1 text-truncate">{{
+                        workspace.name
+                      }}</span>
+                    </button>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+          <ng-container
+            [ngTemplateOutlet]="environmentListTemplate"
+            [ngTemplateOutletContext]="{
+              isCloud: category.id === 'cloud',
+              environments: environments[category.id],
+              activeEnvironment: activeEnvironment,
+              environmentsStatus: environmentsStatus,
+              dragContainer: category.id + 'Environments'
+            }"
+          />
+        </div>
       </div>
     </div>
   }
@@ -172,8 +230,8 @@
   let-environmentsStatus="environmentsStatus"
   let-dragContainer="dragContainer"
 >
-  <ul class="nav h-100 flex-column">
-    <div class="flex-fill menu-list">
+  <ul class="nav flex-fill flex-column overflow-hidden">
+    <div class="flex-fill menu-list overflow-auto">
       @for (environment of environments; track environment.uuid) {
         <li
           class="nav-item"

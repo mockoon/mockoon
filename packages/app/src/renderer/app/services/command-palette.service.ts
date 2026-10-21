@@ -335,7 +335,8 @@ export class CommandPaletteService {
     const hasActiveEnvironment = !!this.store.getActiveEnvironment();
     const isActiveEnvironmentEditable =
       hasActiveEnvironment && this.store.getIsActiveEnvironmentEditable();
-    const activeEnvironmentIsLocal = this.store.getIsActiveEnvLocal();
+    const activeEnvironmentIsLocal =
+      hasActiveEnvironment && this.store.getIsActiveEnvLocal();
     const hasActiveRoute = !!this.store.getActiveRoute();
     const activeEnvironment = this.store.getActiveEnvironment();
     const activeEnvironmentUuid = activeEnvironment?.uuid;
@@ -351,6 +352,8 @@ export class CommandPaletteService {
     const isUserConnected = !!this.store.get('user');
     const isUserConnectedAndPaid = this.store.get('user')?.plan !== Plans.FREE;
     const isSyncConnected = this.store.get('sync')?.status;
+    const canCreateCloudEnvironment =
+      this.settingsService.canCreateCloudEnvironment();
     const isNotSelfHosted = !this.settingsService.getIsSelfHosted();
 
     const commonCommands: Commands = [
@@ -361,7 +364,8 @@ export class CommandPaletteService {
           this.environmentsService.addCloudEnvironment(null, true).subscribe();
         },
         score: 1,
-        enabled: isUserConnectedAndPaid && isSyncConnected
+        enabled:
+          isUserConnectedAndPaid && isSyncConnected && canCreateCloudEnvironment
       },
       {
         id: 'VIEW_SELECT_PREVIOUS_ENVIRONMENT',
@@ -745,7 +749,7 @@ export class CommandPaletteService {
           });
         },
         score: 1,
-        enabled: isSyncConnected
+        enabled: isSyncConnected && canCreateCloudEnvironment
       },
       {
         id: 'EXPORT_ENVIRONMENT_OPENAPI_JSON',
@@ -754,7 +758,7 @@ export class CommandPaletteService {
           this.environmentsService.exportOpenAPIFile('json').subscribe();
         },
         score: 1,
-        enabled: true
+        enabled: hasActiveEnvironment
       },
       {
         id: 'EXPORT_ENVIRONMENT_OPENAPI_YAML',
@@ -763,7 +767,7 @@ export class CommandPaletteService {
           this.environmentsService.exportOpenAPIFile('yaml').subscribe();
         },
         score: 1,
-        enabled: true
+        enabled: hasActiveEnvironment
       },
       {
         id: 'COPY_ENVIRONMENT_CLIPBOARD',
@@ -978,7 +982,10 @@ export class CommandPaletteService {
           },
           score: 1,
           enabled:
-            hasActiveEnvironment && activeEnvironmentIsLocal && isSyncConnected
+            hasActiveEnvironment &&
+            activeEnvironmentIsLocal &&
+            isSyncConnected &&
+            canCreateCloudEnvironment
         }
       );
     } else {
@@ -992,7 +999,7 @@ export class CommandPaletteService {
             .subscribe();
         },
         score: 1,
-        enabled: isSyncConnected
+        enabled: isSyncConnected && canCreateCloudEnvironment
       });
     }
 

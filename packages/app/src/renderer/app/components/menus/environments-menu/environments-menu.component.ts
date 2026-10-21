@@ -19,7 +19,14 @@ import {
   ReorderAction,
   ReorderableContainers
 } from '@mockoon/commons';
-import { NgbCollapse, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbCollapse,
+  NgbDropdown,
+  NgbDropdownItem,
+  NgbDropdownMenu,
+  NgbDropdownToggle,
+  NgbTooltip
+} from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, Observable, combineLatest, merge, of } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -78,7 +85,11 @@ type dropdownMenuPayload = { environmentUuid: string; syncStatus: boolean };
     ReactiveFormsModule,
     EditableElementComponent,
     TeamPresenceComponent,
-    AsyncPipe
+    AsyncPipe,
+    NgbDropdown,
+    NgbDropdownToggle,
+    NgbDropdownMenu,
+    NgbDropdownItem
   ]
 })
 export class EnvironmentsMenuComponent {
@@ -119,7 +130,34 @@ export class EnvironmentsMenuComponent {
   public syncAlert$: Observable<string>;
   public clearRecentLocalEnvironmentsConfirm$ = new TimedBoolean();
   public isWeb = Config.isWeb;
+  public window = window;
   public deployInstances$ = this.store.select('deployInstances');
+  public workspaceMenu$ = combineLatest([
+    this.store.select('workspaces'),
+    this.store.select('environmentWorkspaceIds'),
+    this.store.select('settings').pipe(
+      filter(Boolean),
+      map((settings) => settings.workspaceFilterId),
+      distinctUntilChanged()
+    )
+  ]).pipe(
+    map(([workspaces, environmentWorkspaceIds, selectedWorkspaceId]) => {
+      const selectedWorkspace = workspaces.find(
+        ({ id }) => id === selectedWorkspaceId
+      );
+
+      return {
+        workspaces,
+        environmentWorkspaceIds,
+        workspacesById: Object.fromEntries(
+          workspaces.map((workspace) => [workspace.id, workspace])
+        ),
+        selectedWorkspaceId: selectedWorkspace?.id ?? null,
+        selectedWorkspace,
+        multiple: workspaces.length > 1
+      };
+    })
+  );
   public buildApiUrl = buildApiUrl;
   public alertLabels = {
     VERSION_TOO_OLD_WARNING:
@@ -131,9 +169,15 @@ export class EnvironmentsMenuComponent {
       icon: this.isWeb ? 'content_copy' : 'cloud',
       twoSteps: false,
       disabled$: () =>
-        this.store
-          .selectIsCloudEditable()
-          .pipe(map((isEditable) => !isEditable)),
+        combineLatest([
+          this.store.selectIsCloudEditable(),
+          this.settingsService.selectCanCreateCloudEnvironment()
+        ]).pipe(
+          map(
+            ([isEditable, canCreateCloudEnvironment]) =>
+              !isEditable || !canCreateCloudEnvironment
+          )
+        ),
       action: ({ environmentUuid }: dropdownMenuPayload) => {
         this.environmentsService.duplicateToCloud(environmentUuid).subscribe();
       }
@@ -339,10 +383,19 @@ export class EnvironmentsMenuComponent {
       }, {})
     )
   );
-  public isOfflineOrQuotaReached$ = combineLatest([
+  private cannotCreateCloudEnv$ = combineLatest([
     this.sync$.pipe(map((sync) => !sync?.status)),
-    this.store.selectIsQuotaReached()
-  ]).pipe(map(([isOffline, isQuotaReached]) => isOffline || isQuotaReached));
+    this.store.selectIsQuotaReached(),
+    this.store.select('settings').pipe(filter(Boolean)),
+    this.store.select('workspaces')
+  ]).pipe(
+    map(
+      ([isOffline, isQuotaReached, settings, workspaces]) =>
+        isOffline ||
+        isQuotaReached ||
+        (!!settings.apiUrl?.trim() && workspaces.length === 0)
+    )
+  );
 
   public cloudDropdownMenuItems: DropdownMenuElement[] = [
     {
@@ -352,7 +405,7 @@ export class EnvironmentsMenuComponent {
       action: () => {
         this.environmentsService.addCloudEnvironment(null, true).subscribe();
       },
-      disabled$: () => this.isOfflineOrQuotaReached$
+      disabled$: () => this.cannotCreateCloudEnv$
     },
     ...(!this.isWeb
       ? [
@@ -365,7 +418,7 @@ export class EnvironmentsMenuComponent {
                 .addCloudEnvironmentFromLocalFile()
                 .subscribe();
             },
-            disabled$: () => this.isOfflineOrQuotaReached$
+            disabled$: () => this.cannotCreateCloudEnv$
           }
         ]
       : []),
@@ -379,7 +432,7 @@ export class EnvironmentsMenuComponent {
           cloud: true
         });
       },
-      disabled$: () => this.isOfflineOrQuotaReached$
+      disabled$: () => this.cannotCreateCloudEnv$
     }
   ];
   public localDropdownMenuItems$: Observable<DropdownMenuElement[]>;
@@ -505,15 +558,20 @@ export class EnvironmentsMenuComponent {
     );
     this.cloudEnvironments$ = combineLatest([
       this.store.select('environments').pipe(distinctUntilChanged()),
-      this.settings$
+      this.settings$,
+      this.workspaceMenu$
     ]).pipe(
-      map(([environments, settings]) =>
-        environments.filter((environment) =>
-          settings.environments.find(
-            (settingEnvironment) =>
-              settingEnvironment.uuid === environment.uuid &&
-              settingEnvironment.cloud
-          )
+      map(([environments, settings, workspaceMenu]) =>
+        environments.filter(
+          (environment) =>
+            settings.environments.find(
+              (settingEnvironment) =>
+                settingEnvironment.uuid === environment.uuid &&
+                settingEnvironment.cloud
+            ) &&
+            (workspaceMenu.selectedWorkspaceId === null ||
+              workspaceMenu.environmentWorkspaceIds[environment.uuid] ===
+                workspaceMenu.selectedWorkspaceId)
         )
       )
     );
@@ -549,7 +607,7 @@ export class EnvironmentsMenuComponent {
     this.categories = [
       {
         id: 'cloud',
-        label: this.isWeb ? 'APIs' : 'Remote',
+        label: 'Remote',
         collapsed: false
       }
     ];
@@ -638,6 +696,10 @@ export class EnvironmentsMenuComponent {
 
   public enableDrag(enable: boolean) {
     this.manualDragEnabled$.next(enable);
+  }
+
+  public filterByWorkspace(workspaceId: number | null) {
+    this.settingsService.updateSettings({ workspaceFilterId: workspaceId });
   }
 
   /**
