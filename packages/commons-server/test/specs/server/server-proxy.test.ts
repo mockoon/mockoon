@@ -130,3 +130,83 @@ describe('Server should handle proxy configuration', () => {
     });
   });
 });
+
+describe('Server should handle proxy TLS verification', () => {
+  let targetHttpsServer: MockoonServer;
+  let insecureProxyServer: MockoonServer;
+  let secureProxyServer: MockoonServer;
+
+  before(async () => {
+    const baseTestEnv = await getEnvironment('test');
+    const baseProxyEnv = await getEnvironment('proxy');
+
+    const targetEnv: Environment = {
+      ...baseTestEnv,
+      port: 3003,
+      tlsOptions: {
+        ...baseTestEnv.tlsOptions,
+        enabled: true
+      }
+    };
+
+    const insecureProxyEnv: Environment = {
+      ...baseProxyEnv,
+      port: 3004,
+      proxyHost: 'https://localhost:3003'
+    };
+
+    const secureProxyEnv: Environment = {
+      ...baseProxyEnv,
+      port: 3005,
+      proxyHost: 'https://localhost:3003'
+    };
+
+    targetHttpsServer = new MockoonServer(targetEnv);
+    insecureProxyServer = new MockoonServer(insecureProxyEnv, {
+      proxyVerifyTls: false
+    });
+    secureProxyServer = new MockoonServer(secureProxyEnv, {
+      proxyVerifyTls: true
+    });
+
+    const startPromise = Promise.all([
+      new Promise<void>((resolve) =>
+        targetHttpsServer.once('started', () => resolve())
+      ),
+      new Promise<void>((resolve) =>
+        insecureProxyServer.once('started', () => resolve())
+      ),
+      new Promise<void>((resolve) =>
+        secureProxyServer.once('started', () => resolve())
+      )
+    ]);
+
+    targetHttpsServer.start();
+    insecureProxyServer.start();
+    secureProxyServer.start();
+
+    await startPromise;
+  });
+
+  after(() => {
+    targetHttpsServer.stop();
+    insecureProxyServer.stop();
+    secureProxyServer.stop();
+  });
+
+  it('should accept self-signed certificate when proxyVerifyTls is false', async () => {
+    const response = await fetch('http://localhost:3004/test');
+    equal(response.status, 200);
+
+    const body = await response.json();
+    deepEqual(body, {});
+  });
+
+  it('should reject self-signed certificate with 504 when proxyVerifyTls is true', async () => {
+    const response = await fetch('http://localhost:3005/test');
+    equal(response.status, 504);
+
+    const text = await response.text();
+    equal(text.includes('DEPTH_ZERO_SELF_SIGNED_CERT'), true);
+  });
+});

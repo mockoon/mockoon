@@ -140,6 +140,11 @@ export default class Start extends Command {
       description: "Override the environment's proxy settings",
       options: ['enabled', 'disabled'] as const
     }),
+    'proxy-verify-tls': Flags.boolean({
+      description:
+        'Verify TLS certificates when proxying requests to HTTPS targets (default: false)',
+      default: false
+    }),
     watch: Flags.boolean({
       char: 'w',
       description:
@@ -237,6 +242,7 @@ export default class Start extends Command {
           adminApiCorsOrigins:
             adminApiCorsOrigins.length > 0 ? adminApiCorsOrigins : undefined,
           disableTls: userFlags['disable-tls'],
+          proxyVerifyTls: userFlags['proxy-verify-tls'],
           maxTransactionLogs: userFlags['max-transaction-logs'],
           enableRandomLatency: userFlags['enable-random-latency'],
           enableRouteMetadataHeaders:
@@ -307,6 +313,7 @@ export default class Start extends Command {
       adminApiAuthToken: parameters.adminApiAuthToken,
       adminApiCorsOrigins: parameters.adminApiCorsOrigins,
       disableTls: parameters.disableTls,
+      proxyVerifyTls: parameters.proxyVerifyTls,
       maxTransactionLogs: parameters.maxTransactionLogs,
       enableRandomLatency: parameters.enableRandomLatency,
       enableRouteMetadataHeaders: parameters.enableRouteMetadataHeaders,
