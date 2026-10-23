@@ -18,7 +18,7 @@ Feed it with a Mockoon's [data file](https://mockoon.com/docs/latest/mockoon-dat
 
 The CLI supports the same features as the main application: [templating system](https://mockoon.com/docs/latest/templating/overview/), [proxy mode](https://mockoon.com/docs/latest/server-configuration/proxy-mode/), [route response rules](https://mockoon.com/docs/latest/route-responses/dynamic-rules/), etc.
 
-![Mockoon CLI screenshot](https://mockoon.com/images/cli-hero-repo.png)
+![Mockoon CLI screenshot](https://mockoon.com/images/repos/cli-hero.png)
 
 - [Installation](#installation)
 - [Run a mock API with the CLI](#run-a-mock-api-with-the-cli)
@@ -164,6 +164,7 @@ The mocks will run by default on the ports and hostnames specified in the files.
 |--max-request-body-size | Maximum request body size for all content types (default: 100MB). Set to 0 to disable the limit. You can use either a raw byte count or a human-readable string (e.g. 104857600, 100MB, 10 GB, or 1.5kb).|
 |--enable-random-latency | Randomize global and responses latencies between 0 and the specified value (default: false)|
 |--proxy | Override the environment's proxy settings (options: 'enabled' or 'disabled')|
+|--proxy-verify-tls | Verify TLS certificates when proxying requests to HTTPS targets (default: false)|
 |--public-base-url | Public base URL used to resolve [relative callback URLs](https://mockoon.com/docs/latest/callbacks/overview/#configure-a-callback) and for the [`baseUrl` templating helper](https://mockoon.com/docs/latest/templating/mockoon-request-helpers/#baseurl) (e.g. https://api.example.com or http://localhost:3000). Must include the protocol and port if non-standard.|
 |-k, --token | Access token used to fetch legacy Mockoon Cloud environments (see [access token documentation](https://mockoon.com/cloud/docs/access-tokens/))|
 |--max-callback-depth | Maximum call stack depth for route responses with callbacks (default: 100)|
