@@ -1,4 +1,9 @@
-import { DeployInstance, RemoteConfigData, User } from '@mockoon/cloud';
+import {
+  DeployInstance,
+  RemoteConfigData,
+  User,
+  Workspace
+} from '@mockoon/cloud';
 import {
   Callback,
   DataBucket,
@@ -37,6 +42,8 @@ export const enum ActionTypes {
   UPDATE_USER = 'UPDATE_USER',
   UPDATE_SYNC = 'UPDATE_SYNC',
   UPDATE_DEPLOY_INSTANCES = 'UPDATE_DEPLOY_INSTANCES',
+  UPDATE_WORKSPACES = 'UPDATE_WORKSPACES',
+  UPDATE_ENVIRONMENT_WORKSPACE_IDS = 'UPDATE_ENVIRONMENT_WORKSPACE_IDS',
   ADD_DEPLOY_INSTANCE = 'ADD_DEPLOY_INSTANCE',
   REMOVE_DEPLOY_INSTANCE = 'REMOVE_DEPLOY_INSTANCE',
   UPDATE_DEPLOY_INSTANCE = 'UPDATE_DEPLOY_INSTANCE',
@@ -138,6 +145,20 @@ export const updateDeployInstancesAction = (instances: DeployInstance[]) =>
   ({
     type: ActionTypes.UPDATE_DEPLOY_INSTANCES,
     instances
+  }) as const;
+
+export const updateWorkspacesAction = (workspaces: Workspace[]) =>
+  ({
+    type: ActionTypes.UPDATE_WORKSPACES,
+    workspaces
+  }) as const;
+
+export const updateEnvironmentWorkspaceIdsAction = (
+  environmentWorkspaceIds: Record<string, number>
+) =>
+  ({
+    type: ActionTypes.UPDATE_ENVIRONMENT_WORKSPACE_IDS,
+    environmentWorkspaceIds
   }) as const;
 
 /**
@@ -379,6 +400,7 @@ export const reorderCallbacksAction = (
  * @param options.setActive - if provided, set the new environment as active
  * @param options.cloud - indicates if the environment is added to the cloud
  * @param options.hash - hash of the environment file, if cloud is true
+ * @param options.workspaceId - workspace receiving the cloud environment
  */
 export const addEnvironmentAction = (
   environment: Environment,
@@ -388,6 +410,7 @@ export const addEnvironmentAction = (
     setActive?: boolean;
     cloud?: boolean;
     hash?: string;
+    workspaceId?: number;
   }
 ) =>
   ({
@@ -992,6 +1015,8 @@ export type Actions =
   | ReturnType<typeof updateUserAction>
   | ReturnType<typeof updateSyncAction>
   | ReturnType<typeof updateDeployInstancesAction>
+  | ReturnType<typeof updateWorkspacesAction>
+  | ReturnType<typeof updateEnvironmentWorkspaceIdsAction>
   | ReturnType<typeof addDeployInstanceAction>
   | ReturnType<typeof removeDeployInstanceAction>
   | ReturnType<typeof updateDeployInstanceAction>

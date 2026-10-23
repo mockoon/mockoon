@@ -5,7 +5,7 @@ import {
   ReorderAction,
   moveItemAtTarget
 } from '@mockoon/commons';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -216,6 +216,22 @@ export class SettingsService {
     return (
       (this.normalizeApiUrl(apiUrl) ?? Config.defaultApiUrl) !==
       Config.defaultApiUrl
+    );
+  }
+
+  public canCreateCloudEnvironment(): boolean {
+    return !this.getIsSelfHosted() || this.store.get('workspaces').length > 0;
+  }
+
+  public selectCanCreateCloudEnvironment(): Observable<boolean> {
+    return combineLatest([
+      this.selectIsSelfHosted(),
+      this.store.select('workspaces')
+    ]).pipe(
+      map(
+        ([isSelfHosted, workspaces]) => !isSelfHosted || workspaces.length > 0
+      ),
+      distinctUntilChanged()
     );
   }
 

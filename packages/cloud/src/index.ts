@@ -9,3 +9,4 @@ export * from './models/sync.model';
 export * from './models/team.model';
 export * from './models/templates.model';
 export * from './models/user.model';
+export * from './models/workspace.model';

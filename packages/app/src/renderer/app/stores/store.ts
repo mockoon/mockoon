@@ -81,6 +81,8 @@ export const storeDefaultState: StoreType = {
     alert: null
   },
   deployInstances: [],
+  workspaces: [],
+  environmentWorkspaceIds: {},
   processedDatabuckets: {},
   feedback: '',
   remoteConfig: null,

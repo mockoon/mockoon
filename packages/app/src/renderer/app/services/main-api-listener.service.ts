@@ -4,6 +4,7 @@ import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
@@ -19,6 +20,7 @@ export class MainApiListenerService {
   private userService = inject(UserService);
   private uiService = inject(UIService);
   private mainApiService = inject(MainApiService);
+  private settingsService = inject(SettingsService);
 
   public init() {
     if (!Config.isWeb) {
@@ -148,7 +150,8 @@ export class MainApiListenerService {
         this.store.select('sync').pipe(distinctUntilChanged()),
         this.store
           .selectIsActiveEnvironmentEditable()
-          .pipe(distinctUntilChanged())
+          .pipe(distinctUntilChanged()),
+        this.settingsService.selectCanCreateCloudEnvironment()
       ])
         .pipe(
           tap(
@@ -157,10 +160,11 @@ export class MainApiListenerService {
               activeEnvironment,
               settings,
               sync,
-              isActiveEnvironmentEditable
+              isActiveEnvironmentEditable,
+              canCreateCloudEnvironment
             ]) => {
               this.mainApiService.send('APP_UPDATE_MENU_STATE', {
-                cloudEnabled: sync.status,
+                cloudEnabled: sync.status && canCreateCloudEnvironment,
                 environmentsCount: environments.length,
                 hasActiveEnvironment: !!activeEnvironment,
                 isActiveEnvironmentCloud: activeEnvironment
