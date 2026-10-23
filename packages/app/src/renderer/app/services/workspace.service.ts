@@ -54,8 +54,6 @@ export class WorkspaceService {
           return of({ workspaces: [] as Workspace[], isSelfHosted });
         }
 
-        this.store.update(updateWorkspacesAction([]));
-
         return this.httpClient
           .get<Workspace[]>(`${apiUrl}workspace-access`, {
             headers: {

@@ -9,7 +9,7 @@ import {
   NgbTooltip
 } from '@ng-bootstrap/ng-bootstrap';
 import { EMPTY, Observable, forkJoin, from } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, defaultIfEmpty, map, switchMap } from 'rxjs/operators';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TeamPresenceComponent } from 'src/renderer/app/components/team-presence/team-presence.component';
 import { planLabels } from 'src/renderer/app/constants/user.constant';
@@ -196,7 +196,7 @@ export class HeaderComponent implements OnInit {
     forkJoin([
       this.userService.getUserInfo(true),
       this.remoteConfigService.fetchConfig(),
-      this.workspaceService.getWorkspaces(true)
+      this.workspaceService.getWorkspaces(true).pipe(defaultIfEmpty(null))
     ])
       .pipe(
         switchMap(() => this.deployService.getInstances(true)),

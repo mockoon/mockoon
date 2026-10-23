@@ -386,14 +386,11 @@ export class EnvironmentsMenuComponent {
   private cannotCreateCloudEnv$ = combineLatest([
     this.sync$.pipe(map((sync) => !sync?.status)),
     this.store.selectIsQuotaReached(),
-    this.store.select('settings').pipe(filter(Boolean)),
-    this.store.select('workspaces')
+    this.settingsService.selectCanCreateCloudEnvironment()
   ]).pipe(
     map(
-      ([isOffline, isQuotaReached, settings, workspaces]) =>
-        isOffline ||
-        isQuotaReached ||
-        (!!settings.apiUrl?.trim() && workspaces.length === 0)
+      ([isOffline, isQuotaReached, canCreate]) =>
+        isOffline || isQuotaReached || !canCreate
     )
   );
 
