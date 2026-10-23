@@ -21,7 +21,7 @@ Finally, you can onboard new team members faster by providing them with a consis
 ➡️ [Download](https://mockoon.com/download/)
 
 <div align="center">
-  <img width="50%" src="https://mockoon.com/images/hero-repo.png">
+  <img width="50%" src="https://mockoon.com/images/repos/main-hero.png">
 </div>
 
 ## Features
