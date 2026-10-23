@@ -94,8 +94,7 @@ Mockoon is proudly **independent** and **open-source**, maintained without exter
 If you'd like to **support Mockoon** as well, you can **become a sponsor** or **purchase Mockoon Pro licenses**. Every contribution helps keep the project alive and evolving. Thank you!
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
-<a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsors-btn.png" width="250" alt="sponsor button" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="https://mockoon.com/pro/"><strong>Discover Mockoon Pro</strong></a>
+<a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsors-btn.png" width="250" alt="sponsor button" /></a>
 </div>
 
 ## Download the desktop application
