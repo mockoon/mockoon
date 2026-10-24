@@ -12,8 +12,9 @@
       (hide)="removeToast(toast.UUID)"
       (click)="removeToast(toast.UUID)"
     >
-      <div class="d-flex align-items-center justify-content-between">
-        <span class="toast-message me-2" [innerHTML]="toast.message"></span>
+      <div class="toast-content">
+        <app-svg [icon]="toast.type === 'success' ? 'info' : toast.type" />
+        <span [innerHTML]="toast.message"></span>
         @if (toast.action) {
           <button
             type="button"
@@ -23,6 +24,7 @@
             {{ toast.action.label }}
           </button>
         }
+      </div>
       </div>
     </ngb-toast>
   }
@@ -79,5 +81,3 @@
 
   <app-footer />
 </div>
-
-<app-tour />

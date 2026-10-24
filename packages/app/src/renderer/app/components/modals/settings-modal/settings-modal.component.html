@@ -28,68 +28,81 @@
     </div>
   </div>
 
-  <app-title-separator heading="Self-hosted Mockoon Cloud API" icon="cloud" />
+  <section
+    class="self-hosted-settings"
+    [class.self-hosted-settings-highlighted]="highlightSelfHosted()"
+  >
+    <app-title-separator
+      heading="Self-hosted Mockoon Pro instance"
+      icon="cloud"
+    />
 
-  <div class="ps-4">
-    <div class="mb-3">
-      <div class="input-group">
-        <label for="settings-api-url" class="col-form-label pe-2">
-          Self-hosted API URL
-        </label>
-        <input
-          type="text"
-          class="form-control col-1"
-          id="settings-api-url"
-          placeholder="https://api.mockoon.com/"
-          [formField]="settingsForm.apiUrl"
-        />
-        <div class="input-group-text">
-          <app-svg icon="info" [ngbTooltip]="apiUrlTooltip" />
-          <ng-template #apiUrlTooltip>
-            <div>
-              Override the default API URL to use a self-hosted Mockoon Cloud
-              instance. The URL must contain the protocol (http or https), port,
-              if applicable, and no trailing slash. Example:
-              https://mockoon.company.com or http://localhost:6000
-            </div>
-          </ng-template>
-        </div>
-        @if (
-          settingsForm.apiUrl().getError('invalidApiUrl') ||
-          settingsForm.apiUrl().pending() ||
-          (settingsForm.apiUrl().valid() &&
-            settingsForm.apiUrl().value() !== '')
-        ) {
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="input-group">
+          <label for="settings-api-url" class="col-form-label pe-2">
+            Self-hosted API URL
+          </label>
+          <input
+            #apiUrlInput
+            type="text"
+            class="form-control col-1"
+            id="settings-api-url"
+            placeholder="https://api.mockoon.com/"
+            [formField]="settingsForm.apiUrl"
+          />
           <div class="input-group-text">
-            <small>
-              @if (settingsForm.apiUrl().getError('invalidApiUrl')) {
-                <app-svg
-                  icon="warning"
-                  size="12"
-                  class="text-warning"
-                  [ngbTooltip]="
-                    settingsForm.apiUrl().getError('invalidApiUrl')?.message
-                  "
-                />
-              } @else if (settingsForm.apiUrl().pending()) {
-                <app-spinner size="12" />
-              } @else if (
-                settingsForm.apiUrl().valid() &&
-                settingsForm.apiUrl().value() !== ''
-              ) {
-                <app-svg
-                  icon="check"
-                  size="12"
-                  class="text-success"
-                  ngbTooltip="Self-hosted API URL is valid"
-                />
-              }
-            </small>
+            <app-svg icon="info" [ngbTooltip]="apiUrlTooltip" />
+            <ng-template #apiUrlTooltip>
+              <div>
+                Override the default API URL to use a self-hosted Mockoon Pro
+                instance. The URL must contain the protocol (http or https),
+                port, if applicable, and no trailing slash. Example:
+                https://mockoon.company.com or http://localhost:6000
+              </div>
+            </ng-template>
           </div>
-        }
+          @if (
+            settingsForm.apiUrl().getError('invalidApiUrl') ||
+            settingsForm.apiUrl().pending() ||
+            (settingsForm.apiUrl().valid() &&
+              settingsForm.apiUrl().value() !== '')
+          ) {
+            <div class="input-group-text">
+              <small>
+                @if (settingsForm.apiUrl().getError('invalidApiUrl')) {
+                  <app-svg
+                    icon="warning"
+                    size="12"
+                    class="text-warning"
+                    [ngbTooltip]="
+                      settingsForm.apiUrl().getError('invalidApiUrl')?.message
+                    "
+                  />
+                } @else if (settingsForm.apiUrl().pending()) {
+                  <app-spinner size="12" />
+                } @else if (
+                  settingsForm.apiUrl().valid() &&
+                  settingsForm.apiUrl().value() !== ''
+                ) {
+                  <app-svg
+                    icon="check"
+                    size="12"
+                    class="text-success"
+                    ngbTooltip="Self-hosted API URL is valid"
+                  />
+                }
+              </small>
+            </div>
+          }
+        </div>
+        <small class="text-muted">
+          Learn more about
+          <a [href]="proPlansURL" target="_blank">Mockoon Pro</a>
+        </small>
       </div>
     </div>
-  </div>
+  </section>
 
   @if (!isWeb) {
     <app-title-separator heading="Environment variables" icon="list" />

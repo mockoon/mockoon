@@ -33,8 +33,10 @@
     <button type="button" class="btn btn-primary" (click)="close()">
       {{ confirmModalPayload.confirmButtonText || 'Confirm' }}
     </button>
-    <button type="button" class="btn btn-secondary" (click)="dismiss()">
-      {{ confirmModalPayload.cancelButtonText || 'Cancel' }}
-    </button>
+    @if (confirmModalPayload.cancelable !== false) {
+      <button type="button" class="btn btn-secondary" (click)="dismiss()">
+        {{ confirmModalPayload.cancelButtonText || 'Cancel' }}
+      </button>
+    }
   </div>
 }

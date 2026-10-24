@@ -327,7 +327,7 @@ export const DesktopMessages: Record<
     showToast: true
   }),
   CLOUD_ENVIRONMENT_TOO_LARGE: (messageParams) => ({
-    message: `Your environment is too large to be saved on the cloud (max size: ${messageParams['maxSize'] / 1e6}MB). Please reduce its size.`,
+    message: `Your environment is too large to be saved on the cloud (max size: ${messageParams['maxSize'] / 1e8}MB). Please reduce its size.`,
     log: false,
     toastType: 'warning',
     showToast: true

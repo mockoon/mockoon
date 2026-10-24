@@ -10,7 +10,7 @@ How do we decide what to work on next? We don't have a strict roadmap, but we do
 
 - We prioritize bug fixes and performance improvements.
 - We consider features that are highly requested by the community.
-- We have our own ideas for improving the application, often aligned with our commercial offering ([Mockoon Cloud](https://mockoon.com/cloud/)) and our own usage of the applications.
+- We have our own ideas for improving the application, often aligned with our commercial offering ([Mockoon Pro](https://mockoon.com/pro/)) and our own usage of the applications.
 - We consider less requested features that are easy to implement and maintain, or that have a low impact on the application's complexity (e.g., adding a new templating helper).
 
 What **we recommend before contributing**:

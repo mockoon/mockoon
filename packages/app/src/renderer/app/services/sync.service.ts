@@ -9,6 +9,7 @@ import {
   Plans,
   ServerAcknowledgment,
   SyncActions,
+  SyncDisconnectReasons,
   SyncErrors,
   SyncMessageTypes,
   SyncPresence,
@@ -65,6 +66,7 @@ export class SyncService {
   private timeDifference: number;
   private serverMigrationDone = false;
   private migrationApproval: boolean;
+  private refreshPromptShown = false;
 
   /**
    * Initialize the socket connection.
@@ -76,9 +78,13 @@ export class SyncService {
     this.setDeviceId();
 
     return this.store.selectRemoteConfig('cloudSyncUrl').pipe(
-      filter((cloudSyncUrl) => !!cloudSyncUrl),
+      distinctUntilChanged(),
       tap((cloudSyncUrl) => {
-        if (!this.socket) {
+        // the URL changes when switching between the cloud and a self-hosted instance
+        this.socket?.disconnect();
+        this.socket?.removeAllListeners();
+
+        if (cloudSyncUrl) {
           this.socket = io(cloudSyncUrl, {
             transports: ['websocket'],
             query: {
@@ -92,7 +98,8 @@ export class SyncService {
           });
         }
       }),
-      mergeMap(() =>
+      filter((cloudSyncUrl) => !!cloudSyncUrl),
+      switchMap(() =>
         merge(
           this.initListeners(),
           // ⚠️ do not filter the user early as we want to disconnect the socket if the user logs out
@@ -234,6 +241,12 @@ export class SyncService {
           this.store.update(
             updateSyncAction({ offlineReason: SyncErrors.VERSION_TOO_OLD })
           );
+        } else if (error.message === SyncDisconnectReasons.LICENSE_EXPIRED) {
+          this.store.update(
+            updateSyncAction({
+              offlineReason: SyncDisconnectReasons.LICENSE_EXPIRED
+            })
+          );
         }
 
         return EMPTY;
@@ -309,6 +322,23 @@ export class SyncService {
     ).pipe(
       tap((payload) => {
         this.store.update(updateSyncAction({ offlineReason: payload.reason }));
+
+        if (
+          Config.isWeb &&
+          !this.refreshPromptShown &&
+          payload.reason === SyncDisconnectReasons.ROOM_INCOMPATIBLE_VERSION
+        ) {
+          this.refreshPromptShown = true;
+
+          this.uiService
+            .showConfirmDialog({
+              title: 'New version available',
+              text: 'Refresh the web app to update to the latest version and reconnect.',
+              confirmButtonText: 'Refresh',
+              cancelable: false
+            })
+            .subscribe(() => window.location.reload());
+        }
       })
     );
   }

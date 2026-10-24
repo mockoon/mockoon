@@ -34,7 +34,8 @@ export enum SyncErrors {
 }
 
 export enum SyncDisconnectReasons {
-  ROOM_INCOMPATIBLE_VERSION = 'ROOM_INCOMPATIBLE_VERSION'
+  ROOM_INCOMPATIBLE_VERSION = 'ROOM_INCOMPATIBLE_VERSION',
+  LICENSE_EXPIRED = 'LICENSE_EXPIRED'
 }
 
 export enum SyncMessageTypes {

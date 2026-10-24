@@ -1,4 +1,11 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  effect,
+  inject,
+  signal,
+  viewChild
+} from '@angular/core';
 import { form, FormField, validateHttp } from '@angular/forms/signals';
 import { IsEqual } from '@mockoon/commons';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
@@ -44,8 +51,11 @@ export class SettingsModalComponent {
   ];
 
   public isWeb = Config.isWeb;
+  public proPlansURL = Config.proPlansURL;
   public maxLogsPerEnvironmentLimit = Config.maxLogsPerEnvironmentLimit;
   private validatedApiUrls = new Set<string>();
+  private apiUrlInput = viewChild<ElementRef<HTMLInputElement>>('apiUrlInput');
+  public highlightSelfHosted = signal(false);
   public settingsForm = form(
     signal<Settings>(SettingsDefault),
     (schemaPath) => {
@@ -99,5 +109,10 @@ export class SettingsModalComponent {
 
   public close() {
     this.uiService.closeModal('settings');
+  }
+
+  public highlightSelfHostedSection() {
+    this.highlightSelfHosted.set(true);
+    setTimeout(() => this.apiUrlInput()?.nativeElement.focus());
   }
 }

@@ -9,6 +9,7 @@ import { AuthModalComponent } from 'src/renderer/app/components/modals/auth-moda
 import { ChangelogModalComponent } from 'src/renderer/app/components/modals/changelog-modal/changelog-modal.component';
 import { CommandPaletteModalComponent } from 'src/renderer/app/components/modals/command-palette-modal/command-palette-modal.component';
 import { ConfirmModalComponent } from 'src/renderer/app/components/modals/confirm-modal/confirm-modal.component';
+import { ConnectionModalComponent } from 'src/renderer/app/components/modals/connection-modal/connection-modal.component';
 import { DeployInstanceModalComponent } from 'src/renderer/app/components/modals/deploy-instance-modal/deploy-instance-modal.component';
 import { DuplicateModalComponent } from 'src/renderer/app/components/modals/duplicate-modal/duplicate-modal.component';
 import { EditorModalComponent } from 'src/renderer/app/components/modals/editor-modal/editor-modal.component';
@@ -51,6 +52,7 @@ const commonConfigs: Record<
 
 type ModalNames =
   | 'commandPalette'
+  | 'connection'
   | 'settings'
   | 'feedback'
   | 'changelog'
@@ -102,7 +104,9 @@ export class UIService {
       component: any;
       options:
         | NgbModalOptions
-        | ((payload: OpenApiImportModalPayload) => NgbModalOptions);
+        | ((
+            payload: ConfirmModalPayload | OpenApiImportModalPayload
+          ) => NgbModalOptions);
     }
   > = {
     commandPalette: {
@@ -115,6 +119,10 @@ export class UIService {
           'modal-dialog-transparent-backdrop modal-dialog-rounded modal-dialog-max-height',
         backdropClass: 'modal-backdrop-transparent'
       }
+    },
+    connection: {
+      component: ConnectionModalComponent,
+      options: commonConfigs.large
     },
     settings: {
       component: SettingsModalComponent,
@@ -146,7 +154,11 @@ export class UIService {
     },
     confirm: {
       component: ConfirmModalComponent,
-      options: commonConfigs.medium
+      options: (payload: ConfirmModalPayload) => ({
+        ...commonConfigs.medium,
+        backdrop: payload.cancelable === false ? 'static' : true,
+        keyboard: payload.cancelable !== false
+      })
     },
     deploy: {
       component: DeployInstanceModalComponent,
@@ -174,6 +186,7 @@ export class UIService {
   };
   private modalsInstances: Record<ModalNames, NgbModalRef> = {
     commandPalette: null,
+    connection: null,
     settings: null,
     feedback: null,
     changelog: null,
@@ -271,7 +284,9 @@ export class UIService {
     this.modalsInstances[modalName] = this.ngbModal.open(
       this.modals[modalName].component,
       typeof this.modals[modalName].options === 'function'
-        ? this.modals[modalName].options(payload as OpenApiImportModalPayload)
+        ? this.modals[modalName].options(
+            payload as ConfirmModalPayload | OpenApiImportModalPayload
+          )
         : this.modals[modalName].options
     );
 

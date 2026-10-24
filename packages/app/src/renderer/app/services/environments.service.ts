@@ -907,7 +907,7 @@ export class EnvironmentsService {
           hasDefaultRoute: true
         }),
         // provide a name or the filename (UUID) will be used
-        name: 'New cloud environment'
+        name: 'New remote environment'
       };
     }
 
@@ -988,7 +988,7 @@ export class EnvironmentsService {
     let newEnvironment: Environment = {
       ...CloneObject(environmentToDuplicate),
       name: `${environmentToDuplicate.name} ${
-        environmentIsCloud ? '(copy)' : '(cloud copy)'
+        environmentIsCloud ? '(copy)' : '(remote copy)'
       }`
     };
 
@@ -1016,7 +1016,7 @@ export class EnvironmentsService {
     return this.uiService
       .showConfirmDialog({
         title: 'Convert to local environment',
-        text: 'This will delete the environment from the cloud and convert it to a local environment on all other clients. Are you sure?',
+        text: 'This will delete the environment from remote and convert it to a local environment on all other clients. Are you sure?',
         confirmButtonText: 'Convert',
         cancelButtonText: 'Cancel'
       })
@@ -1046,10 +1046,10 @@ export class EnvironmentsService {
 
     return this.uiService
       .showConfirmDialog({
-        title: this.isWeb ? 'Delete' : 'Delete from the cloud',
+        title: this.isWeb ? 'Delete' : 'Delete from remote',
         text: this.isWeb
           ? 'This will permanently delete the environment. Are you sure? This action cannot be undone.'
-          : 'This will permanently delete the environment from the cloud and convert it to a local environment on all other clients. Are you sure?',
+          : 'This will permanently delete the environment from remote and convert it to a local environment on all other clients. Are you sure?',
         sub: this.isWeb
           ? 'Any running instance of this environment will continue to run until stopped.<br/>You can export the environment setup to a file before deleting it (see export option in the command palette).'
           : `<span class="text-break-all">Your local copy located in <strong>${environmentDescriptor.path}</strong> will not be deleted.</span>`,
@@ -1113,9 +1113,10 @@ export class EnvironmentsService {
       );
 
       if (this.isWeb) {
-        // permanently delete from the web app
         this.store.update(
-          removeEnvironmentAction(deletedCloudEnvironment.uuid)
+          removeEnvironmentAction(deletedCloudEnvironment.uuid),
+          true,
+          false
         );
 
         this.mainApiService.invoke(
@@ -2620,16 +2621,13 @@ export class EnvironmentsService {
             triggerBrowserDownload(filePath, data);
           })
         : switchMap((filePath) =>
-            from(
-              this.mainApiService.invoke('APP_WRITE_FILE', filePath, data)
-            ).pipe(
-              tap(() => {
-                this.loggerService.logMessage('info', 'EXPORT_SUCCESS', {
-                  environmentName: environment.name
-                });
-              })
-            )
-          )
+            from(this.mainApiService.invoke('APP_WRITE_FILE', filePath, data))
+          ),
+      tap(() => {
+        this.loggerService.logMessage('info', 'EXPORT_SUCCESS', {
+          environmentName: environment.name
+        });
+      })
     );
   }
 
@@ -2827,20 +2825,13 @@ export class EnvironmentsService {
               triggerBrowserDownload(filePath, data);
             })
           : switchMap(({ data, filePath }) =>
-              from(
-                this.mainApiService.invoke('APP_WRITE_FILE', filePath, data)
-              ).pipe(
-                tap(() => {
-                  this.loggerService.logMessage(
-                    'info',
-                    'OPENAPI_EXPORT_SUCCESS',
-                    {
-                      environmentName: activeEnvironment.name
-                    }
-                  );
-                })
-              )
+              from(this.mainApiService.invoke('APP_WRITE_FILE', filePath, data))
             ),
+        tap(() => {
+          this.loggerService.logMessage('info', 'OPENAPI_EXPORT_SUCCESS', {
+            environmentName: activeEnvironment.name
+          });
+        }),
         catchError((error) => {
           this.loggerService.logMessage('error', 'OPENAPI_EXPORT_ERROR', {
             error,

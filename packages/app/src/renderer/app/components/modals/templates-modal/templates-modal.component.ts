@@ -104,12 +104,11 @@ export class TemplatesModalComponent implements OnInit {
   public demoPrompt = new UntypedFormControl('');
   public generatedTemplateBody = new UntypedFormControl('');
   public demoEndpoint$ = new BehaviorSubject<(typeof demoTemplates)[0]>(null);
-  public cloudPlansURL = Config.cloudPlansURL;
+  public proPlansURL = Config.proPlansURL;
   public maxPromptLength = Config.maxPromptLength;
   public defaultEditorOptions = defaultEditorOptions;
   public focusableInputs = FocusableInputs;
   public open = false;
-  public accountUrl = Config.accountUrl;
   private isFirstDemo = true;
 
   constructor() {

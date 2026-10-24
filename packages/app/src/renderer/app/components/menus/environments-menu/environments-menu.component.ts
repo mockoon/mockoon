@@ -19,11 +19,7 @@ import {
   ReorderAction,
   ReorderableContainers
 } from '@mockoon/commons';
-import {
-  NgbCollapse,
-  NgbPopover,
-  NgbTooltip
-} from '@ng-bootstrap/ng-bootstrap';
+import { NgbCollapse, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, Observable, combineLatest, merge, of } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -46,7 +42,6 @@ import { DraggableDirective } from 'src/renderer/app/directives/draggable.direct
 import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directive';
 import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
 import { ScrollWhenActiveDirective } from 'src/renderer/app/directives/scroll-to-active.directive';
-import { TourStepDirective } from 'src/renderer/app/directives/tour-step.directive';
 import { buildApiUrl } from 'src/renderer/app/libs/utils.lib';
 import { EnvironmentsStatuses } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
@@ -70,8 +65,6 @@ type dropdownMenuPayload = { environmentUuid: string; syncStatus: boolean };
   templateUrl: './environments-menu.component.html',
   styleUrls: ['./environments-menu.component.scss'],
   imports: [
-    NgbPopover,
-    TourStepDirective,
     DraggableDirective,
     DropzoneDirective,
     SvgComponent,
@@ -120,7 +113,7 @@ export class EnvironmentsMenuComponent {
   public user$ = this.store.select('user');
   public sync$ = this.store.select('sync');
   public categories$: Observable<typeof this.categories>;
-  public cloudPlansURL = Config.cloudPlansURL;
+  public proPlansURL = Config.proPlansURL;
   public isCloudEnabled$: Observable<boolean>;
   public isConnected$ = this.user$.pipe(map((user) => !!user));
   public syncAlert$: Observable<string>;
@@ -134,7 +127,7 @@ export class EnvironmentsMenuComponent {
   };
   public commonDropdownMenuItems: DropdownMenuItem[] = [
     {
-      label: this.isWeb ? 'Duplicate' : 'Duplicate to the cloud',
+      label: this.isWeb ? 'Duplicate' : 'Duplicate to remote',
       icon: this.isWeb ? 'content_copy' : 'cloud',
       twoSteps: false,
       disabled$: () =>
@@ -234,7 +227,7 @@ export class EnvironmentsMenuComponent {
               return 'Manage deployment';
             }
 
-            return this.isWeb ? 'Deploy' : 'Deploy to the cloud';
+            return 'Deploy';
           })
         ),
       icon: ({ environmentUuid }: dropdownMenuPayload) =>
@@ -310,7 +303,7 @@ export class EnvironmentsMenuComponent {
             }
           },
           {
-            label: 'Delete from cloud and convert to local',
+            label: 'Delete from remote and convert to local',
             icon: 'cloud_remove',
             twoSteps: false,
             disabled$: () =>
@@ -325,7 +318,7 @@ export class EnvironmentsMenuComponent {
           }
         ]),
     {
-      label: this.isWeb ? 'Delete' : 'Delete from cloud and close',
+      label: this.isWeb ? 'Delete' : 'Delete from remote and close',
       icon: this.isWeb ? 'delete' : 'cloud_remove',
       twoSteps: false,
       disabled$: () =>
@@ -353,7 +346,7 @@ export class EnvironmentsMenuComponent {
 
   public cloudDropdownMenuItems: DropdownMenuElement[] = [
     {
-      label: 'New cloud environment',
+      label: 'New remote environment',
       icon: 'cloud_add',
       twoSteps: false,
       action: () => {
@@ -364,7 +357,7 @@ export class EnvironmentsMenuComponent {
     ...(!this.isWeb
       ? [
           {
-            label: 'New cloud environment from local file',
+            label: 'New remote environment from local file',
             icon: 'folder_open',
             twoSteps: false,
             action: () => {
@@ -377,7 +370,7 @@ export class EnvironmentsMenuComponent {
         ]
       : []),
     {
-      label: 'New cloud environment from OpenAPI/Swagger',
+      label: 'New remote environment from OpenAPI/Swagger',
       icon: 'description',
       twoSteps: false,
       action: () => {
@@ -395,7 +388,9 @@ export class EnvironmentsMenuComponent {
     [SyncErrors.VERSION_TOO_OLD]:
       'your Mockoon version is too old, please update.',
     [SyncDisconnectReasons.ROOM_INCOMPATIBLE_VERSION]:
-      'your sync space was updated and is not compatible with your current version of Mockoon, please update.'
+      'your sync space was updated and is not compatible with your current version of Mockoon, please update.',
+    [SyncDisconnectReasons.LICENSE_EXPIRED]:
+      'your Mockoon Pro license has expired.'
   };
 
   private localDropdownMenuStaticItems: DropdownMenuElement[] = [
@@ -554,7 +549,7 @@ export class EnvironmentsMenuComponent {
     this.categories = [
       {
         id: 'cloud',
-        label: this.isWeb ? 'APIs' : 'Cloud',
+        label: this.isWeb ? 'APIs' : 'Remote',
         collapsed: false
       }
     ];
