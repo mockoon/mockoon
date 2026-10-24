@@ -1,3 +1,4 @@
+import { escapeHtml } from '@mockoon/commons';
 import { randomBytes } from 'crypto';
 import { shell } from 'electron';
 import { createServer, Server } from 'http';
@@ -33,18 +34,6 @@ const authCallbackPage = `<!doctype html>
     </div>
   </body>
 </html>`;
-
-function escapeHtml(value: string) {
-  const entities: Record<string, string> = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
-  };
-
-  return value.replace(/[&<>"']/g, (character) => entities[character]);
-}
 
 /**
  * Stop the auth callback server

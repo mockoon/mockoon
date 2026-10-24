@@ -1,6 +1,7 @@
 import { strictEqual } from 'node:assert';
 import { describe, it } from 'node:test';
 import {
+  escapeHtml,
   express5PathConvert,
   generateSecureToken,
   parseByteSize
@@ -260,5 +261,22 @@ describe('express5PathConvert', () => {
       express5PathConvert('/api(v2)?/users/:id+/file.:ext?/*'),
       '/api{v2}/users/*id/file{.:ext}/*wildcard0'
     );
+  });
+});
+
+describe('escapeHtml', () => {
+  it('should escape &, <, >, ", and \'', () => {
+    strictEqual(
+      escapeHtml('<script>alert("hello" & \'world\');</script>'),
+      '&lt;script&gt;alert(&quot;hello&quot; &amp; &#39;world&#39;);&lt;/script&gt;'
+    );
+  });
+
+  it('should return unchanged string when no special characters exist', () => {
+    strictEqual(escapeHtml('hello-world_123'), 'hello-world_123');
+  });
+
+  it('should return empty string when input is empty', () => {
+    strictEqual(escapeHtml(''), '');
   });
 });

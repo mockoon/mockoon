@@ -37,7 +37,10 @@ import {
   RouteSchema,
   RouteType,
   deterministicStringify,
-  generateUUID
+  escapeHtml,
+  generateUUID,
+  getInsertAfterUuid,
+  getRouteOrFolderInsertPosition
 } from '@mockoon/commons';
 import {
   BehaviorSubject,
@@ -1318,76 +1321,6 @@ export class EnvironmentsService {
   }
 
   /**
-   * Calculate parentId and insertAfterUuid for a route or folder
-   */
-  private getRouteOrFolderInsertPosition(
-    environment: Environment,
-    uuid: string
-  ): { parentId: string | 'root'; insertAfterUuid?: string | null } {
-    if (environment.rootChildren.some((child) => child.uuid === uuid)) {
-      const index = environment.rootChildren.findIndex(
-        (child) => child.uuid === uuid
-      );
-
-      return {
-        parentId: 'root',
-        insertAfterUuid:
-          index > 0 ? environment.rootChildren[index - 1].uuid : null
-      };
-    }
-
-    const parentFolder = environment.folders.find((folder) =>
-      folder.children.some((child) => child.uuid === uuid)
-    );
-
-    if (parentFolder) {
-      const index = parentFolder.children.findIndex(
-        (child) => child.uuid === uuid
-      );
-
-      return {
-        parentId: parentFolder.uuid,
-        insertAfterUuid:
-          index > 0 ? parentFolder.children[index - 1].uuid : null
-      };
-    }
-
-    return { parentId: 'root' };
-  }
-
-  /**
-   * Calculate insertAfterUuid for a list of items with uuid
-   */
-  private getInsertAfterUuid<T extends { uuid: string }>(
-    items: T[],
-    uuid: string
-  ): string | null | undefined {
-    const itemIndex = items.findIndex((item) => item.uuid === uuid);
-
-    if (itemIndex === -1) {
-      return undefined;
-    }
-
-    if (itemIndex === 0) {
-      return null;
-    }
-
-    return items[itemIndex - 1]?.uuid;
-  }
-
-  /**
-   * Escape HTML special characters
-   */
-  private escapeHtml(value: string): string {
-    return value
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
-  }
-
-  /**
    * Remove a folder and save
    */
   public removeFolder(folderUuid: string) {
@@ -1397,7 +1330,7 @@ export class EnvironmentsService {
     );
 
     if (folderUuid && activeEnvironment && folder) {
-      const { parentId, insertAfterUuid } = this.getRouteOrFolderInsertPosition(
+      const { parentId, insertAfterUuid } = getRouteOrFolderInsertPosition(
         activeEnvironment,
         folderUuid
       );
@@ -1406,7 +1339,7 @@ export class EnvironmentsService {
 
       this.toastsService.addToast(
         'warning',
-        `Folder "<strong>${this.escapeHtml(folder.name)}</strong>" deleted`,
+        `Folder "<strong>${escapeHtml(folder.name)}</strong>" deleted`,
         {
           label: 'Undo',
           action: () => {
@@ -1830,7 +1763,7 @@ export class EnvironmentsService {
     );
 
     if (routeUuid && activeEnvironment && route) {
-      const { parentId, insertAfterUuid } = this.getRouteOrFolderInsertPosition(
+      const { parentId, insertAfterUuid } = getRouteOrFolderInsertPosition(
         activeEnvironment,
         routeUuid
       );
@@ -1839,8 +1772,8 @@ export class EnvironmentsService {
 
       const routeName =
         route.type === RouteType.CRUD
-          ? `CRUD <strong>/${this.escapeHtml(route.endpoint)}</strong>`
-          : `${route.method.toUpperCase()} <strong>/${this.escapeHtml(route.endpoint)}</strong>`;
+          ? `CRUD <strong>/${escapeHtml(route.endpoint)}</strong>`
+          : `${route.method.toUpperCase()} <strong>/${escapeHtml(route.endpoint)}</strong>`;
 
       this.toastsService.addToast('warning', `Route ${routeName} deleted`, {
         label: 'Undo',
@@ -1890,7 +1823,7 @@ export class EnvironmentsService {
         !activeRouteResponse.default &&
         activeRoute.responses.length > 1)
     ) {
-      const insertAfterUuid = this.getInsertAfterUuid(
+      const insertAfterUuid = getInsertAfterUuid(
         activeRoute.responses,
         activeRouteResponse.uuid
       );
@@ -1904,7 +1837,7 @@ export class EnvironmentsService {
       );
 
       const responseLabel = activeRouteResponse.label
-        ? `<strong>"${this.escapeHtml(activeRouteResponse.label)}"</strong> (${activeRouteResponse.statusCode})`
+        ? `<strong>"${escapeHtml(activeRouteResponse.label)}"</strong> (${activeRouteResponse.statusCode})`
         : `<strong>${activeRouteResponse.statusCode}</strong>`;
 
       this.toastsService.addToast(
@@ -1952,7 +1885,7 @@ export class EnvironmentsService {
     );
 
     if (databucketUuid && activeEnvironment && databucket) {
-      const insertAfterUuid = this.getInsertAfterUuid(
+      const insertAfterUuid = getInsertAfterUuid(
         activeEnvironment.data,
         databucketUuid
       );
@@ -1963,7 +1896,7 @@ export class EnvironmentsService {
 
       this.toastsService.addToast(
         'warning',
-        `Data bucket "<strong>${this.escapeHtml(databucket.name)}</strong>" deleted`,
+        `Data bucket "<strong>${escapeHtml(databucket.name)}</strong>" deleted`,
         {
           label: 'Undo',
           action: () => {
@@ -1999,7 +1932,7 @@ export class EnvironmentsService {
     );
 
     if (callbackUuid && activeEnvironment && callback) {
-      const insertAfterUuid = this.getInsertAfterUuid(
+      const insertAfterUuid = getInsertAfterUuid(
         activeEnvironment.callbacks,
         callbackUuid
       );
@@ -2010,7 +1943,7 @@ export class EnvironmentsService {
 
       this.toastsService.addToast(
         'warning',
-        `Callback "<strong>${this.escapeHtml(callback.name)}</strong>" deleted`,
+        `Callback "<strong>${escapeHtml(callback.name)}</strong>" deleted`,
         {
           label: 'Undo',
           action: () => {
