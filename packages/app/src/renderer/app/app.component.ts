@@ -43,6 +43,7 @@ import { SyncService } from 'src/renderer/app/services/sync.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
+import { WorkspaceService } from 'src/renderer/app/services/workspace.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { environment } from 'src/renderer/environments/environment';
 import { OfflineBannerComponent } from './components/offline-banner/offline-banner.component';
@@ -80,6 +81,7 @@ export class AppComponent implements OnInit {
   private remoteConfigService = inject(RemoteConfigService);
   private syncService = inject(SyncService);
   private deployService = inject(DeployService);
+  private workspaceService = inject(WorkspaceService);
   private serverService = inject(ServerService);
   private mainApiService = inject(MainApiService);
   private loggerService = inject(LoggerService);
@@ -130,6 +132,7 @@ export class AppComponent implements OnInit {
 
       if (user.plan !== 'FREE' && user.plan !== 'SOLO') {
         this.deployService.getInstances().subscribe();
+        this.workspaceService.getWorkspaces().subscribe();
       }
     }
   }
@@ -158,6 +161,7 @@ export class AppComponent implements OnInit {
     this.userService.init().subscribe();
     this.syncService.init().subscribe();
     this.deployService.init().subscribe();
+    this.workspaceService.init().subscribe();
     this.mainApiListenerService.init();
     this.serverService.init().subscribe();
 

@@ -10,7 +10,7 @@
     @if (instanceExists) {
       Manage {{ environment?.name }} deployment<br />
       <small class="text-muted h6">
-        Modify your cloud instance configuration (<a
+        Modify your remote instance configuration (<a
           href="{{ proDeploy }}"
           target="_blank"
           >documentation</a
@@ -19,7 +19,7 @@
     } @else {
       Deploy {{ environment?.name }}<br />
       <small class="text-muted h6"
-        >Configure your cloud instance (<a
+        >Configure your remote instance (<a
           href="{{ proDeploy }}"
           target="_blank"
           >documentation</a

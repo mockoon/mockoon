@@ -38,6 +38,7 @@ import {
   updateCallbackAction,
   updateDatabucketAction,
   updateEnvironmentAction,
+  updateEnvironmentWorkspaceIdsAction,
   updateFolderAction,
   updateRouteAction,
   updateRouteResponseAction,
@@ -70,12 +71,16 @@ export class SyncPayloadsService {
           timestamp,
           environmentUuid: action.environmentUuid
         };
-      case ActionTypes.ADD_ENVIRONMENT:
+      case ActionTypes.ADD_ENVIRONMENT: {
         return {
           type: SyncActionTypes.ADD_CLOUD_ENVIRONMENT,
           timestamp,
-          environment: action.environment
+          environment: action.environment,
+          ...(action.workspaceId === undefined
+            ? {}
+            : { workspaceId: action.workspaceId })
         };
+      }
       case ActionTypes.UPDATE_ENVIRONMENT:
         return {
           type: SyncActionTypes.UPDATE_ENVIRONMENT,
@@ -341,6 +346,15 @@ export class SyncPayloadsService {
    */
   public applySyncAction(syncAction: DownSyncActions) {
     if (syncAction.type === SyncActionTypes.ADD_CLOUD_ENVIRONMENT) {
+      if (syncAction.workspaceId !== undefined) {
+        this.store.update(
+          updateEnvironmentWorkspaceIdsAction({
+            ...this.store.get('environmentWorkspaceIds'),
+            [syncAction.environment.uuid]: syncAction.workspaceId
+          })
+        );
+      }
+
       // if new environment, add it, otherwise replace it
       if (
         this.store

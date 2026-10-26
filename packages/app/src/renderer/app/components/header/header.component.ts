@@ -9,7 +9,7 @@ import {
   NgbTooltip
 } from '@ng-bootstrap/ng-bootstrap';
 import { EMPTY, Observable, forkJoin, from } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, defaultIfEmpty, map, switchMap } from 'rxjs/operators';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TeamPresenceComponent } from 'src/renderer/app/components/team-presence/team-presence.component';
 import { planLabels } from 'src/renderer/app/constants/user.constant';
@@ -26,6 +26,7 @@ import { SyncService } from 'src/renderer/app/services/sync.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
+import { WorkspaceService } from 'src/renderer/app/services/workspace.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { environment as env } from 'src/renderer/environments/environment';
@@ -55,6 +56,7 @@ export class HeaderComponent implements OnInit {
   private syncService = inject(SyncService);
   private toastsService = inject(ToastsService);
   private deployService = inject(DeployService);
+  private workspaceService = inject(WorkspaceService);
   private mainApiService = inject(MainApiService);
 
   public activeEnvironment$: Observable<Environment>;
@@ -193,7 +195,8 @@ export class HeaderComponent implements OnInit {
   public refreshAccount() {
     forkJoin([
       this.userService.getUserInfo(true),
-      this.remoteConfigService.fetchConfig()
+      this.remoteConfigService.fetchConfig(),
+      this.workspaceService.getWorkspaces(true).pipe(defaultIfEmpty(null))
     ])
       .pipe(
         switchMap(() => this.deployService.getInstances(true)),

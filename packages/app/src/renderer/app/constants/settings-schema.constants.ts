@@ -34,6 +34,7 @@ export const SettingsDefault: Settings = {
   },
   envVarsPrefix: defaultEnvironmentVariablesPrefix,
   activeEnvironmentUuid: null,
+  workspaceFilterId: null,
   enableRandomLatency: false,
   recentLocalEnvironments: [],
   displayLogsIsoTimestamp: false,
@@ -135,6 +136,12 @@ export const SettingsSchema = Joi.object<Settings, true>({
     .uuid()
     .allow(null)
     .failover(SettingsDefault.activeEnvironmentUuid)
+    .required(),
+  workspaceFilterId: Joi.number()
+    .integer()
+    .positive()
+    .allow(null)
+    .failover(SettingsDefault.workspaceFilterId)
     .required(),
   enableRandomLatency: Joi.boolean()
     .failover(SettingsDefault.enableRandomLatency)
