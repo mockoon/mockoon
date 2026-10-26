@@ -203,10 +203,16 @@ describe('Server should handle proxy TLS verification', () => {
   });
 
   it('should reject self-signed certificate with 504 when proxyVerifyTls is true', async () => {
+    const proxyError = new Promise<NodeJS.ErrnoException>((resolve) => {
+      secureProxyServer.once('error', (_errorCode, error) => {
+        resolve(error as NodeJS.ErrnoException);
+      });
+    });
+
     const response = await fetch('http://localhost:3005/test');
     equal(response.status, 504);
 
-    const text = await response.text();
-    equal(text.includes('DEPTH_ZERO_SELF_SIGNED_CERT'), true);
+    const error = await proxyError;
+    equal(error.code, 'DEPTH_ZERO_SELF_SIGNED_CERT');
   });
 });
