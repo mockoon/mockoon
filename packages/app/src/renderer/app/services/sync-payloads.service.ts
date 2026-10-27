@@ -94,7 +94,8 @@ export class SyncPayloadsService {
           timestamp,
           environmentUuid: action.environmentUuid,
           route: action.route,
-          parentId: action.parentId
+          parentId: action.parentId,
+          insertAfterUuid: action.insertAfterUuid
         };
       case ActionTypes.UPDATE_ROUTE:
         return {
@@ -124,7 +125,8 @@ export class SyncPayloadsService {
           timestamp,
           environmentUuid: action.environmentUuid,
           folder: action.folder,
-          parentId: action.parentId
+          parentId: action.parentId,
+          insertAfterUuid: action.insertAfterUuid
         };
       case ActionTypes.UPDATE_FOLDER:
         return {
@@ -426,7 +428,8 @@ export class SyncPayloadsService {
           syncAction.environmentUuid,
           syncAction.route,
           syncAction.parentId,
-          false
+          false,
+          syncAction.insertAfterUuid
         );
         break;
       case SyncActionTypes.UPDATE_ROUTE:
@@ -453,7 +456,8 @@ export class SyncPayloadsService {
           syncAction.environmentUuid,
           syncAction.folder,
           syncAction.parentId,
-          false
+          false,
+          syncAction.insertAfterUuid
         );
         break;
       case SyncActionTypes.UPDATE_FOLDER:

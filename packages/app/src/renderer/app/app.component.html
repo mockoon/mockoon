@@ -7,15 +7,28 @@
   @for (toast of toasts; track toast.UUID) {
     <ngb-toast
       [class]="'toast-' + toast.type"
+      [class.border-bottom-0]="toast.action"
       [autohide]="true"
-      [delay]="5000"
+      [delay]="toast.action ? 8000 : 5000"
       (hide)="removeToast(toast.UUID)"
       (click)="removeToast(toast.UUID)"
     >
       <div class="toast-content">
         <app-svg [icon]="toast.type === 'success' ? 'info' : toast.type" />
-        <span>{{ toast.message }}</span>
+        <span [innerHTML]="toast.message"></span>
+        @if (toast.action) {
+          <button
+            type="button"
+            class="btn btn-xs btn-link p-0 ms-auto text-nowrap"
+            (click)="executeToastAction($event, toast)"
+          >
+            {{ toast.action.label }}
+          </button>
+        }
       </div>
+      @if (toast.action) {
+        <div class="toast-action-progress" aria-hidden="true"></div>
+      }
     </ngb-toast>
   }
 </div>

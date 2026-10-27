@@ -140,3 +140,66 @@ export const findRouteOrFolderContainer = (
 
   return null;
 };
+
+/**
+ * Calculate parentId and insertAfterUuid for a route or folder
+ *
+ * @param environment
+ * @param uuid
+ */
+export const getRouteOrFolderInsertPosition = (
+  environment: Environment,
+  uuid: string
+): { parentId: string | 'root'; insertAfterUuid?: string | null } => {
+  if (environment.rootChildren.some((child) => child.uuid === uuid)) {
+    const index = environment.rootChildren.findIndex(
+      (child) => child.uuid === uuid
+    );
+
+    return {
+      parentId: 'root',
+      insertAfterUuid:
+        index > 0 ? environment.rootChildren[index - 1].uuid : null
+    };
+  }
+
+  const parentFolder = environment.folders.find((folder) =>
+    folder.children.some((child) => child.uuid === uuid)
+  );
+
+  if (parentFolder) {
+    const index = parentFolder.children.findIndex(
+      (child) => child.uuid === uuid
+    );
+
+    return {
+      parentId: parentFolder.uuid,
+      insertAfterUuid: index > 0 ? parentFolder.children[index - 1].uuid : null
+    };
+  }
+
+  return { parentId: 'root' };
+};
+
+/**
+ * Calculate insertAfterUuid for a list of items with uuid
+ *
+ * @param items
+ * @param uuid
+ */
+export const getInsertAfterUuid = <T extends { uuid: string }>(
+  items: T[],
+  uuid: string
+): string | null | undefined => {
+  const itemIndex = items.findIndex((item) => item.uuid === uuid);
+
+  if (itemIndex === -1) {
+    return undefined;
+  }
+
+  if (itemIndex === 0) {
+    return null;
+  }
+
+  return items[itemIndex - 1]?.uuid;
+};

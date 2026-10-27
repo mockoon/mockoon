@@ -521,19 +521,22 @@ export const setActiveRouteAction = (routeUUID: string) =>
  * @param folder - folder to add
  * @param parentId - target parent (root or folder) Id
  * @param uiReset - indicates if the filters must be reset after addition
+ * @param insertAfterUuid - UUID after which to insert, or null to insert first
  */
 export const addFolderAction = (
   environmentUuid: string,
   folder: Folder,
   parentId: string | 'root',
-  uiReset: boolean
+  uiReset: boolean,
+  insertAfterUuid?: string | null
 ) =>
   ({
     type: ActionTypes.ADD_FOLDER,
     environmentUuid,
     folder,
     parentId,
-    uiReset
+    uiReset,
+    insertAfterUuid
   }) as const;
 
 /**
@@ -578,19 +581,22 @@ export const updateFolderAction = (
  * @param route - route to add
  * @param parentId - target parent (root or folder) Id
  * @param uiReset - indicates if the route must be focused after addition and the UI reset (switch tabs)
+ * @param insertAfterUuid - UUID after which to insert, or null to insert first
  */
 export const addRouteAction = (
   environmentUuid: string,
   route: Route,
   parentId: string | 'root',
-  uiReset: boolean
+  uiReset: boolean,
+  insertAfterUuid?: string | null
 ) =>
   ({
     type: ActionTypes.ADD_ROUTE,
     route,
     parentId,
     uiReset,
-    environmentUuid
+    environmentUuid,
+    insertAfterUuid
   }) as const;
 
 /**
@@ -662,14 +668,14 @@ export const setActiveRouteResponseAction = (routeResponseUUID: string) =>
  * @param routeUuid - route UUID to which the route response is linked to
  * @param routeResponse - route response to add
  * @param uiReset - indicates if the route response must be focused after addition
- * @param insertAfterUuid - route response UUID after which the new route response must be inserted
+ * @param insertAfterUuid - UUID after which to insert, or null to insert first
  */
 export const addRouteResponseAction = (
   environmentUuid: string,
   routeUuid: string,
   routeResponse: RouteResponse,
   uiReset: boolean,
-  insertAfterUuid?: string
+  insertAfterUuid?: string | null
 ) =>
   ({
     type: ActionTypes.ADD_ROUTE_RESPONSE,
@@ -751,13 +757,13 @@ export const setActiveCallbackAction = (callbackUUID: string) =>
  * @param environmentUuid - environment UUID to which the databucket is linked to
  * @param databucket - databucket to add
  * @param uiReset - indicates if the databucket must be selected after addition
- * @param insertAfterUuid - databucket UUID after which the new databucket must be inserted
+ * @param insertAfterUuid - UUID after which to insert, or null to insert first
  */
 export const addDatabucketAction = (
   environmentUuid: string,
   databucket: DataBucket,
   uiReset: boolean,
-  insertAfterUuid?: string
+  insertAfterUuid?: string | null
 ) =>
   ({
     type: ActionTypes.ADD_DATABUCKET,
@@ -772,14 +778,14 @@ export const addDatabucketAction = (
  * @param environmentUuid - environment UUID to which the callback is linked to
  * @param callback - callback to add
  * @param uiReset - indicates if the callback must be selected after addition, filters reset
- * @param insertAfterUuid - callback UUID after which the new callback must be inserted
+ * @param insertAfterUuid - UUID after which to insert, or null to insert first
  * @returns
  */
 export const addCallbackAction = (
   environmentUuid: string,
   callback: Callback,
   uiReset: boolean,
-  insertAfterUuid?: string
+  insertAfterUuid?: string | null
 ) =>
   ({
     type: ActionTypes.ADD_CALLBACK,
