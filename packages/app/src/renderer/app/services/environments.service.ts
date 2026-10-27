@@ -1885,7 +1885,7 @@ export class EnvironmentsService {
               addRouteResponseAction(
                 activeEnvironment.uuid,
                 activeRoute.uuid,
-                activeRouteResponse,
+                { ...activeRouteResponse, default: false },
                 true,
                 insertAfterUuid
               )
