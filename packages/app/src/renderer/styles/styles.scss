@@ -97,7 +97,6 @@ input,
 .main-content {
   background-color: darken($gray-900, 2%);
 }
-
 .menu-list {
   overflow-x: hidden;
   overflow-y: auto;
@@ -161,32 +160,70 @@ $status-code-colors:
 .toasts-container {
   z-index: 5000;
   position: absolute;
-  width: 250px;
-  top: calc($spacer / 2) + 2rem;
+  width: 280px;
+  bottom: calc($spacer / 2) + 2rem;
   right: calc($spacer / 2);
 }
+
 .toast {
+  position: relative;
+  overflow: hidden;
   word-break: break-word;
+  cursor: pointer;
+
+  + .toast {
+    margin-top: calc($spacer / 2);
+  }
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: calc($spacer / 2);
+
+  app-svg {
+    flex: 0 0 auto;
+  }
+}
+
+.toast-action-progress {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background-color: rgba($primary, 0.65);
+  transform-origin: left;
+  animation: toast-action-progress 8s linear forwards;
+}
+
+@keyframes toast-action-progress {
+  to {
+    transform: scaleX(0);
+  }
 }
 
 .toast-success {
-  .toast-body {
-    background-color: $green;
-    border-color: lighten($green, 10%);
+  border-left: 2px solid lighten($cyan, 15%);
+
+  app-svg {
+    color: lighten($cyan, 15%);
   }
 }
 
 .toast-warning {
-  .toast-body {
-    background-color: $orange;
-    border-color: lighten($orange, 10%);
+  border-left: 2px solid $orange;
+
+  app-svg {
+    color: $orange;
   }
 }
 
 .toast-error {
-  .toast-body {
-    background-color: $red;
-    border-color: lighten($red, 10%);
+  border-left: 2px solid $red;
+
+  app-svg {
+    color: $red;
   }
 }
 
@@ -363,11 +400,6 @@ $status-code-colors:
   }
 }
 
-.tour-highlight {
-  pointer-events: none;
-  user-select: none;
-}
-
 .warning-backdrop {
   position: absolute;
   width: 100%;
@@ -375,13 +407,6 @@ $status-code-colors:
   z-index: $zindex-modal-backdrop;
   background-color: $modal-backdrop-bg;
   opacity: 0.4;
-}
-
-.tour-backdrop {
-  position: fixed;
-  z-index: $zindex-modal-backdrop;
-  background-color: $modal-backdrop-bg;
-  opacity: 0.8;
 }
 
 .dropdown-toggle-no-caret {

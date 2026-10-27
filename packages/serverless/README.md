@@ -13,11 +13,25 @@
   <h1>@Mockoon/serverless</h1>
 </div>
 
+> ⚠️ **DEPRECATION NOTICE**: `@mockoon/serverless` is deprecated and will be removed in a future major version. We recommend using the **[Mockoon CLI Docker image](https://hub.docker.com/r/mockoon/cli)** (`mockoon/cli`) or `@mockoon/cli` in containerized serverless runtimes (AWS Lambda container images, Google Cloud Run, AWS Fargate, Azure Container Apps, etc.).
+>
+> 📖 See the [Mockoon CLI Docker documentation](https://github.com/mockoon/mockoon/tree/main/packages/cli#docker-image) for setup instructions.
+
 Mockoon's Serverless package provides an easy way to run Mockoon's mock APIs in cloud functions and serverless environments: AWS Lambda, GCP Functions, Firebase Functions, etc.
 
 The Serverless package supports the same features as the main [application](https://github.com/mockoon/mockoon/blob/main/packages/app) and [CLI](https://github.com/mockoon/mockoon/blob/main/packages/cli) (with some limitations, see below): [templating system](https://mockoon.com/docs/latest/templating/overview/), [proxy mode](https://mockoon.com/docs/latest/server-configuration/proxy-mode/), [route response rules](https://mockoon.com/docs/latest/route-responses/dynamic-rules/), etc.
 
-## Using this package
+## Migration to Docker image (`mockoon/cli`)
+
+Instead of maintaining custom serverless wrapper functions, we recommend running Mockoon's official Docker image in containerized serverless services:
+
+```bash
+docker run -d -p 3000:3000 mockoon/cli:latest --data https://raw.githubusercontent.com/mockoon/mock-samples/main/samples/generate-mock-data.json --port 3000
+```
+
+For more details on running Mockoon with Docker, check out our [Docker documentation](https://github.com/mockoon/mockoon/tree/main/packages/cli#docker-image).
+
+## Using this package (Deprecated)
 
 ### Installation
 
@@ -148,6 +162,8 @@ The `MockoonServerless` class accepts an optional `options` object as a second p
 | `fakerOptions.seed`   | `number`   | `[]`          | Number for the Faker.js seed (e.g. 1234)                                                                                                                                                                  |
 | `envVarsPrefix`       | `string`   | `MOCKOON_`    | [Environment variables prefix](https://mockoon.com/docs/latest/variables/environment-variables/). Pass an empty string to disable it.                                                                     |
 | `enableAdminApi`      | `boolean`  | `true`        | Enable (default) or disable the [Admin API](https://mockoon.com/docs/latest/admin-api/overview/).                                                                                                         |
+| `adminApiAuthToken`   | `string`   | `undefined`   | Admin API bearer token. Required when `enableAdminApi` is `true` if `MOCKOON_ADMIN_API_TOKEN` is not set.                                                                                                 |
+| `adminApiCorsOrigins` | `string[]` | `undefined`   | Allowed CORS origins for the admin API (e.g. `['https://app.example.com']`). When omitted, no CORS headers are emitted on admin API responses. Include `'*'` to explicitly opt into wildcard CORS.        |
 | `disableTls`          | `boolean`  | `false`       | Disable TLS. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/).                                              |
 | `maxTransactionLogs`  | `number`   | `100`         | Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100).                                                                                                      |
 | `enableRandomLatency` | `boolean`  | `false`       | Randomize global and responses latencies between 0 and the specified value (default: false).                                                                                                              |
@@ -167,18 +183,37 @@ const mockoonServerless = new mockoon.MockoonServerless(mockEnv, {
   },
   envVarsPrefix: 'CUSTOM_PREFIX_',
   enableAdminApi: false,
+  adminApiAuthToken: 'my-token',
   disableTls: true,
   enableRandomLatency: false
 });
 ```
 
-#### Admin API
+### Admin API
 
-Each running mock API has an admin API enabled by default and available at `/mockoon-admin/`. This API allows you to interact with the running mock API, retrieve logs, and more. You can disable the admin API with the `enableAdminApi` option.
+Each running mock API has an admin API enabled by default and available at `/mockoon-admin/`. This API allows you to interact with the running mock API, retrieve logs, and more. You can disable it by setting `enableAdminApi: false` in the constructor options.
+
+When the admin API is enabled, bearer authentication is always enabled.
+
+You can provide the admin API token with `adminApiAuthToken` (or `MOCKOON_ADMIN_API_TOKEN`). When `enableAdminApi` is `true`, a token must be provided.
+
+Send the token with the `Authorization: Bearer <token>` header.
+
+By default, the admin API does not emit CORS headers, which prevents browser-based cross-origin requests. To allow specific origins, set `adminApiCorsOrigins`:
+
+```javascript
+const mockoonServerless = new mockoon.MockoonServerless(mockEnv, {
+  adminApiCorsOrigins: ['https://app.example.com']
+});
+```
+
+Only requests whose `Origin` header matches one of the allowed values receive CORS headers. Include `'*'` in the array to explicitly opt into wildcard CORS (not recommended for exposed instances).
+
+Transaction logs returned by the admin API (`GET /mockoon-admin/logs` and the SSE event stream) have known-sensitive headers redacted (`authorization`, `proxy-authorization`, `cookie`, `set-cookie`, `x-api-key`, `api-key`, `x-auth-token`). For `authorization` / `proxy-authorization`, the auth scheme is preserved (e.g. `Bearer [REDACTED]`). Request and response bodies are not modified.
 
 > 💡 To learn more about the admin API, check the [documentation](https://mockoon.com/docs/latest/admin-api/overview/).
 
-#### Faker.js options
+### Faker.js options
 
 - **Locale**: If not provided, Faker.js will use the default locale: `en`. For a list of currently supported locales, you can check the [supported locales list](https://github.com/mockoon/mockoon/blob/main/packages/commons/src/models/faker.model.ts#L1) in Mockoon's commons library. You can also check [Faker.js locales list](https://fakerjs.dev/guide/localization.html#available-locales) for more information (⚠️ Some locales may not yet be implemented in Mockoon).
 - **Seed**: If not provided, Faker.js will not use a seed. By providing a seed value, you can generate repeatable sequences of fake data. Using seeding will not always generate the same value but rather a predictable sequence.
@@ -264,7 +299,7 @@ You will find Mockoon's [documentation](https://mockoon.com/docs/latest/about/) 
 
 ## Support us!
 
-Mockoon is proudly **independent** and **open-source**, maintained without external funding. We rely on both **sponsorships** and **Mockoon Cloud subscriptions** to keep improving the project and building new features. A **big thank you** to the companies below for supporting our work and helping us grow (and all the [sponsors](https://github.com/mockoon/mockoon/blob/main/backers.md) who helped this project over time!):
+Mockoon is proudly **independent** and **open-source**, maintained without external funding. We rely on both **sponsorships** and **Mockoon Pro licenses** to keep improving the project and building new features. A **big thank you** to the companies below for supporting our work and helping us grow (and all the [sponsors](https://github.com/mockoon/mockoon/blob/main/backers.md) who helped this project over time!):
 
 ### Platinum
 
@@ -295,8 +330,13 @@ Mockoon is proudly **independent** and **open-source**, maintained without exter
 ### Gold
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
- 
-  <a href="https://www.testmuai.com/?utm_medium=sponsor&utm_source=mockoon">
+  <a href="https://coderabbit.link/mockoon">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/coderabbit.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/coderabbit.png">
+      <img src="https://mockoon.com/images/sponsors/light/coderabbit.png" alt="CodeRabbit logo" />
+      </picture>
+  </a><br/><br/><a href="https://www.testmuai.com/?utm_medium=sponsor&utm_source=mockoon">
       <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/testmuai.png">
       <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/testmuai.png">
@@ -313,26 +353,27 @@ Mockoon is proudly **independent** and **open-source**, maintained without exter
   </a>
 </div>
 
-If you'd like to **support Mockoon** as well, you can **become a sponsor** or **subscribe to Mockoon Cloud**, every contribution helps keep the project alive and evolving. Thank you!
+If you'd like to **support Mockoon** as well, you can **become a sponsor** or **purchase Mockoon Pro licenses**. Every contribution helps keep the project alive and evolving. Thank you!
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
-<a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsor-btn.png?" width="250" alt="sponsor button" /></a>
+<a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsors-btn.png" width="250" alt="sponsor button" /></a>
 </div>
 
-## Subscribe to Mockoon Cloud
+## Discover Mockoon Pro
 
-With advanced features for solo developers and teams, Mockoon Cloud supercharges your API development:
+Mockoon Pro is a private, self-hosted platform for teams that need to keep their API mocking workflows and data under their control:
 
-- ☁️ [cloud deployments](https://mockoon.com/cloud/docs/api-mock-cloud-deployments/)
-- 🔄️ [data synchronization and real-time collaboration](https://mockoon.com/cloud/docs/data-synchronization-team-collaboration/)
-- 🤖 [AI powered API mocking](https://mockoon.com/ai-powered-api-mocking/)
-- 📃 Access to dozens of [ready-to-use JSON templates](https://mockoon.com/templates/).
-- 💬 Priority support and training.
+- [Deploy on-premises, in a private cloud, or on an isolated network](https://mockoon.com/pro/docs/self-hosting/installation/)
+- [Synchronize data and collaborate in real time](https://mockoon.com/pro/docs/features/data-synchronization-team-collaboration/)
+- [Deploy and manage mock API instances](https://mockoon.com/pro/docs/features/api-mock-deployments/)
+- [Use the embedded web application](https://mockoon.com/pro/docs/clients/embedded-web-application/)
+- [Manage users with local authentication or OIDC SSO](https://mockoon.com/pro/docs/misc/authentication/)
+- [Review administrative and workspace events in the audit trail](https://mockoon.com/pro/docs/misc/audit-trail/)
 
-Upgrade today and take your API development to the next level.
+Start a free trial or learn more about [Mockoon Pro](https://mockoon.com/pro/).
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
-<a href="https://mockoon.com/cloud/"><img src="https://mockoon.com/images/cloud-btn.png?" width="250" alt="cloud button" /></a>
+<a href="https://mockoon.com/pro/"><img src="https://mockoon.com/images/pro-btn.png" width="250" alt="pro button" /></a>
 </div>
 
 ## Support/feedback

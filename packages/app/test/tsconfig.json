@@ -7,7 +7,7 @@
       "@wdio/globals/types",
       "expect-webdriverio",
       "@wdio/mocha-framework",
-      "wdio-electron-service"
+      "@wdio/electron-service"
     ]
   }
 }

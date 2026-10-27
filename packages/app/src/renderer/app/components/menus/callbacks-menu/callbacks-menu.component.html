@@ -1,97 +1,139 @@
-<ng-container
-  *ngIf="{
-    callbackList: callbackList$ | async,
-    settings: settings$ | async,
-    activeCallback: activeCallback$ | async
-  } as data"
->
-  <div class="callbacks-menu d-flex flex-column h-100">
-    <div class="d-flex w-100 py-2 align-items-center">
-      <div>
-        <button
-          type="button"
-          class="btn btn-link"
-          (click)="addCallback()"
-          ngbTooltip="Add callback"
-        >
-          <app-svg icon="add_box" />
-        </button>
-      </div>
-      <div class="flex-grow-1">
-        <app-filter
-          filterName="callbacks"
-          [focusableInput]="focusableInputs.CALLBACK_FILTER"
-        />
-      </div>
-    </div>
+@let callbackList = callbackList$ | async;
+@let settings = settings$ | async;
+@let activeCallback = activeCallback$ | async;
+@let isActiveEnvironmentEditable = isActiveEnvironmentEditable$ | async;
+@let selectedCallbacks = (selectedCallbacks$ | async) ?? [];
+@let hasSelection = selectedCallbacks.length > 0;
 
-    <ul *ngIf="data.callbackList" class="nav flex-column menu-list h-100">
-      <li
-        class="nav-item"
-        *ngFor="let callback of data.callbackList; trackBy: trackByUuid"
-        appDraggable
-        appDropzone
-        dragContainer="callbacks"
-        [dragEnabled]="true"
-        dragParentId="root"
-        [dragIsContainer]="false"
-        [dragId]="callback.uuid"
-        (dropped)="reorderCallbacks($event)"
+<div class="callbacks-menu d-flex flex-column h-100">
+  <div class="d-flex w-100 py-2 align-items-center">
+    <div>
+      <button
+        type="button"
+        class="btn btn-link"
+        (click)="addCallback()"
+        ngbTooltip="Add callback"
+        [disabled]="!isActiveEnvironmentEditable"
       >
-        <a
-          class="nav-link d-flex pe-0 hover-parent"
-          [class]="{
-            active: data.activeCallback?.uuid === callback.uuid
-          }"
-          appScrollWhenActive
-          (click)="selectCallback(callback.uuid)"
-        >
-          <!-- mw0 is important for proper text truncation -->
-          <div class="d-flex flex-column mw0">
-            <div
-              *ngIf="data.settings"
-              class="nav-link-label callback-path"
-              [class]="{
-                'text-truncate': data.settings.truncateRouteName,
-                'text-break': !data.settings.truncateRouteName
-              }"
-            >
-              {{ callback.name }}
-            </div>
-            <div
-              class="nav-link-subtitle mt-1 d-flex align-items-center svg-text-align"
-            >
-              <span class="color-method-{{ callback.method | lowercase }} me-2"
-                >{{ callback.method | uppercase }}
-              </span>
-              <span class="text-truncate">
-                {{
-                  callback.documentation ? callback.documentation : callback.uri
-                }}</span
-              >
-            </div>
-          </div>
-          <div class="ms-auto ps-2 d-flex align-items-start">
-            <app-dropdown-menu
-              [idPrefix]="'callback-' + callback.uuid"
-              [items]="dropdownMenuItems"
-              [payload]="{
-                callbackUuid: callback.uuid
-              }"
-              [iconFaded]="true"
-              [noYPadding]="true"
-            />
-          </div>
-        </a>
-      </li>
-    </ul>
-
-    <div
-      appResizeColumn
-      type="secondary"
-      [minWidth]="menuSize"
-      [maxWidthFactor]="0.25"
-      class="resize-column"
-    ></div>
+        <app-svg icon="add_box" />
+      </button>
+    </div>
+    <div class="flex-grow-1 me-2">
+      <app-filter
+        filterName="callbacks"
+        [focusableInput]="focusableInputs.CALLBACK_FILTER"
+      />
+    </div>
   </div>
-</ng-container>
+
+  @if (hasSelection) {
+    <app-action-toolbar
+      class="mb-2 mx-2"
+      [count]="selectedCallbacks.length"
+      ariaLabel="Batch actions"
+      [buttons]="getToolbarButtons()"
+      (buttonClicked)="onToolbarAction($event)"
+    />
+  }
+
+  @if (callbackList) {
+    <ul class="nav flex-column menu-list h-100">
+      @for (callback of callbackList; track callback.uuid) {
+        <li
+          class="nav-item"
+          appDraggable
+          appDropzone
+          dragContainer="callbacks"
+          [dragEnabled]="isActiveEnvironmentEditable"
+          dragParentId="root"
+          [dragIsContainer]="false"
+          [dragId]="callback.uuid"
+          (dropped)="reorderCallbacks($event)"
+        >
+          <a
+            #callbackRow
+            class="nav-link d-flex pe-0 hover-parent"
+            [attr.data-callback-uuid]="callback.uuid"
+            [class]="{
+              active: activeCallback?.uuid === callback.uuid,
+              selected: selectedCallbacks.includes(callback.uuid)
+            }"
+            appScrollWhenActive
+            (click)="selectCallback(callback.uuid, $event)"
+          >
+            @if (hasSelection) {
+              <div
+                class="callback-select-checkbox pe-3 d-flex align-items-center"
+                (click)="
+                  $event.stopPropagation();
+                  toggleCallbackSelection(callback.uuid)
+                "
+              >
+                <input
+                  type="checkbox"
+                  class="form-check-input m-0"
+                  [attr.aria-label]="
+                    selectedCallbacks.includes(callback.uuid)
+                      ? 'Deselect callback ' + callback.name
+                      : 'Select callback ' + callback.name
+                  "
+                  [checked]="selectedCallbacks.includes(callback.uuid)"
+                  (click)="$event.stopPropagation()"
+                  (change)="toggleCallbackSelection(callback.uuid)"
+                />
+              </div>
+            }
+            <!-- mw0 is important for proper text truncation -->
+            <div class="d-flex flex-column mw0">
+              @if (settings) {
+                <div
+                  class="nav-link-label callback-path"
+                  [class]="{
+                    'text-truncate': settings.truncateRouteName,
+                    'text-break': !settings.truncateRouteName
+                  }"
+                >
+                  {{ callback.name }}
+                </div>
+              }
+              <div
+                class="nav-link-subtitle mt-1 d-flex align-items-center svg-text-align"
+              >
+                <span
+                  class="color-method-{{ callback.method | lowercase }} me-2"
+                  >{{ callback.method | uppercase }}
+                </span>
+                <span class="text-truncate">
+                  {{
+                    callback.documentation
+                      ? callback.documentation
+                      : callback.uri
+                  }}</span
+                >
+              </div>
+            </div>
+            <div class="ms-auto ps-2 d-flex align-items-start">
+              <app-dropdown-menu
+                [idPrefix]="'callback-' + callback.uuid"
+                [items]="dropdownMenuItems"
+                [payload]="{
+                  callbackUuid: callback.uuid
+                }"
+                [iconFaded]="true"
+                [noYPadding]="true"
+              />
+            </div>
+          </a>
+        </li>
+      }
+    </ul>
+  }
+
+  <div
+    appResizeColumn
+    type="secondary"
+    [minWidth]="menuSize"
+    [maxWidthFactor]="0.25"
+    class="resize-column"
+  ></div>
+</div>

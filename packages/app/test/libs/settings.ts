@@ -1,5 +1,5 @@
-import menu from '../libs/menu';
 import utils from '../libs/utils';
+import { clickMenu } from './electron-mocks';
 
 type SettingNames =
   | 'settings-truncate-route-name'
@@ -22,12 +22,12 @@ class Settings {
   }
 
   public async open() {
-    await menu.click('MENU_OPEN_SETTINGS');
+    await clickMenu('MENU_OPEN_SETTINGS');
     await $('.modal-dialog').waitForExist();
   }
 
   public async assertVisible(reverse = false) {
-    const modal = await $('.modal-dialog');
+    const modal = $('.modal-dialog');
 
     if (reverse) {
       await expect(modal).not.toBeDisplayed();
@@ -36,7 +36,7 @@ class Settings {
     }
 
     await expect(modal).toBeDisplayed();
-    await expect(await $('.modal-title')).toHaveText(
+    await expect($('.modal-title')).toHaveText(
       expect.stringContaining('Settings')
     );
   }
@@ -48,7 +48,7 @@ class Settings {
 
   public async setSettingValue(
     settingName: SettingNames,
-    value: string
+    value: string | number
   ): Promise<void> {
     const setting = this.getSettingInput(settingName);
     await utils.setElementValue(setting, value);
@@ -70,10 +70,13 @@ class Settings {
   }
 
   public async assertDropdownSettingValue(
-    settingName: 'fileWatcherEnabled',
+    settingName: SettingNames,
     value: string
   ): Promise<void> {
-    await utils.assertDropdownValue(settingName, value);
+    await utils.assertElementText(
+      $(`app-select[dropdownId="${settingName}"] .dropdown-toggle-label`),
+      value
+    );
   }
 
   private getSettingInput(settingName: SettingNames) {

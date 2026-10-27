@@ -1,11 +1,6 @@
 import { AsyncPipe, LowerCasePipe, UpperCasePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormControl,
@@ -42,6 +37,7 @@ import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { updateOpenApiImportAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
@@ -51,7 +47,6 @@ import { Config } from 'src/renderer/config';
   selector: 'app-openapi-import-modal',
   templateUrl: './openapi-import-modal.component.html',
   styleUrls: ['openapi-import-modal.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     EditorComponent,
     FormsModule,
@@ -73,6 +68,7 @@ export class OpenapiImportModalComponent {
   private mainApiService = inject(MainApiService);
   private dataService = inject(DataService);
   private store = inject(Store);
+  private settingsService = inject(SettingsService);
 
   public defaultEditorConfig = {
     ...defaultEditorOptions,
@@ -156,6 +152,21 @@ export class OpenapiImportModalComponent {
       }
     })
   );
+  public externalRefs$: Observable<string[]> = this.importForm
+    .get('content')
+    .valueChanges.pipe(
+      startWith(this.importForm.get('content').value),
+      debounceTime(250),
+      map((content) => {
+        if (!content?.trim()) {
+          return [];
+        }
+
+        const converter = new OpenApiConverter();
+
+        return converter.extractExternalRefs(content);
+      })
+    );
   public isWeb = Config.isWeb;
   public choiceForm = form(signal<Record<string, boolean>>({}));
 
@@ -238,6 +249,10 @@ export class OpenapiImportModalComponent {
    * @param cloud
    */
   public import(cloud: boolean) {
+    if (cloud && !this.settingsService.canCreateCloudEnvironment()) {
+      return;
+    }
+
     this.taskInProgress.set(true);
 
     const converter = new OpenApiConverter();

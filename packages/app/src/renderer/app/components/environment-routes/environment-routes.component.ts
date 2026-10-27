@@ -1,5 +1,5 @@
-import { AsyncPipe, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
@@ -36,11 +36,9 @@ import {
 } from '@mockoon/commons';
 import {
   NgbDropdown,
-  NgbDropdownButtonItem,
   NgbDropdownItem,
   NgbDropdownMenu,
   NgbDropdownToggle,
-  NgbPopover,
   NgbTooltip
 } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, combineLatest, from, merge } from 'rxjs';
@@ -54,7 +52,7 @@ import {
   tap
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
-import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
+import { RadioComponent } from 'src/renderer/app/components/custom-form-elements/radio.component';
 import {
   DropdownMenuComponent,
   DropdownMenuItem
@@ -66,7 +64,6 @@ import { RoutesMenuComponent } from 'src/renderer/app/components/menus/routes-me
 import { RouteCallbacksComponent } from 'src/renderer/app/components/route-callbacks/route-callbacks.component';
 import { RouteResponseRulesComponent } from 'src/renderer/app/components/route-response-rules/route-response-rules.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
-import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import { statusCodeValidation } from 'src/renderer/app/constants/masks.constants';
 import {
   StatusCodes,
@@ -77,7 +74,6 @@ import { DraggableDirective } from 'src/renderer/app/directives/draggable.direct
 import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directive';
 import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.directive';
 import { InputNumberDirective } from 'src/renderer/app/directives/input-number.directive';
-import { TourStepDirective } from 'src/renderer/app/directives/tour-step.directive';
 import { ValidPathDirective } from 'src/renderer/app/directives/valid-path.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import {
@@ -87,7 +83,7 @@ import {
 } from 'src/renderer/app/libs/utils.lib';
 import {
   DropdownItems,
-  ToggleItems
+  RadioItems
 } from 'src/renderer/app/models/common.model';
 import { EnvironmentLog } from 'src/renderer/app/models/environment-logs.model';
 import {
@@ -100,6 +96,7 @@ import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
+import { SelectComponent } from '../custom-form-elements/select.component';
 
 type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
 
@@ -107,26 +104,19 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
   selector: 'app-environment-routes',
   templateUrl: './environment-routes.component.html',
   styleUrls: ['./environment-routes.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     RoutesMenuComponent,
-    NgbPopover,
-    TourStepDirective,
     FormsModule,
     ReactiveFormsModule,
-    CustomSelectComponent,
     ValidPathDirective,
     FocusOnEventDirective,
     NgbTooltip,
     SvgComponent,
-    ToggleComponent,
     InputNumberDirective,
     NgbDropdown,
     NgbDropdownToggle,
     NgbDropdownMenu,
     FilterComponent,
-    NgbDropdownButtonItem,
     NgbDropdownItem,
     DraggableDirective,
     DropzoneDirective,
@@ -135,7 +125,10 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
     HeadersListComponent,
     RouteResponseRulesComponent,
     RouteCallbacksComponent,
-    AsyncPipe
+    AsyncPipe,
+    NgTemplateOutlet,
+    RadioComponent,
+    SelectComponent
   ]
 })
 export class EnvironmentRoutesComponent {
@@ -160,7 +153,6 @@ export class EnvironmentRoutesComponent {
   }>;
   public buildResponseLabel = buildResponseLabel;
   public effectiveContentType$: Observable<string>;
-  public defaultResponseTooltip$: Observable<string>;
   public routeHasErrors$: Observable<string>;
   public environmentsStatus$: Observable<EnvironmentsStatuses>;
   public activeTab$: Observable<TabsNameType>;
@@ -171,6 +163,14 @@ export class EnvironmentRoutesComponent {
   public scrollToBottom = this.uiService.scrollToBottom;
   public databuckets$: Observable<DropdownItems>;
   public externalLink$: Observable<string>;
+  public defaultResponseTooltips = {
+    [ResponseMode.RANDOM]: 'Default response is disabled in random mode',
+    [ResponseMode.SEQUENTIAL]:
+      'Default response is disabled in sequential mode',
+    [ResponseMode.DISABLE_RULES]:
+      'Default response is always served because rules are disabled',
+    [ResponseMode.FALLBACK]: 'Default response is disabled in fallback mode'
+  };
   public methods: DropdownItems = [
     {
       value: Methods.all,
@@ -248,35 +248,35 @@ export class EnvironmentRoutesComponent {
       classes: 'color-method-unlock'
     }
   ];
-  public responseModes: ToggleItems = [
+  public responseModes: RadioItems = [
     {
       value: ResponseMode.RANDOM,
       icon: 'shuffle',
-      tooltip: 'Random response mode (will disable the rules)'
+      tooltip: 'Random response mode (rules are ignored)'
     },
     {
       value: ResponseMode.SEQUENTIAL,
       icon: 'repeat',
-      tooltip: 'Sequential response mode (will disable the rules)'
+      tooltip: 'Sequential response mode (rules are ignored)'
     },
     {
       value: ResponseMode.DISABLE_RULES,
       icon: 'rule',
-      tooltip: 'Disabled rules mode (default response only)',
+      tooltip: 'Rules disabled mode (default response only)',
       activeClass: 'text-warning'
     },
     {
       value: ResponseMode.FALLBACK,
       icon: 'low_priority',
       tooltip:
-        'Fallback response mode (does not return the default response if none of the rules match, will jump to the next route or use the proxy if configured)'
+        'Fallback response mode (if no rule matches, this route is skipped and Mockoon tries the next route or proxy if configured)'
     }
   ];
   // disables fallback mode for websockets.
-  public responseModesForWs: ToggleItems = this.responseModes.filter(
+  public responseModesForWs: RadioItems = this.responseModes.filter(
     (m) => m.value !== ResponseMode.FALLBACK
   );
-  public streamingModes: ToggleItems = [
+  public streamingModes: RadioItems = [
     {
       value: StreamingMode.UNICAST,
       icon: 'events',
@@ -288,7 +288,7 @@ export class EnvironmentRoutesComponent {
       tooltip: 'Broadcast streaming'
     }
   ];
-  public bodyType$: Observable<ToggleItems> = this.store
+  public bodyType$: Observable<RadioItems> = this.store
     .selectIsActiveEnvCloud()
     .pipe(
       map((isEnvCloud) => [
@@ -338,7 +338,11 @@ export class EnvironmentRoutesComponent {
             })
           )
           .subscribe();
-      }
+      },
+      disabled$: () =>
+        this.store
+          .selectIsActiveEnvironmentEditable()
+          .pipe(map((isEditable) => !isEditable))
     },
     {
       label: 'Show file in explorer/finder',
@@ -361,6 +365,20 @@ export class EnvironmentRoutesComponent {
       }
     }
   ];
+  public isActiveEnvironmentEditable$ = this.store
+    .selectIsActiveEnvironmentEditable()
+    .pipe(
+      tap((isEditable) => {
+        if (isEditable) {
+          this.activeRouteForm.enable({ emitEvent: false });
+          this.activeRouteResponseForm.enable({ emitEvent: false });
+          this.refreshDisabledFields();
+        } else {
+          this.activeRouteForm.disable({ emitEvent: false });
+          this.activeRouteResponseForm.disable({ emitEvent: false });
+        }
+      })
+    );
 
   constructor() {
     this.activeEnvironment$ = this.store.selectActiveEnvironment().pipe(
@@ -494,23 +512,6 @@ export class EnvironmentRoutesComponent {
     this.activeTab$ = this.store.select('activeTab');
     this.bodyEditorConfig$ = this.store.select('bodyEditorConfig');
 
-    this.defaultResponseTooltip$ = this.activeRoute$.pipe(
-      filter((activeRoute) => !!activeRoute),
-      distinctUntilChanged(),
-      map((activeRoute) => {
-        if (
-          activeRoute.responseMode === ResponseMode.SEQUENTIAL ||
-          activeRoute.responseMode === ResponseMode.RANDOM
-        ) {
-          return 'Default response disabled by random or sequential responses';
-        } else if (activeRoute.responseMode === ResponseMode.DISABLE_RULES) {
-          return 'Default response always served as rules are disabled';
-        }
-
-        return 'Default response served if no rule matches';
-      })
-    );
-
     this.routeHasErrors$ = this.activeRoute$.pipe(
       filter((activeRoute) => !!activeRoute),
       distinctUntilChanged(),
@@ -595,47 +596,79 @@ export class EnvironmentRoutesComponent {
       .pipe(
         filter((route) => !!route),
         this.store.distinctUUIDOrForce(),
+        tap((activeRoute) => {
+          this.activeRouteForm.patchValue(
+            {
+              documentation: activeRoute.documentation,
+              method: activeRoute.method,
+              endpoint: activeRoute.endpoint,
+              responseMode: activeRoute.responseMode,
+              streamingMode: activeRoute.streamingMode,
+              streamingInterval: activeRoute.streamingInterval
+            },
+            { emitEvent: false }
+          );
+        }),
         takeUntilDestroyed()
       )
-      .subscribe((activeRoute) => {
-        this.activeRouteForm.patchValue(
-          {
-            documentation: activeRoute.documentation,
-            method: activeRoute.method,
-            endpoint: activeRoute.endpoint,
-            responseMode: activeRoute.responseMode,
-            streamingMode: activeRoute.streamingMode,
-            streamingInterval: activeRoute.streamingInterval
-          },
-          { emitEvent: false }
-        );
-      });
+      .subscribe();
     // subscribe to active route response changes to reset the form
     this.activeRouteResponse$
       .pipe(
         filter((routeResponse) => !!routeResponse),
         this.store.distinctUUIDOrForce(),
+        tap((activeRouteResponse) => {
+          this.activeRouteResponseForm.patchValue(
+            {
+              statusCode: activeRouteResponse.statusCode,
+              label: activeRouteResponse.label,
+              latency: activeRouteResponse.latency,
+              bodyType: activeRouteResponse.bodyType,
+              filePath: activeRouteResponse.filePath,
+              databucketID: activeRouteResponse.databucketID,
+              sendFileAsBody: activeRouteResponse.sendFileAsBody,
+              body: activeRouteResponse.body,
+              rules: activeRouteResponse.rules,
+              disableTemplating: activeRouteResponse.disableTemplating,
+              fallbackTo404: activeRouteResponse.fallbackTo404,
+              crudKey: activeRouteResponse.crudKey
+            },
+            { emitEvent: false }
+          );
+        }),
         takeUntilDestroyed()
       )
-      .subscribe((activeRouteResponse) => {
-        this.activeRouteResponseForm.patchValue(
-          {
-            statusCode: activeRouteResponse.statusCode,
-            label: activeRouteResponse.label,
-            latency: activeRouteResponse.latency,
-            bodyType: activeRouteResponse.bodyType,
-            filePath: activeRouteResponse.filePath,
-            databucketID: activeRouteResponse.databucketID,
-            sendFileAsBody: activeRouteResponse.sendFileAsBody,
-            body: activeRouteResponse.body,
-            rules: activeRouteResponse.rules,
-            disableTemplating: activeRouteResponse.disableTemplating,
-            fallbackTo404: activeRouteResponse.fallbackTo404,
-            crudKey: activeRouteResponse.crudKey
-          },
-          { emitEvent: false }
-        );
-      });
+      .subscribe();
+  }
+
+  /**
+   * When the form is fully re-enabled, [attr.disabled] may be reset and
+   * the rules not applied anymore
+   *
+   * (Ideally, we will switch to signal forms where this is not an issue)
+   */
+  private refreshDisabledFields() {
+    const activeRoute = this.store.getActiveRoute();
+
+    if (!activeRoute) {
+      return;
+    }
+
+    if (this.activeRouteForm.get(['streamingMode']).value === null) {
+      this.activeRouteForm
+        .get(['streamingInterval'])
+        .disable({ emitEvent: false });
+    } else {
+      this.activeRouteForm
+        .get(['streamingInterval'])
+        .enable({ emitEvent: false });
+    }
+
+    if (activeRoute.type === RouteType.WS && !!activeRoute.streamingMode) {
+      this.activeRouteResponseForm.get('latency').disable({ emitEvent: false });
+    } else {
+      this.activeRouteResponseForm.get('latency').enable({ emitEvent: false });
+    }
   }
 
   /**

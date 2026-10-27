@@ -1,10 +1,5 @@
-import { AsyncPipe, NgIf } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject
-} from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
 import { CORSHeaders, Environment, Header } from '@mockoon/commons';
 import { Observable } from 'rxjs';
 import { HeadersListComponent } from 'src/renderer/app/components/headers-list/headers-list.component';
@@ -16,8 +11,7 @@ import { Store } from 'src/renderer/app/stores/store';
 @Component({
   selector: 'app-environment-headers',
   templateUrl: './environment-headers.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, HeadersListComponent, AsyncPipe]
+  imports: [HeadersListComponent, AsyncPipe]
 })
 export class EnvironmentHeadersComponent implements OnInit {
   private uiService = inject(UIService);

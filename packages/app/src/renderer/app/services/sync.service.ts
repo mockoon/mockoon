@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import {
   BaseSyncAction,
   ConnectedPayload,
@@ -9,6 +9,7 @@ import {
   Plans,
   ServerAcknowledgment,
   SyncActions,
+  SyncDisconnectReasons,
   SyncErrors,
   SyncMessageTypes,
   SyncPresence,
@@ -45,13 +46,14 @@ import { SyncPayloadsService } from 'src/renderer/app/services/sync-payloads.ser
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import {
+  updateEnvironmentWorkspaceIdsAction,
   updateSettingsEnvironmentDescriptorAction,
   updateSyncAction
 } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SyncService {
   private userService = inject(UserService);
   private store = inject(Store);
@@ -65,6 +67,7 @@ export class SyncService {
   private timeDifference: number;
   private serverMigrationDone = false;
   private migrationApproval: boolean;
+  private refreshPromptShown = false;
 
   /**
    * Initialize the socket connection.
@@ -76,9 +79,13 @@ export class SyncService {
     this.setDeviceId();
 
     return this.store.selectRemoteConfig('cloudSyncUrl').pipe(
-      filter((cloudSyncUrl) => !!cloudSyncUrl),
+      distinctUntilChanged(),
       tap((cloudSyncUrl) => {
-        if (!this.socket) {
+        // the URL changes when switching between the cloud and a self-hosted instance
+        this.socket?.disconnect();
+        this.socket?.removeAllListeners();
+
+        if (cloudSyncUrl) {
           this.socket = io(cloudSyncUrl, {
             transports: ['websocket'],
             query: {
@@ -92,7 +99,8 @@ export class SyncService {
           });
         }
       }),
-      mergeMap(() =>
+      filter((cloudSyncUrl) => !!cloudSyncUrl),
+      switchMap(() =>
         merge(
           this.initListeners(),
           // ⚠️ do not filter the user early as we want to disconnect the socket if the user logs out
@@ -102,7 +110,7 @@ export class SyncService {
             delay(500),
             switchMap((user) =>
               this.userService
-                .getIdToken()
+                .getToken()
                 .pipe(map((token) => ({ user, token })))
             ),
             switchMap(({ user, token }) => {
@@ -207,7 +215,7 @@ export class SyncService {
       .pipe(
         tap((confirmed) => {
           if (!confirmed) {
-            window.location.href = Config.websiteURL;
+            window.location.href = Config.websiteUrl;
           }
 
           this.migrationApproval = confirmed;
@@ -219,7 +227,7 @@ export class SyncService {
     return fromEvent(socket, 'connect_error').pipe(
       switchMap((error) => {
         if (error.message === SyncErrors.UNAUTHORIZED) {
-          return this.userService.getIdToken().pipe(
+          return this.userService.getToken(true).pipe(
             tap((token) => {
               socket.auth = { ...socket.auth, token };
               // Unauthorized response will close the connection
@@ -233,6 +241,12 @@ export class SyncService {
         } else if (error.message === SyncErrors.VERSION_TOO_OLD) {
           this.store.update(
             updateSyncAction({ offlineReason: SyncErrors.VERSION_TOO_OLD })
+          );
+        } else if (error.message === SyncDisconnectReasons.LICENSE_EXPIRED) {
+          this.store.update(
+            updateSyncAction({
+              offlineReason: SyncDisconnectReasons.LICENSE_EXPIRED
+            })
           );
         }
 
@@ -255,7 +269,12 @@ export class SyncService {
     return fromEvent(socket, 'disconnect').pipe(
       tap(() => {
         this.store.update(
-          updateSyncAction({ status: false, presence: null, alert: null })
+          updateSyncAction({
+            status: false,
+            presence: null,
+            alert: null,
+            lastDisconnectedAt: Date.now()
+          })
         );
       })
     );
@@ -304,6 +323,23 @@ export class SyncService {
     ).pipe(
       tap((payload) => {
         this.store.update(updateSyncAction({ offlineReason: payload.reason }));
+
+        if (
+          Config.isWeb &&
+          !this.refreshPromptShown &&
+          payload.reason === SyncDisconnectReasons.ROOM_INCOMPATIBLE_VERSION
+        ) {
+          this.refreshPromptShown = true;
+
+          this.uiService
+            .showConfirmDialog({
+              title: 'New version available',
+              text: 'Refresh the web app to update to the latest version and reconnect.',
+              confirmButtonText: 'Refresh',
+              cancelable: false
+            })
+            .subscribe(() => window.location.reload());
+        }
       })
     );
   }
@@ -324,6 +360,22 @@ export class SyncService {
         const environmentDescriptors = this.store.get('settings').environments;
 
         const hashes$ = [];
+
+        this.store.update(
+          updateEnvironmentWorkspaceIdsAction(
+            updatedCloudEnvironmentsList.reduce(
+              (environmentWorkspaceIds, environment) => {
+                if (environment.workspaceId !== undefined) {
+                  environmentWorkspaceIds[environment.environmentUuid] =
+                    environment.workspaceId;
+                }
+
+                return environmentWorkspaceIds;
+              },
+              {} as Record<string, number>
+            )
+          )
+        );
 
         this.environmentsService.updateClientEnvironments(
           updatedCloudEnvironmentsList
@@ -395,36 +447,15 @@ export class SyncService {
                     hashResult.hash !== hashResult.lastServerHash &&
                     !this.serverMigrationDone
                   ) {
-                    observable$ = this.uiService
-                      .showConfirmDialog({
-                        title: 'Conflict detected',
-                        text: `The environment "${
-                          this.store.getEnvironmentByUUID(
-                            hashResult.environmentUuid
-                          ).name
-                        }" was modified on the server while you were disconnected. Do you want to keep your local version or accept the remote one?`,
-                        sub: 'Both actions are destructive and will overwrite the other version.',
-                        subIcon: 'warning',
-                        subIconClass: 'text-warning',
-                        confirmButtonText: 'Accept remote and pull',
-                        cancelButtonText: 'Keep local and push'
+                    // local version didn't change, but server changed, pull
+                    observable$ = observable$.pipe(
+                      tap(() => {
+                        this.sendGetFullEnvironment(
+                          hashResult.environmentUuid,
+                          'UPDATE'
+                        );
                       })
-                      .pipe(
-                        tap((result) => {
-                          if (result) {
-                            // accept remote and pull
-                            this.sendGetFullEnvironment(
-                              hashResult.environmentUuid,
-                              'UPDATE'
-                            );
-                          } else {
-                            // keep local and push
-                            this.sendUpdateFullEnvironment(
-                              hashResult.environmentUuid
-                            );
-                          }
-                        })
-                      );
+                    );
                   } else if (
                     hashResult.lastServerHash !== hashResult.serverHash &&
                     hashResult.hash !== hashResult.lastServerHash &&
@@ -616,7 +647,7 @@ export class SyncService {
         }
 
         // if we are not connected, we don't buffer actions, we will either push or pull depending on the environment list
-        if (!this.socket.disconnected) {
+        if (this.socket?.connected) {
           this.socket.emit(
             SyncMessageTypes.SYNC,
             syncAction,

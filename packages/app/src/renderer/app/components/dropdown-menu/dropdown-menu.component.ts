@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import {
   NgbDropdown,
   NgbDropdownMenu,
@@ -44,7 +44,6 @@ export type DropdownMenuElement = DropdownMenuItem | DropdownMenuSeparator;
 @Component({
   selector: 'app-dropdown-menu',
   templateUrl: './dropdown-menu.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgbDropdown,
     NgbDropdownToggle,

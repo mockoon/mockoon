@@ -38,4 +38,23 @@ describe('Run from OpenAPI spec', () => {
 
     ok(stdout.includes('Server started'));
   });
+
+  it('should support --disable-external-refs flag', async () => {
+    const { instance, output } = await spawnCli([
+      'start',
+      '--data',
+      './test/data/openapi/petstore.yaml',
+      '--disable-external-refs'
+    ]);
+
+    const result = await (await fetch('http://localhost:3000/v1/pets')).json();
+
+    notStrictEqual(result[0].id, undefined);
+
+    instance.kill();
+
+    const { stdout } = await output;
+
+    ok(stdout.includes('Server started'));
+  });
 });

@@ -2,7 +2,8 @@ import {
   DeployInstance,
   RemoteConfigData,
   SyncPresence,
-  User
+  User,
+  Workspace
 } from '@mockoon/cloud';
 import {
   Environments,
@@ -31,11 +32,7 @@ export type ViewsNameType =
   | 'ENV_CALLBACKS';
 
 export type TabsNameType =
-  | 'RESPONSE'
-  | 'HEADERS'
-  | 'RULES'
-  | 'SETTINGS'
-  | 'CALLBACKS';
+  'RESPONSE' | 'HEADERS' | 'RULES' | 'SETTINGS' | 'CALLBACKS';
 
 export type CallbackSettings = {
   activeTab: CallbackTabsNameType;
@@ -45,14 +42,13 @@ export type CallbackSettings = {
 export type EnvironmentLogsTabsNameType = 'REQUEST' | 'RESPONSE';
 
 export type TemplatesTabsName =
-  | 'LIST'
-  | 'GENERATE_TEMPLATE'
-  | 'GENERATE_ENDPOINT';
+  'LIST' | 'GENERATE_TEMPLATE' | 'GENERATE_ENDPOINT';
 
 export type EnvironmentStatus = {
   running: boolean;
   needRestart: boolean;
   redeploying: boolean;
+  adminApiAuthToken?: string | null;
 };
 
 export type EnvironmentsStatuses = Record<string, EnvironmentStatus>;
@@ -66,8 +62,11 @@ export type UIState = {
 
 export type DuplicateEntityToAnotherEnvironment = {
   moving: boolean;
-  subject?: Omit<DataSubject, 'environment'>;
-  subjectUUID?: string;
+  subject?: Omit<DataSubject, 'environment' | 'folder'>;
+  // UUIDs of the entities to duplicate. Always an array; contains a single
+  // element for the standard single-entity flow, multiple for batch flows
+  // (currently only supported for routes).
+  subjectUuids?: string[];
   targetEnvironmentUUID?: string;
 };
 
@@ -105,11 +104,14 @@ export type StoreType = {
   callbackSettings: CallbackSettings;
   sync: {
     status: boolean;
+    lastDisconnectedAt: number | null;
     presence: SyncPresence;
     offlineReason: string | null;
     alert: string | null;
   };
   deployInstances: DeployInstance[];
+  workspaces: Workspace[];
+  environmentWorkspaceIds: Record<string, number>;
   /**
    * Processed databuckets data per environment, indexed by databucket UUID
    */

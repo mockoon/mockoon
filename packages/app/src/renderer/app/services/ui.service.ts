@@ -1,15 +1,15 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import {
   NgbModal,
   NgbModalOptions,
   NgbModalRef
 } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
-import { AuthIframeModalComponent } from 'src/renderer/app/components/modals/auth-iframe-modal/auth-iframe-modal.component';
 import { AuthModalComponent } from 'src/renderer/app/components/modals/auth-modal/auth-modal.component';
 import { ChangelogModalComponent } from 'src/renderer/app/components/modals/changelog-modal/changelog-modal.component';
 import { CommandPaletteModalComponent } from 'src/renderer/app/components/modals/command-palette-modal/command-palette-modal.component';
 import { ConfirmModalComponent } from 'src/renderer/app/components/modals/confirm-modal/confirm-modal.component';
+import { ConnectionModalComponent } from 'src/renderer/app/components/modals/connection-modal/connection-modal.component';
 import { DeployInstanceModalComponent } from 'src/renderer/app/components/modals/deploy-instance-modal/deploy-instance-modal.component';
 import { DuplicateModalComponent } from 'src/renderer/app/components/modals/duplicate-modal/duplicate-modal.component';
 import { EditorModalComponent } from 'src/renderer/app/components/modals/editor-modal/editor-modal.component';
@@ -52,6 +52,7 @@ const commonConfigs: Record<
 
 type ModalNames =
   | 'commandPalette'
+  | 'connection'
   | 'settings'
   | 'feedback'
   | 'changelog'
@@ -59,7 +60,6 @@ type ModalNames =
   | 'duplicate_to_environment'
   | 'welcome'
   | 'auth'
-  | 'authIframe'
   | 'confirm'
   | 'deploy'
   | 'editor'
@@ -84,7 +84,7 @@ type ModalWithoutPayload = Exclude<
   | 'selfHostingInstructions'
 >;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class UIService {
   private store = inject(Store);
   private eventsService = inject(EventsService);
@@ -104,7 +104,9 @@ export class UIService {
       component: any;
       options:
         | NgbModalOptions
-        | ((payload: OpenApiImportModalPayload) => NgbModalOptions);
+        | ((
+            payload: ConfirmModalPayload | OpenApiImportModalPayload
+          ) => NgbModalOptions);
     }
   > = {
     commandPalette: {
@@ -117,6 +119,10 @@ export class UIService {
           'modal-dialog-transparent-backdrop modal-dialog-rounded modal-dialog-max-height',
         backdropClass: 'modal-backdrop-transparent'
       }
+    },
+    connection: {
+      component: ConnectionModalComponent,
+      options: commonConfigs.large
     },
     settings: {
       component: SettingsModalComponent,
@@ -146,17 +152,13 @@ export class UIService {
       component: AuthModalComponent,
       options: commonConfigs.medium
     },
-    authIframe: {
-      component: AuthIframeModalComponent,
-      options: {
-        ...commonConfigs.medium,
-        keyboard: false,
-        modalDialogClass: 'modal-dialog-rounded'
-      }
-    },
     confirm: {
       component: ConfirmModalComponent,
-      options: commonConfigs.medium
+      options: (payload: ConfirmModalPayload) => ({
+        ...commonConfigs.medium,
+        backdrop: payload.cancelable === false ? 'static' : true,
+        keyboard: payload.cancelable !== false
+      })
     },
     deploy: {
       component: DeployInstanceModalComponent,
@@ -184,6 +186,7 @@ export class UIService {
   };
   private modalsInstances: Record<ModalNames, NgbModalRef> = {
     commandPalette: null,
+    connection: null,
     settings: null,
     feedback: null,
     changelog: null,
@@ -191,7 +194,6 @@ export class UIService {
     duplicate_to_environment: null,
     welcome: null,
     auth: null,
-    authIframe: null,
     confirm: null,
     deploy: null,
     editor: null,
@@ -282,7 +284,9 @@ export class UIService {
     this.modalsInstances[modalName] = this.ngbModal.open(
       this.modals[modalName].component,
       typeof this.modals[modalName].options === 'function'
-        ? this.modals[modalName].options(payload as OpenApiImportModalPayload)
+        ? this.modals[modalName].options(
+            payload as ConfirmModalPayload | OpenApiImportModalPayload
+          )
         : this.modals[modalName].options
     );
 

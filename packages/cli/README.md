@@ -18,7 +18,7 @@ Feed it with a Mockoon's [data file](https://mockoon.com/docs/latest/mockoon-dat
 
 The CLI supports the same features as the main application: [templating system](https://mockoon.com/docs/latest/templating/overview/), [proxy mode](https://mockoon.com/docs/latest/server-configuration/proxy-mode/), [route response rules](https://mockoon.com/docs/latest/route-responses/dynamic-rules/), etc.
 
-![Mockoon CLI screenshot](https://mockoon.com/images/cli-hero-repo.png)
+![Mockoon CLI screenshot](https://mockoon.com/images/repos/cli-hero.png)
 
 - [Installation](#installation)
 - [Run a mock API with the CLI](#run-a-mock-api-with-the-cli)
@@ -30,6 +30,7 @@ The CLI supports the same features as the main application: [templating system](
   - [Dockerize command](#dockerize-command)
   - [Import command](#import-command)
   - [Export command](#export-command)
+  - [MCP command](#mcp-command)
   - [Help command](#help-command)
 - [Use the GitHub Action](#use-the-github-action)
 - [Docker image](#docker-image)
@@ -79,7 +80,7 @@ You can also directly load Mockoon's environment file from a URL. To do so, prov
 $ mockoon-cli start --data https://domain.com/your-environment-file.json
 ```
 
-### Run a cloud-hosted Mockoon environment
+### Run a Mockoon Cloud environment
 
 Since v9.5.0, you can also run a cloud-hosted Mockoon environment directly from the CLI by providing the cloud URL as the `data` parameter:
 
@@ -87,13 +88,13 @@ Since v9.5.0, you can also run a cloud-hosted Mockoon environment directly from 
 $ mockoon-cli start --data cloud://{UUID} --token {TOKEN}
 ```
 
-Where `{UUID}` is your environment's UUID and `{TOKEN}` is your Mockoon Cloud [access token](https://mockoon.com/cloud/docs/access-tokens/).
+Where `{UUID}` is your environment's UUID and `{TOKEN}` is your legacy Mockoon Cloud [access token](https://mockoon.com/cloud/docs/access-tokens/).
 
 The application will provide you with the necessary **commands and instructions** to set up and run the mock on your own servers in the environment dropdown menu:
 
 ![application dialog showing instructions to pull a cloud environment](https://mockoon.com/images/docs/repo/cli/cli-pull-instructions.png)
 
-Learn more about self-hosting cloud environments in the [official Mockoon Cloud documentation](https://mockoon.com/cloud/docs/api-mock-cloud-deployments/#self-host-with-the-cli).
+This command is retained for existing Mockoon Cloud customers. New team deployments should use [Mockoon Pro](https://mockoon.com/pro/docs/self-hosting/installation/).
 
 
 ### Use an OpenAPI specification file
@@ -125,6 +126,7 @@ Mockoon's CLI has been tested on Node.js versions 18, 20, 22 and 24.
 - [`import`](#import-command)
 - [`export`](#export-command)
 - [`validate`](#validate-command)
+- [`mcp`](#mcp-command)
 - [`help`](#help-command)
 
 ### `start` command
@@ -142,7 +144,7 @@ The mocks will run by default on the ports and hostnames specified in the files.
 **Options**:
 |Flag|Description|
 |-|-|
-|-d, --data |[required] Path(s) or URL(s) to your Mockoon file(s). Supports cloud URLs (e.g. `cloud://`, [see above](#run-a-cloud-hosted-mockoon-environment)).|
+|-d, --data |[required] Path(s) or URL(s) to your Mockoon file(s). Supports cloud URLs (e.g. `cloud://`, [see above](#run-a-mockoon-cloud-environment)).|
 |-p, --port |Override environment(s) port(s)|
 |-l, --hostname |Override default listening hostname(s)|
 |-c, --faker-locale | Faker locale (e.g. 'en', 'en_GB', etc. For supported locales, see below.)|
@@ -155,12 +157,19 @@ The mocks will run by default on the ports and hostnames specified in the files.
 |-w, --watch | Watch local data file(s) for changes and restart the server when a change is detected (watch is using polling, see `--polling-interval` flag below)|
 |--polling-interval | Local files watch polling interval in milliseconds (default: 2000)|
 |--disable-admin-api | Disable the admin API, enabled by default (more info: https://mockoon.com/docs/latest/admin-api/overview/)|
+|--admin-api-token | Admin API bearer token(s). Provide once to reuse for all environments, or multiple times (or comma-separated) to set one token per environment. Can also be set with `MOCKOON_ADMIN_API_TOKEN`.|
+|--admin-api-cors-origin | Allowed CORS origin(s) for the admin API (e.g. 'https://app.example.com'). Provide multiple times or comma-separated for multiple origins. Use '\*' to explicitly opt into wildcard CORS. When omitted, no CORS headers are emitted on admin API responses. Can also be set with `MOCKOON_ADMIN_API_CORS_ORIGIN`.|
 |--disable-tls | Disable TLS for all environments. TLS configuration is part of the environment configuration (more info: https://mockoon.com/docs/latest/server-configuration/serving-over-tls/)|
 |--max-transaction-logs | Maximum number of transaction logs to keep in memory for retrieval via the admin API (default: 100)|
+|--max-request-body-size | Maximum request body size for all content types (default: 100MB). Set to 0 to disable the limit. You can use either a raw byte count or a human-readable string (e.g. 104857600, 100MB, 10 GB, or 1.5kb).|
 |--enable-random-latency | Randomize global and responses latencies between 0 and the specified value (default: false)|
 |--proxy | Override the environment's proxy settings (options: 'enabled' or 'disabled')|
+|--proxy-verify-tls | Verify TLS certificates when proxying requests to HTTPS targets (default: false)|
 |--public-base-url | Public base URL used to resolve [relative callback URLs](https://mockoon.com/docs/latest/callbacks/overview/#configure-a-callback) and for the [`baseUrl` templating helper](https://mockoon.com/docs/latest/templating/mockoon-request-helpers/#baseurl) (e.g. https://api.example.com or http://localhost:3000). Must include the protocol and port if non-standard.|
-|-k, --token | Access token used to fetch cloud-hosted Mockoon environments (see  [access token documentation](https://mockoon.com/cloud/docs/access-tokens/))|
+|-k, --token | Access token used to fetch legacy Mockoon Cloud environments (see [access token documentation](https://mockoon.com/cloud/docs/access-tokens/))|
+|--max-callback-depth | Maximum call stack depth for route responses with callbacks (default: 100)|
+|--enable-route-metadata-headers | Add [route metadata headers](https://mockoon.com/docs/latest/response-configuration/response-headers/#mockoon-response-headers) to responses (UUID and response metadata) (default: false)|
+|--disable-external-refs | Disable fetching of external HTTP/HTTPS `$ref` references when loading OpenAPI specifications (default: false)|
 |-h, --help | Show CLI help|
 
 **Examples**:
@@ -175,12 +184,32 @@ $ mockoon-cli start --data ~/data.json --disable-routes route1 route2 folder1
 $ mockoon-cli start --data ~/data.json --disable-routes=*
 $ mockoon-cli start --data ~/data.json --disable-routes "*"
 $ mockoon-cli start --data ~/data.json --public-base-url https://api.example.com
+$ mockoon-cli start --data ~/data.json --max-request-body-size 100MB
 $ mockoon-cli start --data cloud://def01727-aeb7-4cf1-9172-e0c38f22b224 --token mkn_sk_1234567890abcdef
 ```
 
 #### Admin API
 
-Each running mock API has an admin API enabled by default and available at `/mockoon-admin/`. This API allows you to interact with the running mock API, retrieve logs, and more. You can disable the admin API with the `--disable-admin-api` flag.
+Each running mock API has an admin API enabled by default and available at `/mockoon-admin/`. This API allows you to interact with the running mock API, retrieve logs, and more. You can disable it with the `--disable-admin-api` flag.
+
+When the admin API is enabled, bearer authentication is always enabled.
+
+You can provide the admin API token with `--admin-api-token` (or `MOCKOON_ADMIN_API_TOKEN`). If no token is provided, a secure token is auto-generated at startup and printed in the logs.
+
+- Provide one token to reuse it for all environments.
+- Provide one token per environment when starting multiple environments in one command.
+- Send the token with the `Authorization: Bearer <token>` header.
+
+By default, the admin API does not emit CORS headers, which prevents browser-based cross-origin requests. To allow specific origins (e.g. a frontend served from another domain), use `--admin-api-cors-origin` (or `MOCKOON_ADMIN_API_CORS_ORIGIN`):
+
+```bash
+$ mockoon-cli start --data ~/data.json --admin-api-cors-origin https://app.example.com
+$ mockoon-cli start --data ~/data.json --admin-api-cors-origin https://app.example.com https://admin.example.com
+```
+
+Only requests whose `Origin` header matches one of the allowed values receive CORS headers. Use `--admin-api-cors-origin "*"` to explicitly opt into wildcard CORS (not recommended for exposed instances).
+
+Transaction logs returned by the admin API (`GET /mockoon-admin/logs` and the SSE event stream) have known-sensitive headers redacted (`authorization`, `proxy-authorization`, `cookie`, `set-cookie`, `x-api-key`, `api-key`, `x-auth-token`). For `authorization` / `proxy-authorization`, the auth scheme is preserved (e.g. `Bearer [REDACTED]`). Request and response bodies are not modified.
 
 > 💡 To learn more about the admin API, check the [documentation](https://mockoon.com/docs/latest/admin-api/overview/).
 
@@ -194,6 +223,8 @@ Each running mock API has an admin API enabled by default and available at `/moc
 You can access environment variables in your routes' responses by using the [`{{getEnvVar 'VARIABLE_NAME'}}` templating helper](https://mockoon.com/docs/latest/variables/environment-variables/). By default, only the environment variables prefixed with `MOCKOON_` are available, for example, `MOCKOON_MY_VARIABLE`.
 
 You can customize the prefix with the `--env-vars-prefix` flag. For example, if you set `--env-vars-prefix CUSTOM_PREFIX_`, you will be able to access the environment variable `CUSTOM_PREFIX_MY_VARIABLE` in your routes' responses. To disable the prefix, set it to an empty string: `--env-vars-prefix ''` or `--env-vars-prefix=`.
+
+The prefix is also enforced when writing environment variables through the admin API: keys that do not start with the prefix are automatically prepended with it. When the prefix is empty, writes through the admin API are rejected to prevent arbitrary environment variable modifications (e.g. `PATH`, `NODE_OPTIONS`).
 
 #### Disabling routes
 
@@ -252,6 +283,7 @@ Note: This command is similar to the app's import feature, but it will not impor
 |-i, --input [required] |Path or URL to your Swagger v2/OpenAPI v3 file|
 |-o, --output [required] |Generated Mockoon path and name (e.g. `./environment.json`)|
 |-p, --prettify |Prettify output|
+|--disable-external-refs |Disable fetching of external HTTP/HTTPS `$ref` references when importing OpenAPI specifications (default: false)|
 |-h, --help |Show CLI help|
 
 **Examples**:
@@ -320,6 +352,52 @@ Invalid environment: ~/data2.json
 
 > ⚠️ This command does not validate the OpenAPI specification files. OpenAPI files are validated by the [start command](#start-command) when you run it with an OpenAPI file as the `--data` parameter.
 
+### `mcp` command
+
+Starts a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that exposes Mockoon mocks to AI assistants (Claude, GitHub Copilot, Cursor, etc.).
+
+**Usage**:
+`$ mockoon-cli mcp`
+
+Running the command in a terminal will print the configuration snippet to add to your MCP client.
+
+**Available MCP tools**:
+
+| Tool                  | Description                                                    |
+| --------------------- | -------------------------------------------------------------- |
+| `list_mocks`          | List all local Mockoon mock files                              |
+| `start_mock`          | Start a Mockoon mock server from a local mock file             |
+| `stop_mock`           | Stop a running mock server by UUID                             |
+| `list_running_mocks`  | List all mock servers currently running in the MCP session     |
+
+**Extra mock directories**:
+
+By default, the MCP server looks for Mockoon mock files in the default desktop app storage directory (`%APPDATA%\mockoon\storage` on Windows, `~/Library/Application Support/mockoon/storage` on macOS, `~/.config/mockoon/storage` on Linux).
+
+To include mock files from additional directories, set the `MOCKOON_DATA_DIRS` environment variable to a semicolon-separated list of paths in your MCP client configuration:
+
+```json
+{
+  "servers": {
+    "mockoon": {
+      "command": "mockoon-cli",
+      "args": ["mcp"],
+      "env": {
+        "MOCKOON_DATA_DIRS": "/path/to/dir1;/path/to/dir2"
+      }
+    }
+  }
+}
+```
+
+Mocks with the same UUID found in multiple directories are only listed once (the first occurrence wins).
+
+**Examples**:
+
+```bash
+$ mockoon-cli mcp
+```
+
 ### `help` command
 
 Returns information about a command.
@@ -373,13 +451,13 @@ jobs:
 
 ### Using the generic Docker image
 
-A generic Docker image is published on the [Docker Hub Mockoon CLI repository](https://hub.docker.com/r/mockoon/cli). It uses `node:18-alpine` and installs the latest version of Mockoon CLI.
+A generic Docker image is published on the [Docker Hub Mockoon CLI repository](https://hub.docker.com/r/mockoon/cli). It uses `node:26-alpine` and installs the latest version of Mockoon CLI.
 
 All of `mockoon-cli start` flags (`--port`, etc.) must be provided when running the container.
 
 To load the Mockoon data, you can either mount a local data file and pass `mockoon-cli start` flags at the end of the command:
 
-`docker run -d --mount type=bind,source=/home/your-data-file.json,target=/data,readonly -p 3000:3000 mockoon/cli:latest --data data --port 3000`
+`docker run -d --mount type=bind,source=/home/your-data-file.json,target=/home/mockoon/data/your-data-file.json,readonly -p 3000:3000 mockoon/cli:latest --data /home/mockoon/data/your-data-file.json --port 3000`
 
 Or directly pass a URL to the `mockoon-cli start` command, without mounting a local data file:
 
@@ -394,7 +472,7 @@ You can also use `docker-compose` with a `docker-compose.yml` file:
 ```
 mock-server:
   image: mockoon/cli:latest
-  command: ["--data", "data", "--port", "3000"]
+  command: ["--data", "/home/mockoon/data/your-data-file.json", "--port", "3000"]
   healthcheck:
     test: ["CMD-SHELL", "curl -f http://localhost:3000/your-healthcheck-route || exit 1"]
     interval: 30s
@@ -402,7 +480,7 @@ mock-server:
     retries: 2
     start_period: 10s
   volumes:
-    - /home/your-data-file.json:/data:readonly
+    - /home/your-data-file.json:/home/mockoon/data/your-data-file.json:readonly
 ```
 
 > Please note that our [Docker image includes an `ENTRYPOINT`](https://github.com/mockoon/mockoon/blob/main/packages/cli/docker/Dockerfile#L16) that you may override or not. If you don't override it, and use Docker compose `command`, do not include `mockoon-cli start` as it is already included in the `ENTRYPOINT`.
@@ -440,6 +518,8 @@ As the CLI is running in the foreground, logs are also sent to stdout (console).
 ### Transaction logging
 
 When using the `--log-transaction` flag, logs will contain the full transaction (request and response) with the same information you can see in the desktop application "Logs" tab.
+
+Known-sensitive header values (`authorization`, `proxy-authorization`, `cookie`, `set-cookie`, `x-api-key`, `api-key`, `x-auth-token`) are replaced with `[REDACTED]` in both the CLI transaction logs and the admin API responses. For `authorization` / `proxy-authorization`, the auth scheme is preserved (e.g. `Bearer [REDACTED]`). Request and response bodies are not modified.
 
 Example:
 
@@ -536,7 +616,7 @@ You will find Mockoon's [documentation](https://mockoon.com/docs/latest/about/) 
 
 ## Support us!
 
-Mockoon is proudly **independent** and **open-source**, maintained without external funding. We rely on both **sponsorships** and **Mockoon Cloud subscriptions** to keep improving the project and building new features. A **big thank you** to the companies below for supporting our work and helping us grow (and all the [sponsors](https://github.com/mockoon/mockoon/blob/main/backers.md) who helped this project over time!):
+Mockoon is proudly **independent** and **open-source**, maintained without external funding. We rely on both **sponsorships** and **Mockoon Pro licenses** to keep improving the project and building new features. A **big thank you** to the companies below for supporting our work and helping us grow (and all the [sponsors](https://github.com/mockoon/mockoon/blob/main/backers.md) who helped this project over time!):
 
 ### Platinum
 
@@ -567,8 +647,13 @@ Mockoon is proudly **independent** and **open-source**, maintained without exter
 ### Gold
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
- 
-  <a href="https://www.testmuai.com/?utm_medium=sponsor&utm_source=mockoon">
+  <a href="https://coderabbit.link/mockoon">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/coderabbit.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/coderabbit.png">
+      <img src="https://mockoon.com/images/sponsors/light/coderabbit.png" alt="CodeRabbit logo" />
+      </picture>
+  </a><br/><br/><a href="https://www.testmuai.com/?utm_medium=sponsor&utm_source=mockoon">
       <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/testmuai.png">
       <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/testmuai.png">
@@ -585,26 +670,27 @@ Mockoon is proudly **independent** and **open-source**, maintained without exter
   </a>
 </div>
 
-If you'd like to **support Mockoon** as well, you can **become a sponsor** or **subscribe to Mockoon Cloud**, every contribution helps keep the project alive and evolving. Thank you!
+If you'd like to **support Mockoon** as well, you can **become a sponsor** or **purchase Mockoon Pro licenses**. Every contribution helps keep the project alive and evolving. Thank you!
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
-<a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsor-btn.png?" width="250" alt="sponsor button" /></a>
+<a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsors-btn.png" width="250" alt="sponsor button" /></a>
 </div>
 
-## Subscribe to Mockoon Cloud
+## Discover Mockoon Pro
 
-With advanced features for solo developers and teams, Mockoon Cloud supercharges your API development:
+Mockoon Pro is a private, self-hosted platform for teams that need to keep their API mocking workflows and data under their control:
 
-- ☁️ [cloud deployments](https://mockoon.com/cloud/docs/api-mock-cloud-deployments/)
-- 🔄️ [data synchronization and real-time collaboration](https://mockoon.com/cloud/docs/data-synchronization-team-collaboration/)
-- 🤖 [AI powered API mocking](https://mockoon.com/ai-powered-api-mocking/)
-- 📃 Access to dozens of [ready-to-use JSON templates](https://mockoon.com/templates/).
-- 💬 Priority support and training.
+- [Deploy on-premises, in a private cloud, or on an isolated network](https://mockoon.com/pro/docs/self-hosting/installation/)
+- [Synchronize data and collaborate in real time](https://mockoon.com/pro/docs/features/data-synchronization-team-collaboration/)
+- [Deploy and manage mock API instances](https://mockoon.com/pro/docs/features/api-mock-deployments/)
+- [Use the embedded web application](https://mockoon.com/pro/docs/clients/embedded-web-application/)
+- [Manage users with local authentication or OIDC SSO](https://mockoon.com/pro/docs/misc/authentication/)
+- [Review administrative and workspace events in the audit trail](https://mockoon.com/pro/docs/misc/audit-trail/)
 
-Upgrade today and take your API development to the next level.
+Start a free trial or learn more about [Mockoon Pro](https://mockoon.com/pro/).
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
-<a href="https://mockoon.com/cloud/"><img src="https://mockoon.com/images/cloud-btn.png?" width="250" alt="cloud button" /></a>
+<a href="https://mockoon.com/pro/"><img src="https://mockoon.com/images/pro-btn.png" width="250" alt="pro button" /></a>
 </div>
 
 ## Support/feedback

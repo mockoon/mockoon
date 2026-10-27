@@ -1,13 +1,13 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { generateUUID } from '@mockoon/commons';
-import { ToastTypes } from 'src/renderer/app/models/toasts.model';
+import { ToastAction, ToastTypes } from 'src/renderer/app/models/toasts.model';
 import {
   addToastAction,
   removeToastAction
 } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ToastsService {
   private store = inject(Store);
 
@@ -16,13 +16,15 @@ export class ToastsService {
    *
    * @param type - type of toast
    * @param message - text message to display
+   * @param action - optional action button configuration
    */
-  public addToast(type: ToastTypes, message: string) {
+  public addToast(type: ToastTypes, message: string, action?: ToastAction) {
     this.store.update(
       addToastAction({
         UUID: generateUUID(),
         type,
-        message
+        message,
+        action
       })
     );
   }

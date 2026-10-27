@@ -19,7 +19,12 @@
           "rulesOperator": "OR",
           "statusCode": 200,
           "label": "Route",
-          "headers": [],
+          "headers": [
+            {
+              "key": "Set-Cookie",
+              "value": "session=abc; Secure; HttpOnly"
+            }
+          ],
           "latency": 0,
           "filePath": "",
           "sendFileAsBody": false,

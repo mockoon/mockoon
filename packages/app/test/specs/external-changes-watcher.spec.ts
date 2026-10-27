@@ -1,6 +1,6 @@
 import { generateUUID } from '@mockoon/commons';
 import { resolve } from 'path';
-import dialogs from '../libs/dialogs';
+import { mockSaveDialog } from '../libs/electron-mocks';
 import environments from '../libs/environments';
 import environmentsLogs from '../libs/environments-logs';
 import file from '../libs/file';
@@ -17,7 +17,10 @@ describe('Environment external reload', () => {
     // wait a bit for app to load, apparently cannot open the modal too soon
     await browser.pause(1000);
     await settings.open();
-    await settings.assertDropdownSettingValue('fileWatcherEnabled', 'Disabled');
+    await settings.assertDropdownSettingValue(
+      'settings-storage-file-watcher',
+      'Disabled'
+    );
     await settings.setDropdownSettingValue('settings-storage-file-watcher', 3);
     await modals.close();
   });
@@ -93,7 +96,7 @@ describe('Environment external reload', () => {
   });
 
   it('should assert the external watch works after a duplicate', async () => {
-    await dialogs.save(resolve('./tmp/storage/new-dup-env.json'));
+    await mockSaveDialog(resolve('./tmp/storage/new-dup-env.json'));
     await environments.duplicate(1);
     await browser.pause(100);
     await environments.assertActiveMenuEntryText('env 1 (change2) (copy)');
@@ -110,7 +113,10 @@ describe('Environment external reload', () => {
 
   it('should switch to prompt mode', async () => {
     await settings.open();
-    await settings.assertDropdownSettingValue('fileWatcherEnabled', 'Auto');
+    await settings.assertDropdownSettingValue(
+      'settings-storage-file-watcher',
+      'Auto'
+    );
     await settings.setDropdownSettingValue('settings-storage-file-watcher', 2);
     await modals.close();
     await utils.waitForAutosave();

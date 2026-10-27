@@ -1,5 +1,5 @@
-import { AsyncPipe, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
@@ -11,6 +11,7 @@ import {
   Environment,
   EnvironmentDefault,
   Header,
+  IsRemoteHttpsURL,
   IsValidURL
 } from '@mockoon/commons';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
@@ -26,9 +27,7 @@ import { Store } from 'src/renderer/app/stores/store';
 @Component({
   selector: 'app-environment-proxy',
   templateUrl: './environment-proxy.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     FormsModule,
     ReactiveFormsModule,
     SvgComponent,
@@ -45,6 +44,7 @@ export class EnvironmentProxyComponent {
 
   public activeEnvironment$: Observable<Environment>;
   public isValidURL = IsValidURL;
+  public isRemoteHttpsURL = IsRemoteHttpsURL;
   public scrollToBottom = this.uiService.scrollToBottom;
   public environmentProxyForm: UntypedFormGroup;
 
@@ -55,6 +55,20 @@ export class EnvironmentProxyComponent {
       proxyHost: [EnvironmentDefault.proxyHost],
       proxyRemovePrefix: [EnvironmentDefault.proxyRemovePrefix]
     });
+
+    this.store
+      .selectIsActiveEnvironmentEditable()
+      .pipe(
+        tap((isEditable) => {
+          if (isEditable) {
+            this.environmentProxyForm.enable({ emitEvent: false });
+          } else {
+            this.environmentProxyForm.disable({ emitEvent: false });
+          }
+        }),
+        takeUntilDestroyed()
+      )
+      .subscribe();
 
     // send new activeEnvironmentForm values to the store, one by one
     merge(

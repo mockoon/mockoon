@@ -1,7 +1,6 @@
 import { resolve } from 'path';
-import clipboard from '../libs/clipboard';
 import databuckets from '../libs/databuckets';
-import dialogs from '../libs/dialogs';
+import { mockSaveDialog, readClipboard } from '../libs/electron-mocks';
 import environments from '../libs/environments';
 import file from '../libs/file';
 import http from '../libs/http';
@@ -15,7 +14,7 @@ describe('Databuckets navigation and deletion', () => {
   it('should open and start the environment', async () => {
     await environments.open('databuckets');
     await settings.open();
-    await settings.setSettingValue('settings-faker-seed', '1');
+    await settings.setSettingValue('settings-faker-seed', 1);
     await modals.close();
   });
 
@@ -51,7 +50,7 @@ describe('Databuckets addition', () => {
   it('should copy the ID to the clipboard via the context menu', async () => {
     await databuckets.copyID(5);
     expect(await databuckets.idElement.getText()).toContain(
-      await clipboard.read()
+      await readClipboard()
     );
   });
 });
@@ -110,7 +109,7 @@ describe('Databucket duplication to another environment', () => {
 
     const modalText = await $('.modal-content .modal-title small').getText();
 
-    expect(modalText).toContain('My Databucket');
+    expect(modalText).toContain('Copy 1 data bucket to:');
 
     await modals.assertDuplicationModalEnvName('Basic data');
     await modals.assertDuplicationModalEnvHostname('localhost:3000/');
@@ -185,7 +184,7 @@ describe('Databucket filter', () => {
 
   it('should reset databuckets filter when switching env', async () => {
     await databuckets.setFilter('Second');
-    await dialogs.save(resolve('./tmp/storage/dup-databuckets.json'));
+    await mockSaveDialog(resolve('./tmp/storage/dup-databuckets.json'));
     await environments.duplicate(1);
     await navigation.switchView('ENV_DATABUCKETS');
     await databuckets.assertFilter('');
@@ -390,6 +389,9 @@ describe('Databuckets selection in responses', () => {
   it('should be able to purge databuckets state with admin endpoint', async () => {
     await environments.stop();
     await environments.start();
+
+    const adminApiAuthToken = await environments.getEnvironmentAdminApiToken();
+
     await http.assertCall({
       method: 'GET',
       path: '/databucketWithReqHelper?param=testvalue1',
@@ -403,7 +405,10 @@ describe('Databuckets selection in responses', () => {
 
     await http.assertCall({
       method: 'PURGE',
-      path: '/mockoon-admin/state'
+      path: '/mockoon-admin/state',
+      headers: {
+        Authorization: `Bearer ${adminApiAuthToken}`
+      }
     });
     await http.assertCall({
       method: 'GET',
@@ -413,12 +418,47 @@ describe('Databuckets selection in responses', () => {
 
     await http.assertCall({
       method: 'POST',
-      path: '/mockoon-admin/state/purge'
+      path: '/mockoon-admin/state/purge',
+      headers: {
+        Authorization: `Bearer ${adminApiAuthToken}`
+      }
     });
     await http.assertCall({
       method: 'GET',
       path: '/databucketWithReqHelper?param=testvalue4',
       testedResponse: { body: 'testvalue4' }
     });
+  });
+});
+
+describe('Databuckets toolbar batch actions', () => {
+  it('should require a second click to confirm batch delete', async () => {
+    await environments.localAdd('batch-toolbar-databuckets');
+    await navigation.switchView('ENV_DATABUCKETS');
+
+    let count = await $$('.databuckets-menu .menu-list .nav-item:not(.d-none)')
+      .length;
+    while (count < 2) {
+      await databuckets.add();
+      count += 1;
+    }
+
+    await utils.ctrlSelect(
+      $('.databuckets-menu .menu-list .nav-item:nth-child(1) .nav-link')
+    );
+    await utils.ctrlSelect(
+      $('.databuckets-menu .menu-list .nav-item:nth-child(2) .nav-link')
+    );
+
+    await utils.assertElementText(
+      $('.databuckets-menu .toolbar span'),
+      '2 selected'
+    );
+
+    await $('#databuckets-batch-delete').click();
+    await databuckets.assertCount(count);
+
+    await $('#databuckets-batch-delete').click();
+    await databuckets.assertCount(count - 2);
   });
 });

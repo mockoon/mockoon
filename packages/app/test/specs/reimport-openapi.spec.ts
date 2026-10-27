@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import dialogs from '../libs/dialogs';
+import { mockOpenDialog, mockSaveDialog } from '../libs/electron-mocks';
 import environments from '../libs/environments';
 import routes from '../libs/routes';
 import utils from '../libs/utils';
@@ -13,9 +13,9 @@ const reimportSpecPath = resolve(
 
 const importInitialEnvironment = async () => {
   await environments.localAddFromOpenApi();
-  await dialogs.open(initialSpecPath);
+  await mockOpenDialog(initialSpecPath);
   await environments.browseOpenApi();
-  await dialogs.save(resolve('./tmp/storage/reimport-openapi.json'));
+  await mockSaveDialog(resolve('./tmp/storage/reimport-openapi.json'));
   await environments.importOpenApi();
   await utils.waitForAutosave();
 
@@ -24,7 +24,7 @@ const importInitialEnvironment = async () => {
 
 const openReimportPreview = async () => {
   await environments.reimportFromOpenApi(1);
-  await dialogs.open(reimportSpecPath);
+  await mockOpenDialog(reimportSpecPath);
   await environments.browseOpenApi();
 
   await utils.waitForAutosave();

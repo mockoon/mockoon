@@ -1,7 +1,5 @@
 export type HeadersProperties =
-  | 'headers'
-  | 'proxyReqHeaders'
-  | 'proxyResHeaders';
+  'headers' | 'proxyReqHeaders' | 'proxyResHeaders';
 
 export type DropdownItem<T = string | number> = {
   category?: true;
@@ -12,8 +10,8 @@ export type DropdownItem<T = string | number> = {
 
 export type DropdownItems<T = string | number> = DropdownItem<T>[];
 
-export type ToggleItem = {
-  value?: number | string | boolean;
+export type RadioItem = {
+  value: number | string;
   label?: string;
   icon?: string;
   iconSize?: number;
@@ -21,7 +19,15 @@ export type ToggleItem = {
   activeClass?: string;
 };
 
-export type ToggleItems = ToggleItem[];
+export type RadioItems = RadioItem[];
+
+export type CheckboxItem = {
+  label?: string;
+  icon?: string;
+  iconSize?: number;
+  tooltip?: string;
+  activeClass?: string;
+};
 
 export type Validation = {
   mask: string;

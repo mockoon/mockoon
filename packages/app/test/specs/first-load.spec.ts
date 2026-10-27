@@ -4,13 +4,6 @@ import modals from '../libs/modals';
 import utils from '../libs/utils';
 
 describe('First load', () => {
-  before(async () => {
-    await file.editSettingsAndReload({
-      welcomeShown: false,
-      environments: undefined
-    });
-  });
-
   it('Open window with Mockoon title', async () => {
     expect(await browser.getTitle()).toContain('Mockoon');
   });

@@ -2,7 +2,7 @@
   <h4 class="modal-title">Settings</h4>
 </div>
 
-<div class="modal-body" [formGroup]="settingsForm">
+<div class="modal-body">
   <div>
     <app-title-separator
       heading="User interface"
@@ -17,7 +17,7 @@
             type="checkbox"
             class="form-check-input"
             id="settings-truncate-route-name"
-            formControlName="truncateRouteName"
+            [formField]="settingsForm.truncateRouteName"
           />
           <label class="form-check-label" for="settings-truncate-route-name"
             >Truncate long paths in lists (environments, routes, logs,
@@ -27,6 +27,82 @@
       </div>
     </div>
   </div>
+
+  <section
+    class="self-hosted-settings"
+    [class.self-hosted-settings-highlighted]="highlightSelfHosted()"
+  >
+    <app-title-separator
+      heading="Self-hosted Mockoon Pro instance"
+      icon="cloud"
+    />
+
+    <div class="ps-4">
+      <div class="mb-3">
+        <div class="input-group">
+          <label for="settings-api-url" class="col-form-label pe-2">
+            Self-hosted API URL
+          </label>
+          <input
+            #apiUrlInput
+            type="text"
+            class="form-control col-1"
+            id="settings-api-url"
+            placeholder="https://api.mockoon.com/"
+            [formField]="settingsForm.apiUrl"
+          />
+          <div class="input-group-text">
+            <app-svg icon="info" [ngbTooltip]="apiUrlTooltip" />
+            <ng-template #apiUrlTooltip>
+              <div>
+                Override the default API URL to use a self-hosted Mockoon Pro
+                instance. The URL must contain the protocol (http or https),
+                port, if applicable, and no trailing slash. Example:
+                https://mockoon.company.com or http://localhost:6000
+              </div>
+            </ng-template>
+          </div>
+          @if (
+            settingsForm.apiUrl().getError('invalidApiUrl') ||
+            settingsForm.apiUrl().pending() ||
+            (settingsForm.apiUrl().valid() &&
+              settingsForm.apiUrl().value() !== '')
+          ) {
+            <div class="input-group-text">
+              <small>
+                @if (settingsForm.apiUrl().getError('invalidApiUrl')) {
+                  <app-svg
+                    icon="warning"
+                    size="12"
+                    class="text-warning"
+                    [ngbTooltip]="
+                      settingsForm.apiUrl().getError('invalidApiUrl')?.message
+                    "
+                  />
+                } @else if (settingsForm.apiUrl().pending()) {
+                  <app-spinner size="12" />
+                } @else if (
+                  settingsForm.apiUrl().valid() &&
+                  settingsForm.apiUrl().value() !== ''
+                ) {
+                  <app-svg
+                    icon="check"
+                    size="12"
+                    class="text-success"
+                    ngbTooltip="Self-hosted API URL is valid"
+                  />
+                }
+              </small>
+            </div>
+          }
+        </div>
+        <small class="text-muted">
+          Learn more about
+          <a [href]="proPlansURL" target="_blank">Mockoon Pro</a>
+        </small>
+      </div>
+    </div>
+  </section>
 
   @if (!isWeb) {
     <app-title-separator heading="Environment variables" icon="list" />
@@ -41,7 +117,7 @@
             type="text"
             class="form-control col-1"
             id="settings-env-vars-prefix"
-            formControlName="envVarsPrefix"
+            [formField]="settingsForm.envVarsPrefix"
           />
           <div class="input-group-text">
             <app-svg icon="info" [ngbTooltip]="envVarsPrefixTooltip" />
@@ -75,7 +151,7 @@
               type="checkbox"
               class="form-check-input"
               id="settings-log-transactions"
-              formControlName="logTransactions"
+              [formField]="settingsForm.logTransactions"
             />
             <label class="form-check-label" for="settings-log-transactions">
               Log the full transactions
@@ -112,7 +188,7 @@
             max: maxLogsPerEnvironmentLimit,
             canBeEmpty: false
           }"
-          formControlName="maxLogsPerEnvironment"
+          [formField]="settingsForm.maxLogsPerEnvironment"
         />
       </div>
     </div>
@@ -123,7 +199,7 @@
           type="checkbox"
           class="form-check-input"
           id="settings-log-iso-timestamp"
-          formControlName="displayLogsIsoTimestamp"
+          [formField]="settingsForm.displayLogsIsoTimestamp"
         />
         <label class="form-check-label" for="settings-log-iso-timestamp">
           Use ISO timestamp format in logs instead of human-readable format
@@ -144,9 +220,9 @@
       <div class="mb-3">
         <div class="input-group">
           <label class="col-form-label pe-2"> Locale </label>
-          <app-custom-select
+          <app-select
             class="col-3"
-            formControlName="fakerLocale"
+            [formField]="settingsForm.fakerLocale"
             [enableCustomInput]="false"
             [items]="fakerLocales"
             dropdownId="settings-faker-locale"
@@ -178,7 +254,7 @@
             id="settings-faker-seed"
             placeholder="Number or empty for no seed"
             [appInputNumber]="{ min: 0, max: Infinity, canBeEmpty: true }"
-            formControlName="fakerSeed"
+            [formField]="settingsForm.fakerSeed"
           />
           <div class="input-group-text">
             <app-svg icon="info" [ngbTooltip]="fakerSeedTooltip" />
@@ -206,7 +282,7 @@
               type="checkbox"
               class="form-check-input"
               id="settings-start-environments-on-load"
-              formControlName="startEnvironmentsOnLoad"
+              [formField]="settingsForm.startEnvironmentsOnLoad"
             />
             <label
               class="form-check-label"
@@ -227,7 +303,7 @@
               type="checkbox"
               class="form-check-input"
               id="settings-enable-random-latency"
-              formControlName="enableRandomLatency"
+              [formField]="settingsForm.enableRandomLatency"
             />
             <label
               class="form-check-label"
@@ -258,9 +334,10 @@
       <div class="mb-3">
         <div class="input-group file-watcher-input-group">
           <label class="col-form-label pe-2"> Environment files watcher </label>
-          <app-custom-select
+
+          <app-select
             class="col-2"
-            formControlName="fileWatcherEnabled"
+            [formField]="settingsForm.fileWatcherEnabled"
             [enableCustomInput]="false"
             [items]="fileWatcherOptions"
             dropdownId="settings-storage-file-watcher"
@@ -282,7 +359,7 @@
             type="checkbox"
             class="form-check-input"
             id="settings-storage-pretty-print"
-            formControlName="storagePrettyPrint"
+            [formField]="settingsForm.storagePrettyPrint"
           />
           <label class="form-check-label" for="settings-storage-pretty-print">
             Pretty print JSON storage files (settings and environments)</label

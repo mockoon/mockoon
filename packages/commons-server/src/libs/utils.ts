@@ -31,6 +31,96 @@ export { lookup as mimeTypeLookup } from 'mime-types';
 export { get as objectGetPath } from 'object-path';
 
 /**
+ * Header names whose values are redacted before transactions are exposed
+ * outside of the original process trust boundary.
+ *
+ * Applied to:
+ *  - Admin API output (SSE stream + GET /logs)
+ *  - CLI / serverless transaction logs (--log-transaction)
+ *
+ * NOT applied to:
+ *  - Desktop "Logs" tab (transactions reach the renderer through local IPC
+ *    and are only visible to the user running the app)
+ */
+const SENSITIVE_TRANSACTION_HEADERS = new Set([
+  'authorization',
+  'proxy-authorization',
+  'cookie',
+  'set-cookie',
+  'x-api-key',
+  'api-key',
+  'x-auth-token'
+]);
+
+const REDACTED_VALUE = '[REDACTED]';
+
+/**
+ * Headers whose value starts with an auth scheme (e.g. "Bearer xyz",
+ * "Basic xyz"). For these, the scheme is preserved and only the credential
+ * portion is redacted ("Bearer [REDACTED]"), which is useful for debugging
+ * client configuration without leaking the secret.
+ */
+const SCHEME_PRESERVING_HEADERS = new Set([
+  'authorization',
+  'proxy-authorization'
+]);
+
+const redactHeaderValue = (key: string, value: string): string => {
+  if (SCHEME_PRESERVING_HEADERS.has(key)) {
+    const [scheme, ...rest] = value.split(' ');
+
+    return rest.length === 0 ? REDACTED_VALUE : `${scheme} ${REDACTED_VALUE}`;
+  }
+
+  return REDACTED_VALUE;
+};
+
+/**
+ * Return a copy of the given header list with sensitive values replaced.
+ */
+export const redactHeaders = (headers: Header[]): Header[] =>
+  headers.map((header) => {
+    const lowerKey = header.key.toLowerCase();
+
+    return SENSITIVE_TRANSACTION_HEADERS.has(lowerKey)
+      ? { ...header, value: redactHeaderValue(lowerKey, header.value) }
+      : header;
+  });
+
+/**
+ * Return a shallow copy of a transaction with sensitive request/response
+ * header values redacted.
+ */
+export const redactTransaction = (transaction: Transaction): Transaction => ({
+  ...transaction,
+  request: {
+    ...transaction.request,
+    headers: redactHeaders(transaction.request.headers)
+  },
+  response: {
+    ...transaction.response,
+    headers: redactHeaders(transaction.response.headers)
+  }
+});
+
+/**
+ * Mutate the given in-flight request in place, redacting sensitive header
+ * values. The input is expected to be a clone (e.g. via CloneObject) so the
+ * underlying transaction reference held elsewhere stays unchanged.
+ */
+export const redactInFlightRequestInPlace = (
+  inflightRequest: InFlightRequest
+): InFlightRequest => {
+  if (inflightRequest.request?.headers) {
+    inflightRequest.request.headers = redactHeaders(
+      inflightRequest.request.headers
+    );
+  }
+
+  return inflightRequest;
+};
+
+/**
  * Transform http headers objects to Mockoon's Header key value object
  *
  * @param object
@@ -637,4 +727,259 @@ export const parseRequestMessage = (
  */
 export const isValidStatusCode = (statusCode: number): boolean => {
   return Number.isInteger(statusCode) && statusCode >= 100 && statusCode <= 999;
+};
+
+interface FormPathStep {
+  type: 'object' | 'array';
+  key: string | number;
+  nextType?: 'object' | 'array';
+  append?: boolean;
+  last?: boolean;
+}
+
+const DANGEROUS_KEYS_REGEX =
+  /(^|\[|\.)(__proto__|constructor|prototype)(\]|\.|$)/;
+
+const MAX_ARRAY_INDEX = 10000;
+const RE_FIRST_KEY = /^[^[]*/;
+const RE_DIGIT_PATH = /^\[(\d+)\]/;
+const RE_NORMAL_PATH = /^\[([^\]]+)\]/;
+
+const isDangerousPropertyKey = (propertyKey: unknown): boolean =>
+  propertyKey === '__proto__' ||
+  propertyKey === 'constructor' ||
+  propertyKey === 'prototype';
+
+const setFormProperty = (
+  context: Record<string | number, any>,
+  key: string | number,
+  value: any
+) => {
+  Object.defineProperty(context, key, {
+    configurable: true,
+    enumerable: true,
+    value,
+    writable: true
+  });
+};
+
+const parseFormPath = (key: string): FormPathStep[] => {
+  const failure = (): FormPathStep[] => {
+    if (isDangerousPropertyKey(key)) {
+      return [];
+    }
+
+    return [{ type: 'object', key, last: true }];
+  };
+
+  const firstKeyMatch = RE_FIRST_KEY.exec(key);
+  const firstKey = firstKeyMatch ? firstKeyMatch[0] : '';
+  if (!firstKey) {
+    return failure();
+  }
+
+  const len = key.length;
+  let pos = firstKey.length;
+  let tail: FormPathStep = { type: 'object', key: firstKey };
+  const steps: FormPathStep[] = [tail];
+
+  while (pos < len) {
+    if (key[pos] === '[' && key[pos + 1] === ']') {
+      pos += 2;
+      tail.append = true;
+      if (pos !== len) {
+        return failure();
+      }
+      continue;
+    }
+
+    const digitMatch = RE_DIGIT_PATH.exec(key.substring(pos));
+    if (digitMatch !== null) {
+      const index = parseInt(digitMatch[1], 10);
+
+      if (!Number.isSafeInteger(index) || index > MAX_ARRAY_INDEX) {
+        return failure();
+      }
+
+      pos += digitMatch[0].length;
+      tail.nextType = 'array';
+      tail = { type: 'array', key: index };
+      steps.push(tail);
+      continue;
+    }
+
+    const normalMatch = RE_NORMAL_PATH.exec(key.substring(pos));
+    if (normalMatch !== null) {
+      const segmentKey = normalMatch[1];
+
+      if (isDangerousPropertyKey(segmentKey)) {
+        return failure();
+      }
+
+      pos += normalMatch[0].length;
+      tail.nextType = 'object';
+      tail = { type: 'object', key: segmentKey };
+      steps.push(tail);
+      continue;
+    }
+
+    return failure();
+  }
+
+  tail.last = true;
+
+  return steps;
+};
+
+const getFormValueType = (
+  value: any
+): 'undefined' | 'array' | 'object' | 'scalar' => {
+  if (value === undefined) {
+    return 'undefined';
+  }
+  if (Array.isArray(value)) {
+    return 'array';
+  }
+  if (typeof value === 'object' && value !== null) {
+    return 'object';
+  }
+
+  return 'scalar';
+};
+
+const setLastFormValue = (
+  context: Record<string, any>,
+  step: FormPathStep,
+  currentValue: any,
+  entryValue: any
+): Record<string, any> => {
+  if (isDangerousPropertyKey(step.key)) {
+    return context;
+  }
+
+  switch (getFormValueType(currentValue)) {
+    case 'undefined':
+      if (step.append) {
+        setFormProperty(context, step.key, [entryValue]);
+      } else {
+        setFormProperty(context, step.key, entryValue);
+      }
+      break;
+    case 'array':
+      context[step.key].push(entryValue);
+      break;
+    case 'object':
+      if (Object.prototype.hasOwnProperty.call(currentValue, '')) {
+        return setLastFormValue(
+          currentValue,
+          { type: 'object', key: '', last: true },
+          currentValue[''],
+          entryValue
+        );
+      }
+
+      setFormProperty(context, step.key, [currentValue, entryValue]);
+      break;
+    case 'scalar':
+      setFormProperty(context, step.key, [context[step.key], entryValue]);
+      break;
+  }
+
+  return context;
+};
+
+const setStepFormValue = (
+  context: Record<string, any>,
+  step: FormPathStep,
+  currentValue: any,
+  entryValue: any
+): any => {
+  if (isDangerousPropertyKey(step.key)) {
+    return context;
+  }
+
+  if (step.last) {
+    return setLastFormValue(context, step, currentValue, entryValue);
+  }
+
+  switch (getFormValueType(currentValue)) {
+    case 'undefined':
+      if (step.nextType === 'array') {
+        setFormProperty(context, step.key, []);
+      } else {
+        setFormProperty(context, step.key, {});
+      }
+
+      return context[step.key];
+    case 'object':
+      return context[step.key];
+    case 'array': {
+      if (step.nextType === 'array') {
+        return currentValue;
+      }
+
+      const obj: Record<string, any> = {};
+      setFormProperty(context, step.key, obj);
+      currentValue.forEach((item: any, i: number) => {
+        if (item !== undefined) {
+          obj[String(i)] = item;
+        }
+      });
+
+      return obj;
+    }
+    case 'scalar': {
+      const obj: Record<string, any> = {};
+      obj[''] = currentValue;
+      setFormProperty(context, step.key, obj);
+
+      return obj;
+    }
+  }
+};
+
+/**
+ * Append a field key-value pair to a target object supporting nested bracket notation
+ * (e.g. key[subkey], key[], key[0]). Safe against prototype pollution.
+ *
+ * @param store - The target object to append property into
+ * @param key - The field key path
+ * @param value - The value to append
+ */
+export const appendField = (
+  store: Record<string, any>,
+  key: string,
+  value: any
+): void => {
+  if (!store || typeof store !== 'object' || !key || typeof key !== 'string') {
+    return;
+  }
+
+  if (DANGEROUS_KEYS_REGEX.test(key)) {
+    return;
+  }
+
+  const steps = parseFormPath(key);
+
+  for (const step of steps) {
+    if (
+      step.key === '__proto__' ||
+      step.key === 'constructor' ||
+      step.key === 'prototype'
+    ) {
+      return;
+    }
+  }
+
+  steps.reduce((context, step) => {
+    if (!context || typeof context !== 'object') {
+      return context;
+    }
+
+    const current = Object.prototype.hasOwnProperty.call(context, step.key)
+      ? context[step.key]
+      : undefined;
+
+    return setStepFormValue(context, step, current, value);
+  }, store);
 };

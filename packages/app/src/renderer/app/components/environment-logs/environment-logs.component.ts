@@ -5,12 +5,7 @@ import {
   TitleCasePipe,
   UpperCasePipe
 } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit
-} from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { GetContentType, isContentTypeApplicationJson } from '@mockoon/commons';
 import { NgbCollapse, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
@@ -24,6 +19,7 @@ import {
   startWith
 } from 'rxjs/operators';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
+import { RadioComponent } from 'src/renderer/app/components/custom-form-elements/radio.component';
 import {
   DropdownMenuComponent,
   DropdownMenuItem
@@ -31,7 +27,6 @@ import {
 import { EditorComponent } from 'src/renderer/app/components/editor/editor.component';
 import { FilterComponent } from 'src/renderer/app/components/filter/filter.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
-import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
 import { ResizeColumnDirective } from 'src/renderer/app/directives/resize-column.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
@@ -40,7 +35,7 @@ import {
   GetEditorModeFromContentType,
   textFilter
 } from 'src/renderer/app/libs/utils.lib';
-import { ToggleItems } from 'src/renderer/app/models/common.model';
+import { RadioItems } from 'src/renderer/app/models/common.model';
 import {
   EnvironmentLog,
   EnvironmentLogOrigin
@@ -74,7 +69,6 @@ type logsDropdownMenuPayload = { logUuid: string };
   selector: 'app-environment-logs',
   templateUrl: 'environment-logs.component.html',
   styleUrls: ['environment-logs.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DatePipe],
   imports: [
     NgbTooltip,
@@ -90,7 +84,7 @@ type logsDropdownMenuPayload = { logUuid: string };
     LowerCasePipe,
     TitleCasePipe,
     DatePipe,
-    ToggleComponent
+    RadioComponent
   ]
 })
 export class EnvironmentLogsComponent implements OnInit {
@@ -146,7 +140,11 @@ export class EnvironmentLogsComponent implements OnInit {
           logUuid,
           true
         );
-      }
+      },
+      disabled$: () =>
+        this.store
+          .selectIsActiveEnvironmentEditable()
+          .pipe(map((isEditable) => !isEditable))
     },
     {
       label: () =>
@@ -180,7 +178,7 @@ export class EnvironmentLogsComponent implements OnInit {
       hidden$: () => this.isEnvCloud$.pipe(map((isCloud) => !isCloud))
     }
   ];
-  public logOrigins: ToggleItems = [
+  public logOrigins: RadioItems = [
     {
       value: 'all',
       label: 'All'
@@ -198,6 +196,8 @@ export class EnvironmentLogsComponent implements OnInit {
       iconSize: 14
     }
   ];
+  public isActiveEnvironmentEditable$ =
+    this.store.selectIsActiveEnvironmentEditable();
 
   ngOnInit() {
     this.logsFilter$ = this.store.selectFilter('logs');
@@ -224,7 +224,7 @@ export class EnvironmentLogsComponent implements OnInit {
         if (search) {
           result = result.filter((log) =>
             textFilter(
-              `${log.method} ${log.url} ${log.response.status} ${log.response.statusMessage} ${log.request.query} ${log.request.body} ${log.response.body} ${this.datePipe.transform(log.timestampMs, this.dateFormat)} ${log.proxied ? 'proxied' : ''}`,
+              `${log.method} ${log.url} ${log.response.status} ${log.response.statusMessage} ${log.request.query} ${this.datePipe.transform(log.timestampMs, this.dateFormat)} ${log.proxied ? 'proxied' : ''} ${log.request.body} ${log.response.body} ${JSON.stringify(log.request.headers)} ${JSON.stringify(log.response.headers)}`,
               search
             )
           );

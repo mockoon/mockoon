@@ -3,6 +3,8 @@ import { Header } from '../models/route.model';
 export const INDENT_SIZE = 2;
 
 export const defaultMaxTransactionLogs = 100;
+export const defaultMaxFileSize = 10 * 1024 * 1024; // 10MB
+export const defaultMaxRequestBodySize = 100 * 1024 * 1024; // 100MB;
 
 export const CORSHeaders: Header[] = [
   { key: 'Access-Control-Allow-Origin', value: '*' },

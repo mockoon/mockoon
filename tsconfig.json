@@ -17,6 +17,7 @@
     "noPropertyAccessFromIndexSignature": true,
     "isolatedModules": true,
     "useDefineForClassFields": false,
-    "noImplicitOverride": true
+    "noImplicitOverride": true,
+    "ignoreDeprecations": "6.0"
   }
 }

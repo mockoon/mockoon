@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
@@ -28,7 +28,6 @@ import {
   tap,
   withLatestFrom
 } from 'rxjs';
-import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
 import {
   DropdownMenuComponent,
   DropdownMenuItem
@@ -37,7 +36,6 @@ import { EditorComponent } from 'src/renderer/app/components/editor/editor.compo
 import { HeadersListComponent } from 'src/renderer/app/components/headers-list/headers-list.component';
 import { CallbacksMenuComponent } from 'src/renderer/app/components/menus/callbacks-menu/callbacks-menu.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
-import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import { FocusOnEventDirective } from 'src/renderer/app/directives/focus-event.directive';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
 import {
@@ -48,13 +46,15 @@ import {
 } from 'src/renderer/app/models/callback.model';
 import {
   DropdownItems,
-  ToggleItems
+  RadioItems
 } from 'src/renderer/app/models/common.model';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
+import { RadioComponent } from '../custom-form-elements/radio.component';
+import { SelectComponent } from '../custom-form-elements/select.component';
 
 type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
 
@@ -62,20 +62,19 @@ type fileDropdownMenuPayload = { filePath: string; environmentUuid: string };
   selector: 'app-environment-callbacks',
   templateUrl: './environment-callbacks.component.html',
   styleUrls: ['./environment-callbacks.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CallbacksMenuComponent,
     FormsModule,
     ReactiveFormsModule,
     FocusOnEventDirective,
-    CustomSelectComponent,
     HeadersListComponent,
-    ToggleComponent,
     EditorComponent,
     NgbTooltip,
     SvgComponent,
     DropdownMenuComponent,
-    AsyncPipe
+    AsyncPipe,
+    RadioComponent,
+    SelectComponent
   ]
 })
 export class EnvironmentCallbacksComponent {
@@ -127,7 +126,7 @@ export class EnvironmentCallbacksComponent {
       classes: 'color-method-options'
     }
   ];
-  public bodyType$: Observable<ToggleItems> = this.store
+  public bodyType$: Observable<RadioItems> = this.store
     .selectIsActiveEnvCloud()
     .pipe(
       map((isEnvCloud) => [
@@ -188,6 +187,17 @@ export class EnvironmentCallbacksComponent {
       }
     }
   ];
+  public isActiveEnvironmentEditable$ = this.store
+    .selectIsActiveEnvironmentEditable()
+    .pipe(
+      tap((isEditable) => {
+        if (isEditable) {
+          this.activeCallbackForm.enable({ emitEvent: false });
+        } else {
+          this.activeCallbackForm.disable({ emitEvent: false });
+        }
+      })
+    );
 
   constructor() {
     this.activeEnvironment$ = this.store

@@ -1,5 +1,6 @@
 import { BodyTypes, Environment, RouteType } from '@mockoon/commons';
-import { deepEqual } from 'node:assert';
+import { deepEqual, strictEqual } from 'node:assert';
+import { EventEmitter } from 'node:events';
 import { after, before, describe, it } from 'node:test';
 import { MockoonServer } from '../../../src';
 
@@ -155,8 +156,207 @@ describe('Server body parsing', () => {
       });
     });
 
+    it('should parse nested fields and arrays in multipart form data', async () => {
+      const boundary = '----testboundary123';
+      const body = [
+        `--${boundary}`,
+        'Content-Disposition: form-data; name="user[name]"',
+        '',
+        'Alice',
+        `--${boundary}`,
+        'Content-Disposition: form-data; name="user[address][city]"',
+        '',
+        'Paris',
+        `--${boundary}`,
+        'Content-Disposition: form-data; name="tags[]"',
+        '',
+        'tag1',
+        `--${boundary}`,
+        'Content-Disposition: form-data; name="tags[]"',
+        '',
+        'tag2',
+        `--${boundary}--`
+      ].join('\r\n');
+
+      const data = await (
+        await fetch('http://localhost:3010/test', {
+          method: 'POST',
+          headers: {
+            'Content-Type': `multipart/form-data; boundary=${boundary}`
+          },
+          body
+        })
+      ).json();
+
+      deepEqual(data, {
+        user: {
+          name: 'Alice',
+          address: {
+            city: 'Paris'
+          }
+        },
+        tags: ['tag1', 'tag2']
+      });
+    });
+
+    it('should ignore dangerous prototype pollution field names and prevent Object.prototype pollution', async () => {
+      const boundary = '----pocboundary123456';
+      const body = [
+        `--${boundary}`,
+        'Content-Disposition: form-data; name="__proto__[polluted]"',
+        '',
+        'PWNED_VIA_HTTP_MULTIPART',
+        `--${boundary}`,
+        'Content-Disposition: form-data; name="constructor[prototype][polluted2]"',
+        '',
+        'PWNED_VIA_CONSTRUCTOR',
+        `--${boundary}`,
+        'Content-Disposition: form-data; name="safeField"',
+        '',
+        'safeValue',
+        `--${boundary}--`
+      ].join('\r\n');
+
+      const data = await (
+        await fetch('http://localhost:3010/test', {
+          method: 'POST',
+          headers: {
+            'Content-Type': `multipart/form-data; boundary=${boundary}`
+          },
+          body
+        })
+      ).json();
+
+      strictEqual(({} as any).polluted, undefined);
+      strictEqual(({} as any).polluted2, undefined);
+      deepEqual(data, {
+        safeField: 'safeValue'
+      });
+    });
+
+    after(() => {
+      server.stop();
+    });
+  });
+
+  describe('Duplicate request end events', () => {
+    it('should only advance the routing pipeline once when end is emitted twice', () => {
+      const server = new MockoonServer(environment);
+      let nextCalls = 0;
+
+      const request = new EventEmitter() as RequestLike;
+      request.headers = {};
+      request.header = () => undefined;
+
+      (server as any).parseBody(request, {} as any, () => {
+        nextCalls += 1;
+      });
+
+      request.emit('end');
+      request.emit('end');
+
+      strictEqual(nextCalls, 1);
+      strictEqual(request.stringBody, '');
+      strictEqual(request.rawBody?.toString('utf8'), '');
+    });
+  });
+
+  describe('Oversized body socket handling', () => {
+    it('should destroy request socket only after sending 413', () => {
+      const server = new MockoonServer(environment, {
+        maxRequestBodySize: 4
+      });
+      const request = new EventEmitter() as RequestLike;
+      request.headers = {};
+      request.header = () => 'application/octet-stream';
+
+      let destroyCalled = false;
+      request.destroy = () => {
+        destroyCalled = true;
+
+        return request;
+      };
+
+      const response = new EventEmitter() as ResponseLike;
+      response.set = () => response;
+      response.status = () => response;
+      response.send = () => response;
+
+      (server as any).parseBody(request, response, () => {
+        throw new Error('next should not be called for oversized body');
+      });
+
+      request.emit('data', Buffer.from('12345'));
+      request.emit('end');
+
+      strictEqual(destroyCalled, false);
+
+      response.emit('finish');
+
+      strictEqual(destroyCalled, true);
+    });
+  });
+
+  describe('Request body size limit', () => {
+    let server: MockoonServer;
+
+    before((_context, done) => {
+      server = new MockoonServer(
+        {
+          ...environment,
+          uuid: 'a1176212-0a15-4f4a-9af4-03c0f0f902a1',
+          port: 3011
+        },
+        {
+          maxRequestBodySize: 32
+        }
+      );
+
+      server.on('started', () => {
+        done();
+      });
+
+      server.start();
+    });
+
+    it('should reject request bodies larger than the configured maximum with 413', async () => {
+      const transactionPromise = new Promise<any>((resolve) => {
+        server.once('transaction-complete', (transaction) => {
+          resolve(transaction);
+        });
+      });
+
+      const response = await fetch('http://localhost:3011/no-route', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/octet-stream'
+        },
+        body: 'x'.repeat(64)
+      });
+      const transaction = await transactionPromise;
+
+      strictEqual(response.status, 413);
+      strictEqual(await response.text(), 'Payload too large');
+      strictEqual(transaction.response.statusCode, 413);
+    });
+
     after(() => {
       server.stop();
     });
   });
 });
+
+type RequestLike = EventEmitter & {
+  headers: Record<string, string>;
+  rawBody?: Buffer;
+  stringBody?: string;
+  body?: unknown;
+  header(name: string): string | undefined;
+  destroy(): RequestLike;
+};
+
+type ResponseLike = EventEmitter & {
+  set(name: string, value: string): ResponseLike;
+  status(code: number): ResponseLike;
+  send(content: string): ResponseLike;
+};

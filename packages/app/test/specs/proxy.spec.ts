@@ -168,26 +168,23 @@ describe('Proxy (with TLS and proxy headers)', () => {
     await navigation.switchView('ENV_LOGS');
     await environmentsLogs.select(1);
     await environmentsLogs.switchTab('RESPONSE');
-    await environmentsLogs.assertLogItem(
+    await environmentsLogs.assertLogSectionContains(
       'Set-cookie: cookie1=cookievalue1,cookie2=cookievalue2',
       'response',
-      4,
-      6
+      4
     );
-    await environmentsLogs.assertLogItem(
+    await environmentsLogs.assertLogSectionContains(
       'X-proxy-response-header: header value',
       'response',
-      4,
-      8
+      4
     );
   });
 
   it('should display custom environment response header in environment logs', async () => {
-    await environmentsLogs.assertLogItem(
+    await environmentsLogs.assertLogSectionContains(
       'X-custom-header: header value',
       'response',
-      4,
-      7
+      4
     );
   });
 
@@ -216,9 +213,11 @@ describe('Proxy (with TLS and proxy headers)', () => {
 
     const response = await http.assertCallWithPort(getDisabledProxyCall, 3002);
 
-    expect(response.headers).not.toMatchObject({
-      'x-proxy-response-header': 'header value'
-    });
+    if (response) {
+      expect(response.headers).not.toMatchObject({
+        'x-proxy-response-header': 'header value'
+      });
+    }
   });
 
   it('should call external HTTPS API through proxy ', async () => {

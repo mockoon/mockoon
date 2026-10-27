@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
@@ -23,7 +23,6 @@ import { UserService } from 'src/renderer/app/services/user.service';
 @Component({
   selector: 'app-auth-modal',
   templateUrl: './auth-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, ReactiveFormsModule, AsyncPipe, SpinnerComponent]
 })
 export class AuthModalComponent {

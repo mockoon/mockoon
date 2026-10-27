@@ -27,46 +27,46 @@ class Http {
       port,
       path: httpCall.path,
       method: httpCall.method,
-      headers: httpCall.headers,
+      headers: httpCall.headers ?? {},
       body: httpCall.body,
-      cookie: httpCall.cookie
+      cookie: httpCall.cookie ?? ''
     });
 
-    if (httpCall.testedResponse) {
-      Object.keys(httpCall.testedResponse).forEach((propertyName) => {
-        if (propertyName === 'headers') {
-          Object.keys(httpCall.testedResponse.headers).forEach((headerName) => {
-            const responseHeader = response.headers[headerName];
+    if (httpCall.testedResponse != null) {
+      const testedResponse = httpCall.testedResponse;
 
-            if (Array.isArray(httpCall.testedResponse.headers[headerName])) {
-              (httpCall.testedResponse.headers[headerName] as string[]).forEach(
+      Object.keys(testedResponse).forEach((propertyName) => {
+        if (propertyName === 'headers' && testedResponse.headers != null) {
+          const responseHeaders = response.headers ?? {};
+
+          Object.keys(testedResponse?.headers ?? {}).forEach((headerName) => {
+            const responseHeader = response.headers?.[headerName];
+
+            if (Array.isArray(responseHeaders[headerName])) {
+              (responseHeaders[headerName] as string[]).forEach(
                 (expectedHeader) => {
                   expect(responseHeader).toContain(expectedHeader);
                 }
               );
             } else {
               expect(responseHeader).not.toEqual(undefined);
-              expect(responseHeader).toContain(
-                httpCall.testedResponse.headers[headerName]
-              );
+              expect(responseHeader).toContain(responseHeaders[headerName]);
             }
           });
         } else if (
           propertyName === 'body' &&
-          httpCall.testedResponse.body instanceof RegExp
+          testedResponse?.body instanceof RegExp
         ) {
-          expect(response.body).toMatch(httpCall.testedResponse.body);
+          expect(response.body).toMatch(testedResponse?.body);
         } else if (
           propertyName === 'body' &&
-          typeof httpCall.testedResponse.body === 'object'
+          typeof testedResponse?.body === 'object'
         ) {
           expect(response.body).toContain(
-            (httpCall.testedResponse.body as { contains: string }).contains
+            (testedResponse?.body as { contains: string }).contains
           );
         } else {
-          expect(response[propertyName]).toEqual(
-            httpCall.testedResponse[propertyName]
-          );
+          expect(response[propertyName]).toEqual(testedResponse[propertyName]);
         }
       });
     } else {
@@ -107,7 +107,7 @@ class Http {
     params.hostname = params.hostname ?? 'localhost';
 
     return new Promise((resolve, reject) => {
-      const headers = {
+      const headers: Record<string, string | string[] | number> = {
         ...params.headers,
         'Content-Length': data.length
       };
@@ -134,7 +134,7 @@ class Http {
             resolve({
               status: response.statusCode,
               statusMessage: response.statusMessage,
-              headers: response.headers,
+              headers: response.headers ?? {},
               body
             })
           );

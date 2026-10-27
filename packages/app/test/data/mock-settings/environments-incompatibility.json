@@ -1,0 +1,32 @@
+{
+  "welcomeShown": true,
+  "maxLogsPerEnvironment": 50,
+  "truncateRouteName": true,
+  "mainMenuSize": 100,
+  "secondaryMenuSize": 200,
+  "fakerLocale": "en",
+  "fakerSeed": null,
+  "lastChangelog": "9999.9.9",
+  "environments": [
+    {
+      "uuid": "323a25c6-b196-4d27-baf8-8aeb83d87c76",
+      "path": "./tmp/storage/incompatible.json",
+      "cloud": false,
+      "lastServerHash": null
+    }
+  ],
+  "storagePrettyPrint": true,
+  "startEnvironmentsOnLoad": false,
+  "logTransactions": false,
+  "disabledRoutes": {},
+  "collapsedFolders": {},
+  "fileWatcherEnabled": "disabled",
+  "dialogWorkingDir": "",
+  "environmentsCategoriesOrder": ["local", "cloud"],
+  "environmentsCategoriesCollapsed": {
+    "local": false,
+    "cloud": false
+  },
+  "envVarsPrefix": "MOCKOON_",
+  "activeEnvironmentUuid": null
+}

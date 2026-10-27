@@ -132,6 +132,7 @@ export const parseDataFile = async (
     port?: number;
     hostname?: string;
     proxy?: 'enabled' | 'disabled';
+    disableExternalRefs?: boolean;
   } = { port: undefined, hostname: undefined },
   repair = false,
   token?: string
@@ -142,7 +143,9 @@ export const parseDataFile = async (
   let environment: Environment | null = null;
 
   try {
-    environment = await openAPIConverter.convertFromOpenAPI(data);
+    environment = await openAPIConverter.convertFromOpenAPI(data, undefined, {
+      disableExternalRefs: userOptions.disableExternalRefs
+    });
   } catch (openAPIError) {
     if (openAPIError instanceof Error) {
       errorMessage += `\nOpenAPI parser: ${openAPIError.message}`;

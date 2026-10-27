@@ -4,9 +4,9 @@ import { mkdir } from 'node:fs/promises';
 import { basename } from 'path';
 
 class Bootstrap {
-  public async init(): Promise<void> {
+  public async init(specs?: string[] | string): Promise<void> {
     await this.prepareStorageFolder();
-    await this.copyAllDataFiles();
+    await this.copyAllDataFiles(specs);
   }
 
   /**
@@ -23,11 +23,51 @@ class Bootstrap {
   }
 
   /**
+   * Resolve the settings seed file for the current spec, if present.
+   * Expected files are located under ./test/data/mock-settings and named after
+   * the spec file (e.g. changelog-modal.json, schema-validation.json).
+   */
+  private async resolveSettingsFile(
+    specs?: string[] | string
+  ): Promise<string> {
+    const specFiles = Array.isArray(specs) ? specs : specs ? [specs] : [];
+
+    for (const specFile of specFiles) {
+      if (!specFile) {
+        continue;
+      }
+
+      const fileName = basename(specFile);
+      const candidates = [
+        fileName.replace(/\.spec\.ts$/, '.json'),
+        fileName.replace(/\.ts$/, '.json'),
+        fileName.replace(/\.spec\.js$/, '.json'),
+        fileName.replace(/\.js$/, '.json')
+      ];
+
+      const uniqueCandidates = [...new Set(candidates)];
+
+      for (const candidate of uniqueCandidates) {
+        const settingsPath = `./test/data/mock-settings/${candidate}`;
+
+        try {
+          await fs.access(settingsPath);
+
+          return settingsPath;
+        } catch (_error) {}
+      }
+    }
+
+    return './test/data/mock-settings/settings.json';
+  }
+
+  /**
    * Copy environments files and settings
    */
-  private async copyAllDataFiles() {
+  private async copyAllDataFiles(specs?: string[] | string) {
     // list all environment file including from old storage (for migration tests)
     const envFiles = await glob('./test/data/mock-envs/*.json');
+    const settingsFile = await this.resolveSettingsFile(specs);
 
     try {
       if (envFiles) {
@@ -36,10 +76,7 @@ class Bootstrap {
           await fs.copyFile(filePath, `./tmp/storage/${filename}`);
         }
       }
-      await fs.copyFile(
-        './test/data/mock-settings/settings.json',
-        './tmp/storage/settings.json'
-      );
+      await fs.copyFile(settingsFile, './tmp/storage/settings.json');
     } catch (_error) {}
   }
 }

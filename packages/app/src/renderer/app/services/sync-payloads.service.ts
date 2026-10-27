@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import {
   DownSyncActions,
   GetFullEnvironmentSyncAction,
@@ -10,8 +10,10 @@ import {
 } from '@mockoon/cloud';
 import { Environment, deterministicStringify } from '@mockoon/commons';
 import { from } from 'rxjs';
+import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import {
   ActionTypes,
   Actions,
@@ -36,6 +38,7 @@ import {
   updateCallbackAction,
   updateDatabucketAction,
   updateEnvironmentAction,
+  updateEnvironmentWorkspaceIdsAction,
   updateFolderAction,
   updateRouteAction,
   updateRouteResponseAction,
@@ -44,11 +47,13 @@ import {
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SyncPayloadsService {
   private store = inject(Store);
   private environmentsService = inject(EnvironmentsService);
   private mainApiService = inject(MainApiService);
+  private settingsService = inject(SettingsService);
+  private deployService = inject(DeployService);
 
   private recentActions: RecentActionsStore = {};
 
@@ -66,12 +71,16 @@ export class SyncPayloadsService {
           timestamp,
           environmentUuid: action.environmentUuid
         };
-      case ActionTypes.ADD_ENVIRONMENT:
+      case ActionTypes.ADD_ENVIRONMENT: {
         return {
           type: SyncActionTypes.ADD_CLOUD_ENVIRONMENT,
           timestamp,
-          environment: action.environment
+          environment: action.environment,
+          ...(action.workspaceId === undefined
+            ? {}
+            : { workspaceId: action.workspaceId })
         };
+      }
       case ActionTypes.UPDATE_ENVIRONMENT:
         return {
           type: SyncActionTypes.UPDATE_ENVIRONMENT,
@@ -85,7 +94,8 @@ export class SyncPayloadsService {
           timestamp,
           environmentUuid: action.environmentUuid,
           route: action.route,
-          parentId: action.parentId
+          parentId: action.parentId,
+          insertAfterUuid: action.insertAfterUuid
         };
       case ActionTypes.UPDATE_ROUTE:
         return {
@@ -115,7 +125,8 @@ export class SyncPayloadsService {
           timestamp,
           environmentUuid: action.environmentUuid,
           folder: action.folder,
-          parentId: action.parentId
+          parentId: action.parentId,
+          insertAfterUuid: action.insertAfterUuid
         };
       case ActionTypes.UPDATE_FOLDER:
         return {
@@ -337,6 +348,15 @@ export class SyncPayloadsService {
    */
   public applySyncAction(syncAction: DownSyncActions) {
     if (syncAction.type === SyncActionTypes.ADD_CLOUD_ENVIRONMENT) {
+      if (syncAction.workspaceId !== undefined) {
+        this.store.update(
+          updateEnvironmentWorkspaceIdsAction({
+            ...this.store.get('environmentWorkspaceIds'),
+            [syncAction.environment.uuid]: syncAction.workspaceId
+          })
+        );
+      }
+
       // if new environment, add it, otherwise replace it
       if (
         this.store
@@ -385,6 +405,11 @@ export class SyncPayloadsService {
             syncAction.environmentUuid
           );
         }
+
+        // for self-hosted version, refresh the running instances as a cloud deletion triggers the instance stop
+        if (this.settingsService.getIsSelfHosted()) {
+          this.deployService.getInstances(true).subscribe();
+        }
         break;
       case SyncActionTypes.UPDATE_ENVIRONMENT:
         reducerAction = updateEnvironmentAction(
@@ -403,7 +428,8 @@ export class SyncPayloadsService {
           syncAction.environmentUuid,
           syncAction.route,
           syncAction.parentId,
-          false
+          false,
+          syncAction.insertAfterUuid
         );
         break;
       case SyncActionTypes.UPDATE_ROUTE:
@@ -430,7 +456,8 @@ export class SyncPayloadsService {
           syncAction.environmentUuid,
           syncAction.folder,
           syncAction.parentId,
-          false
+          false,
+          syncAction.insertAfterUuid
         );
         break;
       case SyncActionTypes.UPDATE_FOLDER:

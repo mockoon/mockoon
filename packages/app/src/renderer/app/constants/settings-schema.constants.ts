@@ -11,6 +11,7 @@ import {
 
 export const SettingsDefault: Settings = {
   welcomeShown: false,
+  apiUrl: '',
   maxLogsPerEnvironment: Config.defaultMaxLogsPerEnvironment,
   truncateRouteName: true,
   mainMenuSize: Config.defaultMainMenuSize,
@@ -33,6 +34,7 @@ export const SettingsDefault: Settings = {
   },
   envVarsPrefix: defaultEnvironmentVariablesPrefix,
   activeEnvironmentUuid: null,
+  workspaceFilterId: null,
   enableRandomLatency: false,
   recentLocalEnvironments: [],
   displayLogsIsoTimestamp: false,
@@ -42,6 +44,7 @@ export const SettingsDefault: Settings = {
 
 export const SettingsSchema = Joi.object<Settings, true>({
   welcomeShown: Joi.boolean().failover(SettingsDefault.welcomeShown).required(),
+  apiUrl: Joi.string().allow('').failover(SettingsDefault.apiUrl).required(),
   maxLogsPerEnvironment: Joi.number()
     .min(1)
     .max(Config.maxLogsPerEnvironmentLimit)
@@ -133,6 +136,12 @@ export const SettingsSchema = Joi.object<Settings, true>({
     .uuid()
     .allow(null)
     .failover(SettingsDefault.activeEnvironmentUuid)
+    .required(),
+  workspaceFilterId: Joi.number()
+    .integer()
+    .positive()
+    .allow(null)
+    .failover(SettingsDefault.workspaceFilterId)
     .required(),
   enableRandomLatency: Joi.boolean()
     .failover(SettingsDefault.enableRandomLatency)

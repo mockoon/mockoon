@@ -16,12 +16,16 @@ const endpointCall: HttpCall = {
   }
 };
 const nics = os.networkInterfaces();
-const testedAddresses = [];
+const testedAddresses: string[] = [];
 
 for (const nicName in nics) {
-  if (nicName.toLowerCase().includes('ethernet')) {
-    for (const adapter of nics[nicName].filter((f) => f.family === 'IPv4')) {
-      testedAddresses.push(adapter.address);
+  if (Object.prototype.hasOwnProperty.call(nics, nicName)) {
+    const nic = nics[nicName];
+
+    if (nic && nicName.toLowerCase().includes('ethernet')) {
+      for (const adapter of nic.filter((f) => f.family === 'IPv4')) {
+        testedAddresses.push(adapter.address);
+      }
     }
   }
 }
@@ -67,8 +71,8 @@ describe('Environment hostname restriction', async () => {
       it(`shouldn't answer on ${address}`, async () => {
         try {
           await http.assertCallWithPortAndHostname(endpointCall, 3000, address);
-        } catch (error) {
-          await expect(error.message).toContain('ECONNREFUSED');
+        } catch (error: any) {
+          expect(error.message).toContain('ECONNREFUSED');
         }
       });
     });

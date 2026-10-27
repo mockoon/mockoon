@@ -1,13 +1,8 @@
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Output,
-  inject
-} from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
+  AbstractControl,
   FormsModule,
   ReactiveFormsModule,
   UntypedFormArray,
@@ -32,10 +27,10 @@ import {
   map,
   tap
 } from 'rxjs/operators';
+import { StableTrackBy } from 'src/renderer/app/classes/stable-track-by';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
-import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
+import { CheckboxComponent } from 'src/renderer/app/components/custom-form-elements/checkbox.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
-import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import {
   headerNames,
   headerValues
@@ -44,37 +39,39 @@ import { Texts } from 'src/renderer/app/constants/texts.constant';
 import { DraggableDirective } from 'src/renderer/app/directives/draggable.directive';
 import { DropzoneDirective } from 'src/renderer/app/directives/dropzone.directive';
 import {
+  CheckboxItem,
   DropdownItems,
-  ToggleItems
+  RadioItems
 } from 'src/renderer/app/models/common.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { moveItemToTargetIndex } from 'src/renderer/app/stores/reducer-utils';
 import { Store } from 'src/renderer/app/stores/store';
+import { RadioComponent } from '../custom-form-elements/radio.component';
+import { SelectComponent } from '../custom-form-elements/select.component';
 
 @Component({
   selector: 'app-route-response-rules',
   templateUrl: 'route-response-rules.component.html',
   styleUrls: ['./route-response-rules.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     FormsModule,
     ReactiveFormsModule,
-    ToggleComponent,
-    NgFor,
     DraggableDirective,
     DropzoneDirective,
-    CustomSelectComponent,
     NgbTypeahead,
     NgbTooltip,
     SvgComponent,
-    AsyncPipe
+    AsyncPipe,
+    CheckboxComponent,
+    RadioComponent,
+    SelectComponent
   ]
 })
 export class RouteResponseRulesComponent {
   private environmentsService = inject(EnvironmentsService);
   private formBuilder = inject(UntypedFormBuilder);
   private store = inject(Store);
+  public ruleTrackBy = new StableTrackBy<AbstractControl>();
   public activeRouteResponse$ = this.store.selectActiveRouteResponse();
   public activeRoute$ = this.store.selectActiveRoute();
   @Output()
@@ -129,7 +126,7 @@ export class RouteResponseRulesComponent {
     array_includes: 'Value',
     valid_json_schema: 'Databucket ID or name'
   };
-  public operatorDisablingForTargets = {
+  public disabledOperatorsPerTarget = {
     request_number: [
       'null',
       'empty_array',
@@ -142,7 +139,7 @@ export class RouteResponseRulesComponent {
     method: ['null', 'empty_array', 'array_includes', 'valid_json_schema'],
     templating: ['empty_array', 'array_includes']
   };
-  public rulesOperators: ToggleItems = [
+  public rulesOperators: RadioItems = [
     {
       value: 'OR',
       label: 'OR'
@@ -152,9 +149,10 @@ export class RouteResponseRulesComponent {
       label: 'AND'
     }
   ];
-  public rulesInvert: ToggleItems = [
-    { icon: 'priority_high', tooltip: 'Invert condition' }
-  ];
+  public rulesInvert: CheckboxItem = {
+    icon: 'priority_high',
+    tooltip: 'Invert condition'
+  };
   public deleteRuleRequested$ = new TimedBoolean();
   public texts = Texts;
   private searchers = new Map<
@@ -162,6 +160,18 @@ export class RouteResponseRulesComponent {
     (text$: Observable<string>) => Observable<readonly any[]>
   >();
   private listenToChanges = true;
+  public isActiveEnvironmentEditable$ = this.store
+    .selectIsActiveEnvironmentEditable()
+    .pipe(
+      tap((isEditable) => {
+        if (isEditable) {
+          this.form.enable({ emitEvent: false });
+          this.refreshDisabledFields();
+        } else {
+          this.form.disable({ emitEvent: false });
+        }
+      })
+    );
 
   public get rules() {
     return this.form.get('rules') as UntypedFormArray;
@@ -195,6 +205,31 @@ export class RouteResponseRulesComponent {
         takeUntilDestroyed()
       )
       .subscribe();
+  }
+
+  /**
+   * When the form is fully re-enabled, [attr.disabled] may be reset and
+   * the rules not applied anymore
+   *
+   * (Ideally, we will switch to signal forms where this is not an issue)
+   */
+  private refreshDisabledFields() {
+    this.rules.value.forEach((rule: ResponseRule, index: number) => {
+      const target = rule.target;
+      const operator = rule.operator;
+
+      if (['request_number', 'path', 'method'].includes(target)) {
+        this.rules.at(index).get('modifier').disable({ emitEvent: false });
+      } else {
+        this.rules.at(index).get('modifier').enable({ emitEvent: false });
+      }
+
+      if (['null', 'empty_array'].includes(operator)) {
+        this.rules.at(index).get('value').disable({ emitEvent: false });
+      } else {
+        this.rules.at(index).get('value').enable({ emitEvent: false });
+      }
+    });
   }
 
   /**
@@ -275,6 +310,9 @@ export class RouteResponseRulesComponent {
   private replaceRules(newRules: ResponseRule[], listenToChanges = true) {
     this.listenToChanges = listenToChanges;
 
+    // Preserve the current disabled state of the form
+    const isFormDisabled = this.form.disabled;
+
     this.rules.clear();
 
     newRules.forEach((rule) => {
@@ -284,6 +322,11 @@ export class RouteResponseRulesComponent {
         } as ResponseRule)
       );
     });
+
+    // Reapply the disabled state if necessary
+    if (isFormDisabled) {
+      this.form.disable({ emitEvent: false });
+    }
 
     this.listenToChanges = true;
   }

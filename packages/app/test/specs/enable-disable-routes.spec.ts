@@ -73,4 +73,39 @@ describe('Enable/disable routes', () => {
   it('should call reenabled route', async () => {
     await http.assertCallWithPort(getAnswerCall[0], 3000);
   });
+
+  describe('Batch toggle multiple routes', () => {
+    it('should multi-select routes and batch toggle them off', async () => {
+      await routes.ctrlSelect(1);
+      await routes.ctrlSelect(2);
+      await routes.ctrlSelect(3);
+      await routes.assertBatchSelectionCount(3);
+
+      await routes.batchToggle();
+
+      await $(
+        '.routes-menu .menu-list .nav-item:nth-child(1) .nav-link.route-disabled'
+      ).waitForExist();
+      await $(
+        '.routes-menu .menu-list .nav-item:nth-child(2) .nav-link.route-disabled'
+      ).waitForExist();
+      await $(
+        '.routes-menu .menu-list .nav-item:nth-child(3) .nav-link.route-disabled'
+      ).waitForExist();
+    });
+
+    it('should batch toggle the same routes back on', async () => {
+      await routes.batchToggle();
+
+      await $(
+        '.routes-menu .menu-list .nav-item:nth-child(1) .nav-link.route-disabled'
+      ).waitForExist({ reverse: true });
+      await $(
+        '.routes-menu .menu-list .nav-item:nth-child(2) .nav-link.route-disabled'
+      ).waitForExist({ reverse: true });
+      await $(
+        '.routes-menu .menu-list .nav-item:nth-child(3) .nav-link.route-disabled'
+      ).waitForExist({ reverse: true });
+    });
+  });
 });

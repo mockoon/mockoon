@@ -1,5 +1,5 @@
 import { BrowserWindow, Menu, shell } from 'electron';
-import * as windowState from 'electron-window-state';
+import windowState from 'electron-window-state';
 import { join as pathJoin } from 'path';
 import { argv } from 'process';
 import { parseProtocolArgs } from 'src/main/libs/custom-protocol';
@@ -13,7 +13,7 @@ declare const IS_DEV: boolean;
 let openUrlArgs: string[];
 let mainWindow: BrowserWindow;
 
-const showMainWindow = (mainWindowState: windowState.State) => {
+const showMainWindow = (mainWindowState: ReturnType<typeof windowState>) => {
   mainWindowState.manage(mainWindow);
   // ensure focus, as manage function does not necessarily focus
   mainWindow.show();

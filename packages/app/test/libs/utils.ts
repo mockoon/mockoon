@@ -1,7 +1,8 @@
+import { Key } from 'webdriverio';
 import { ToastTypes } from '../../src/renderer/app/models/toasts.model';
 import { SharedConfig } from '../../src/shared/shared-config';
 
-const Config = SharedConfig({ apiURL: '', websiteURL: '' });
+const Config = SharedConfig({ defaultApiUrl: '', websiteUrl: '' });
 
 export enum DropdownMenuEnvironmentActions {
   DUPLICATE_TO_CLOUD = 1,
@@ -61,7 +62,7 @@ class Utils {
 
   public async setElementValue(
     element: ReturnType<WebdriverIO.Browser['$']>,
-    value: string
+    value: string | number
   ): Promise<void> {
     // ensure we unfocus previously selected fields (on Linux, using setValue, previous fields with typeaheads may still show the menu and not be immediately unfocused)
     await element.click();
@@ -111,7 +112,7 @@ class Utils {
   ) {
     await this.assertElementText(
       $(
-        `app-custom-select[formcontrolname="${targetControlName}"] .dropdown-toggle-label`
+        `app-select[formcontrolname="${targetControlName}"] .dropdown-toggle-label`
       ),
       expected
     );
@@ -300,6 +301,12 @@ class Utils {
     await $('.toast:last-of-type').click();
   }
 
+  public async clickToastAction() {
+    const actionBtn = $('.toast:last-of-type button');
+    await actionBtn.waitForExist();
+    await actionBtn.click();
+  }
+
   public makeString(length: number): string {
     let result = '';
     const characters =
@@ -318,6 +325,22 @@ class Utils {
 
   public async clickOutside() {
     await $('body').click({ x: 0, y: 0 });
+  }
+
+  /**
+   * Ctrl/Cmd-click an element to add/remove it from a multi-selection.
+   * WebdriverIO maps Key.Ctrl to the platform-specific modifier key.
+   */
+  public async ctrlSelect(
+    element: ReturnType<WebdriverIO.Browser['$']>
+  ): Promise<void> {
+    await browser.action('key').down(Key.Ctrl).perform(true);
+
+    try {
+      await element.click();
+    } finally {
+      await browser.action('key').up(Key.Ctrl).perform();
+    }
   }
 }
 

@@ -35,7 +35,7 @@ import { NgbTypeaheadConfigFactory } from 'src/renderer/app/modules-config/ngb-t
 import { NgbConfigFactory } from 'src/renderer/app/modules-config/ngb.config';
 import { GlobalErrorHandler } from 'src/renderer/app/services/global-error-handler';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
-import { Config } from 'src/renderer/config';
+import { Config, setCallbackApiUrl } from 'src/renderer/config';
 import { environment } from 'src/renderer/environments/environment';
 
 declare global {
@@ -46,6 +46,10 @@ declare global {
 
 if (environment.production) {
   enableProdMode();
+}
+
+if (environment.web) {
+  setCallbackApiUrl(new URL(window.location.href).searchParams.get('apiUrl'));
 }
 
 const firebaseApp = initializeApp(Config.firebaseConfig);

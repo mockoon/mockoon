@@ -85,6 +85,14 @@ export class InputNumberDirective implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
+  public setDisabledState(isDisabled: boolean): void {
+    this.renderer.setProperty(
+      this.elementRef.nativeElement,
+      'disabled',
+      isDisabled
+    );
+  }
+
   /**
    * Sanitize the number entry:
    * - remove leading zeros and any other character.

@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { Subject } from 'rxjs';
 import { DragState } from 'src/renderer/app/models/ui.model';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class DragService {
   public dragStopped$ = new Subject<void>();
   public dropzone$ = new Subject<string | number>();

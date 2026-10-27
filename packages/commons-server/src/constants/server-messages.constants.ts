@@ -16,6 +16,7 @@ export const ServerMessages = {
   HEADER_PARSING_ERROR_LIGHT:
     '-- Header parsing error, see logs for more details --',
   SERVER_STARTED: 'Server started on port %d',
+  ADMIN_API_AUTH_AUTO_GENERATED_TOKEN: 'Admin API token (auto-generated): %s',
   SERVER_STOPPED: 'Server stopped',
   CALLBACK_FILE_ERROR: 'Error while attaching file to callback request: %s',
   CALLBACK_ERROR: 'Error while executing callback: %s',

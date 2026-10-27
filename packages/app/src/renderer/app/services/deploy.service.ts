@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { DeployInstance, Plans } from '@mockoon/cloud';
 import {
   EMPTY,
@@ -13,6 +13,7 @@ import {
   switchMap,
   tap
 } from 'rxjs';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import {
   addDeployInstanceAction,
@@ -25,9 +26,10 @@ import {
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class DeployService {
   private userService = inject(UserService);
+  private settingsService = inject(SettingsService);
   private store = inject(Store);
   private httpClient = inject(HttpClient);
 
@@ -66,18 +68,16 @@ export class DeployService {
         filter((user) => !!user),
         first()
       ),
-      this.userService.getIdToken().pipe(filter((token) => !!token))
+      this.settingsService.selectApiUrl(),
+      this.userService.getToken().pipe(filter((token) => !!token))
     ]).pipe(
-      switchMap(([user, token]) => {
+      switchMap(([user, apiUrl, token]) => {
         if (user?.plan !== Plans.FREE) {
-          return this.httpClient.get<DeployInstance[]>(
-            `${Config.apiURL}deployments`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`
-              }
+          return this.httpClient.get<DeployInstance[]>(`${apiUrl}deployments`, {
+            headers: {
+              Authorization: `Bearer ${token}`
             }
-          );
+          });
         }
 
         return of([]);
@@ -99,7 +99,7 @@ export class DeployService {
     environmentUuid?: string
   ) {
     return forkJoin([
-      this.userService.getIdToken().pipe(filter((token) => !!token)),
+      this.userService.getToken().pipe(filter((token) => !!token)),
       this.store.selectRemoteConfig('deployUrl').pipe(
         filter((deployUrl) => !!deployUrl),
         first()
@@ -143,7 +143,7 @@ export class DeployService {
     const instances = this.store.get('deployInstances');
 
     return forkJoin([
-      this.userService.getIdToken().pipe(filter((token) => !!token)),
+      this.userService.getToken().pipe(filter((token) => !!token)),
       this.store.selectRemoteConfig('deployUrl').pipe(
         filter((deployUrl) => !!deployUrl),
         first()
@@ -238,7 +238,7 @@ export class DeployService {
    */
   public stop(environmentUuid: string) {
     return forkJoin([
-      this.userService.getIdToken().pipe(filter((token) => !!token)),
+      this.userService.getToken().pipe(filter((token) => !!token)),
       this.store.selectRemoteConfig('deployUrl').pipe(
         filter((deployUrl) => !!deployUrl),
         first()

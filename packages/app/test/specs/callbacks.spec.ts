@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import callbacks from '../libs/callbacks';
-import dialogs from '../libs/dialogs';
+import { mockSaveDialog } from '../libs/electron-mocks';
 import environments from '../libs/environments';
 import environmentsLogs from '../libs/environments-logs';
 import environmentsSettings from '../libs/environments-settings';
@@ -8,6 +8,7 @@ import file from '../libs/file';
 import headersUtils from '../libs/headers-utils';
 import http from '../libs/http';
 import modals from '../libs/modals';
+import { HttpCall } from '../libs/models';
 import navigation from '../libs/navigation';
 import routes from '../libs/routes';
 import settings from '../libs/settings';
@@ -19,7 +20,7 @@ describe('Callbacks navigation and deletion', () => {
   it('should open the environment', async () => {
     await environments.open('callbacks');
     await settings.open();
-    await settings.setSettingValue('settings-faker-seed', '1');
+    await settings.setSettingValue('settings-faker-seed', 1);
     await modals.close();
   });
 
@@ -194,7 +195,7 @@ describe('Callback duplication to another environment', () => {
 
     const modalText = await $('.modal-content .modal-title small').getText();
 
-    expect(modalText).toContain('Callback PUT');
+    expect(modalText).toContain('Copy 1 callback to:');
 
     await modals.assertDuplicationModalEnvName('Basic data');
     await modals.assertDuplicationModalEnvHostname('localhost:3000/');
@@ -268,7 +269,7 @@ describe('Callback filter', () => {
 
   it('should reset callbacks filter when switching env', async () => {
     await callbacks.setFilter('Second');
-    await dialogs.save(resolve('./tmp/storage/dup-callbacks.json'));
+    await mockSaveDialog(resolve('./tmp/storage/dup-callbacks.json'));
     await environments.duplicate(1);
     await navigation.switchView('ENV_CALLBACKS');
     await callbacks.assertFilter('');
@@ -489,8 +490,6 @@ describe('Callback usages', () => {
       await environments.close(1);
       await environments.close(1);
       await environments.close(1);
-      await utils.waitForAutosave();
-      await browser.reloadSession();
 
       await environments.open('callbacks');
       await environments.open('basic-data');
@@ -526,7 +525,10 @@ describe('Callback usages', () => {
       await environments.select(2);
       await navigation.switchView('ENV_LOGS');
 
-      await http.assertCallWithPort({ method: 'GET', path: '/inline' }, 3000);
+      await http.assertCallWithPort(
+        { method: 'GET', path: '/inline' } as HttpCall,
+        3000
+      );
       await browser.pause(1000);
       await environmentsLogs.assertCount(1);
       await environmentsLogs.assertLogItem(
@@ -560,7 +562,10 @@ describe('Callback usages', () => {
       await environments.start();
       await navigation.switchView('ENV_LOGS');
 
-      await http.assertCallWithPort({ method: 'GET', path: '/inline' }, 3000);
+      await http.assertCallWithPort(
+        { method: 'GET', path: '/inline' } as HttpCall,
+        3000
+      );
       await browser.pause(1000);
       await environmentsLogs.assertCount(3);
       await environmentsLogs.select(1);
@@ -576,6 +581,41 @@ describe('Callback usages', () => {
         4,
         8
       );
+    });
+  });
+
+  describe('Callbacks toolbar batch actions', () => {
+    it('should require a second click to confirm batch delete', async () => {
+      await navigation.switchView('ENV_CALLBACKS');
+
+      let count = (await browser.execute(
+        () =>
+          document.querySelectorAll(
+            '.callbacks-menu .menu-list .nav-item:not(.d-none)'
+          ).length
+      )) as number;
+      while (count < 2) {
+        await callbacks.add();
+        count += 1;
+      }
+
+      await utils.ctrlSelect(
+        $('.callbacks-menu .menu-list .nav-item:nth-child(1) .nav-link')
+      );
+      await utils.ctrlSelect(
+        $('.callbacks-menu .menu-list .nav-item:nth-child(2) .nav-link')
+      );
+
+      await utils.assertElementText(
+        $('.callbacks-menu .toolbar span'),
+        '2 selected'
+      );
+
+      await $('#callbacks-batch-delete').click();
+      await callbacks.assertCount(count);
+
+      await $('#callbacks-batch-delete').click();
+      await callbacks.assertCount(count - 2);
     });
   });
 });

@@ -1,9 +1,9 @@
-Thank you to all the supporters who donated over time, and all the ones who wanted to remain anonymous!
+  Thank you to all the supporters who donated over time, and all the ones who wanted to remain anonymous!
 
 You can join them by visiting our Sponsor page on [GitHub Sponsors](https://github.com/sponsors/mockoon)
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
-<a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsor-btn.png?" width="250" alt="sponsor button" /></a>
+<a href="https://github.com/sponsors/mockoon"><img src="https://mockoon.com/images/sponsors-btn.png" width="250" alt="sponsor button" /></a>
 </div>
 
 # Our sponsors
@@ -39,8 +39,13 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 ### Gold
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
- 
-  <a href="https://www.testmuai.com/?utm_medium=sponsor&utm_source=mockoon">
+  <a href="https://coderabbit.link/mockoon">
+      <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/coderabbit.png">
+      <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/coderabbit.png">
+      <img src="https://mockoon.com/images/sponsors/light/coderabbit.png" alt="CodeRabbit logo" />
+      </picture>
+  </a><br/><br/><a href="https://www.testmuai.com/?utm_medium=sponsor&utm_source=mockoon">
       <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://mockoon.com/images/sponsors/light/testmuai.png">
       <source media="(prefers-color-scheme: light)" srcset="https://mockoon.com/images/sponsors/testmuai.png">
@@ -61,6 +66,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 
 - 0xhexmeow
 - [0xhybrid](https://github.com/0xhybrid)
+- [9proxy](https://9proxy.com/?utm_source=Github&utm_campaign=mockoon)
 - Adam Recvlohe
 - Adialix
 - [affiliate.fm](https://affiliate.fm/)
@@ -68,11 +74,12 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Andrey Kozlov
 - [Anthony Critelli](https://github.com/acritelli)
 - [Appwrite](https://appwrite.io/)
-- Asopian
+- [Asopian](https://github.com/asopian)
 - Валентин Радчук
 - Barefootdeveloper
 - Buckley Robinson
 - Burak Sinan Karabulut
+- [CodeRabbit](https://coderabbit.link/mockoon)
 - Colin White
 - Cyhung
 - Dwi Satria
@@ -85,6 +92,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - [fl0rian-p](https://github.com/fl0rian-p)
 - François Grémont
 - [GitHub](https://github.blog/2023-04-12-github-accelerator-our-first-cohort-and-whats-next/)
+- [GitHub Secure Open-Source Fund](https://github.com/GitHub-SecureOSS-Fund)
 - Jakub Bartkowiak
 - Jakub Ślusarski
 - Jeremy
@@ -92,6 +100,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - John
 - [John Michael Luy](https://github.com/jmluy)
 - Jonatan Gonzalez
+- [jpidelatorre](https://github.com/jpidelatorre)
 - Kelly Farris
 - [TestMu AI](https://www.testmuai.com/?utm_medium=sponsor&utm_source=mockoon)
 - [Localazy](https://localazy.com/register?ref=a9CiDC61gOac-azO)
@@ -109,6 +118,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - [Peak Crypto](https://www.peakcrypto.com/)
 - Pedro
 - Rafael Braga Nanes
+- [RapidProxy](https://www.rapidproxy.io/?ref=mockoon)
 - Riaz
 - [Rosario Raulin](https://github.com/rosario-raulin)
 - Roybarberuk
@@ -116,6 +126,7 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Samer Samer
 - Samja666
 - Sander
+- [Santosh Yadav](https://github.com/santoshyadavdev)
 - [ScottMariano](https://github.com/ScottMariano)
 - Sebastián Díaz
 - Serj
@@ -124,10 +135,13 @@ You can join them by visiting our Sponsor page on [GitHub Sponsors](https://gith
 - Silicon Jungles
 - Steve Seidenthal
 - Steven Pollock
+- [TalorData](https://talordata.com/?campaignid=rGAerPX1XrVAODD0&utm_source=mockoon&utm_term=mockoon)
+- [SwiftProxy](https://www.swiftproxy.net/?ref=mockoon)
 - Thilo
 - Vetle Økland
 - Victor Castro
 - Volker Richert
+- [Will (wwestrop)](https://github.com/wwestrop)
 - Xutzin
 - Yuemuc
 

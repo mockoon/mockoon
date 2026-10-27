@@ -1,10 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject
-} from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, EMPTY, Observable, catchError, map, tap } from 'rxjs';
 import {
@@ -18,6 +13,7 @@ import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
@@ -28,7 +24,6 @@ type dropdownMenuPayload = { environmentUuid: string };
 @Component({
   selector: 'app-manage-instances-modal',
   templateUrl: './manage-instances-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     HideAfterDirective,
     SvgComponent,
@@ -46,6 +41,7 @@ export class ManageInstancesModalComponent implements OnInit {
   private mainApiService = inject(MainApiService);
   private loggerService = inject(LoggerService);
   private userService = inject(UserService);
+  private settingsService = inject(SettingsService);
 
   public payload$ = this.uiService.getModalPayload$('manageInstances');
   public taskInProgress$ = new BehaviorSubject<boolean>(false);
@@ -63,7 +59,6 @@ export class ManageInstancesModalComponent implements OnInit {
     );
   public environmentList$: Observable<Record<string, true>>;
   public user$ = this.store.select('user');
-  public accountUrl = Config.accountUrl;
   public isCloudEnabled$ = this.user$.pipe(
     map((user) => user && user.plan !== 'FREE')
   );
@@ -85,7 +80,8 @@ export class ManageInstancesModalComponent implements OnInit {
           }))
       )
     );
-  public cloudPlansURL = Config.cloudPlansURL;
+  public isSelfHosted$ = this.settingsService.selectIsSelfHosted();
+  public proPlansURL = Config.proPlansURL;
   public instancesDropdownMenuItems: DropdownMenuItem[] = [
     {
       label: 'Manage deployment',

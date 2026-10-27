@@ -1,4 +1,9 @@
-import { DeployInstance, RemoteConfigData, User } from '@mockoon/cloud';
+import {
+  DeployInstance,
+  RemoteConfigData,
+  User,
+  Workspace
+} from '@mockoon/cloud';
 import {
   Callback,
   DataBucket,
@@ -37,6 +42,8 @@ export const enum ActionTypes {
   UPDATE_USER = 'UPDATE_USER',
   UPDATE_SYNC = 'UPDATE_SYNC',
   UPDATE_DEPLOY_INSTANCES = 'UPDATE_DEPLOY_INSTANCES',
+  UPDATE_WORKSPACES = 'UPDATE_WORKSPACES',
+  UPDATE_ENVIRONMENT_WORKSPACE_IDS = 'UPDATE_ENVIRONMENT_WORKSPACE_IDS',
   ADD_DEPLOY_INSTANCE = 'ADD_DEPLOY_INSTANCE',
   REMOVE_DEPLOY_INSTANCE = 'REMOVE_DEPLOY_INSTANCE',
   UPDATE_DEPLOY_INSTANCE = 'UPDATE_DEPLOY_INSTANCE',
@@ -88,9 +95,6 @@ export const enum ActionTypes {
   UPDATE_UI_STATE = 'UPDATE_UI_STATE',
   START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
   CANCEL_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT = 'CANCEL_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT',
-  DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT',
-  DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT',
-  DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT = 'DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT',
   FULL_REORDER_ENTITIES = 'FULL_REORDER_ENTITIES',
   UPDATE_PROCESSED_DATABUCKETS = 'UPDATE_PROCESSED_DATABUCKETS',
   UPDATE_FEEDBACK = 'UPDATE_FEEDBACK',
@@ -141,6 +145,20 @@ export const updateDeployInstancesAction = (instances: DeployInstance[]) =>
   ({
     type: ActionTypes.UPDATE_DEPLOY_INSTANCES,
     instances
+  }) as const;
+
+export const updateWorkspacesAction = (workspaces: Workspace[]) =>
+  ({
+    type: ActionTypes.UPDATE_WORKSPACES,
+    workspaces
+  }) as const;
+
+export const updateEnvironmentWorkspaceIdsAction = (
+  environmentWorkspaceIds: Record<string, number>
+) =>
+  ({
+    type: ActionTypes.UPDATE_ENVIRONMENT_WORKSPACE_IDS,
+    environmentWorkspaceIds
   }) as const;
 
 /**
@@ -382,6 +400,7 @@ export const reorderCallbacksAction = (
  * @param options.setActive - if provided, set the new environment as active
  * @param options.cloud - indicates if the environment is added to the cloud
  * @param options.hash - hash of the environment file, if cloud is true
+ * @param options.workspaceId - workspace receiving the cloud environment
  */
 export const addEnvironmentAction = (
   environment: Environment,
@@ -391,6 +410,7 @@ export const addEnvironmentAction = (
     setActive?: boolean;
     cloud?: boolean;
     hash?: string;
+    workspaceId?: number;
   }
 ) =>
   ({
@@ -501,19 +521,22 @@ export const setActiveRouteAction = (routeUUID: string) =>
  * @param folder - folder to add
  * @param parentId - target parent (root or folder) Id
  * @param uiReset - indicates if the filters must be reset after addition
+ * @param insertAfterUuid - UUID after which to insert, or null to insert first
  */
 export const addFolderAction = (
   environmentUuid: string,
   folder: Folder,
   parentId: string | 'root',
-  uiReset: boolean
+  uiReset: boolean,
+  insertAfterUuid?: string | null
 ) =>
   ({
     type: ActionTypes.ADD_FOLDER,
     environmentUuid,
     folder,
     parentId,
-    uiReset
+    uiReset,
+    insertAfterUuid
   }) as const;
 
 /**
@@ -558,19 +581,22 @@ export const updateFolderAction = (
  * @param route - route to add
  * @param parentId - target parent (root or folder) Id
  * @param uiReset - indicates if the route must be focused after addition and the UI reset (switch tabs)
+ * @param insertAfterUuid - UUID after which to insert, or null to insert first
  */
 export const addRouteAction = (
   environmentUuid: string,
   route: Route,
   parentId: string | 'root',
-  uiReset: boolean
+  uiReset: boolean,
+  insertAfterUuid?: string | null
 ) =>
   ({
     type: ActionTypes.ADD_ROUTE,
     route,
     parentId,
     uiReset,
-    environmentUuid
+    environmentUuid,
+    insertAfterUuid
   }) as const;
 
 /**
@@ -642,14 +668,14 @@ export const setActiveRouteResponseAction = (routeResponseUUID: string) =>
  * @param routeUuid - route UUID to which the route response is linked to
  * @param routeResponse - route response to add
  * @param uiReset - indicates if the route response must be focused after addition
- * @param insertAfterUuid - route response UUID after which the new route response must be inserted
+ * @param insertAfterUuid - UUID after which to insert, or null to insert first
  */
 export const addRouteResponseAction = (
   environmentUuid: string,
   routeUuid: string,
   routeResponse: RouteResponse,
   uiReset: boolean,
-  insertAfterUuid?: string
+  insertAfterUuid?: string | null
 ) =>
   ({
     type: ActionTypes.ADD_ROUTE_RESPONSE,
@@ -661,29 +687,16 @@ export const addRouteResponseAction = (
   }) as const;
 
 /**
- * Finalizes route movement to another environment
- */
-export const duplicateRouteToAnotherEnvironmentAction = (
-  route: Route,
-  targetEnvironmentUUID: string
-) =>
-  ({
-    type: ActionTypes.DUPLICATE_ROUTE_TO_ANOTHER_ENVIRONMENT,
-    route,
-    targetEnvironmentUUID
-  }) as const;
-
-/**
- * Triggers movement of an entity to another environment
+ * Triggers movement of one or more entities to another environment
  */
 export const startEntityDuplicationToAnotherEnvironmentAction = (
-  subjectUUID: string,
-  subject: DataSubject
+  subject: DataSubject,
+  subjectUuids: string[]
 ) =>
   ({
     type: ActionTypes.START_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT,
-    subjectUUID,
-    subject
+    subject,
+    subjectUuids
   }) as const;
 
 /**
@@ -692,32 +705,6 @@ export const startEntityDuplicationToAnotherEnvironmentAction = (
 export const cancelEntityDuplicationToAnotherEnvironmentAction = () =>
   ({
     type: ActionTypes.CANCEL_ENTITY_DUPLICATION_TO_ANOTHER_ENVIRONMENT
-  }) as const;
-
-/**
- * Finalizes databucket movement to another environment
- */
-export const duplicateDatabucketToAnotherEnvironmentAction = (
-  databucket: DataBucket,
-  targetEnvironmentUUID: string
-) =>
-  ({
-    type: ActionTypes.DUPLICATE_DATABUCKET_TO_ANOTHER_ENVIRONMENT,
-    databucket,
-    targetEnvironmentUUID
-  }) as const;
-
-/**
- * Finalizes databucket movement to another environment
- */
-export const duplicateCallbackToAnotherEnvironmentAction = (
-  callback: Callback,
-  targetEnvironmentUUID: string
-) =>
-  ({
-    type: ActionTypes.DUPLICATE_CALLBACK_TO_ANOTHER_ENVIRONMENT,
-    callback,
-    targetEnvironmentUUID
   }) as const;
 
 /**
@@ -769,14 +756,14 @@ export const setActiveCallbackAction = (callbackUUID: string) =>
  *
  * @param environmentUuid - environment UUID to which the databucket is linked to
  * @param databucket - databucket to add
- * @param insertAfterUuid - databucket UUID after which the new databucket must be inserted
  * @param uiReset - indicates if the databucket must be selected after addition
+ * @param insertAfterUuid - UUID after which to insert, or null to insert first
  */
 export const addDatabucketAction = (
   environmentUuid: string,
   databucket: DataBucket,
   uiReset: boolean,
-  insertAfterUuid?: string
+  insertAfterUuid?: string | null
 ) =>
   ({
     type: ActionTypes.ADD_DATABUCKET,
@@ -791,14 +778,14 @@ export const addDatabucketAction = (
  * @param environmentUuid - environment UUID to which the callback is linked to
  * @param callback - callback to add
  * @param uiReset - indicates if the callback must be selected after addition, filters reset
- * @param insertAfterUuid - callback UUID after which the new callback must be inserted
+ * @param insertAfterUuid - UUID after which to insert, or null to insert first
  * @returns
  */
 export const addCallbackAction = (
   environmentUuid: string,
   callback: Callback,
   uiReset: boolean,
-  insertAfterUuid?: string
+  insertAfterUuid?: string | null
 ) =>
   ({
     type: ActionTypes.ADD_CALLBACK,
@@ -1034,6 +1021,8 @@ export type Actions =
   | ReturnType<typeof updateUserAction>
   | ReturnType<typeof updateSyncAction>
   | ReturnType<typeof updateDeployInstancesAction>
+  | ReturnType<typeof updateWorkspacesAction>
+  | ReturnType<typeof updateEnvironmentWorkspaceIdsAction>
   | ReturnType<typeof addDeployInstanceAction>
   | ReturnType<typeof removeDeployInstanceAction>
   | ReturnType<typeof updateDeployInstanceAction>
@@ -1086,9 +1075,6 @@ export type Actions =
   | ReturnType<typeof updateSettingsEnvironmentDescriptorAction>
   | ReturnType<typeof startEntityDuplicationToAnotherEnvironmentAction>
   | ReturnType<typeof cancelEntityDuplicationToAnotherEnvironmentAction>
-  | ReturnType<typeof duplicateRouteToAnotherEnvironmentAction>
-  | ReturnType<typeof duplicateDatabucketToAnotherEnvironmentAction>
-  | ReturnType<typeof duplicateCallbackToAnotherEnvironmentAction>
   | ReturnType<typeof updateProcessedDatabucketsAction>
   | ReturnType<typeof updateFeedbackAction>
   | ReturnType<typeof updateRemoteConfigAction>

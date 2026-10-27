@@ -1,6 +1,5 @@
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
@@ -10,6 +9,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
+  AbstractControl,
   FormsModule,
   ReactiveFormsModule,
   UntypedFormArray,
@@ -26,6 +26,7 @@ import {
   map,
   tap
 } from 'rxjs/operators';
+import { StableTrackBy } from 'src/renderer/app/classes/stable-track-by';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import {
@@ -39,12 +40,9 @@ import { Store } from 'src/renderer/app/stores/store';
 @Component({
   selector: 'app-headers-list',
   templateUrl: 'headers-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     FormsModule,
     ReactiveFormsModule,
-    NgFor,
     NgbTypeahead,
     NgbTooltip,
     SvgComponent,
@@ -54,6 +52,7 @@ import { Store } from 'src/renderer/app/stores/store';
 export class HeadersListComponent implements OnInit {
   private formBuilder = inject(UntypedFormBuilder);
   private store = inject(Store);
+  public headerTrackBy = new StableTrackBy<AbstractControl>();
 
   @Input()
   public activeDataSubject$: Observable<RouteResponse | Environment | Callback>;
@@ -70,6 +69,17 @@ export class HeadersListComponent implements OnInit {
   @Output()
   public secondaryButtonClicked = new EventEmitter();
   public dataSubject$: Observable<RouteResponse | Environment | Callback>;
+  public isActiveEnvironmentEditable$ = this.store
+    .selectIsActiveEnvironmentEditable()
+    .pipe(
+      tap((isEditable) => {
+        if (isEditable) {
+          this.form.enable({ emitEvent: false });
+        } else {
+          this.form.disable({ emitEvent: false });
+        }
+      })
+    );
   public form: UntypedFormGroup;
   public headerNamesSearch = this.buildSearch(headerNames);
   public headerValuesSearch = this.buildSearch(headerValues);
@@ -156,11 +166,19 @@ export class HeadersListComponent implements OnInit {
   private replaceHeaders(newHeaders: Header[], listenToChanges = true) {
     this.listenToChanges = listenToChanges;
 
+    // Preserve the current disabled state of the form
+    const isFormDisabled = this.form.disabled;
+
     this.headers.clear();
 
     newHeaders.forEach((header) => {
       this.headers.push(this.formBuilder.group({ ...header }));
     });
+
+    // Reapply the disabled state if necessary
+    if (isFormDisabled) {
+      this.form.disable({ emitEvent: false });
+    }
 
     this.listenToChanges = true;
   }

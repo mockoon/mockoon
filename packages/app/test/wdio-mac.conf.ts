@@ -10,7 +10,7 @@ const config: WebdriverIO.Config = {
         appBinaryPath: join(
           process.cwd(),
           'packages',
-          'mac',
+          'mac-arm64',
           'Mockoon.app',
           'Contents',
           'MacOS',

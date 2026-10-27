@@ -1,15 +1,22 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostListener,
-  OnInit,
-  inject
-} from '@angular/core';
+import { Component, HostListener, OnInit, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Environment } from '@mockoon/commons';
 import { NgbToast } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, from, fromEvent, switchMap, tap } from 'rxjs';
+import {
+  Observable,
+  auditTime,
+  combineLatest,
+  delay,
+  distinctUntilChanged,
+  from,
+  fromEvent,
+  map,
+  of,
+  startWith,
+  switchMap,
+  tap
+} from 'rxjs';
 import { EnvironmentCallbacksComponent } from 'src/renderer/app/components/environment-callbacks/environment-callbacks.component';
 import { EnvironmentDatabucketsComponent } from 'src/renderer/app/components/environment-databuckets/environment-databuckets.component';
 import { EnvironmentHeadersComponent } from 'src/renderer/app/components/environment-headers/environment-headers.component';
@@ -20,7 +27,7 @@ import { EnvironmentSettingsComponent } from 'src/renderer/app/components/enviro
 import { FooterComponent } from 'src/renderer/app/components/footer/footer.component';
 import { HeaderComponent } from 'src/renderer/app/components/header/header.component';
 import { EnvironmentsMenuComponent } from 'src/renderer/app/components/menus/environments-menu/environments-menu.component';
-import { TourComponent } from 'src/renderer/app/components/tour/tour.component';
+import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { ViewsNameType } from 'src/renderer/app/models/store.model';
 import { Toast } from 'src/renderer/app/models/toasts.model';
 import { AppQuitService } from 'src/renderer/app/services/app-quit.services';
@@ -34,16 +41,16 @@ import { ServerService } from 'src/renderer/app/services/server.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { SyncService } from 'src/renderer/app/services/sync.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
-import { TourService } from 'src/renderer/app/services/tour.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
+import { WorkspaceService } from 'src/renderer/app/services/workspace.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { environment } from 'src/renderer/environments/environment';
+import { OfflineBannerComponent } from './components/offline-banner/offline-banner.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgbToast,
     EnvironmentsMenuComponent,
@@ -56,8 +63,9 @@ import { environment } from 'src/renderer/environments/environment';
     EnvironmentProxyComponent,
     EnvironmentSettingsComponent,
     FooterComponent,
-    TourComponent,
-    AsyncPipe
+    AsyncPipe,
+    OfflineBannerComponent,
+    SvgComponent
   ]
 })
 export class AppComponent implements OnInit {
@@ -70,15 +78,43 @@ export class AppComponent implements OnInit {
   private appQuitService = inject(AppQuitService);
   private userService = inject(UserService);
   private title = inject(Title);
-  private tourService = inject(TourService);
   private remoteConfigService = inject(RemoteConfigService);
   private syncService = inject(SyncService);
   private deployService = inject(DeployService);
+  private workspaceService = inject(WorkspaceService);
   private serverService = inject(ServerService);
   private mainApiService = inject(MainApiService);
   private loggerService = inject(LoggerService);
   public activeEnvironment$: Observable<Environment>;
   public activeView$: Observable<ViewsNameType>;
+  public displayOfflineBanner$ = combineLatest([
+    this.store.selectIsActiveEnvironmentEditable(),
+    this.store.select('sync').pipe(
+      map((sync) => sync?.lastDisconnectedAt),
+      distinctUntilChanged()
+    )
+  ]).pipe(
+    auditTime(0),
+    switchMap(([isEditable, lastDisconnectedAt]) => {
+      if (isEditable) {
+        return of(false);
+      }
+      if (lastDisconnectedAt === null) {
+        return of(true).pipe(delay(6000));
+      }
+
+      const elapsed = Date.now() - lastDisconnectedAt;
+
+      if (elapsed >= 6000) {
+        return of(true);
+      }
+
+      return of(true).pipe(delay(6000 - elapsed));
+    }),
+    // Hide the banner during the initial async pipe `null` state to avoid
+    // flashing it before the first real emission.
+    startWith(false)
+  );
   public scrollToBottom = this.uiService.scrollToBottom;
   public toasts$: Observable<Toast[]>;
   public os: string;
@@ -96,6 +132,7 @@ export class AppComponent implements OnInit {
 
       if (user.plan !== 'FREE' && user.plan !== 'SOLO') {
         this.deployService.getInstances().subscribe();
+        this.workspaceService.getWorkspaces().subscribe();
       }
     }
   }
@@ -109,16 +146,6 @@ export class AppComponent implements OnInit {
     ) {
       event.preventDefault();
       this.uiService.openModal('commandPalette');
-    }
-
-    if (this.tourService.isInProgress()) {
-      if (event.key === 'ArrowLeft') {
-        this.tourService.previous();
-      } else if (event.key === 'ArrowRight') {
-        this.tourService.next();
-      } else if (event.key === 'Escape') {
-        this.tourService.stop();
-      }
     }
   }
 
@@ -134,6 +161,7 @@ export class AppComponent implements OnInit {
     this.userService.init().subscribe();
     this.syncService.init().subscribe();
     this.deployService.init().subscribe();
+    this.workspaceService.init().subscribe();
     this.mainApiListenerService.init();
     this.serverService.init().subscribe();
 
@@ -176,5 +204,14 @@ export class AppComponent implements OnInit {
    */
   public removeToast(toastUUID: string) {
     this.toastService.removeToast(toastUUID);
+  }
+
+  /**
+   * Execute the toast action and remove the toast
+   */
+  public executeToastAction(event: MouseEvent, toast: Toast) {
+    event.stopPropagation();
+    toast.action?.action();
+    this.removeToast(toast.UUID);
   }
 }

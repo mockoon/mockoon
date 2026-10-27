@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import {
   EnvironmentsListPayload,
   getEnvironmentByteSize
@@ -37,7 +37,10 @@ import {
   RouteSchema,
   RouteType,
   deterministicStringify,
-  generateUUID
+  escapeHtml,
+  generateUUID,
+  getInsertAfterUuid,
+  getRouteOrFolderInsertPosition
 } from '@mockoon/commons';
 import {
   BehaviorSubject,
@@ -87,12 +90,15 @@ import {
   ViewsNameType
 } from 'src/renderer/app/models/store.model';
 import { DataService } from 'src/renderer/app/services/data.service';
+import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { ServerService } from 'src/renderer/app/services/server.service';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { StorageService } from 'src/renderer/app/services/storage.service';
+import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import {
   Actions,
@@ -103,9 +109,6 @@ import {
   addRouteAction,
   addRouteResponseAction,
   convertEnvironmentToLocalAction,
-  duplicateCallbackToAnotherEnvironmentAction,
-  duplicateDatabucketToAnotherEnvironmentAction,
-  duplicateRouteToAnotherEnvironmentAction,
   logRequestAction,
   navigateEnvironmentsAction,
   refreshEnvironmentAction,
@@ -146,9 +149,7 @@ import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { EnvironmentDescriptor } from 'src/shared/models/settings.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class EnvironmentsService {
   private dataService = inject(DataService);
   private eventsService = inject(EventsService);
@@ -160,6 +161,9 @@ export class EnvironmentsService {
   private http = inject(HttpClient);
   private mainApiService = inject(MainApiService);
   private loggerService = inject(LoggerService);
+  private deployService = inject(DeployService);
+  private toastsService = inject(ToastsService);
+  private settingsService = inject(SettingsService);
 
   private environmentChangesNotified = false;
   private environmentChanges$ = new BehaviorSubject<
@@ -506,6 +510,7 @@ export class EnvironmentsService {
     options?: {
       environment?: Environment;
       insertAfterIndex?: number;
+      filePath?: string;
       promptSave?: boolean;
       cloud?: boolean;
       setActive?: boolean;
@@ -516,6 +521,7 @@ export class EnvironmentsService {
       ...{
         environment: null,
         insertAfterIndex: null,
+        filePath: null,
         promptSave: true,
         cloud: false,
         setActive: false
@@ -525,7 +531,9 @@ export class EnvironmentsService {
 
     let filePath$: Observable<string>;
 
-    if (options.promptSave) {
+    if (options.filePath) {
+      filePath$ = of(options.filePath);
+    } else if (options.promptSave) {
       filePath$ = this.dialogsService.showSaveDialog(
         'Save your new environment'
       );
@@ -592,13 +600,20 @@ export class EnvironmentsService {
         );
       }),
       tap(({ newEnvironment, filePath, hash }) => {
+        const workspaceId =
+          options.cloud && storeUpdateOptions.emit
+            ? (this.store.get('settings').workspaceFilterId ??
+              this.store.get('workspaces')[0]?.id)
+            : undefined;
+
         this.store.update(
           addEnvironmentAction(newEnvironment, {
             filePath,
             insertAfterIndex: options.insertAfterIndex,
             cloud: options.cloud,
             setActive: options.setActive,
-            hash
+            hash,
+            workspaceId
           }),
           storeUpdateOptions.force,
           storeUpdateOptions.emit
@@ -616,6 +631,10 @@ export class EnvironmentsService {
    * Add and save a new environment from the clipboard
    */
   public newEnvironmentFromClipboard(cloud: boolean): Observable<any> {
+    if (cloud && !this.settingsService.canCreateCloudEnvironment()) {
+      return EMPTY;
+    }
+
     return from(this.mainApiService.invoke('APP_READ_CLIPBOARD')).pipe(
       map((data: string) => JSON.parse(data)),
       switchMap((environment: Environment) => this.verifyData(environment)),
@@ -652,27 +671,44 @@ export class EnvironmentsService {
    */
   public newEnvironmentFromURL(url: string) {
     if (url) {
-      this.loggerService.logMessage('info', 'NEW_ENVIRONMENT_FROM_URL', {
-        url
-      });
+      return this.dialogsService
+        .showSaveDialog('Save your new environment')
+        .pipe(
+          filter((filePath) => !!filePath),
+          switchMap((filePath) => {
+            this.loggerService.logMessage('info', 'NEW_ENVIRONMENT_FROM_URL', {
+              url
+            });
 
-      return this.http.get(url, { responseType: 'text' }).pipe(
-        map<string, Environment>((data) => JSON.parse(data)),
-        switchMap((environment: Environment) => this.verifyData(environment)),
-        switchMap((environment: Environment) => {
-          const migratedEnvironment =
-            this.dataService.migrateAndValidateEnvironment(environment);
+            return this.http.get(url, { responseType: 'text' }).pipe(
+              map<string, Environment>((data) => JSON.parse(data)),
+              switchMap((environment: Environment) =>
+                this.verifyData(environment)
+              ),
+              switchMap((environment: Environment) => {
+                const migratedEnvironment =
+                  this.dataService.migrateAndValidateEnvironment(environment);
 
-          return this.addEnvironment({ environment: migratedEnvironment });
-        }),
-        catchError((error) => {
-          this.loggerService.logMessage('error', 'NEW_ENVIRONMENT_URL_ERROR', {
-            error
-          });
+                return this.addEnvironment({
+                  environment: migratedEnvironment,
+                  filePath,
+                  promptSave: false
+                });
+              })
+            );
+          }),
+          catchError((error) => {
+            this.loggerService.logMessage(
+              'error',
+              'NEW_ENVIRONMENT_URL_ERROR',
+              {
+                error
+              }
+            );
 
-          return EMPTY;
-        })
-      );
+            return EMPTY;
+          })
+        );
     }
 
     return EMPTY;
@@ -861,6 +897,10 @@ export class EnvironmentsService {
   ) {
     const user = this.store.get('user');
 
+    if (!this.settingsService.canCreateCloudEnvironment()) {
+      return EMPTY;
+    }
+
     if (this.isQuotaReached()) {
       this.loggerService.logMessage('error', 'CLOUD_SYNC_QUOTA_EXCEEDED', {
         quota: user.cloudSyncItemsQuota
@@ -884,7 +924,7 @@ export class EnvironmentsService {
           hasDefaultRoute: true
         }),
         // provide a name or the filename (UUID) will be used
-        name: 'New cloud environment'
+        name: 'New remote environment'
       };
     }
 
@@ -905,6 +945,11 @@ export class EnvironmentsService {
    */
   public addCloudEnvironmentFromLocalFile() {
     const user = this.store.get('user');
+
+    if (!this.settingsService.canCreateCloudEnvironment()) {
+      return EMPTY;
+    }
+
     const cloudEnvironments = this.store
       .get('settings')
       .environments.filter(
@@ -965,7 +1010,7 @@ export class EnvironmentsService {
     let newEnvironment: Environment = {
       ...CloneObject(environmentToDuplicate),
       name: `${environmentToDuplicate.name} ${
-        environmentIsCloud ? '(copy)' : '(cloud copy)'
+        environmentIsCloud ? '(copy)' : '(remote copy)'
       }`
     };
 
@@ -993,7 +1038,7 @@ export class EnvironmentsService {
     return this.uiService
       .showConfirmDialog({
         title: 'Convert to local environment',
-        text: 'This will delete the environment from the cloud and convert it to a local environment on all other clients. Are you sure?',
+        text: 'This will delete the environment from remote and convert it to a local environment on all other clients. Are you sure?',
         confirmButtonText: 'Convert',
         cancelButtonText: 'Cancel'
       })
@@ -1001,6 +1046,8 @@ export class EnvironmentsService {
         tap((confirmed) => {
           if (confirmed) {
             this.store.update(convertEnvironmentToLocalAction(environmentUuid));
+
+            this.deployService.getInstances(true).subscribe();
           }
         })
       );
@@ -1021,10 +1068,10 @@ export class EnvironmentsService {
 
     return this.uiService
       .showConfirmDialog({
-        title: this.isWeb ? 'Delete' : 'Delete from the cloud',
+        title: this.isWeb ? 'Delete' : 'Delete from remote',
         text: this.isWeb
           ? 'This will permanently delete the environment. Are you sure? This action cannot be undone.'
-          : 'This will permanently delete the environment from the cloud and convert it to a local environment on all other clients. Are you sure?',
+          : 'This will permanently delete the environment from remote and convert it to a local environment on all other clients. Are you sure?',
         sub: this.isWeb
           ? 'Any running instance of this environment will continue to run until stopped.<br/>You can export the environment setup to a file before deleting it (see export option in the command palette).'
           : `<span class="text-break-all">Your local copy located in <strong>${environmentDescriptor.path}</strong> will not be deleted.</span>`,
@@ -1035,7 +1082,9 @@ export class EnvironmentsService {
       .pipe(
         switchMap((confirmed) => {
           if (confirmed) {
-            // in web version, completely delete the environment an do not convert to local
+            this.deployService.getInstances(true).subscribe();
+
+            // in web version, completely delete the environment and do not convert to local
             if (this.isWeb) {
               this.store.update(removeEnvironmentAction(environmentUuid));
               this.mainApiService.invoke(
@@ -1086,9 +1135,10 @@ export class EnvironmentsService {
       );
 
       if (this.isWeb) {
-        // permanently delete from the web app
         this.store.update(
-          removeEnvironmentAction(deletedCloudEnvironment.uuid)
+          removeEnvironmentAction(deletedCloudEnvironment.uuid),
+          true,
+          false
         );
 
         this.mainApiService.invoke(
@@ -1294,13 +1344,53 @@ export class EnvironmentsService {
   }
 
   /**
-   * Remove a folder and save.
-   * Move all children to the parent container (root or folder) one by one
+   * Remove a folder and save
    */
   public removeFolder(folderUuid: string) {
-    if (folderUuid) {
-      this.store.update(
-        removeFolderAction(this.store.getActiveEnvironment().uuid, folderUuid)
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const folder = activeEnvironment?.folders.find(
+      (entry) => entry.uuid === folderUuid
+    );
+
+    if (folderUuid && activeEnvironment && folder) {
+      const { parentId, insertAfterUuid } = getRouteOrFolderInsertPosition(
+        activeEnvironment,
+        folderUuid
+      );
+
+      this.store.update(removeFolderAction(activeEnvironment.uuid, folderUuid));
+
+      this.toastsService.addToast(
+        'warning',
+        `Folder "<strong>${escapeHtml(folder.name)}</strong>" deleted`,
+        {
+          label: 'Undo',
+          action: () => {
+            const currentEnvironment = this.store
+              .get('environments')
+              .find((env) => env.uuid === activeEnvironment.uuid);
+
+            if (!currentEnvironment) {
+              return;
+            }
+
+            const targetParentId =
+              parentId !== 'root' &&
+              !currentEnvironment.folders.some((f) => f.uuid === parentId)
+                ? 'root'
+                : parentId;
+
+            this.store.update(
+              addFolderAction(
+                activeEnvironment.uuid,
+                folder,
+                targetParentId,
+                false,
+                insertAfterUuid
+              )
+            );
+          }
+        }
       );
     }
   }
@@ -1330,8 +1420,6 @@ export class EnvironmentsService {
   /**
    * Add a new WS route and save it in the store
    *
-   * ⚠️ WS are currently disabled for cloud environments
-   *
    * @param folderId
    * @param options
    */
@@ -1346,9 +1434,8 @@ export class EnvironmentsService {
     }
   ) {
     const activeEnvironment = this.store.getActiveEnvironment();
-    const isActiveEnvCloud = this.store.getIsActiveEnvCloud();
 
-    if (activeEnvironment && !isActiveEnvCloud) {
+    if (activeEnvironment) {
       this.store.update(
         addRouteAction(
           activeEnvironment.uuid,
@@ -1583,20 +1670,17 @@ export class EnvironmentsService {
    * Duplicate a route to another environment
    */
   public duplicateRouteInAnotherEnvironment(
-    routeUUID: string,
-    targetEnvironmentUUID: string
+    routeUuid: string,
+    targetEnvironmentUuid: string
   ) {
-    const routeToDuplicate = this.store.getRouteByUUID(routeUUID);
+    const routeToDuplicate = this.store.getRouteByUUID(routeUuid);
 
     if (routeToDuplicate) {
       let newRoute: Route = CloneObject(routeToDuplicate);
       newRoute = this.dataService.renewRouteUUIDs(newRoute);
 
       this.store.update(
-        duplicateRouteToAnotherEnvironmentAction(
-          newRoute,
-          targetEnvironmentUUID
-        )
+        addRouteAction(targetEnvironmentUuid, newRoute, 'root', true)
       );
     }
   }
@@ -1604,10 +1688,10 @@ export class EnvironmentsService {
   /**
    * Duplicate a databucket, or the current active databucket and append it at the end
    */
-  public duplicateDatabucket(databucketUUID: string) {
+  public duplicateDatabucket(databucketUuid: string) {
     const activeEnvironment = this.store.getActiveEnvironment();
     const databucketToDuplicate = activeEnvironment.data.find(
-      (data) => data.uuid === databucketUUID
+      (data) => data.uuid === databucketUuid
     );
 
     if (databucketToDuplicate) {
@@ -1651,11 +1735,11 @@ export class EnvironmentsService {
    * Duplicate a databucket to another environment
    */
   public duplicateDatabucketInAnotherEnvironment(
-    databucketUUID: string,
-    targetEnvironmentUUID: string
+    databucketUuid: string,
+    targetEnvironmentUuid: string
   ) {
     const databucketToDuplicate =
-      this.store.getDatabucketByUUID(databucketUUID);
+      this.store.getDatabucketByUUID(databucketUuid);
 
     if (databucketToDuplicate) {
       let newDatabucket: DataBucket = {
@@ -1665,10 +1749,7 @@ export class EnvironmentsService {
       newDatabucket = this.dataService.deduplicateDatabucketID(newDatabucket);
 
       this.store.update(
-        duplicateDatabucketToAnotherEnvironmentAction(
-          newDatabucket,
-          targetEnvironmentUUID
-        )
+        addDatabucketAction(targetEnvironmentUuid, newDatabucket, true)
       );
     }
   }
@@ -1677,10 +1758,10 @@ export class EnvironmentsService {
    * Duplicate a callback to another environment
    */
   public duplicateCallbackInAnotherEnvironment(
-    callbackUUID: string,
-    targetEnvironmentUUID: string
+    callbackUuid: string,
+    targetEnvironmentUuid: string
   ) {
-    const callbackToDuplicate = this.store.getCallbackByUUID(callbackUUID);
+    const callbackToDuplicate = this.store.getCallbackByUUID(callbackUuid);
 
     if (callbackToDuplicate) {
       let newCallback: Callback = {
@@ -1690,10 +1771,7 @@ export class EnvironmentsService {
       newCallback = this.dataService.deduplicateCallbackID(newCallback);
 
       this.store.update(
-        duplicateCallbackToAnotherEnvironmentAction(
-          newCallback,
-          targetEnvironmentUUID
-        )
+        addCallbackAction(targetEnvironmentUuid, newCallback, true)
       );
     }
   }
@@ -1702,10 +1780,52 @@ export class EnvironmentsService {
    * Remove a route and save
    */
   public removeRoute(routeUuid: string = this.store.get('activeRouteUUID')) {
-    if (routeUuid) {
-      this.store.update(
-        removeRouteAction(this.store.getActiveEnvironment().uuid, routeUuid)
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const route = activeEnvironment?.routes.find(
+      (entry) => entry.uuid === routeUuid
+    );
+
+    if (routeUuid && activeEnvironment && route) {
+      const { parentId, insertAfterUuid } = getRouteOrFolderInsertPosition(
+        activeEnvironment,
+        routeUuid
       );
+
+      this.store.update(removeRouteAction(activeEnvironment.uuid, routeUuid));
+
+      const routeName =
+        route.type === RouteType.CRUD
+          ? `CRUD <strong>/${escapeHtml(route.endpoint)}</strong>`
+          : `${route.method.toUpperCase()} <strong>/${escapeHtml(route.endpoint)}</strong>`;
+
+      this.toastsService.addToast('warning', `Route ${routeName} deleted`, {
+        label: 'Undo',
+        action: () => {
+          const currentEnvironment = this.store
+            .get('environments')
+            .find((env) => env.uuid === activeEnvironment.uuid);
+
+          if (!currentEnvironment) {
+            return;
+          }
+
+          const targetParentId =
+            parentId !== 'root' &&
+            !currentEnvironment.folders.some((f) => f.uuid === parentId)
+              ? 'root'
+              : parentId;
+
+          this.store.update(
+            addRouteAction(
+              activeEnvironment.uuid,
+              route,
+              targetParentId,
+              true,
+              insertAfterUuid
+            )
+          );
+        }
+      });
     }
   }
 
@@ -1726,12 +1846,52 @@ export class EnvironmentsService {
         !activeRouteResponse.default &&
         activeRoute.responses.length > 1)
     ) {
+      const insertAfterUuid = getInsertAfterUuid(
+        activeRoute.responses,
+        activeRouteResponse.uuid
+      );
+
       this.store.update(
         removeRouteResponseAction(
           activeEnvironment.uuid,
           activeRoute.uuid,
           activeRouteResponse.uuid
         )
+      );
+
+      const responseLabel = activeRouteResponse.label
+        ? `<strong>"${escapeHtml(activeRouteResponse.label)}"</strong> (${activeRouteResponse.statusCode})`
+        : `<strong>${activeRouteResponse.statusCode}</strong>`;
+
+      this.toastsService.addToast(
+        'warning',
+        `Response ${responseLabel} deleted`,
+        {
+          label: 'Undo',
+          action: () => {
+            const currentEnvironment = this.store
+              .get('environments')
+              .find((env) => env.uuid === activeEnvironment.uuid);
+
+            const currentRoute = currentEnvironment?.routes.find(
+              (r) => r.uuid === activeRoute.uuid
+            );
+
+            if (!currentRoute) {
+              return;
+            }
+
+            this.store.update(
+              addRouteResponseAction(
+                activeEnvironment.uuid,
+                activeRoute.uuid,
+                { ...activeRouteResponse, default: false },
+                true,
+                insertAfterUuid
+              )
+            );
+          }
+        }
       );
     }
   }
@@ -1743,10 +1903,44 @@ export class EnvironmentsService {
     databucketUuid: string = this.store.get('activeDatabucketUUID')
   ) {
     const activeEnvironment = this.store.getActiveEnvironment();
+    const databucket = activeEnvironment?.data.find(
+      (entry) => entry.uuid === databucketUuid
+    );
 
-    if (databucketUuid) {
+    if (databucketUuid && activeEnvironment && databucket) {
+      const insertAfterUuid = getInsertAfterUuid(
+        activeEnvironment.data,
+        databucketUuid
+      );
+
       this.store.update(
         removeDatabucketAction(activeEnvironment.uuid, databucketUuid)
+      );
+
+      this.toastsService.addToast(
+        'warning',
+        `Data bucket "<strong>${escapeHtml(databucket.name)}</strong>" deleted`,
+        {
+          label: 'Undo',
+          action: () => {
+            const currentEnvironment = this.store
+              .get('environments')
+              .find((env) => env.uuid === activeEnvironment.uuid);
+
+            if (!currentEnvironment) {
+              return;
+            }
+
+            this.store.update(
+              addDatabucketAction(
+                activeEnvironment.uuid,
+                databucket,
+                true,
+                insertAfterUuid
+              )
+            );
+          }
+        }
       );
     }
   }
@@ -1756,10 +1950,44 @@ export class EnvironmentsService {
    */
   public removeCallback(callbackUuid: string) {
     const activeEnvironment = this.store.getActiveEnvironment();
+    const callback = activeEnvironment?.callbacks.find(
+      (entry) => entry.uuid === callbackUuid
+    );
 
-    if (callbackUuid) {
+    if (callbackUuid && activeEnvironment && callback) {
+      const insertAfterUuid = getInsertAfterUuid(
+        activeEnvironment.callbacks,
+        callbackUuid
+      );
+
       this.store.update(
         removeCallbackAction(activeEnvironment.uuid, callbackUuid)
+      );
+
+      this.toastsService.addToast(
+        'warning',
+        `Callback "<strong>${escapeHtml(callback.name)}</strong>" deleted`,
+        {
+          label: 'Undo',
+          action: () => {
+            const currentEnvironment = this.store
+              .get('environments')
+              .find((env) => env.uuid === activeEnvironment.uuid);
+
+            if (!currentEnvironment) {
+              return;
+            }
+
+            this.store.update(
+              addCallbackAction(
+                activeEnvironment.uuid,
+                callback,
+                true,
+                insertAfterUuid
+              )
+            );
+          }
+        }
       );
     }
   }
@@ -2115,7 +2343,10 @@ export class EnvironmentsService {
   public convertCurrentEnvironmentToCloud() {
     const activeEnvironment = this.store.getActiveEnvironment();
 
-    if (this.store.getIsEnvCloud(activeEnvironment.uuid)) {
+    if (
+      !this.settingsService.canCreateCloudEnvironment() ||
+      this.store.getIsEnvCloud(activeEnvironment.uuid)
+    ) {
       return EMPTY;
     }
 
@@ -2264,14 +2495,15 @@ export class EnvironmentsService {
   }
 
   /**
-   * Sends an event for further process of entity movement
+   * Sends an event for further process of entity movement. Accepts one or
+   * more entity UUIDs
    */
   public startEntityDuplicationToAnotherEnvironment(
-    subjectUUID: string,
-    subject: DataSubject
+    subject: DataSubject,
+    subjectUuids: string[]
   ) {
     this.store.update(
-      startEntityDuplicationToAnotherEnvironmentAction(subjectUUID, subject)
+      startEntityDuplicationToAnotherEnvironmentAction(subject, subjectUuids)
     );
 
     this.uiService.openModal('duplicate_to_environment');
@@ -2414,16 +2646,13 @@ export class EnvironmentsService {
             triggerBrowserDownload(filePath, data);
           })
         : switchMap((filePath) =>
-            from(
-              this.mainApiService.invoke('APP_WRITE_FILE', filePath, data)
-            ).pipe(
-              tap(() => {
-                this.loggerService.logMessage('info', 'EXPORT_SUCCESS', {
-                  environmentName: environment.name
-                });
-              })
-            )
-          )
+            from(this.mainApiService.invoke('APP_WRITE_FILE', filePath, data))
+          ),
+      tap(() => {
+        this.loggerService.logMessage('info', 'EXPORT_SUCCESS', {
+          environmentName: environment.name
+        });
+      })
     );
   }
 
@@ -2493,7 +2722,10 @@ export class EnvironmentsService {
             serverTransactionPayload.environmentUUID
           ] === true &&
           (!serverTransactionPayload.websocketEvent ||
-            serverTransactionPayload.websocketEvent.type === 'connection')
+            serverTransactionPayload.websocketEvent.type === 'connection') &&
+          this.store.getIsEnvironmentEditable(
+            serverTransactionPayload.environmentUUID
+          )
         ) {
           this.createRouteFromLog(
             serverTransactionPayload.environmentUUID,
@@ -2626,20 +2858,13 @@ export class EnvironmentsService {
               triggerBrowserDownload(filePath, data);
             })
           : switchMap(({ data, filePath }) =>
-              from(
-                this.mainApiService.invoke('APP_WRITE_FILE', filePath, data)
-              ).pipe(
-                tap(() => {
-                  this.loggerService.logMessage(
-                    'info',
-                    'OPENAPI_EXPORT_SUCCESS',
-                    {
-                      environmentName: activeEnvironment.name
-                    }
-                  );
-                })
-              )
+              from(this.mainApiService.invoke('APP_WRITE_FILE', filePath, data))
             ),
+        tap(() => {
+          this.loggerService.logMessage('info', 'OPENAPI_EXPORT_SUCCESS', {
+            environmentName: activeEnvironment.name
+          });
+        }),
         catchError((error) => {
           this.loggerService.logMessage('error', 'OPENAPI_EXPORT_ERROR', {
             error,

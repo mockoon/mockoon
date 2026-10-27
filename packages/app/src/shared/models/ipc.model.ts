@@ -4,4 +4,5 @@ export type MenuStateUpdatePayload = {
   hasActiveEnvironment: boolean;
   isActiveEnvironmentCloud: boolean;
   activeEnvironmentRoutesCount: number;
+  isActiveEnvironmentEditable: boolean;
 };

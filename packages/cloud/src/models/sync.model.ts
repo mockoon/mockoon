@@ -34,7 +34,8 @@ export enum SyncErrors {
 }
 
 export enum SyncDisconnectReasons {
-  ROOM_INCOMPATIBLE_VERSION = 'ROOM_INCOMPATIBLE_VERSION'
+  ROOM_INCOMPATIBLE_VERSION = 'ROOM_INCOMPATIBLE_VERSION',
+  LICENSE_EXPIRED = 'LICENSE_EXPIRED'
 }
 
 export enum SyncMessageTypes {
@@ -51,6 +52,7 @@ export enum SyncMessageTypes {
 export type EnvironmentsListPayload = {
   environmentUuid: string;
   hash: string;
+  workspaceId?: number;
 }[];
 
 export type ConnectedPayload = {
@@ -133,6 +135,7 @@ export interface GetFullEnvironmentSyncAction extends BaseSyncAction {
 export interface AddCloudEnvironmentSyncAction extends BaseSyncAction {
   type: SyncActionTypes.ADD_CLOUD_ENVIRONMENT;
   environment: Environment;
+  workspaceId?: number;
 }
 
 /**
@@ -169,6 +172,7 @@ export interface AddRouteSyncAction extends BaseSyncAction {
   environmentUuid: string;
   route: Route;
   parentId: string | 'root';
+  insertAfterUuid?: string | null;
 }
 
 /**
@@ -207,6 +211,7 @@ export interface AddFolderSyncAction extends BaseSyncAction {
   environmentUuid: string;
   folder: Folder;
   parentId: string | 'root';
+  insertAfterUuid?: string | null;
 }
 
 /**
@@ -236,7 +241,7 @@ export interface AddRouteResponseSyncAction extends BaseSyncAction {
   environmentUuid: string;
   routeUuid: string;
   routeResponse: RouteResponse;
-  insertAfterUuid?: string;
+  insertAfterUuid?: string | null;
 }
 
 /**
@@ -277,7 +282,7 @@ export interface AddDatabucketSyncAction extends BaseSyncAction {
   type: SyncActionTypes.ADD_DATABUCKET;
   environmentUuid: string;
   databucket: DataBucket;
-  insertAfterUuid?: string;
+  insertAfterUuid?: string | null;
 }
 
 /**
@@ -315,7 +320,7 @@ export interface AddCallbackSyncAction extends BaseSyncAction {
   type: SyncActionTypes.ADD_CALLBACK;
   environmentUuid: string;
   callback: Callback;
-  insertAfterUuid?: string;
+  insertAfterUuid?: string | null;
 }
 
 /**

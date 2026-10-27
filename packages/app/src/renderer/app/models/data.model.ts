@@ -1,6 +1,2 @@
 export type DataSubject =
-  | 'environment'
-  | 'folder'
-  | 'route'
-  | 'databucket'
-  | 'callback';
+  'environment' | 'folder' | 'route' | 'databucket' | 'callback';

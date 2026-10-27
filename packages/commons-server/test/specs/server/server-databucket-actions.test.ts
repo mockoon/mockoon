@@ -70,6 +70,114 @@ describe('Databucket Actions', () => {
     deepStrictEqual(databucket.value[0], request.body);
   });
 
+  it('should generate the id using the expression found in the databucket template', () => {
+    request.body = { name: 'John' };
+    routeCrudKey = 'id';
+
+    databucketActions(
+      'create',
+      databucket,
+      request,
+      response,
+      routeCrudKey,
+      (content) => (content === "{{faker 'location.country'}}" ? 'Panama' : ''),
+      '[{{#repeat 5}}{"id": "{{faker \'location.country\'}}", "name": "{{faker \'person.firstName\'}}"}{{/repeat}}]'
+    );
+
+    strictEqual(databucket.value[0].id, 'Panama');
+  });
+
+  it('should generate the id using an unquoted expression found in the databucket template', () => {
+    request.body = { name: 'John' };
+    routeCrudKey = 'id';
+
+    databucketActions(
+      'create',
+      databucket,
+      request,
+      response,
+      routeCrudKey,
+      (content) => (content === "{{faker 'number.int'}}" ? '25' : ''),
+      '[{"id": {{faker \'number.int\'}}}]'
+    );
+
+    strictEqual(databucket.value[0].id, 25);
+  });
+
+  it('should generate a nested id using its path-scoped expression', () => {
+    request.body = { name: 'John' };
+    routeCrudKey = 'data.id';
+
+    databucketActions(
+      'create',
+      databucket,
+      request,
+      response,
+      routeCrudKey,
+      (content) => (content === '{{nested}}' ? 'nested-id' : 'root-id'),
+      '[{"id": "{{root}}", "data": {"id": "{{nested}}"}}]'
+    );
+
+    strictEqual(databucket.value[0].data.id, 'nested-id');
+  });
+
+  it('should fall back to the default id generation if the databucket template has no expression for the key', () => {
+    databucket.value = [{ id: 5 }];
+    request.body = { name: 'John' };
+    routeCrudKey = 'id';
+
+    databucketActions(
+      'create',
+      databucket,
+      request,
+      response,
+      routeCrudKey,
+      () => 'should-not-be-used',
+      '[{"id": 5, "name": "{{faker \'person.firstName\'}}"}]'
+    );
+
+    strictEqual(databucket.value[1].id, 6);
+  });
+
+  it('should fall back to the default id generation if the templating expression fails', () => {
+    databucket.value = [{ id: 5 }];
+    request.body = { name: 'John' };
+    routeCrudKey = 'id';
+
+    databucketActions(
+      'create',
+      databucket,
+      request,
+      response,
+      routeCrudKey,
+      () => {
+        throw new Error('parsing error');
+      },
+      '[{"id": "{{templating}}"}]'
+    );
+
+    strictEqual(databucket.value[1].id, 6);
+  });
+
+  it('should find an item by its CRUD key', () => {
+    databucket.value = [
+      { id: 1, name: 'John' },
+      { id: 2, name: 'Peter' }
+    ];
+    request.params = { id: '2' };
+    routeCrudKey = 'id';
+
+    const responseBody = databucketActions(
+      'getbyId',
+      databucket,
+      request,
+      response,
+      routeCrudKey
+    );
+
+    deepStrictEqual(responseBody, { id: 2, name: 'Peter' });
+  });
+
   it('should set entire request body if databucket.value != []', () => {
     request.body = { name: 'John' };
     databucket.value = null;

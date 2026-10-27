@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { Environment } from '@mockoon/commons';
 import { MainAPIModel } from 'src/renderer/app/models/main-api.model';
 import { Settings } from 'src/shared/models/settings.model';
@@ -9,7 +9,7 @@ import { Settings } from 'src/shared/models/settings.model';
  * Some methods are noops as they are not needed in the web version
  *
  */
-@Injectable({ providedIn: 'root' })
+@Service()
 export class MainApiService implements MainAPIModel {
   private dbName = 'mockoon-db';
   // version can be always 1 as migrations are handled by the environment schema/migrationId

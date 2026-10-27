@@ -1,10 +1,4 @@
-import { NgSwitch, NgSwitchCase } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostBinding,
-  Input
-} from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 
 /**
  * Simple SVG component (KISS!)
@@ -22,9 +16,7 @@ import {
 @Component({
   selector: 'app-svg',
   templateUrl: './svg.component.html',
-  styleUrls: ['./svg.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgSwitch, NgSwitchCase]
+  styleUrls: ['./svg.component.scss']
 })
 export class SvgComponent {
   @Input()
@@ -50,6 +42,7 @@ export class SvgComponent {
     | 'magic'
     | 'account'
     | 'people'
+    | 'edit_off'
     | 'endpoint'
     | 'endpoints'
     | 'play_arrow'

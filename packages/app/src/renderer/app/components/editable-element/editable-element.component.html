@@ -1,17 +1,19 @@
-<span
-  *ngIf="!edit || !editCondition"
-  [class]="{
-    'cursor-text': editCondition
-  }"
-  >{{ _text ? _text : '&nbsp;' }}</span
->
-<input
-  *ngIf="edit && editCondition"
-  #input
-  type="text"
-  class="form-control invisible-input"
-  [formControl]="data"
-  (click)="$event.stopPropagation()"
-  (keydown)="keydown($event)"
-  (blur)="save()"
-/>
+@if (!edit || !editCondition) {
+  <span
+    [class]="{
+      'cursor-text': editCondition && data.enabled
+    }"
+    >{{ _text ? _text : '&nbsp;' }}</span
+  >
+}
+@if (edit && editCondition) {
+  <input
+    #input
+    type="text"
+    class="form-control invisible-input"
+    [formControl]="data"
+    (click)="$event.stopPropagation()"
+    (keydown)="keydown($event)"
+    (blur)="save()"
+  />
+}

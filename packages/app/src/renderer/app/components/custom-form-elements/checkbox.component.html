@@ -1,0 +1,43 @@
+@let idLabel = (item().label | uppercase) ?? 'checkbox';
+
+<div class="btn-group btn-group-sm h-100" role="group">
+  <input
+    id="{{ prefix() }}-{{ idLabel }}-input"
+    class="btn-check"
+    type="checkbox"
+    autocomplete="off"
+    [checked]="checked()"
+    [disabled]="disabled()"
+    [attr.aria-disabled]="disabled() || readonly() ? true : null"
+    [attr.aria-readonly]="readonly() ? true : null"
+    [attr.aria-labelledby]="prefix() + '-' + idLabel"
+    [attr.aria-checked]="checked()"
+    (change)="onCheckedChange()"
+  />
+  <label
+    id="{{ prefix() }}-{{ idLabel }}"
+    for="{{ prefix() }}-{{ idLabel }}-input"
+    class="btn btn-custom px-2 d-flex align-items-center"
+    [class]="{
+      'btn-primary': checked() === true,
+      active: checked() === true
+    }"
+    [ngbTooltip]="item().tooltip"
+    [class]="
+      checked() === true
+        ? item().activeClass
+          ? item().activeClass
+          : 'text-primary'
+        : ''
+    "
+  >
+    @if (item().icon) {
+      <app-svg
+        [icon]="item().icon"
+        size="{{ item().iconSize ?? 16 }}"
+        [class]="{ 'me-2': !!item().label }"
+      />
+    }
+    {{ item().label }}
+  </label>
+</div>

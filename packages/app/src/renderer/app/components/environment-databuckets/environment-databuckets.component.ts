@@ -1,5 +1,5 @@
-import { AsyncPipe, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormsModule,
@@ -29,13 +29,11 @@ import { Store } from 'src/renderer/app/stores/store';
   selector: 'app-environment-databuckets',
   templateUrl: './environment-databuckets.component.html',
   styleUrls: ['./environment-databuckets.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DatabucketsMenuComponent,
     FormsModule,
     ReactiveFormsModule,
     FocusOnEventDirective,
-    NgIf,
     EditorComponent,
     NgbTooltip,
     SvgComponent,
@@ -58,6 +56,17 @@ export class EnvironmentDatabucketsComponent {
     Record<string, ProcessedDatabucketWithoutValue>
   >;
   public scrollToBottom = this.uiService.scrollToBottom;
+  public isActiveEnvironmentEditable$ = this.store
+    .selectIsActiveEnvironmentEditable()
+    .pipe(
+      tap((isEditable) => {
+        if (isEditable) {
+          this.activeDatabucketForm.enable({ emitEvent: false });
+        } else {
+          this.activeDatabucketForm.disable({ emitEvent: false });
+        }
+      })
+    );
 
   constructor() {
     this.hasDatabuckets$ = this.store.selectActiveEnvironment().pipe(

@@ -22,7 +22,7 @@ describe('Logging', () => {
     cleanLogs();
   });
 
-  it('should verify basic logging', async () => {
+  it('should verify basic logging and auto-generated admin token logging', async () => {
     cleanLogs();
 
     const { instance, output } = await spawnCli([
@@ -43,11 +43,45 @@ describe('Logging', () => {
     const logs = await parseLogs();
 
     strictEqual(logs[0].message, 'Server started on port 3000');
+    ok(logs[1].message.startsWith('Admin API token (auto-generated): '));
+    strictEqual(logs[2].message, 'Transaction recorded');
+    strictEqual(logs[2].requestMethod, 'GET');
+    strictEqual(logs[2].requestPath, '/api/test');
+    strictEqual(logs[2].responseStatus, 200);
+    strictEqual(logs[2].transaction, undefined);
+
+    const { stdout } = await output;
+
+    ok(stdout.includes('Server started'));
+  });
+
+  it('should stay silent for admin auth when a token is provided', async () => {
+    cleanLogs();
+
+    const { instance, output } = await spawnCli([
+      'start',
+      '--data',
+      './test/data/envs/mock1.json',
+      '--admin-api-token',
+      'cli-admin-token'
+    ]);
+
+    const responseBody = await (
+      await fetch('http://localhost:3000/api/test')
+    ).text();
+
+    ok(responseBody.includes('mock-content-1'));
+
+    await delay(1000);
+    instance.kill();
+
+    const logs = await parseLogs();
+
+    strictEqual(logs[0].message, 'Server started on port 3000');
     strictEqual(logs[1].message, 'Transaction recorded');
     strictEqual(logs[1].requestMethod, 'GET');
     strictEqual(logs[1].requestPath, '/api/test');
     strictEqual(logs[1].responseStatus, 200);
-    strictEqual(logs[1].transaction, undefined);
 
     const { stdout } = await output;
 
@@ -74,15 +108,15 @@ describe('Logging', () => {
     const logs = await parseLogs();
 
     strictEqual(logs[0].message, 'Server started on port 3000');
-    strictEqual(logs[1].message, 'Transaction recorded');
-    strictEqual(logs[1].requestMethod, 'GET');
-    strictEqual(logs[1].requestPath, '/api/test');
-    strictEqual(logs[1].responseStatus, 200);
-    strictEqual(logs[1].transaction.request.method, 'GET');
+    strictEqual(logs[2].message, 'Transaction recorded');
+    strictEqual(logs[2].requestMethod, 'GET');
+    strictEqual(logs[2].requestPath, '/api/test');
+    strictEqual(logs[2].responseStatus, 200);
+    strictEqual(logs[2].transaction.request.method, 'GET');
 
-    strictEqual(logs[1].transaction.request.route, '/api/test');
-    strictEqual(logs[1].transaction.response.body, 'mock-content-1');
-    strictEqual(logs[1].transaction.response.statusCode, 200);
+    strictEqual(logs[2].transaction.request.route, '/api/test');
+    strictEqual(logs[2].transaction.response.body, 'mock-content-1');
+    strictEqual(logs[2].transaction.response.statusCode, 200);
 
     const { stdout } = await output;
 

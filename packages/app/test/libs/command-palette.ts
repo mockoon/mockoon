@@ -36,7 +36,7 @@ class CommandPalette {
   public async countCommands(expectedLength: number) {
     const commandList = await this.commandsList;
     const commands = await commandList.$$('.list-group-item');
-    await expect(commands).toHaveLength(expectedLength);
+    expect(commands).toHaveLength(expectedLength);
   }
 
   public async executeCommandClick(index: number) {

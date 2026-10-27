@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { Plans } from '@mockoon/cloud';
 import { Route, RouteType } from '@mockoon/commons';
 import { Observable, from, map } from 'rxjs';
@@ -11,18 +11,16 @@ import {
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
-import { TourService } from 'src/renderer/app/services/tour.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { clearLogsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class CommandPaletteService {
   private environmentsService = inject(EnvironmentsService);
   private uiService = inject(UIService);
   private store = inject(Store);
-  private tourService = inject(TourService);
   private mainApiService = inject(MainApiService);
   private settingsService = inject(SettingsService);
 
@@ -335,7 +333,10 @@ export class CommandPaletteService {
     const hasAtLeastOneEnvironment = this.store.get('environments').length > 0;
     const hasMoreThanOneEnvironment = this.store.get('environments').length > 1;
     const hasActiveEnvironment = !!this.store.getActiveEnvironment();
-    const activeEnvironmentIsLocal = this.store.getIsActiveEnvLocal();
+    const isActiveEnvironmentEditable =
+      hasActiveEnvironment && this.store.getIsActiveEnvironmentEditable();
+    const activeEnvironmentIsLocal =
+      hasActiveEnvironment && this.store.getIsActiveEnvLocal();
     const hasActiveRoute = !!this.store.getActiveRoute();
     const activeEnvironment = this.store.getActiveEnvironment();
     const activeEnvironmentUuid = activeEnvironment?.uuid;
@@ -348,18 +349,23 @@ export class CommandPaletteService {
     const hasActiveCallback = !!activeCallback;
     const activeCallbackUuid = activeCallback?.uuid;
     const environmentDescriptors = this.store.get('settings').environments;
+    const isUserConnected = !!this.store.get('user');
     const isUserConnectedAndPaid = this.store.get('user')?.plan !== Plans.FREE;
     const isSyncConnected = this.store.get('sync')?.status;
+    const canCreateCloudEnvironment =
+      this.settingsService.canCreateCloudEnvironment();
+    const isNotSelfHosted = !this.settingsService.getIsSelfHosted();
 
     const commonCommands: Commands = [
       {
         id: 'NEW_CLOUD_ENVIRONMENT',
-        label: 'Create a New Cloud Environment',
+        label: 'Create a New Remote Environment',
         action: () => {
           this.environmentsService.addCloudEnvironment(null, true).subscribe();
         },
         score: 1,
-        enabled: isUserConnectedAndPaid && isSyncConnected
+        enabled:
+          isUserConnectedAndPaid && isSyncConnected && canCreateCloudEnvironment
       },
       {
         id: 'VIEW_SELECT_PREVIOUS_ENVIRONMENT',
@@ -512,7 +518,7 @@ export class CommandPaletteService {
           this.environmentsService.addDatabucket();
         },
         score: 1,
-        enabled: hasActiveEnvironment
+        enabled: hasActiveEnvironment && isActiveEnvironmentEditable
       },
       {
         id: 'DUPLICATE_DATA_BUCKET',
@@ -521,15 +527,18 @@ export class CommandPaletteService {
           this.environmentsService.duplicateDatabucket(activeDatabucketUuid);
         },
         score: 1,
-        enabled: hasActiveEnvironment && hasActiveDatabucket
+        enabled:
+          hasActiveEnvironment &&
+          hasActiveDatabucket &&
+          isActiveEnvironmentEditable
       },
       {
         id: 'DUPLICATE_DATA_BUCKET_TO_ENVIRONMENT',
         label: 'Duplicate Current Data Bucket to Another Environment',
         action: () => {
           this.environmentsService.startEntityDuplicationToAnotherEnvironment(
-            activeDatabucketUuid,
-            'databucket'
+            'databucket',
+            [activeDatabucketUuid]
           );
         },
         score: 1,
@@ -555,7 +564,7 @@ export class CommandPaletteService {
           this.environmentsService.addCallback();
         },
         score: 1,
-        enabled: hasActiveEnvironment
+        enabled: hasActiveEnvironment && isActiveEnvironmentEditable
       },
       {
         id: 'DUPLICATE_CALLBACK',
@@ -564,15 +573,18 @@ export class CommandPaletteService {
           this.environmentsService.duplicateCallback(activeCallbackUuid);
         },
         score: 1,
-        enabled: hasActiveEnvironment && hasActiveCallback
+        enabled:
+          hasActiveEnvironment &&
+          hasActiveCallback &&
+          isActiveEnvironmentEditable
       },
       {
         id: 'DUPLICATE_CALLBACK_TO_ENVIRONMENT',
         label: 'Duplicate Current Callback to Another Environment',
         action: () => {
           this.environmentsService.startEntityDuplicationToAnotherEnvironment(
-            activeCallbackUuid,
-            'callback'
+            'callback',
+            [activeCallbackUuid]
           );
         },
         score: 1,
@@ -588,7 +600,7 @@ export class CommandPaletteService {
           this.environmentsService.addHTTPRoute('root');
         },
         score: 1,
-        enabled: hasActiveEnvironment
+        enabled: hasActiveEnvironment && isActiveEnvironmentEditable
       },
       {
         id: 'CREATE_CRUD_ROUTE',
@@ -598,7 +610,7 @@ export class CommandPaletteService {
           this.environmentsService.addCRUDRoute('root');
         },
         score: 1,
-        enabled: hasActiveEnvironment
+        enabled: hasActiveEnvironment && isActiveEnvironmentEditable
       },
       {
         id: 'CREATE_FOLDER',
@@ -608,7 +620,7 @@ export class CommandPaletteService {
           this.environmentsService.addFolder('root');
         },
         score: 1,
-        enabled: hasActiveEnvironment
+        enabled: hasActiveEnvironment && isActiveEnvironmentEditable
       },
       {
         id: 'OPEN_TEMPLATES',
@@ -617,7 +629,11 @@ export class CommandPaletteService {
           this.uiService.openModal('templates');
         },
         score: 1,
-        enabled: hasActiveEnvironment
+        enabled:
+          hasActiveEnvironment &&
+          isActiveEnvironmentEditable &&
+          isNotSelfHosted &&
+          isUserConnected
       },
       {
         id: 'ENVIRONMENT_TOGGLE_RECORDING',
@@ -632,7 +648,7 @@ export class CommandPaletteService {
           this.environmentsService.startRecording(activeEnvironmentUuid);
         },
         score: 1,
-        enabled: hasActiveEnvironment
+        enabled: hasActiveEnvironment && isActiveEnvironmentEditable
       },
       {
         id: 'ENVIRONMENT_CLEAR_LOGS',
@@ -660,8 +676,8 @@ export class CommandPaletteService {
         label: 'Duplicate Current Route to Another Environment',
         action: () => {
           this.environmentsService.startEntityDuplicationToAnotherEnvironment(
-            activeRouteUuid,
-            'route'
+            'route',
+            [activeRouteUuid]
           );
         },
         score: 1,
@@ -675,7 +691,8 @@ export class CommandPaletteService {
           this.environmentsService.addRouteResponse();
         },
         score: 1,
-        enabled: hasActiveEnvironment && hasActiveRoute
+        enabled:
+          hasActiveEnvironment && hasActiveRoute && isActiveEnvironmentEditable
       },
       {
         id: 'ADD_ROUTE_HEADER',
@@ -686,7 +703,8 @@ export class CommandPaletteService {
           this.environmentsService.addRouteResponseHeader();
         },
         score: 1,
-        enabled: hasActiveEnvironment && hasActiveRoute
+        enabled:
+          hasActiveEnvironment && hasActiveRoute && isActiveEnvironmentEditable
       },
       {
         id: 'ADD_ENVIRONMENT_HEADER',
@@ -696,7 +714,7 @@ export class CommandPaletteService {
           this.environmentsService.addEnvironmentHeader();
         },
         score: 1,
-        enabled: hasActiveEnvironment
+        enabled: hasActiveEnvironment && isActiveEnvironmentEditable
       },
       {
         id: 'ENVIRONMENT_TOGGLE_PROXY',
@@ -710,7 +728,7 @@ export class CommandPaletteService {
           );
         },
         score: 1,
-        enabled: hasActiveEnvironment
+        enabled: hasActiveEnvironment && isActiveEnvironmentEditable
       },
       {
         id: 'OPEN_CHANGELOG',
@@ -722,17 +740,8 @@ export class CommandPaletteService {
         enabled: true
       },
       {
-        id: 'TOUR_START',
-        label: 'Take the tour',
-        action: () => {
-          this.tourService.start();
-        },
-        score: 1,
-        enabled: hasAtLeastOneEnvironment
-      },
-      {
         id: 'IMPORT_CLOUD_OPENAPI',
-        label: 'New cloud environment from OpenAPI/Swagger',
+        label: 'New remote environment from OpenAPI/Swagger',
         action: () => {
           this.uiService.openModal('openApiImport', {
             mode: 'import',
@@ -740,7 +749,7 @@ export class CommandPaletteService {
           });
         },
         score: 1,
-        enabled: isSyncConnected
+        enabled: isSyncConnected && canCreateCloudEnvironment
       },
       {
         id: 'EXPORT_ENVIRONMENT_OPENAPI_JSON',
@@ -749,7 +758,7 @@ export class CommandPaletteService {
           this.environmentsService.exportOpenAPIFile('json').subscribe();
         },
         score: 1,
-        enabled: true
+        enabled: hasActiveEnvironment
       },
       {
         id: 'EXPORT_ENVIRONMENT_OPENAPI_YAML',
@@ -758,7 +767,7 @@ export class CommandPaletteService {
           this.environmentsService.exportOpenAPIFile('yaml').subscribe();
         },
         score: 1,
-        enabled: true
+        enabled: hasActiveEnvironment
       },
       {
         id: 'COPY_ENVIRONMENT_CLIPBOARD',
@@ -965,28 +974,32 @@ export class CommandPaletteService {
         },
         {
           id: 'CONVERT_ENVIRONMENT_TO_CLOUD',
-          label: 'Convert Current Local Environment to Cloud',
+          label: 'Convert Current Local Environment to Remote',
           action: () => {
             this.environmentsService
               .convertCurrentEnvironmentToCloud()
               .subscribe();
           },
           score: 1,
-          enabled: hasActiveEnvironment && activeEnvironmentIsLocal
+          enabled:
+            hasActiveEnvironment &&
+            activeEnvironmentIsLocal &&
+            isSyncConnected &&
+            canCreateCloudEnvironment
         }
       );
     } else {
       commonCommands.push({
         id: 'NEW_CLOUD_ENVIRONMENT_CLIPBOARD',
         label:
-          "Create a New Cloud Environment From Clipboard (Mockoon's JSON format)",
+          "Create a New Remote Environment From Clipboard (Mockoon's JSON format)",
         action: () => {
           this.environmentsService
             .newEnvironmentFromClipboard(true)
             .subscribe();
         },
         score: 1,
-        enabled: true
+        enabled: isSyncConnected && canCreateCloudEnvironment
       });
     }
 

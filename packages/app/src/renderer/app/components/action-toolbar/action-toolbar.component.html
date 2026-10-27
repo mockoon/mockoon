@@ -1,0 +1,31 @@
+@let confirmRequested = confirmRequested$ | async;
+
+<div
+  class="toolbar d-flex align-items-center"
+  role="toolbar"
+  [attr.aria-label]="ariaLabel()"
+>
+  <span class="text-truncate"> {{ count() }} {{ selectedLabel() }} </span>
+  <div class="ms-auto d-flex align-items-center">
+    <div class="btn-group btn-group-sm">
+      @for (button of buttons(); track button.id) {
+        <button
+          type="button"
+          [id]="button.id"
+          class="btn btn-custom d-flex align-items-center"
+          [attr.aria-label]="getButtonAriaLabel(button)"
+          [ngbTooltip]="getButtonTooltip(button)"
+          [disabled]="!!button.disabled || (button.disabled$ | async) === true"
+          [class.text-danger]="
+            (confirmRequested.enabled &&
+              confirmRequested.payload === button.id) ||
+            !!button.danger
+          "
+          (click)="onButtonClick(button)"
+        >
+          <app-svg [icon]="getButtonIcon(button)" size="16" />
+        </button>
+      }
+    </div>
+  </div>
+</div>

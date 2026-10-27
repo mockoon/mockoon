@@ -1,17 +1,17 @@
-import { Injectable, NgZone, inject } from '@angular/core';
+import { NgZone, Service, inject } from '@angular/core';
 import { combineLatest } from 'rxjs';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
-import { TourService } from 'src/renderer/app/services/tour.service';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { FileWatcherOptions } from 'src/shared/models/settings.model';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class MainApiListenerService {
   private environmentsService = inject(EnvironmentsService);
   private eventsService = inject(EventsService);
@@ -19,8 +19,8 @@ export class MainApiListenerService {
   private zone = inject(NgZone);
   private userService = inject(UserService);
   private uiService = inject(UIService);
-  private tourService = inject(TourService);
   private mainApiService = inject(MainApiService);
+  private settingsService = inject(SettingsService);
 
   public init() {
     if (!Config.isWeb) {
@@ -90,9 +90,6 @@ export class MainApiListenerService {
             case 'OPEN_SETTINGS':
               this.uiService.openModal('settings');
               break;
-            case 'TOUR_START':
-              this.tourService.start();
-              break;
             case 'OPEN_CHANGELOG':
               this.uiService.openModal('changelog');
               break;
@@ -150,25 +147,39 @@ export class MainApiListenerService {
         this.store.select('environments').pipe(distinctUntilChanged()),
         this.store.selectActiveEnvironment().pipe(distinctUntilChanged()),
         this.store.select('settings').pipe(distinctUntilChanged()),
-        this.store.select('sync').pipe(distinctUntilChanged())
+        this.store.select('sync').pipe(distinctUntilChanged()),
+        this.store
+          .selectIsActiveEnvironmentEditable()
+          .pipe(distinctUntilChanged()),
+        this.settingsService.selectCanCreateCloudEnvironment()
       ])
         .pipe(
-          tap(([environments, activeEnvironment, settings, sync]) => {
-            this.mainApiService.send('APP_UPDATE_MENU_STATE', {
-              cloudEnabled: sync.status,
-              environmentsCount: environments.length,
-              hasActiveEnvironment: !!activeEnvironment,
-              isActiveEnvironmentCloud: activeEnvironment
-                ? !!settings?.environments.find(
-                    (environmentDescriptor) =>
-                      environmentDescriptor.uuid === activeEnvironment.uuid &&
-                      environmentDescriptor.cloud
-                  )
-                : false,
-              activeEnvironmentRoutesCount:
-                activeEnvironment?.routes.length ?? 0
-            });
-          })
+          tap(
+            ([
+              environments,
+              activeEnvironment,
+              settings,
+              sync,
+              isActiveEnvironmentEditable,
+              canCreateCloudEnvironment
+            ]) => {
+              this.mainApiService.send('APP_UPDATE_MENU_STATE', {
+                cloudEnabled: sync.status && canCreateCloudEnvironment,
+                environmentsCount: environments.length,
+                hasActiveEnvironment: !!activeEnvironment,
+                isActiveEnvironmentCloud: activeEnvironment
+                  ? !!settings?.environments.find(
+                      (environmentDescriptor) =>
+                        environmentDescriptor.uuid === activeEnvironment.uuid &&
+                        environmentDescriptor.cloud
+                    )
+                  : false,
+                activeEnvironmentRoutesCount:
+                  activeEnvironment?.routes.length ?? 0,
+                isActiveEnvironmentEditable
+              });
+            }
+          )
         )
         .subscribe();
     }

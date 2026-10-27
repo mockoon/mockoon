@@ -1,10 +1,12 @@
 import { Environment, Route } from '@mockoon/commons';
 import { resolve } from 'path';
-import clipboard from '../libs/clipboard';
-import dialogs from '../libs/dialogs';
+import {
+  clickMenu,
+  mockSaveDialog,
+  readClipboard
+} from '../libs/electron-mocks';
 import environments from '../libs/environments';
 import file from '../libs/file';
-import menu from '../libs/menu';
 import routes from '../libs/routes';
 import utils, {
   DropdownMenuEnvironmentActions,
@@ -23,7 +25,7 @@ describe('Clipboard copy', () => {
         DropdownMenuEnvironmentActions.COPY_JSON
       );
 
-      const clipboardContent = await clipboard.read();
+      const clipboardContent = await readClipboard();
       const environmentCopy: Environment = JSON.parse(clipboardContent);
 
       await utils.checkToastDisplayed(
@@ -38,9 +40,11 @@ describe('Clipboard copy', () => {
     });
 
     it('should create a new environment from clipboard', async () => {
-      await dialogs.save(resolve('./tmp/storage/new-env-clipboard-copy.json'));
+      await mockSaveDialog(
+        resolve('./tmp/storage/new-env-clipboard-copy.json')
+      );
 
-      await menu.click('MENU_NEW_ENVIRONMENT_CLIPBOARD');
+      await clickMenu('MENU_NEW_ENVIRONMENT_CLIPBOARD');
       await browser.pause(500);
 
       await environments.assertCount(2);
@@ -57,7 +61,7 @@ describe('Clipboard copy', () => {
         DropdownMenuRouteActions.COPY_JSON
       );
 
-      const clipboardContent = await clipboard.read();
+      const clipboardContent = await readClipboard();
       const routeCopy: Route = JSON.parse(clipboardContent);
 
       await utils.checkToastDisplayed(
@@ -72,7 +76,7 @@ describe('Clipboard copy', () => {
     });
 
     it('should create a route from clipboard and add it to the active environment', async () => {
-      await menu.click('MENU_NEW_ROUTE_CLIPBOARD');
+      await clickMenu('MENU_NEW_ROUTE_CLIPBOARD');
       await browser.pause(500);
 
       await environments.assertCount(1);
@@ -85,11 +89,11 @@ describe('Clipboard copy', () => {
 
     it('should create a route from clipboard and create a new environment if no environment is open', async () => {
       await environments.assertCount(0);
-      await dialogs.save(
+      await mockSaveDialog(
         resolve('./tmp/storage/new-environment-route-clipboard.json')
       );
 
-      await menu.click('MENU_NEW_ROUTE_CLIPBOARD');
+      await clickMenu('MENU_NEW_ROUTE_CLIPBOARD');
       await browser.pause(500);
 
       await environments.assertCount(1);
@@ -105,7 +109,7 @@ describe('Clipboard copy', () => {
         `.routes-menu .nav-item:nth-child(${1}) .nav-link`,
         DropdownMenuRouteActions.COPY_PATH
       );
-      const clipboardContent = await clipboard.read();
+      const clipboardContent = await readClipboard();
 
       expect(clipboardContent).toEqual('http://localhost:3000/answer');
     });

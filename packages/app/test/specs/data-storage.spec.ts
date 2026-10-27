@@ -4,19 +4,6 @@ import utils from '../libs/utils';
 
 describe('Data storage', () => {
   describe('Settings environment list with file missing', () => {
-    before(async () => {
-      await file.editSettingsAndReload({
-        environments: [
-          {
-            uuid: '6f2d0c0b-cf7b-494d-9080-8d614bf761db',
-            path: 'wrongpath',
-            cloud: false,
-            lastServerHash: null
-          }
-        ]
-      });
-    });
-
     it('should open the environment', async () => {
       await environments.open('data-storage');
     });

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { InFlightRequest, Transaction } from '@mockoon/commons';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
@@ -7,7 +7,7 @@ import {
   EnvironmentLogWebSocketEvent
 } from 'src/renderer/app/models/environment-logs.model';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class EventsService {
   public focusInput = new Subject<FocusableInputs>();
   public updateAvailable$ = new BehaviorSubject<string | null>(null);

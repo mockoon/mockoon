@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-  ReactiveFormsModule,
-  UntypedFormBuilder,
-  UntypedFormGroup
-} from '@angular/forms';
+  Component,
+  ElementRef,
+  effect,
+  inject,
+  signal,
+  viewChild
+} from '@angular/core';
+import { form, FormField, validateHttp } from '@angular/forms/signals';
+import { IsEqual } from '@mockoon/commons';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, merge } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
-import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { TitleSeparatorComponent } from 'src/renderer/app/components/title-separator/title-separator.component';
 import { FakerLocales } from 'src/renderer/app/constants/faker.constants';
@@ -20,27 +20,28 @@ import { UIService } from 'src/renderer/app/services/ui.service';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 import { FileWatcherOptions, Settings } from 'src/shared/models/settings.model';
+import { SelectComponent } from '../../custom-form-elements/select.component';
+import { SpinnerComponent } from '../../spinner.component';
 
 @Component({
   selector: 'app-settings-modal',
   templateUrl: './settings-modal.component.html',
   styleUrls: ['settings-modal.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    ReactiveFormsModule,
     TitleSeparatorComponent,
     SvgComponent,
     NgbTooltip,
     InputNumberDirective,
-    CustomSelectComponent
+    SelectComponent,
+    FormField,
+    SpinnerComponent
   ]
 })
 export class SettingsModalComponent {
-  private formBuilder = inject(UntypedFormBuilder);
   private settingsService = inject(SettingsService);
   private store = inject(Store);
   private uiService = inject(UIService);
-  public settings$: Observable<Settings>;
+  private settings = this.store.selectSignal('settings');
   public Infinity = Infinity;
   public fakerLocales: DropdownItems = FakerLocales;
   public fileWatcherOptions: DropdownItems = [
@@ -48,84 +49,70 @@ export class SettingsModalComponent {
     { value: FileWatcherOptions.PROMPT, label: 'Prompt' },
     { value: FileWatcherOptions.AUTO, label: 'Auto' }
   ];
-  public settingsForm: UntypedFormGroup;
+
   public isWeb = Config.isWeb;
+  public proPlansURL = Config.proPlansURL;
   public maxLogsPerEnvironmentLimit = Config.maxLogsPerEnvironmentLimit;
+  private validatedApiUrls = new Set<string>();
+  private apiUrlInput = viewChild<ElementRef<HTMLInputElement>>('apiUrlInput');
+  public highlightSelfHosted = signal(false);
+  public settingsForm = form(
+    signal<Settings>(SettingsDefault),
+    (schemaPath) => {
+      validateHttp(schemaPath.apiUrl, {
+        debounce: 300,
+        request: ({ value }) => {
+          const apiUrl = value();
+
+          if (this.validatedApiUrls.has(apiUrl) || !apiUrl) {
+            return undefined;
+          }
+
+          // only validate the URL if it is valid
+          new URL(apiUrl);
+
+          return `${apiUrl}/health`;
+        },
+        onSuccess: (response: { status: 'ok' }, { value }) => {
+          if (response.status === 'ok') {
+            this.validatedApiUrls.add(value());
+
+            return null;
+          }
+
+          return {
+            kind: 'invalidApiUrl',
+            message:
+              'Self-hosted API URL is invalid. Please check the URL and try again.'
+          };
+        },
+        onError: () => ({
+          kind: 'invalidApiUrl',
+          message:
+            'Self-hosted API URL is invalid. Please check the URL and try again.'
+        })
+      });
+    }
+  );
 
   constructor() {
-    this.settings$ = this.store
-      .select('settings')
-      .pipe(filter((settings) => !!settings));
+    effect(() => {
+      if (this.settingsForm().dirty()) {
+        this.settingsService.updateSettings(this.settingsForm().value());
+      }
 
-    this.settingsForm = this.formBuilder.group({
-      truncateRouteName: [SettingsDefault.truncateRouteName],
-      maxLogsPerEnvironment: [SettingsDefault.maxLogsPerEnvironment],
-      fakerLocale: [SettingsDefault.fakerLocale],
-      fakerSeed: [SettingsDefault.fakerSeed],
-      fileWatcherEnabled: [SettingsDefault.fileWatcherEnabled],
-      storagePrettyPrint: [SettingsDefault.storagePrettyPrint],
-      startEnvironmentsOnLoad: [SettingsDefault.startEnvironmentsOnLoad],
-      logTransactions: [SettingsDefault.logTransactions],
-      envVarsPrefix: [SettingsDefault.envVarsPrefix],
-      enableRandomLatency: [SettingsDefault.enableRandomLatency],
-      displayLogsIsoTimestamp: [SettingsDefault.displayLogsIsoTimestamp]
+      if (!IsEqual(this.settingsForm().value(), this.settings())) {
+        this.settingsForm().reset(this.settings());
+      }
     });
-
-    // send new activeEnvironmentForm values to the store, one by one
-    merge(
-      ...Object.keys(this.settingsForm.controls).map((controlName) =>
-        this.settingsForm.get(controlName).valueChanges.pipe(
-          map((newValue) => ({
-            [controlName]: newValue
-          }))
-        )
-      )
-    )
-      .pipe(
-        tap((newProperty) => {
-          this.settingsService.updateSettings(newProperty);
-        }),
-        takeUntilDestroyed()
-      )
-      .subscribe();
-
-    // subscribe to active environment changes to reset the form
-    this.settings$
-      .pipe(
-        tap((settings) => {
-          this.settingsForm.setValue(
-            {
-              truncateRouteName: settings.truncateRouteName,
-              maxLogsPerEnvironment: settings.maxLogsPerEnvironment,
-              fakerLocale: settings.fakerLocale,
-              fakerSeed: settings.fakerSeed,
-              fileWatcherEnabled: settings.fileWatcherEnabled,
-              storagePrettyPrint: settings.storagePrettyPrint,
-              startEnvironmentsOnLoad: settings.startEnvironmentsOnLoad,
-              logTransactions: settings.logTransactions,
-              envVarsPrefix: settings.envVarsPrefix,
-              enableRandomLatency: settings.enableRandomLatency,
-              displayLogsIsoTimestamp: settings.displayLogsIsoTimestamp
-            },
-            { emitEvent: false }
-          );
-        }),
-        takeUntilDestroyed()
-      )
-      .subscribe();
-  }
-
-  /**
-   * Call the store to update the settings
-   *
-   * @param newValue
-   * @param settingName
-   */
-  public settingsUpdated(settingNewValue: string, settingName: keyof Settings) {
-    this.settingsService.updateSettings({ [settingName]: settingNewValue });
   }
 
   public close() {
     this.uiService.closeModal('settings');
+  }
+
+  public highlightSelfHostedSection() {
+    this.highlightSelfHosted.set(true);
+    setTimeout(() => this.apiUrlInput()?.nativeElement.focus());
   }
 }

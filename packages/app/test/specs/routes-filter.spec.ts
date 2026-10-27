@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import dialogs from '../libs/dialogs';
+import { mockSaveDialog } from '../libs/electron-mocks';
 import environments from '../libs/environments';
 import routes from '../libs/routes';
 import utils, { DropdownMenuRouteActions } from '../libs/utils';
@@ -66,7 +66,7 @@ describe('Routes filter', () => {
 
   it('should reset routes filter when switching env', async () => {
     await routes.setFilter('/dolphins');
-    await dialogs.save(resolve('./tmp/storage/dup-env1-test.json'));
+    await mockSaveDialog(resolve('./tmp/storage/dup-env1-test.json'));
     await environments.duplicate(1);
     await routes.assertFilter('');
   });

@@ -72,6 +72,34 @@ export const IsValidURL = (address: string): boolean => {
 };
 
 /**
+ * Test if a URL uses HTTPS and targets a remote host (non-localhost/loopback)
+ *
+ * @param address
+ */
+export const IsRemoteHttpsURL = (address: string): boolean => {
+  try {
+    const parsed = new URL(address);
+
+    if (parsed.protocol !== 'https:') {
+      return false;
+    }
+
+    const host = parsed.hostname.toLowerCase();
+
+    return !(
+      host === 'localhost' ||
+      host === '127.0.0.1' ||
+      host === '::1' ||
+      host === '[::1]' ||
+      host === '0.0.0.0' ||
+      host === '::'
+    );
+  } catch (_error) {
+    return false;
+  }
+};
+
+/**
  * Clone an object using JSON.stringify
  * /!\ Suitable for Environment, Route, etc but not for complex objects containing Map, Set, etc
  */
@@ -181,6 +209,80 @@ export const generateUUID = (): string =>
   typeof window !== 'undefined'
     ? window.crypto.randomUUID()
     : require('crypto').randomUUID();
+
+/**
+ * Generate a cryptographically secure random token encoded in hexadecimal.
+ */
+export const generateSecureToken = (byteLength = 32): string => {
+  const effectiveByteLength = Math.max(1, Math.floor(byteLength));
+
+  const cryptoLib =
+    globalThis.crypto ?? require('crypto').webcrypto ?? undefined;
+
+  if (!cryptoLib) {
+    return require('crypto').randomBytes(effectiveByteLength).toString('hex');
+  }
+
+  const randomBytes = new Uint8Array(effectiveByteLength);
+  cryptoLib.getRandomValues(randomBytes);
+
+  return Array.from(randomBytes, (byte) =>
+    byte.toString(16).padStart(2, '0')
+  ).join('');
+};
+
+/**
+ * Parse a byte size from either a raw byte count or a human-readable string.
+ * Accepts values like `104857600`, `100MB`, `10 GB`, or `1.5kb`.
+ * Returns 0 when the input is empty/undefined.
+ */
+export const parseByteSize = (rawValue?: string | number): number => {
+  const validate = (value: number): number => {
+    if (!Number.isFinite(value) || value < 0) {
+      throw new Error('Byte size must be a finite, non-negative number.');
+    }
+
+    return value;
+  };
+
+  if (rawValue == null) {
+    return 0;
+  }
+
+  if (typeof rawValue === 'number') {
+    return validate(rawValue);
+  }
+
+  const value = rawValue.trim();
+
+  if (value.length === 0) {
+    return 0;
+  }
+
+  if (/^\d+$/.test(value)) {
+    return validate(Number(value));
+  }
+
+  const sizeMatch = value.match(/^([0-9]+(?:\.[0-9]+)?)\s*(b|kb|mb|gb|tb)$/i);
+
+  if (!sizeMatch) {
+    throw new Error(
+      `Invalid byte size: ${rawValue}. Use a raw byte value like 104857600 or a human-readable unit like 100MB.`
+    );
+  }
+
+  const amount = Number(sizeMatch[1]);
+  const unit = sizeMatch[2].toLowerCase();
+  const multipliers: Record<string, number> = {
+    b: 1,
+    kb: 1024,
+    mb: 1024 * 1024,
+    gb: 1024 * 1024 * 1024,
+    tb: 1024 * 1024 * 1024 * 1024
+  };
+
+  return validate(Math.round(amount * multipliers[unit]));
+};
 
 /**
  * Return a random integer
@@ -513,4 +615,35 @@ export const pathMatchErrorBuilder = (error: unknown) => {
     name: 'Error',
     message: 'Invalid route path'
   };
+};
+
+/**
+ * Extract a Bearer token from an Authorization header.
+ * Returns undefined when the header is not a Bearer scheme or token is empty.
+ */
+export const extractBearerToken = (
+  authorizationHeader: string | undefined
+): string | undefined => {
+  const headerValue = authorizationHeader ?? '';
+  const token = headerValue.replace(/^bearer\s+/i, '').trim();
+
+  return token !== headerValue.trim() && token ? token : undefined;
+};
+
+/**
+ * Escape HTML special characters in a string
+ *
+ * @param value
+ * @returns
+ */
+export const escapeHtml = (value: string): string => {
+  const entities: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  };
+
+  return value.replace(/[&<>"']/g, (character) => entities[character]);
 };

@@ -1,15 +1,17 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import {
   Environment,
   IsEqual,
   ReorderAction,
   moveItemAtTarget
 } from '@mockoon/commons';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
   filter,
+  first,
+  map,
   mergeMap,
   pairwise,
   startWith,
@@ -22,14 +24,14 @@ import { StorageService } from 'src/renderer/app/services/storage.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { updateSettingsAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
-import { Config } from 'src/renderer/config';
+import { Config, getCallbackApiUrl } from 'src/renderer/config';
 import {
   EnvironmentsCategories,
   FileWatcherOptions,
   Settings
 } from 'src/shared/models/settings.model';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SettingsService {
   private store = inject(Store);
   private storageService = inject(StorageService);
@@ -66,7 +68,11 @@ export class SettingsService {
   public loadSettings(): Observable<any> {
     return this.storageService.loadSettings().pipe(
       tap((settings: Settings) => {
-        const validatedSchema = SettingsSchema.validate(settings);
+        const callbackApiUrl = getCallbackApiUrl();
+        const validatedSchema = SettingsSchema.validate({
+          ...settings,
+          apiUrl: settings?.apiUrl?.trim() || callbackApiUrl
+        });
         this.updateSettings(validatedSchema.value);
         settings = validatedSchema.value;
 
@@ -76,7 +82,10 @@ export class SettingsService {
           this.updateSettings({ lastChangelog: Config.appVersion });
         }
 
-        if (!settings.welcomeShown) {
+        if (
+          !settings.welcomeShown &&
+          (!Config.isWeb || (Config.isWeb && !settings.apiUrl))
+        ) {
           this.uiService.openModal('welcome');
         }
       })
@@ -135,6 +144,95 @@ export class SettingsService {
    */
   public updateSettings(newProperties: Partial<Settings>) {
     this.store.update(updateSettingsAction(newProperties));
+  }
+
+  /**
+   * Get the API URL with settings override priority for desktop app.
+   * Fallback to the shared config value.
+   */
+  public selectApiUrl(): Observable<string> {
+    return this.selectApiUrlChanges().pipe(first());
+  }
+
+  public selectApiUrlChanges(): Observable<string> {
+    return this.store.select('settings').pipe(
+      filter((settings) => !!settings),
+      map((settings) => settings.apiUrl?.trim()),
+      map(
+        (configuredApiUrl) =>
+          this.normalizeApiUrl(configuredApiUrl) ?? Config.defaultApiUrl
+      ),
+      distinctUntilChanged()
+    );
+  }
+
+  private normalizeApiUrl(apiUrl?: string | null) {
+    if (!apiUrl) {
+      return null;
+    }
+
+    try {
+      const normalizedApiUrl = new URL(
+        /^https?:\/\//i.test(apiUrl) ? apiUrl : `https://${apiUrl}`
+      );
+
+      if (
+        normalizedApiUrl.protocol === 'http:' &&
+        !(
+          normalizedApiUrl.hostname === 'localhost' ||
+          normalizedApiUrl.hostname.endsWith('.localhost') ||
+          ['127.0.0.1', '[::1]'].includes(normalizedApiUrl.hostname)
+        )
+      ) {
+        return null;
+      }
+
+      normalizedApiUrl.pathname = normalizedApiUrl.pathname.replace(
+        /\/?$/,
+        '/'
+      );
+
+      return normalizedApiUrl.toString();
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Check if a custom API URL override is configured in settings.
+   */
+  public selectIsSelfHosted(): Observable<boolean> {
+    return this.selectApiUrlChanges().pipe(
+      map((apiUrl) => apiUrl !== Config.defaultApiUrl)
+    );
+  }
+
+  /**
+   * Check if a custom API URL override is configured in settings.
+   */
+  public getIsSelfHosted(): boolean {
+    const apiUrl = this.store.get('settings').apiUrl?.trim();
+
+    return (
+      (this.normalizeApiUrl(apiUrl) ?? Config.defaultApiUrl) !==
+      Config.defaultApiUrl
+    );
+  }
+
+  public canCreateCloudEnvironment(): boolean {
+    return !this.getIsSelfHosted() || this.store.get('workspaces').length > 0;
+  }
+
+  public selectCanCreateCloudEnvironment(): Observable<boolean> {
+    return combineLatest([
+      this.selectIsSelfHosted(),
+      this.store.select('workspaces')
+    ]).pipe(
+      map(
+        ([isSelfHosted, workspaces]) => !isSelfHosted || workspaces.length > 0
+      ),
+      distinctUntilChanged()
+    );
   }
 
   /**

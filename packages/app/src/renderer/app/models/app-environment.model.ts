@@ -4,6 +4,6 @@ export type AppEnvironment = {
   ci: boolean;
   remoteConfig: string;
   useFirebaseEmulator: boolean;
-  websiteURL: string;
-  apiURL: string;
+  websiteUrl: string;
+  defaultApiUrl: string;
 };

@@ -1,13 +1,8 @@
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Output,
-  inject
-} from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
+  AbstractControl,
   FormArray,
   FormBuilder,
   FormGroup,
@@ -24,36 +19,35 @@ import {
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
+import { StableTrackBy } from 'src/renderer/app/classes/stable-track-by';
 import { TimedBoolean } from 'src/renderer/app/classes/timed-boolean';
-import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
 import { Texts } from 'src/renderer/app/constants/texts.constant';
 import { InputNumberDirective } from 'src/renderer/app/directives/input-number.directive';
 import { DropdownItems } from 'src/renderer/app/models/common.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { Store } from 'src/renderer/app/stores/store';
+import { SelectComponent } from '../custom-form-elements/select.component';
 
 @Component({
   selector: 'app-route-callbacks',
   templateUrl: 'route-callbacks.component.html',
   styleUrls: ['./route-callbacks.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     FormsModule,
     ReactiveFormsModule,
-    NgFor,
-    CustomSelectComponent,
     NgbTooltip,
     SvgComponent,
     InputNumberDirective,
-    AsyncPipe
+    AsyncPipe,
+    SelectComponent
   ]
 })
 export class RouteCallbacksComponent {
   private environmentsService = inject(EnvironmentsService);
   private store = inject(Store);
   private formBuilder = inject(FormBuilder);
+  public callbackTrackBy = new StableTrackBy<AbstractControl>();
   public activeRouteResponse$ = this.store.selectActiveRouteResponse();
   public activeRoute$ = this.store.selectActiveRoute();
   @Output()
@@ -67,6 +61,17 @@ export class RouteCallbacksComponent {
   public Infinity = Infinity;
   public allCallbacks$: Observable<Callback[]>;
   private listenToChanges = true;
+  public isActiveEnvironmentEditable$ = this.store
+    .selectIsActiveEnvironmentEditable()
+    .pipe(
+      tap((isEditable) => {
+        if (isEditable) {
+          this.form.enable({ emitEvent: false });
+        } else {
+          this.form.disable({ emitEvent: false });
+        }
+      })
+    );
 
   public get callbacks() {
     return this.form.get('callbacks') as FormArray;
@@ -159,6 +164,8 @@ export class RouteCallbacksComponent {
   ) {
     this.listenToChanges = listenToChanges;
 
+    // Preserve the current disabled state of the form
+    const isFormDisabled = this.form.disabled;
     this.callbacks.clear();
 
     newCallbacks.forEach((cb) => {
@@ -168,6 +175,11 @@ export class RouteCallbacksComponent {
         } as CallbackInvocation)
       );
     });
+
+    // Reapply the disabled state if necessary
+    if (isFormDisabled) {
+      this.form.disable({ emitEvent: false });
+    }
 
     this.listenToChanges = true;
   }

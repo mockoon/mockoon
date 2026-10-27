@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import dialogs from '../libs/dialogs';
+import { mockOpenDialog, mockSaveDialog } from '../libs/electron-mocks';
 import environments from '../libs/environments';
 import http from '../libs/http';
 import { HttpCall } from '../libs/models';
@@ -7,6 +7,8 @@ import routes from '../libs/routes';
 import utils from '../libs/utils';
 
 const firstRuleCall: HttpCall = {
+  description:
+    'Call /users/1 with GET method and no body and receive the default response (500)',
   path: '/users/1',
   method: 'GET',
   testedResponse: {
@@ -20,6 +22,8 @@ const firstRuleCallWithBody: HttpCall = {
 };
 
 const secondRuleCall: HttpCall = {
+  description:
+    'Call /users/1 with GET method and no body and receive the default response (200)',
   path: '/users/1',
   method: 'GET',
   testedResponse: {
@@ -108,11 +112,11 @@ describe('Default route response', () => {
 
   it('should set first route response as default when importing an open api spec', async () => {
     await environments.localAddFromOpenApi();
-    await dialogs.open(
+    await mockOpenDialog(
       './test/data/res/import-openapi/samples/petstore-v3.yaml'
     );
     await environments.browseOpenApi();
-    await dialogs.save(resolve('./tmp/storage/petstore-v3.json'));
+    await mockSaveDialog(resolve('./tmp/storage/petstore-v3.json'));
     await environments.importOpenApi();
     await browser.pause(500);
     await environments.assertActiveMenuEntryText('Swagger Petstore v3');

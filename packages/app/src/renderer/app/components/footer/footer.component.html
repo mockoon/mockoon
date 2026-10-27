@@ -4,6 +4,7 @@
 @let platform = platform$ | async;
 @let uiState = uiState$ | async;
 @let showFeedback = showFeedback$ | async;
+@let hasPlan = hasPlan$ | async;
 
 <div class="footer d-flex">
   <div class="d-flex me-auto">
@@ -94,6 +95,12 @@
       >
         <app-svg icon="help_outline" />
       </button>
+    </div>
+  }
+
+  @if (hasPlan) {
+    <div class="footer-item d-flex align-items-center px-2">
+      <app-plan-indicator />
     </div>
   }
 

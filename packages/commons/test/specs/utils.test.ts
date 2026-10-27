@@ -1,6 +1,108 @@
 import { strictEqual } from 'node:assert';
 import { describe, it } from 'node:test';
-import { express5PathConvert } from '../../src';
+import {
+  escapeHtml,
+  IsRemoteHttpsURL,
+  express5PathConvert,
+  generateSecureToken,
+  parseByteSize
+} from '../../src';
+
+describe('generateSecureToken', () => {
+  it('should generate a 64-char hex token by default', () => {
+    const token = generateSecureToken();
+
+    strictEqual(token.length, 64);
+    strictEqual(/^[0-9a-f]+$/.test(token), true);
+  });
+
+  it('should generate a token with 2 hex chars per byte', () => {
+    const token = generateSecureToken(16);
+
+    strictEqual(token.length, 32);
+    strictEqual(/^[0-9a-f]+$/.test(token), true);
+  });
+
+  it('should floor non-integer byte lengths', () => {
+    const token = generateSecureToken(5.9);
+
+    strictEqual(token.length, 10);
+  });
+
+  it('should enforce a minimum of one byte', () => {
+    strictEqual(generateSecureToken(0).length, 2);
+    strictEqual(generateSecureToken(-42).length, 2);
+  });
+});
+
+describe('parseByteSize', () => {
+  it('should default empty values to zero', () => {
+    strictEqual(parseByteSize(), 0);
+    strictEqual(parseByteSize(''), 0);
+    strictEqual(parseByteSize('   '), 0);
+  });
+
+  it('should accept raw byte counts as numbers', () => {
+    strictEqual(parseByteSize(104857600), 104857600);
+  });
+
+  it('should accept raw byte counts as strings', () => {
+    strictEqual(parseByteSize('104857600'), 104857600);
+  });
+
+  it('should accept human-readable megabytes', () => {
+    strictEqual(parseByteSize('100MB'), 100 * 1024 * 1024);
+    strictEqual(parseByteSize('100 mb'), 100 * 1024 * 1024);
+  });
+
+  it('should accept other binary units', () => {
+    strictEqual(parseByteSize('1.5kb'), 1536);
+    strictEqual(parseByteSize('2GB'), 2 * 1024 * 1024 * 1024);
+  });
+
+  it('should reject invalid values', () => {
+    try {
+      parseByteSize('ten megabytes');
+      strictEqual(false, true);
+    } catch (error) {
+      strictEqual(error instanceof Error, true);
+    }
+  });
+
+  it('should reject non-finite numeric values', () => {
+    try {
+      parseByteSize(Number.NaN);
+      strictEqual(false, true);
+    } catch (error) {
+      strictEqual(error instanceof Error, true);
+    }
+
+    try {
+      parseByteSize(Number.POSITIVE_INFINITY);
+      strictEqual(false, true);
+    } catch (error) {
+      strictEqual(error instanceof Error, true);
+    }
+  });
+
+  it('should reject negative numeric values', () => {
+    try {
+      parseByteSize(-1);
+      strictEqual(false, true);
+    } catch (error) {
+      strictEqual(error instanceof Error, true);
+    }
+  });
+
+  it('should reject parsed non-finite values from oversized numbers', () => {
+    try {
+      parseByteSize('9'.repeat(500));
+      strictEqual(false, true);
+    } catch (error) {
+      strictEqual(error instanceof Error, true);
+    }
+  });
+});
 
 describe('express5PathConvert', () => {
   it('should name unnamed wildcards', () => {
@@ -160,5 +262,51 @@ describe('express5PathConvert', () => {
       express5PathConvert('/api(v2)?/users/:id+/file.:ext?/*'),
       '/api{v2}/users/*id/file{.:ext}/*wildcard0'
     );
+  });
+});
+
+describe('escapeHtml', () => {
+  it('should escape &, <, >, ", and \'', () => {
+    strictEqual(
+      escapeHtml('<script>alert("hello" & \'world\');</script>'),
+      '&lt;script&gt;alert(&quot;hello&quot; &amp; &#39;world&#39;);&lt;/script&gt;'
+    );
+  });
+
+  it('should return unchanged string when no special characters exist', () => {
+    strictEqual(escapeHtml('hello-world_123'), 'hello-world_123');
+  });
+
+  it('should return empty string when input is empty', () => {
+    strictEqual(escapeHtml(''), '');
+  });
+});
+
+describe('IsRemoteHttpsURL', () => {
+  it('should return false for invalid URLs', () => {
+    strictEqual(IsRemoteHttpsURL(''), false);
+    strictEqual(IsRemoteHttpsURL('not-a-url'), false);
+  });
+
+  it('should return false for non-https URLs', () => {
+    strictEqual(IsRemoteHttpsURL('http://example.com'), false);
+    strictEqual(IsRemoteHttpsURL('http://localhost:3000'), false);
+    strictEqual(IsRemoteHttpsURL('ws://example.com'), false);
+  });
+
+  it('should return false for localhost and loopback https URLs', () => {
+    strictEqual(IsRemoteHttpsURL('https://localhost'), false);
+    strictEqual(IsRemoteHttpsURL('https://localhost:3000'), false);
+    strictEqual(IsRemoteHttpsURL('https://127.0.0.1'), false);
+    strictEqual(IsRemoteHttpsURL('https://127.0.0.1:8443'), false);
+    strictEqual(IsRemoteHttpsURL('https://[::1]'), false);
+    strictEqual(IsRemoteHttpsURL('https://[::1]:8443'), false);
+    strictEqual(IsRemoteHttpsURL('https://0.0.0.0:8443'), false);
+  });
+
+  it('should return true for remote https URLs', () => {
+    strictEqual(IsRemoteHttpsURL('https://example.com'), true);
+    strictEqual(IsRemoteHttpsURL('https://api.example.com/v1'), true);
+    strictEqual(IsRemoteHttpsURL('https://192.168.1.100:8443'), true);
   });
 });

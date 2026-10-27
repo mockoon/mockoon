@@ -2,6 +2,7 @@
 @let bodyEditorMode = bodyEditorMode$ | async;
 @let reimportPreview = reimportPreview$ | async;
 @let previewPlan = getPreviewPlan(reimportPreview);
+@let externalRefs = externalRefs$ | async;
 
 <div class="modal-header">
   <h4 class="modal-title">
@@ -82,6 +83,27 @@
           [mode]="bodyEditorMode"
         />
       </div>
+      @if (externalRefs && externalRefs.length > 0) {
+        <div class="mt-2 mb-0 d-flex flex-column gap-1 p-2">
+          <div class="d-flex align-items-center">
+            <app-svg icon="warning" class="text-warning me-2 flex-shrink-0" />
+            <span class="fw-bold"> External references detected: </span>
+          </div>
+          <div class="small">
+            The following external URLs will be fetched during import:
+          </div>
+          <ul
+            class="mb-0 ps-3 small text-break overflow-auto"
+            style="max-height: 80px"
+          >
+            @for (ref of externalRefs; track ref) {
+              <li>
+                <code>{{ ref }}</code>
+              </li>
+            }
+          </ul>
+        </div>
+      }
       <p class="px-2 pt-2 mb-0 text-muted fst-italic">
         Note: URL references (<code>$ref</code>) will be automatically resolved.
         File references are not supported.

@@ -1,10 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
@@ -26,11 +21,9 @@ import {
   switchMap,
   tap
 } from 'rxjs';
-import { CustomSelectComponent } from 'src/renderer/app/components/custom-select/custom-select.component';
 import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
-import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
-import { ToggleItems } from 'src/renderer/app/models/common.model';
+import { RadioItems } from 'src/renderer/app/models/common.model';
 import { DeployService } from 'src/renderer/app/services/deploy.service';
 import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
@@ -41,20 +34,21 @@ import {
 } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
+import { RadioComponent } from '../../custom-form-elements/radio.component';
+import { SelectComponent } from '../../custom-form-elements/select.component';
 
 @Component({
   selector: 'app-deploy-instance-modal',
   templateUrl: './deploy-instance-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     ReactiveFormsModule,
     SvgComponent,
     NgbTooltip,
-    ToggleComponent,
     AsyncPipe,
     SpinnerComponent,
-    CustomSelectComponent
+    RadioComponent,
+    SelectComponent
   ]
 })
 export class DeployInstanceModalComponent {
@@ -81,8 +75,7 @@ export class DeployInstanceModalComponent {
     map((existingInstance) => !!existingInstance)
   );
   public user$ = this.store.select('user');
-  public accountUrl = Config.accountUrl;
-  public cloudDeploy = Config.docs.cloudDeploy;
+  public proDeploy = Config.docs.proDeploy;
   public isWeb = Config.isWeb;
   public stopInstanceRequested = signal(false);
   public optionsForm = this.formBuilder.group({
@@ -100,7 +93,7 @@ export class DeployInstanceModalComponent {
     region: this.formBuilder.control<DeployRegions>(null),
     liveUpdate: this.formBuilder.control<boolean>(true)
   });
-  public visibilityToggle: ToggleItems = [
+  public visibilityToggle: RadioItems = [
     {
       value: DeployInstanceVisibility.PRIVATE,
       label: 'private'

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, NgZone } from '@angular/core';
+import { inject, NgZone, Service } from '@angular/core';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { DeployInstance } from '@mockoon/cloud';
 import {
@@ -33,7 +33,7 @@ import {
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ServerService {
   private store = inject(Store);
   private zone = inject(NgZone);
@@ -304,7 +304,11 @@ export class ServerService {
         this.zone.run(() => {
           this.store.update(
             updateEnvironmentStatusAction(
-              { running: true, needRestart: false },
+              {
+                running: true,
+                needRestart: false,
+                adminApiAuthToken: data?.adminApiAuthToken || null
+              },
               environment.uuid
             )
           );
@@ -317,7 +321,8 @@ export class ServerService {
             updateEnvironmentStatusAction(
               {
                 running: false,
-                needRestart: false
+                needRestart: false,
+                adminApiAuthToken: null
               },
               environment.uuid
             )

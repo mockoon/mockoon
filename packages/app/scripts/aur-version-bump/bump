@@ -10,16 +10,26 @@ sed -i "/pkgver=/c\pkgver=$1" PKGBUILD
 echo "Setting pkgrel to $2"
 sed -i "/pkgrel=/c\pkgrel=$2" PKGBUILD
 
-source="https://github.com/mockoon/mockoon/releases/download/v$1/mockoon-$1.amd64.deb"
+source_x86_64="https://github.com/mockoon/mockoon/releases/download/v$1/mockoon-$1.amd64.deb"
+source_aarch64="https://github.com/mockoon/mockoon/releases/download/v$1/mockoon-$1.arm64.deb"
 
-echo "Downloading debian package ($source) for md5sum"
-md5sum=`curl -sL "$source" | md5sum | cut -d ' ' -f 1`
+echo "Downloading debian package ($source_x86_64) for md5sum"
+md5sum_x86_64=`curl -sL "$source_x86_64" | md5sum | cut -d ' ' -f 1`
 
-echo "Setting md5sums to $md5sum"
-sed -i "/md5sums=/c\md5sums=('$md5sum')" PKGBUILD
+echo "Downloading debian package ($source_aarch64) for md5sum"
+md5sum_aarch64=`curl -sL "$source_aarch64" | md5sum | cut -d ' ' -f 1`
 
-echo "Setting source to $source"
-sed -i "/source=/c\source=('$source')" PKGBUILD
+echo "Setting md5sums_x86_64 to $md5sum_x86_64"
+sed -i "/md5sums_x86_64=/c\md5sums_x86_64=('$md5sum_x86_64')" PKGBUILD
+
+echo "Setting md5sums_aarch64 to $md5sum_aarch64"
+sed -i "/md5sums_aarch64=/c\md5sums_aarch64=('$md5sum_aarch64')" PKGBUILD
+
+echo "Setting source_x86_64 to $source_x86_64"
+sed -i "/source_x86_64=/c\source_x86_64=('$source_x86_64')" PKGBUILD
+
+echo "Setting source_aarch64 to $source_aarch64"
+sed -i "/source_aarch64=/c\source_aarch64=('$source_aarch64')" PKGBUILD
 
 echo "Generating .SRCINFO"
 sudo -u build-user makepkg --printsrcinfo > .SRCINFO

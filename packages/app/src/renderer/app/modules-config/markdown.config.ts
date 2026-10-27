@@ -7,7 +7,7 @@ export const MarkedOptionsFactory = (): MarkedOptions => {
   // Open all links in an external browser
   renderer.link = function ({ href, tokens }) {
     if (!href.startsWith('http')) {
-      href = `${Config.websiteURL}${href}`;
+      href = `${Config.websiteUrl}${href}`;
     }
 
     return `<a href="${href}" target="_blank">${this.parser.parseInline(tokens)}</a>`;
@@ -15,7 +15,7 @@ export const MarkedOptionsFactory = (): MarkedOptions => {
 
   // Make images responsive
   renderer.image = ({ href, title }) => {
-    href = href.replace(/^\/images\//g, `${Config.websiteURL}images/`);
+    href = href.replace(/^\/images\//g, `${Config.websiteUrl}images/`);
 
     return `<img src="${href}" class="img-fluid mx-auto d-block my-5" style="filter:drop-shadow(0 0 .75rem rgba(0,0,0,.2));" alt="${title}">`;
   };

@@ -1,12 +1,5 @@
+import { AsyncPipe, NgTemplateOutlet, UpperCasePipe } from '@angular/common';
 import {
-  AsyncPipe,
-  NgFor,
-  NgIf,
-  NgTemplateOutlet,
-  UpperCasePipe
-} from '@angular/common';
-import {
-  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   DOCUMENT,
@@ -54,7 +47,6 @@ import { FilterComponent } from 'src/renderer/app/components/filter/filter.compo
 import { SpinnerComponent } from 'src/renderer/app/components/spinner.component';
 
 import { SvgComponent } from 'src/renderer/app/components/svg/svg.component';
-import { ToggleComponent } from 'src/renderer/app/components/toggle/toggle.component';
 import { demoTemplates } from 'src/renderer/app/constants/demo-templates';
 import { defaultEditorOptions } from 'src/renderer/app/constants/editor.constants';
 import { FocusableInputs } from 'src/renderer/app/enums/ui.enum';
@@ -66,26 +58,23 @@ import { UIService } from 'src/renderer/app/services/ui.service';
 import { setActiveTemplatesTabAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
+import { CheckboxComponent } from '../../custom-form-elements/checkbox.component';
 
 @Component({
   selector: 'app-templates-modal',
   templateUrl: './templates-modal.component.html',
   styleUrls: ['./templates-modal.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     SvgComponent,
-    NgFor,
     EditorComponent,
     FormsModule,
     ReactiveFormsModule,
     NgTemplateOutlet,
     NgbTooltip,
-    ToggleComponent,
     AsyncPipe,
     UpperCasePipe,
     SpinnerComponent,
-    // fixes a circular dependency (no idea where it comes from)
+    CheckboxComponent,
     forwardRef(() => FilterComponent)
   ]
 })
@@ -115,12 +104,11 @@ export class TemplatesModalComponent implements OnInit {
   public demoPrompt = new UntypedFormControl('');
   public generatedTemplateBody = new UntypedFormControl('');
   public demoEndpoint$ = new BehaviorSubject<(typeof demoTemplates)[0]>(null);
-  public cloudPlansURL = Config.cloudPlansURL;
+  public proPlansURL = Config.proPlansURL;
   public maxPromptLength = Config.maxPromptLength;
   public defaultEditorOptions = defaultEditorOptions;
   public focusableInputs = FocusableInputs;
   public open = false;
-  public accountUrl = Config.accountUrl;
   private isFirstDemo = true;
 
   constructor() {
