@@ -37,7 +37,10 @@ import {
   RouteSchema,
   RouteType,
   deterministicStringify,
-  generateUUID
+  escapeHtml,
+  generateUUID,
+  getInsertAfterUuid,
+  getRouteOrFolderInsertPosition
 } from '@mockoon/commons';
 import {
   BehaviorSubject,
@@ -95,6 +98,7 @@ import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { ServerService } from 'src/renderer/app/services/server.service';
 import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { StorageService } from 'src/renderer/app/services/storage.service';
+import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import {
   Actions,
@@ -158,6 +162,7 @@ export class EnvironmentsService {
   private mainApiService = inject(MainApiService);
   private loggerService = inject(LoggerService);
   private deployService = inject(DeployService);
+  private toastsService = inject(ToastsService);
   private settingsService = inject(SettingsService);
 
   private environmentChangesNotified = false;
@@ -1339,13 +1344,53 @@ export class EnvironmentsService {
   }
 
   /**
-   * Remove a folder and save.
-   * Move all children to the parent container (root or folder) one by one
+   * Remove a folder and save
    */
   public removeFolder(folderUuid: string) {
-    if (folderUuid) {
-      this.store.update(
-        removeFolderAction(this.store.getActiveEnvironment().uuid, folderUuid)
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const folder = activeEnvironment?.folders.find(
+      (entry) => entry.uuid === folderUuid
+    );
+
+    if (folderUuid && activeEnvironment && folder) {
+      const { parentId, insertAfterUuid } = getRouteOrFolderInsertPosition(
+        activeEnvironment,
+        folderUuid
+      );
+
+      this.store.update(removeFolderAction(activeEnvironment.uuid, folderUuid));
+
+      this.toastsService.addToast(
+        'warning',
+        `Folder "<strong>${escapeHtml(folder.name)}</strong>" deleted`,
+        {
+          label: 'Undo',
+          action: () => {
+            const currentEnvironment = this.store
+              .get('environments')
+              .find((env) => env.uuid === activeEnvironment.uuid);
+
+            if (!currentEnvironment) {
+              return;
+            }
+
+            const targetParentId =
+              parentId !== 'root' &&
+              !currentEnvironment.folders.some((f) => f.uuid === parentId)
+                ? 'root'
+                : parentId;
+
+            this.store.update(
+              addFolderAction(
+                activeEnvironment.uuid,
+                folder,
+                targetParentId,
+                false,
+                insertAfterUuid
+              )
+            );
+          }
+        }
       );
     }
   }
@@ -1735,10 +1780,52 @@ export class EnvironmentsService {
    * Remove a route and save
    */
   public removeRoute(routeUuid: string = this.store.get('activeRouteUUID')) {
-    if (routeUuid) {
-      this.store.update(
-        removeRouteAction(this.store.getActiveEnvironment().uuid, routeUuid)
+    const activeEnvironment = this.store.getActiveEnvironment();
+    const route = activeEnvironment?.routes.find(
+      (entry) => entry.uuid === routeUuid
+    );
+
+    if (routeUuid && activeEnvironment && route) {
+      const { parentId, insertAfterUuid } = getRouteOrFolderInsertPosition(
+        activeEnvironment,
+        routeUuid
       );
+
+      this.store.update(removeRouteAction(activeEnvironment.uuid, routeUuid));
+
+      const routeName =
+        route.type === RouteType.CRUD
+          ? `CRUD <strong>/${escapeHtml(route.endpoint)}</strong>`
+          : `${route.method.toUpperCase()} <strong>/${escapeHtml(route.endpoint)}</strong>`;
+
+      this.toastsService.addToast('warning', `Route ${routeName} deleted`, {
+        label: 'Undo',
+        action: () => {
+          const currentEnvironment = this.store
+            .get('environments')
+            .find((env) => env.uuid === activeEnvironment.uuid);
+
+          if (!currentEnvironment) {
+            return;
+          }
+
+          const targetParentId =
+            parentId !== 'root' &&
+            !currentEnvironment.folders.some((f) => f.uuid === parentId)
+              ? 'root'
+              : parentId;
+
+          this.store.update(
+            addRouteAction(
+              activeEnvironment.uuid,
+              route,
+              targetParentId,
+              true,
+              insertAfterUuid
+            )
+          );
+        }
+      });
     }
   }
 
@@ -1759,12 +1846,52 @@ export class EnvironmentsService {
         !activeRouteResponse.default &&
         activeRoute.responses.length > 1)
     ) {
+      const insertAfterUuid = getInsertAfterUuid(
+        activeRoute.responses,
+        activeRouteResponse.uuid
+      );
+
       this.store.update(
         removeRouteResponseAction(
           activeEnvironment.uuid,
           activeRoute.uuid,
           activeRouteResponse.uuid
         )
+      );
+
+      const responseLabel = activeRouteResponse.label
+        ? `<strong>"${escapeHtml(activeRouteResponse.label)}"</strong> (${activeRouteResponse.statusCode})`
+        : `<strong>${activeRouteResponse.statusCode}</strong>`;
+
+      this.toastsService.addToast(
+        'warning',
+        `Response ${responseLabel} deleted`,
+        {
+          label: 'Undo',
+          action: () => {
+            const currentEnvironment = this.store
+              .get('environments')
+              .find((env) => env.uuid === activeEnvironment.uuid);
+
+            const currentRoute = currentEnvironment?.routes.find(
+              (r) => r.uuid === activeRoute.uuid
+            );
+
+            if (!currentRoute) {
+              return;
+            }
+
+            this.store.update(
+              addRouteResponseAction(
+                activeEnvironment.uuid,
+                activeRoute.uuid,
+                activeRouteResponse,
+                true,
+                insertAfterUuid
+              )
+            );
+          }
+        }
       );
     }
   }
@@ -1776,10 +1903,44 @@ export class EnvironmentsService {
     databucketUuid: string = this.store.get('activeDatabucketUUID')
   ) {
     const activeEnvironment = this.store.getActiveEnvironment();
+    const databucket = activeEnvironment?.data.find(
+      (entry) => entry.uuid === databucketUuid
+    );
 
-    if (databucketUuid) {
+    if (databucketUuid && activeEnvironment && databucket) {
+      const insertAfterUuid = getInsertAfterUuid(
+        activeEnvironment.data,
+        databucketUuid
+      );
+
       this.store.update(
         removeDatabucketAction(activeEnvironment.uuid, databucketUuid)
+      );
+
+      this.toastsService.addToast(
+        'warning',
+        `Data bucket "<strong>${escapeHtml(databucket.name)}</strong>" deleted`,
+        {
+          label: 'Undo',
+          action: () => {
+            const currentEnvironment = this.store
+              .get('environments')
+              .find((env) => env.uuid === activeEnvironment.uuid);
+
+            if (!currentEnvironment) {
+              return;
+            }
+
+            this.store.update(
+              addDatabucketAction(
+                activeEnvironment.uuid,
+                databucket,
+                true,
+                insertAfterUuid
+              )
+            );
+          }
+        }
       );
     }
   }
@@ -1789,10 +1950,44 @@ export class EnvironmentsService {
    */
   public removeCallback(callbackUuid: string) {
     const activeEnvironment = this.store.getActiveEnvironment();
+    const callback = activeEnvironment?.callbacks.find(
+      (entry) => entry.uuid === callbackUuid
+    );
 
-    if (callbackUuid) {
+    if (callbackUuid && activeEnvironment && callback) {
+      const insertAfterUuid = getInsertAfterUuid(
+        activeEnvironment.callbacks,
+        callbackUuid
+      );
+
       this.store.update(
         removeCallbackAction(activeEnvironment.uuid, callbackUuid)
+      );
+
+      this.toastsService.addToast(
+        'warning',
+        `Callback "<strong>${escapeHtml(callback.name)}</strong>" deleted`,
+        {
+          label: 'Undo',
+          action: () => {
+            const currentEnvironment = this.store
+              .get('environments')
+              .find((env) => env.uuid === activeEnvironment.uuid);
+
+            if (!currentEnvironment) {
+              return;
+            }
+
+            this.store.update(
+              addCallbackAction(
+                activeEnvironment.uuid,
+                callback,
+                true,
+                insertAfterUuid
+              )
+            );
+          }
+        }
       );
     }
   }

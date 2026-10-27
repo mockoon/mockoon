@@ -8,13 +8,23 @@
     <ngb-toast
       [class]="'toast-' + toast.type"
       [autohide]="true"
-      [delay]="5000"
+      [delay]="toast.action ? 8000 : 5000"
       (hide)="removeToast(toast.UUID)"
       (click)="removeToast(toast.UUID)"
     >
       <div class="toast-content">
         <app-svg [icon]="toast.type === 'success' ? 'info' : toast.type" />
-        <span>{{ toast.message }}</span>
+        <span [innerHTML]="toast.message"></span>
+        @if (toast.action) {
+          <button
+            type="button"
+            class="btn btn-xs btn-link text-white text-decoration-underline p-0 ms-auto text-nowrap"
+            (click)="executeToastAction($event, toast)"
+          >
+            {{ toast.action.label }}
+          </button>
+        }
+      </div>
       </div>
     </ngb-toast>
   }
