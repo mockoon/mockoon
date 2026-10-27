@@ -34,14 +34,14 @@ export const updateEnvironmentMutator = (
  * @param environment
  * @param newRoute
  * @param parentId
- * @param insertAfterUuid
+ * @param insertAfterUuid - UUID after which to insert; null inserts at the top, undefined appends
  * @returns
  */
 export const addRouteMutator = (
   environment: Environment,
   newRoute: Route,
   parentId: string | 'root',
-  insertAfterUuid?: string
+  insertAfterUuid?: string | null
 ): Environment => {
   let rootChildren = environment.rootChildren;
   const routes = [...environment.routes];
@@ -53,7 +53,9 @@ export const addRouteMutator = (
   if (parentId === 'root') {
     rootChildren = [...environment.rootChildren];
 
-    if (insertAfterUuid) {
+    if (insertAfterUuid === null) {
+      rootChildren.unshift({ type: 'route', uuid: newRoute.uuid });
+    } else if (insertAfterUuid !== undefined) {
       const insertAfterIndex = rootChildren.findIndex(
         (child) => child.uuid === insertAfterUuid
       );
@@ -74,7 +76,9 @@ export const addRouteMutator = (
       if (folder.uuid === parentId) {
         const children = [...folder.children];
 
-        if (insertAfterUuid) {
+        if (insertAfterUuid === null) {
+          children.unshift({ type: 'route', uuid: newRoute.uuid });
+        } else if (insertAfterUuid !== undefined) {
           const insertAfterIndex = children.findIndex(
             (child) => child.uuid === insertAfterUuid
           );
@@ -392,14 +396,14 @@ export const reorderCallbackMutator = (
  * @param environment
  * @param newFolder
  * @param parentId
- * @param insertAfterUuid
+ * @param insertAfterUuid - UUID after which to insert; null inserts at the top, undefined appends
  * @returns
  */
 export const addFolderMutator = (
   environment: Environment,
   newFolder: Folder,
   parentId: string | 'root',
-  insertAfterUuid?: string
+  insertAfterUuid?: string | null
 ): Environment => {
   let rootChildren = environment.rootChildren;
   let folders = [...environment.folders];
@@ -409,7 +413,9 @@ export const addFolderMutator = (
   if (parentId === 'root') {
     rootChildren = [...environment.rootChildren];
 
-    if (insertAfterUuid) {
+    if (insertAfterUuid === null) {
+      rootChildren.unshift({ type: 'folder', uuid: newFolder.uuid });
+    } else if (insertAfterUuid !== undefined) {
       const insertAfterIndex = rootChildren.findIndex(
         (child) => child.uuid === insertAfterUuid
       );
@@ -430,7 +436,9 @@ export const addFolderMutator = (
       if (folder.uuid === parentId) {
         const children = [...folder.children];
 
-        if (insertAfterUuid) {
+        if (insertAfterUuid === null) {
+          children.unshift({ type: 'folder', uuid: newFolder.uuid });
+        } else if (insertAfterUuid !== undefined) {
           const insertAfterIndex = children.findIndex(
             (child) => child.uuid === insertAfterUuid
           );
@@ -542,19 +550,21 @@ export const removeFolderMutator = (
  *
  * @param environment
  * @param newDataBucket
- * @param insertAfterUuid
+ * @param insertAfterUuid - UUID after which to insert; null inserts at the top, undefined appends
  * @returns
  */
 export const addDatabucketMutator = (
   environment: Environment,
   newDatabucket: DataBucket,
-  insertAfterUuid?: string
+  insertAfterUuid?: string | null
 ): Environment => {
   const data = [...environment.data];
 
   let afterIndex = data.length;
 
-  if (insertAfterUuid) {
+  if (insertAfterUuid === null) {
+    afterIndex = 0;
+  } else if (insertAfterUuid !== undefined) {
     const targetIndex = environment.data.findIndex(
       (databucket) => databucket.uuid === insertAfterUuid
     );
@@ -642,14 +652,14 @@ export const removeDatabucketMutator = (
  * @param environment
  * @param routeUuid
  * @param newRouteResponse
- * @param insertAfterUuid
+ * @param insertAfterUuid - UUID after which to insert; null inserts at the top, undefined appends
  * @returns
  */
 export const addRouteResponseMutator = (
   environment: Environment,
   routeUuid: string,
   newRouteResponse: RouteResponse,
-  insertAfterUuid?: string
+  insertAfterUuid?: string | null
 ): Environment => ({
   ...environment,
   routes: environment.routes.map((route) => {
@@ -658,7 +668,9 @@ export const addRouteResponseMutator = (
 
       let afterIndex = responses.length;
 
-      if (insertAfterUuid) {
+      if (insertAfterUuid === null) {
+        afterIndex = 0;
+      } else if (insertAfterUuid !== undefined) {
         const targetIndex = route.responses.findIndex(
           (routeResponse) => routeResponse.uuid === insertAfterUuid
         );
@@ -771,18 +783,20 @@ export const removeRouteResponseMutator = (
  *
  * @param environment
  * @param newCallback
- * @param insertAfterUuid
+ * @param insertAfterUuid - UUID after which to insert; null inserts at the top, undefined appends
  */
 export const addCallbackMutator = (
   environment: Environment,
   newCallback: Callback,
-  insertAfterUuid?: string
+  insertAfterUuid?: string | null
 ): Environment => {
   const callbacks = [...environment.callbacks];
 
   let afterIndex = callbacks.length;
 
-  if (insertAfterUuid) {
+  if (insertAfterUuid === null) {
+    afterIndex = 0;
+  } else if (insertAfterUuid !== undefined) {
     const targetIndex = environment.callbacks.findIndex(
       (callback) => callback.uuid === insertAfterUuid
     );

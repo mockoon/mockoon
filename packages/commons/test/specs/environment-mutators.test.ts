@@ -107,6 +107,19 @@ describe('environment-mutators: addRouteMutator with insertAfterUuid', () => {
     ]);
   });
 
+  it('should insert route first when insertAfterUuid is null', () => {
+    const env = createBaseEnvironment();
+    const newRoute = {
+      uuid: 'route-new',
+      endpoint: 'first-route',
+      method: 'get'
+    } as Route;
+
+    const result = addRouteMutator(env, newRoute, 'root', null);
+
+    strictEqual(result.rootChildren[0].uuid, 'route-new');
+  });
+
   it('should append route to root level if insertAfterUuid not found', () => {
     const env = createBaseEnvironment();
     const newRoute = {
@@ -209,6 +222,19 @@ describe('environment-mutators: addFolderMutator with insertAfterUuid', () => {
     ]);
   });
 
+  it('should insert folder first when insertAfterUuid is null', () => {
+    const env = createBaseEnvironment();
+    const newFolder = {
+      uuid: 'folder-new',
+      name: 'First Folder',
+      children: []
+    } as Folder;
+
+    const result = addFolderMutator(env, newFolder, 'root', null);
+
+    strictEqual(result.rootChildren[0].uuid, 'folder-new');
+  });
+
   it('should insert folder after specified UUID in parent folder', () => {
     const env = createBaseEnvironment();
     env.folders[0].children = [
@@ -253,6 +279,15 @@ describe('environment-mutators: addFolderMutator with insertAfterUuid', () => {
 });
 
 describe('environment-mutators: addDatabucketMutator with insertAfterUuid', () => {
+  it('should insert databucket first when insertAfterUuid is null', () => {
+    const env = createBaseEnvironment();
+    const newBucket = { uuid: 'data-new', name: 'First Data' } as DataBucket;
+
+    const result = addDatabucketMutator(env, newBucket, null);
+
+    strictEqual(result.data[0].uuid, 'data-new');
+  });
+
   it('should append databucket when insertAfterUuid is undefined', () => {
     const env = createBaseEnvironment();
     const newBucket = { uuid: 'data-new', name: 'Appended Data' } as DataBucket;
@@ -275,6 +310,15 @@ describe('environment-mutators: addDatabucketMutator with insertAfterUuid', () =
 });
 
 describe('environment-mutators: addCallbackMutator with insertAfterUuid', () => {
+  it('should insert callback first when insertAfterUuid is null', () => {
+    const env = createBaseEnvironment();
+    const newCallback = { uuid: 'cb-new', name: 'First Callback' } as Callback;
+
+    const result = addCallbackMutator(env, newCallback, null);
+
+    strictEqual(result.callbacks[0].uuid, 'cb-new');
+  });
+
   it('should append callback when insertAfterUuid is undefined', () => {
     const env = createBaseEnvironment();
     const newCallback = {
@@ -300,6 +344,19 @@ describe('environment-mutators: addCallbackMutator with insertAfterUuid', () => 
 });
 
 describe('environment-mutators: addRouteResponseMutator with insertAfterUuid', () => {
+  it('should insert route response first when insertAfterUuid is null', () => {
+    const env = createBaseEnvironment();
+    const newResponse = {
+      uuid: 'res-new',
+      statusCode: 201,
+      label: 'Created'
+    } as RouteResponse;
+
+    const result = addRouteResponseMutator(env, 'route-1', newResponse, null);
+
+    strictEqual(result.routes[0].responses[0].uuid, 'res-new');
+  });
+
   it('should append route response when insertAfterUuid is undefined', () => {
     const env = createBaseEnvironment();
     const newResponse = {
@@ -335,11 +392,11 @@ describe('environment-mutators: addRouteResponseMutator with insertAfterUuid', (
 });
 
 describe('mutator-utils: getRouteOrFolderInsertPosition and getInsertAfterUuid', () => {
-  it('should return parentId root and undefined insertAfterUuid for item at index 0 in root', () => {
+  it('should return parentId root and null insertAfterUuid for item at index 0 in root', () => {
     const env = createBaseEnvironment();
     const pos = getRouteOrFolderInsertPosition(env, 'route-1');
 
-    deepStrictEqual(pos, { parentId: 'root', insertAfterUuid: undefined });
+    deepStrictEqual(pos, { parentId: 'root', insertAfterUuid: null });
   });
 
   it('should return parentId root and predecessor insertAfterUuid for item at index > 0 in root', () => {
@@ -349,7 +406,7 @@ describe('mutator-utils: getRouteOrFolderInsertPosition and getInsertAfterUuid',
     deepStrictEqual(pos, { parentId: 'root', insertAfterUuid: 'route-1' });
   });
 
-  it('should return parent folder id and undefined insertAfterUuid for first child in folder', () => {
+  it('should return parent folder id and null insertAfterUuid for first child in folder', () => {
     const env = createBaseEnvironment();
     env.folders[0].children = [
       { type: 'route', uuid: 'child-1' },
@@ -357,7 +414,7 @@ describe('mutator-utils: getRouteOrFolderInsertPosition and getInsertAfterUuid',
     ];
     const pos = getRouteOrFolderInsertPosition(env, 'child-1');
 
-    deepStrictEqual(pos, { parentId: 'folder-1', insertAfterUuid: undefined });
+    deepStrictEqual(pos, { parentId: 'folder-1', insertAfterUuid: null });
   });
 
   it('should return parent folder id and predecessor insertAfterUuid for subsequent child in folder', () => {
@@ -371,10 +428,10 @@ describe('mutator-utils: getRouteOrFolderInsertPosition and getInsertAfterUuid',
     deepStrictEqual(pos, { parentId: 'folder-1', insertAfterUuid: 'child-1' });
   });
 
-  it('should return undefined for item at index 0 in getInsertAfterUuid', () => {
+  it('should return null for item at index 0 in getInsertAfterUuid', () => {
     const items = [{ uuid: 'item-1' }, { uuid: 'item-2' }];
 
-    strictEqual(getInsertAfterUuid(items, 'item-1'), undefined);
+    strictEqual(getInsertAfterUuid(items, 'item-1'), null);
   });
 
   it('should return predecessor uuid for item at index > 0 in getInsertAfterUuid', () => {
