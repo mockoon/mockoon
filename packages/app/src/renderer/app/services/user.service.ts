@@ -22,9 +22,11 @@ import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import {
   updateDeployInstancesAction,
+  updateEnvironmentWorkspaceIdsAction,
   updateFeedbackAction,
   updateSyncAction,
-  updateUserAction
+  updateUserAction,
+  updateWorkspacesAction
 } from 'src/renderer/app/stores/actions';
 import { Store, storeDefaultState } from 'src/renderer/app/stores/store';
 import { Config } from 'src/renderer/config';
@@ -342,6 +344,12 @@ export class UserService {
   private resetUserData() {
     this.store.update(
       updateDeployInstancesAction(storeDefaultState.deployInstances)
+    );
+    this.store.update(updateWorkspacesAction(storeDefaultState.workspaces));
+    this.store.update(
+      updateEnvironmentWorkspaceIdsAction(
+        storeDefaultState.environmentWorkspaceIds
+      )
     );
     this.store.update(updateUserAction(storeDefaultState.user));
     this.store.update(updateSyncAction(storeDefaultState.sync));

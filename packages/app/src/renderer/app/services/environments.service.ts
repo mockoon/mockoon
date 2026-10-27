@@ -96,6 +96,7 @@ import { EventsService } from 'src/renderer/app/services/events.service';
 import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
 import { ServerService } from 'src/renderer/app/services/server.service';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { StorageService } from 'src/renderer/app/services/storage.service';
 import { ToastsService } from 'src/renderer/app/services/toasts.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
@@ -162,6 +163,7 @@ export class EnvironmentsService {
   private loggerService = inject(LoggerService);
   private deployService = inject(DeployService);
   private toastsService = inject(ToastsService);
+  private settingsService = inject(SettingsService);
 
   private environmentChangesNotified = false;
   private environmentChanges$ = new BehaviorSubject<
@@ -598,13 +600,20 @@ export class EnvironmentsService {
         );
       }),
       tap(({ newEnvironment, filePath, hash }) => {
+        const workspaceId =
+          options.cloud && storeUpdateOptions.emit
+            ? (this.store.get('settings').workspaceFilterId ??
+              this.store.get('workspaces')[0]?.id)
+            : undefined;
+
         this.store.update(
           addEnvironmentAction(newEnvironment, {
             filePath,
             insertAfterIndex: options.insertAfterIndex,
             cloud: options.cloud,
             setActive: options.setActive,
-            hash
+            hash,
+            workspaceId
           }),
           storeUpdateOptions.force,
           storeUpdateOptions.emit
@@ -622,6 +631,10 @@ export class EnvironmentsService {
    * Add and save a new environment from the clipboard
    */
   public newEnvironmentFromClipboard(cloud: boolean): Observable<any> {
+    if (cloud && !this.settingsService.canCreateCloudEnvironment()) {
+      return EMPTY;
+    }
+
     return from(this.mainApiService.invoke('APP_READ_CLIPBOARD')).pipe(
       map((data: string) => JSON.parse(data)),
       switchMap((environment: Environment) => this.verifyData(environment)),
@@ -884,6 +897,10 @@ export class EnvironmentsService {
   ) {
     const user = this.store.get('user');
 
+    if (!this.settingsService.canCreateCloudEnvironment()) {
+      return EMPTY;
+    }
+
     if (this.isQuotaReached()) {
       this.loggerService.logMessage('error', 'CLOUD_SYNC_QUOTA_EXCEEDED', {
         quota: user.cloudSyncItemsQuota
@@ -928,6 +945,11 @@ export class EnvironmentsService {
    */
   public addCloudEnvironmentFromLocalFile() {
     const user = this.store.get('user');
+
+    if (!this.settingsService.canCreateCloudEnvironment()) {
+      return EMPTY;
+    }
+
     const cloudEnvironments = this.store
       .get('settings')
       .environments.filter(
@@ -2321,7 +2343,10 @@ export class EnvironmentsService {
   public convertCurrentEnvironmentToCloud() {
     const activeEnvironment = this.store.getActiveEnvironment();
 
-    if (this.store.getIsEnvCloud(activeEnvironment.uuid)) {
+    if (
+      !this.settingsService.canCreateCloudEnvironment() ||
+      this.store.getIsEnvCloud(activeEnvironment.uuid)
+    ) {
       return EMPTY;
     }
 

@@ -190,4 +190,10 @@ export type ServerOptions = {
    * Default is 100.
    */
   maxCallbackDepth?: number;
+
+  /**
+   * Verify TLS certificates when proxying requests to HTTPS targets.
+   * Default is false for development convenience.
+   */
+  proxyVerifyTls?: boolean;
 };

@@ -29,6 +29,7 @@ export class MockoonServerless {
     envVarsPrefix: defaultEnvironmentVariablesPrefix,
     enableAdminApi: true,
     disableTls: false,
+    proxyVerifyTls: false,
     maxTransactionLogs: defaultMaxTransactionLogs,
     enableRandomLatency: false,
     enableRouteMetadataHeaders: false
@@ -79,6 +80,7 @@ export class MockoonServerless {
       adminApiAuthToken: this.options.adminApiAuthToken,
       adminApiCorsOrigins: this.options.adminApiCorsOrigins,
       disableTls: this.options.disableTls,
+      proxyVerifyTls: this.options.proxyVerifyTls,
       maxTransactionLogs: this.options.maxTransactionLogs,
       enableRandomLatency: this.options.enableRandomLatency,
       enableRouteMetadataHeaders: this.options.enableRouteMetadataHeaders,

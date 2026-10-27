@@ -72,6 +72,34 @@ export const IsValidURL = (address: string): boolean => {
 };
 
 /**
+ * Test if a URL uses HTTPS and targets a remote host (non-localhost/loopback)
+ *
+ * @param address
+ */
+export const IsRemoteHttpsURL = (address: string): boolean => {
+  try {
+    const parsed = new URL(address);
+
+    if (parsed.protocol !== 'https:') {
+      return false;
+    }
+
+    const host = parsed.hostname.toLowerCase();
+
+    return !(
+      host === 'localhost' ||
+      host === '127.0.0.1' ||
+      host === '::1' ||
+      host === '[::1]' ||
+      host === '0.0.0.0' ||
+      host === '::'
+    );
+  } catch (_error) {
+    return false;
+  }
+};
+
+/**
  * Clone an object using JSON.stringify
  * /!\ Suitable for Environment, Route, etc but not for complex objects containing Map, Set, etc
  */

@@ -45,6 +45,7 @@ export type Settings = {
   environmentsCategoriesCollapsed: Record<EnvironmentsCategories, boolean>;
   envVarsPrefix: string;
   activeEnvironmentUuid: string | null;
+  workspaceFilterId: number | null;
   enableRandomLatency: boolean;
   recentLocalEnvironments: RecentLocalEnvironment[];
   displayLogsIsoTimestamp: boolean;

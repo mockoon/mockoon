@@ -52,6 +52,7 @@ export enum SyncMessageTypes {
 export type EnvironmentsListPayload = {
   environmentUuid: string;
   hash: string;
+  workspaceId?: number;
 }[];
 
 export type ConnectedPayload = {
@@ -134,6 +135,7 @@ export interface GetFullEnvironmentSyncAction extends BaseSyncAction {
 export interface AddCloudEnvironmentSyncAction extends BaseSyncAction {
   type: SyncActionTypes.ADD_CLOUD_ENVIRONMENT;
   environment: Environment;
+  workspaceId?: number;
 }
 
 /**

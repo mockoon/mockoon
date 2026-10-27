@@ -116,6 +116,22 @@ export const environmentReducer = (
       break;
     }
 
+    case ActionTypes.UPDATE_WORKSPACES: {
+      newState = {
+        ...state,
+        workspaces: [...action.workspaces]
+      };
+      break;
+    }
+
+    case ActionTypes.UPDATE_ENVIRONMENT_WORKSPACE_IDS: {
+      newState = {
+        ...state,
+        environmentWorkspaceIds: { ...action.environmentWorkspaceIds }
+      };
+      break;
+    }
+
     case ActionTypes.ADD_DEPLOY_INSTANCE: {
       newState = {
         ...state,
@@ -643,6 +659,13 @@ export const environmentReducer = (
           ...state.duplicatedRoutes,
           [newEnvironment.uuid]: listDuplicatedRouteUuids(newEnvironment)
         },
+        environmentWorkspaceIds:
+          action.workspaceId === undefined
+            ? state.environmentWorkspaceIds
+            : {
+                ...state.environmentWorkspaceIds,
+                [newEnvironment.uuid]: action.workspaceId
+              },
         settings: newSettings
       };
       break;

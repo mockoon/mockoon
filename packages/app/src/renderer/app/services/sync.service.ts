@@ -46,6 +46,7 @@ import { SyncPayloadsService } from 'src/renderer/app/services/sync-payloads.ser
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { UserService } from 'src/renderer/app/services/user.service';
 import {
+  updateEnvironmentWorkspaceIdsAction,
   updateSettingsEnvironmentDescriptorAction,
   updateSyncAction
 } from 'src/renderer/app/stores/actions';
@@ -359,6 +360,22 @@ export class SyncService {
         const environmentDescriptors = this.store.get('settings').environments;
 
         const hashes$ = [];
+
+        this.store.update(
+          updateEnvironmentWorkspaceIdsAction(
+            updatedCloudEnvironmentsList.reduce(
+              (environmentWorkspaceIds, environment) => {
+                if (environment.workspaceId !== undefined) {
+                  environmentWorkspaceIds[environment.environmentUuid] =
+                    environment.workspaceId;
+                }
+
+                return environmentWorkspaceIds;
+              },
+              {} as Record<string, number>
+            )
+          )
+        );
 
         this.environmentsService.updateClientEnvironments(
           updatedCloudEnvironmentsList

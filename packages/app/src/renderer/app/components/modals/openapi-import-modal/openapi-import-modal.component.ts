@@ -37,6 +37,7 @@ import { DialogsService } from 'src/renderer/app/services/dialogs.service';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
 import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import { UIService } from 'src/renderer/app/services/ui.service';
 import { updateOpenApiImportAction } from 'src/renderer/app/stores/actions';
 import { Store } from 'src/renderer/app/stores/store';
@@ -67,6 +68,7 @@ export class OpenapiImportModalComponent {
   private mainApiService = inject(MainApiService);
   private dataService = inject(DataService);
   private store = inject(Store);
+  private settingsService = inject(SettingsService);
 
   public defaultEditorConfig = {
     ...defaultEditorOptions,
@@ -247,6 +249,10 @@ export class OpenapiImportModalComponent {
    * @param cloud
    */
   public import(cloud: boolean) {
+    if (cloud && !this.settingsService.canCreateCloudEnvironment()) {
+      return;
+    }
+
     this.taskInProgress.set(true);
 
     const converter = new OpenApiConverter();
