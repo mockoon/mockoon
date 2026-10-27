@@ -1,6 +1,7 @@
 import { strictEqual } from 'node:assert';
 import { describe, it } from 'node:test';
 import {
+  IsRemoteHttpsURL,
   express5PathConvert,
   generateSecureToken,
   parseByteSize
@@ -260,5 +261,34 @@ describe('express5PathConvert', () => {
       express5PathConvert('/api(v2)?/users/:id+/file.:ext?/*'),
       '/api{v2}/users/*id/file{.:ext}/*wildcard0'
     );
+  });
+});
+
+describe('IsRemoteHttpsURL', () => {
+  it('should return false for invalid URLs', () => {
+    strictEqual(IsRemoteHttpsURL(''), false);
+    strictEqual(IsRemoteHttpsURL('not-a-url'), false);
+  });
+
+  it('should return false for non-https URLs', () => {
+    strictEqual(IsRemoteHttpsURL('http://example.com'), false);
+    strictEqual(IsRemoteHttpsURL('http://localhost:3000'), false);
+    strictEqual(IsRemoteHttpsURL('ws://example.com'), false);
+  });
+
+  it('should return false for localhost and loopback https URLs', () => {
+    strictEqual(IsRemoteHttpsURL('https://localhost'), false);
+    strictEqual(IsRemoteHttpsURL('https://localhost:3000'), false);
+    strictEqual(IsRemoteHttpsURL('https://127.0.0.1'), false);
+    strictEqual(IsRemoteHttpsURL('https://127.0.0.1:8443'), false);
+    strictEqual(IsRemoteHttpsURL('https://[::1]'), false);
+    strictEqual(IsRemoteHttpsURL('https://[::1]:8443'), false);
+    strictEqual(IsRemoteHttpsURL('https://0.0.0.0:8443'), false);
+  });
+
+  it('should return true for remote https URLs', () => {
+    strictEqual(IsRemoteHttpsURL('https://example.com'), true);
+    strictEqual(IsRemoteHttpsURL('https://api.example.com/v1'), true);
+    strictEqual(IsRemoteHttpsURL('https://192.168.1.100:8443'), true);
   });
 });

@@ -160,6 +160,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     envVarsPrefix: defaultEnvironmentVariablesPrefix,
     enableAdminApi: true,
     disableTls: false,
+    proxyVerifyTls: false,
     maxTransactionLogs: defaultMaxTransactionLogs,
     enableRandomLatency: false,
     enableRouteMetadataHeaders: false,
@@ -182,6 +183,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     this.options = {
       ...this.options,
       ...options,
+      proxyVerifyTls: options.proxyVerifyTls ?? false,
       envVarsPrefix: options.envVarsPrefix ?? defaultEnvironmentVariablesPrefix,
       maxCallbackDepth: options.maxCallbackDepth ?? defaultMaxCallbackDepth
     };
@@ -2124,7 +2126,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
       router: () => this.environment.proxyHost,
       cookieDomainRewrite: { '*': '' },
       target: this.environment.proxyHost,
-      secure: false,
+      secure: this.options.proxyVerifyTls ?? false,
       changeOrigin: true,
       pathRewrite: (path) => {
         if (

@@ -41,6 +41,17 @@
             <app-svg icon="warning" />
           </span>
         }
+        @if (
+          activeEnvironment.proxyHost &&
+          isRemoteHttpsURL(activeEnvironment.proxyHost)
+        ) {
+          <span
+            class="text-warning"
+            ngbTooltip="TLS certificate validation is disabled for proxied HTTPS requests. Do not forward sensitive credentials over untrusted networks."
+          >
+            <app-svg icon="warning" />
+          </span>
+        }
       </div>
     </div>
     <div class="input-group align-items-center mb-3">

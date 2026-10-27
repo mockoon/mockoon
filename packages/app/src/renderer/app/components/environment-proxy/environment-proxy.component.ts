@@ -11,6 +11,7 @@ import {
   Environment,
   EnvironmentDefault,
   Header,
+  IsRemoteHttpsURL,
   IsValidURL
 } from '@mockoon/commons';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
@@ -43,6 +44,7 @@ export class EnvironmentProxyComponent {
 
   public activeEnvironment$: Observable<Environment>;
   public isValidURL = IsValidURL;
+  public isRemoteHttpsURL = IsRemoteHttpsURL;
   public scrollToBottom = this.uiService.scrollToBottom;
   public environmentProxyForm: UntypedFormGroup;
 
