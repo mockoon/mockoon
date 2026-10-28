@@ -101,7 +101,7 @@
     "@firebase/util@1.15.3": true,
     "esbuild@0.28.2": true,
     "lmdb@3.5.6": true,
-    "edgedriver@8.0.0": true,
-    "geckodriver@8.0.0": true
+    "edgedriver@6.3.1": true,
+    "geckodriver@6.1.1": true
   }
 }
