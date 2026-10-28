@@ -161,7 +161,8 @@ $status-code-colors:
   z-index: 5000;
   position: absolute;
   width: 280px;
-  bottom: calc($spacer / 2) + 2rem;
+  max-height: 80vh;
+  bottom: calc($spacer / 2 + 2rem);
   right: calc($spacer / 2);
 }
 

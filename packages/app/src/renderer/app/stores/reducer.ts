@@ -1583,7 +1583,9 @@ export const environmentReducer = (
     case ActionTypes.ADD_TOAST: {
       newState = {
         ...state,
-        toasts: [...state.toasts, action.toast]
+
+        // remove oldest toast if we reach maximum (10)
+        toasts: [...state.toasts, action.toast].slice(-10)
       };
       break;
     }
