@@ -1128,6 +1128,8 @@ describe('Templating', () => {
 
   describe('Disable route response templating', () => {
     it('should get body content with disabled templating', async () => {
+      // wait for toasts to disappear
+      await browser.pause(6000);
       await routes.select(1);
       await routes.switchTab('SETTINGS');
       await routes.toggleDisableTemplating();

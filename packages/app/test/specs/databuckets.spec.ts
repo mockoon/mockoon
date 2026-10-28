@@ -257,6 +257,7 @@ describe('Databuckets selection in responses', () => {
     await routes.select(1);
     await environments.start();
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/databucket',
       testedResponse: {
@@ -264,6 +265,7 @@ describe('Databuckets selection in responses', () => {
       }
     });
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/databucket',
       testedResponse: {
@@ -282,11 +284,13 @@ describe('Databuckets selection in responses', () => {
     await databuckets.assertProcessedState('na');
 
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/databucketWithReqHelper?param=testvalue1',
       testedResponse: { body: 'testvalue1' }
     });
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/databucketWithReqHelper?param=testvalue2',
       testedResponse: { body: 'testvalue1' }
@@ -300,11 +304,13 @@ describe('Databuckets selection in responses', () => {
     await environments.stop();
     await environments.start();
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/databucketWithReqHelper?param=560',
       testedResponse: { body: '560' }
     });
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/databucketWithReqHelper?param=testvalue2',
       testedResponse: { body: '560' }
@@ -315,11 +321,13 @@ describe('Databuckets selection in responses', () => {
     await environments.stop();
     await environments.start();
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/databucketWithReqHelper?param=false',
       testedResponse: { body: 'false' }
     });
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/databucketWithReqHelper?param=testvalue2',
       testedResponse: { body: 'false' }
@@ -330,11 +338,13 @@ describe('Databuckets selection in responses', () => {
     await environments.stop();
     await environments.start();
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/databucketWithReqHelper?param=null',
       testedResponse: { body: 'null' }
     });
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/databucketWithReqHelper?param=testvalue2',
       testedResponse: { body: 'null' }
@@ -345,11 +355,13 @@ describe('Databuckets selection in responses', () => {
     await environments.stop();
     await environments.start();
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/databucketWithImbricatedReqHelper?limit=7',
       testedResponse: { body: 'testtesttesttesttesttesttest' }
     });
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/databucketWithImbricatedReqHelper',
       testedResponse: { body: 'testtesttesttesttesttesttest' }
@@ -360,11 +372,13 @@ describe('Databuckets selection in responses', () => {
     await environments.stop();
     await environments.start();
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/multipleDatabucketsFromBody?param=paramvalue1&limit=4',
       testedResponse: { body: 'paramvalue1testtesttesttesthello' }
     });
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/multipleDatabucketsFromBody',
       testedResponse: { body: 'paramvalue1testtesttesttesthello' }
@@ -375,11 +389,13 @@ describe('Databuckets selection in responses', () => {
     await environments.stop();
     await environments.start();
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/nestedDatabuckets?param=1234',
       testedResponse: { body: '{"id":"1234","otherBucketId":"1234"}' }
     });
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/nestedDatabuckets',
       testedResponse: { body: '{"id":"1234","otherBucketId":"1234"}' }
@@ -393,17 +409,20 @@ describe('Databuckets selection in responses', () => {
     const adminApiAuthToken = await environments.getEnvironmentAdminApiToken();
 
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/databucketWithReqHelper?param=testvalue1',
       testedResponse: { body: 'testvalue1' }
     });
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/databucketWithReqHelper?param=testvalue2',
       testedResponse: { body: 'testvalue1' }
     });
 
     await http.assertCall({
+      description: '',
       method: 'PURGE',
       path: '/mockoon-admin/state',
       headers: {
@@ -411,12 +430,14 @@ describe('Databuckets selection in responses', () => {
       }
     });
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/databucketWithReqHelper?param=testvalue3',
       testedResponse: { body: 'testvalue3' }
     });
 
     await http.assertCall({
+      description: '',
       method: 'POST',
       path: '/mockoon-admin/state/purge',
       headers: {
@@ -424,6 +445,7 @@ describe('Databuckets selection in responses', () => {
       }
     });
     await http.assertCall({
+      description: '',
       method: 'GET',
       path: '/databucketWithReqHelper?param=testvalue4',
       testedResponse: { body: 'testvalue4' }

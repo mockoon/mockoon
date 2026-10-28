@@ -154,7 +154,7 @@ const findItemIndex = (
 
       return getPath(value, routeCrudKey).toString() === request.params['id'];
     } else {
-      let indexParam = parseInt(request.params['id'], 10);
+      let indexParam = parseInt(request.params['id'] as string, 10);
       indexParam = isNaN(indexParam) ? 0 : indexParam;
 
       return indexParam === index;
