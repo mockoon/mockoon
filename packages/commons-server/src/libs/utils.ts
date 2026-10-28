@@ -311,10 +311,14 @@ export function CreateTransaction(
       urlPath: requestUrl.pathname,
       route: request.effectiveRoute ? request.effectiveRoute : null,
       params: request.params
-        ? Object.keys(request.params).map((paramName) => ({
-            name: paramName,
-            value: request.params[paramName] as string
-          }))
+        ? Object.keys(request.params).map((paramName) => {
+            const value = request.params[paramName];
+
+            return {
+              name: paramName,
+              value: Array.isArray(value) ? value.join('/') : value
+            };
+          })
         : [],
       query: requestUrl ? queryString : null,
       queryParams: request.query,

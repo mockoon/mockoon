@@ -2101,6 +2101,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
   private setCors(server: Application) {
     server.options('/{*splat}', (req, res, next) => {
       if (this.environment.cors) {
+        req.params = {};
+
         // override default CORS headers with environment's headers
         this.setHeaders(
           [...CORSHeaders, ...this.environment.headers],

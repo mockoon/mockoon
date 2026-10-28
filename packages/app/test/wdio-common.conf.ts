@@ -11,6 +11,7 @@ export const config: Partial<WebdriverIO.Config> = {
   beforeSession: async (_config, _capabilities, specs) => {
     await bootstrap.init(specs);
   },
+  strictSelectors: false,
   bail: 0,
   waitforTimeout: 10000,
   connectionRetryTimeout: 120000,

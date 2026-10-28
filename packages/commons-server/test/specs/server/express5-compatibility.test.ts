@@ -17,7 +17,7 @@ describe('Express 5 compatibility', () => {
   before(async () => {
     environment = await getEnvironment('test');
     environment.cors = true;
-    environment.routes = ['', 'nested/:id', 'custom-options'].map(
+    environment.routes = ['', 'nested/:id', 'custom-options/:id'].map(
       (endpoint, index) => {
         const route = structuredClone(environment.routes[0]);
         route.uuid = `express5-route-${index}`;
@@ -89,16 +89,24 @@ describe('Express 5 compatibility', () => {
       strictEqual(response.status, 200);
       strictEqual(response.headers.get('access-control-allow-origin'), '*');
       await response.text();
+
+      const logs = await (await adminFetch(url, '/mockoon-admin/logs')).json();
+      deepStrictEqual(logs[logs.length - 1].request.params, []);
     }
   });
 
-  it('should prefer user-defined OPTIONS routes over global CORS', async () => {
-    const response = await fetch(`${url}/custom-options`, {
+  it('should preserve parameters on user-defined OPTIONS routes', async () => {
+    const response = await fetch(`${url}/custom-options/123`, {
       method: 'OPTIONS'
     });
 
     strictEqual(response.status, 202);
     await response.text();
+
+    const logs = await (await adminFetch(url, '/mockoon-admin/logs')).json();
+    deepStrictEqual(logs[logs.length - 1].request.params, [
+      { name: 'id', value: '123' }
+    ]);
   });
 
   it('should proxy unmatched requests without changing the path or query', async () => {
