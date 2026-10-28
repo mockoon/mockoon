@@ -71,7 +71,7 @@ export const createAdminEndpoint = (
     }
   });
 
-  app.use(`${adminApiPrefix}*`, (req, res, next) => {
+  app.use(`${adminApiPrefix}{*splat}`, (req, res, next) => {
     const allowedOrigins = adminApiCorsOrigins ?? [];
     const allowAll = allowedOrigins.includes('*');
     const requestOrigin = req.get('origin');
@@ -123,7 +123,7 @@ export const createAdminEndpoint = (
     return timingSafeEqual(expectedTokenBuffer, providedTokenBuffer);
   };
 
-  app.use(`${adminApiPrefix}*`, (req: Request, res: Response, next) => {
+  app.use(`${adminApiPrefix}{*splat}`, (req: Request, res: Response, next) => {
     if (req.method === 'OPTIONS') {
       next();
 

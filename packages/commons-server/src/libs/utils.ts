@@ -313,7 +313,7 @@ export function CreateTransaction(
       params: request.params
         ? Object.keys(request.params).map((paramName) => ({
             name: paramName,
-            value: request.params[paramName]
+            value: request.params[paramName] as string
           }))
         : [],
       query: requestUrl ? queryString : null,

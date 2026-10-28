@@ -318,6 +318,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     const app = express();
     app.disable('x-powered-by');
     app.disable('etag');
+    app.set('query parser', 'extended');
 
     app.use(this.removeExpectHeader);
     app.use(this.logRequest);
@@ -793,7 +794,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    */
   private createRestRoutes(server: Application) {
     server.all(
-      '*',
+      '/{*splat}',
       (request: Request, response: Response, next: NextFunction) => {
         let matchingRoute: Route | null = null;
         let matchingRouteResponse: RouteResponse | null = null;
@@ -2098,7 +2099,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
    * @param server - express instance
    */
   private setCors(server: Application) {
-    server.options('/*', (req, res, next) => {
+    server.options('/{*splat}', (req, res, next) => {
       if (this.environment.cors) {
         // override default CORS headers with environment's headers
         this.setHeaders(
