@@ -2,6 +2,7 @@ import { fail } from 'node:assert';
 import { promises as fs } from 'node:fs';
 import environments from '../libs/environments';
 import environmentsSettings from '../libs/environments-settings';
+import environmentsLogs from '../libs/environments-logs';
 import http from '../libs/http';
 import navigation from '../libs/navigation';
 import { WsConnection, withTimeout } from '../libs/ws';
@@ -50,6 +51,21 @@ describe('WebSockets', () => {
       await ws.assertReply(
         '{ "message": "Hello world 2222!" }',
         'ECHO: { "message": "Hello world 2222!" }'
+      );
+
+      await navigation.switchView('ENV_LOGS');
+      await browser.pause(500);
+      await environmentsLogs.select(1);
+      await environmentsLogs.assertLogMenu(1, 'WS', '/ws-env/test/ws/echo');
+      await environmentsLogs.assertLogItem(
+        'WebSocket event: Message received',
+        'request',
+        2,
+        3
+      );
+      await environmentsLogs.assertLogBody(
+        '{ "message": "Hello world 2222!" }',
+        'request'
       );
 
       ws.close();

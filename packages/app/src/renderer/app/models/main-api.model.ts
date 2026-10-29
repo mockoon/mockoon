@@ -110,6 +110,9 @@ export interface MainAPIModel {
         originalError?: Error;
         transaction?: Transaction;
         inflightRequest?: InFlightRequest;
+        websocketMessage?: string;
+        websocketCode?: number;
+        websocketReason?: string | null;
         dataBuckets?: ProcessedDatabucketWithoutValue[];
         adminApiAuthToken?: string;
       }

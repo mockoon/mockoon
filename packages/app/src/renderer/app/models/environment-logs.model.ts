@@ -24,6 +24,11 @@ export type EnvironmentLogResponse = {
 
 export type EnvironmentLogOrigin = 'local' | 'cloud';
 
+export type EnvironmentLogWebSocketEvent =
+  | { type: 'connection' }
+  | { type: 'message'; message: string }
+  | { type: 'closed'; code: number; reason?: string | null };
+
 export type EnvironmentLog = {
   origin: EnvironmentLogOrigin;
   uuid: string;
@@ -37,6 +42,7 @@ export type EnvironmentLog = {
   route: string;
   method: keyof typeof Methods;
   proxied: boolean;
+  websocketEvent?: EnvironmentLogWebSocketEvent;
   request: EnvironmentLogRequest;
   response: EnvironmentLogResponse;
 };
