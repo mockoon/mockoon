@@ -5,6 +5,34 @@ const commonConfig = require('./electron-builder.common');
  * @see https://www.electron.build/configuration/configuration
  */
 const config = Object.assign({}, commonConfig, {
+  afterPack: ({ targets }) => {
+    for (const target of targets) {
+      if (target.name !== 'snap') {
+        continue;
+      }
+
+      // Work around electron-builder core24 desktop source path.
+      // Clone the shared helper so other Linux targets remain unaffected.
+      const helper = target.helper;
+      target.helper = Object.create(helper);
+      target.helper.getSnapCore = () => {
+        const core = helper.getSnapCore();
+        const createDescriptor = core.createDescriptor.bind(core);
+        core.createDescriptor = async (arch) => {
+          const descriptor = await createDescriptor(arch);
+          for (const app of Object.values(descriptor.apps)) {
+            if (app.desktop?.startsWith('meta/gui/')) {
+              app.desktop = app.desktop.replace(/^meta\/gui\//, 'gui/');
+            }
+          }
+
+          return descriptor;
+        };
+
+        return core;
+      };
+    }
+  },
   linux: {
     executableName: 'mockoon',
     syncDesktopName: true,

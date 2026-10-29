@@ -87,7 +87,7 @@ jobs:
 
   build-linux:
     name: Build Linux binaries
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment: production
     timeout-minutes: 60
     env:
