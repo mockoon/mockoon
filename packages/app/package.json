@@ -94,7 +94,7 @@
     "electron-builder": "26.18.0",
     "esbuild": "0.28.2",
     "firebase": "13.1.0",
-    "joi": "18.3.0",
+    "joi": "18.3.1",
     "ngx-markdown": "22.1.1",
     "ngx-mask": "22.2.5",
     "puppeteer-core": "25.16.0",
