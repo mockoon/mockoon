@@ -15,4 +15,5 @@ export * from './models/reorder.model';
 export * from './models/route.model';
 export * from './models/server.model';
 export * from './utils/mutator-utils';
+export * from './utils/templating-utils';
 export * from './utils/utils';

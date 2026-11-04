@@ -114,6 +114,56 @@ describe('Callback addition', () => {
 });
 
 describe('Callback edition', () => {
+  it('should warn only when templates may change the callback destination', async () => {
+    const originalUri = await callbacks.uriInput.getValue();
+    const destinationWarningCases = [
+      { uri: '', warning: false },
+      { uri: 'https://example.com/webhook', warning: false },
+      { uri: '{{body "callbackUrl"}}', warning: true },
+      { uri: '{{body  "callbackUrl"}}', warning: true },
+      { uri: '{{concat "body" "https://example.com"}}', warning: false },
+      {
+        uri: 'https://example.com/{{concat "prefix" (body "path")}}',
+        warning: false
+      },
+      { uri: '{{{body "callbackUrl"}}}', warning: true },
+      {
+        uri: '{{#if (body "external")}}https://example.com{{/if}}',
+        warning: true
+      },
+      { uri: '{{getGlobalVar "callbackUrl"}}', warning: false },
+      { uri: 'https://{{getGlobalVar "host"}}/webhook', warning: false },
+      { uri: '{{faker "internet.url"}}', warning: false },
+      { uri: '{{queryParam "callbackUrl"}}', warning: true },
+      { uri: '{{header "X-Callback-Url"}}', warning: true },
+      { uri: '{{body "scheme"}}://example.com/webhook', warning: true },
+      { uri: 'https://{{body "host"}}/webhook', warning: true },
+      { uri: 'https://api.{{body "domain"}}/webhook', warning: true },
+      { uri: 'https://example.com:{{body "port"}}/webhook', warning: true },
+      { uri: 'https://example.com{{body "suffix"}}', warning: true },
+      { uri: 'https://example.com/{{body "path"}}', warning: false },
+      { uri: 'https://example.com?value={{body "value"}}', warning: false },
+      { uri: 'https://example.com#{{body "fragment"}}', warning: false },
+      { uri: 'HTTP://[::1]:3000/{{body "path"}}', warning: false },
+      { uri: '/{{body "path"}}', warning: false },
+      { uri: '//{{body "path"}}', warning: false }
+    ];
+
+    try {
+      for (const { uri, warning } of destinationWarningCases) {
+        await callbacks.setUri(uri);
+
+        if (warning) {
+          await expect($('#callback-destination-warning')).toBeDisplayed();
+        } else {
+          await expect($('#callback-destination-warning')).not.toBeExisting();
+        }
+      }
+    } finally {
+      await callbacks.setUri(originalUri);
+    }
+  });
+
   it('should edit a callback name', async () => {
     await callbacks.setName('Testing callback');
 
