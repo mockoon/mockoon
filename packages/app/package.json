@@ -61,7 +61,7 @@
     "@mockoon/cloud": "9.10.0",
     "@mockoon/commons": "9.10.0",
     "@mockoon/commons-server": "9.10.0",
-    "chokidar": "4.0.3",
+    "chokidar": "6.0.0",
     "electron-json-storage": "4.6.0",
     "electron-window-state": "5.0.3",
     "semver": "7.8.5",
