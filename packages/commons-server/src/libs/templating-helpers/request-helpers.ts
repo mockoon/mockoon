@@ -3,22 +3,7 @@ import { SafeString } from 'handlebars';
 import { ServerRequest } from '../requests';
 import { fromSafeString, getValueFromPath } from '../utils';
 
-export const requestHelperNames: (keyof ReturnType<typeof RequestHelpers>)[] = [
-  'bodyRaw',
-  'body',
-  'method',
-  'ip',
-  'urlParam',
-  'urlParams',
-  'queryParam',
-  'queryParamRaw',
-  'queryParams',
-  'header',
-  'headers',
-  'cookie',
-  'baseUrl',
-  'hostname'
-];
+export { requestHelperNames } from '@mockoon/commons';
 
 export const RequestHelpers = function (
   request: ServerRequest,

@@ -14,7 +14,8 @@ import {
   Environment,
   Header,
   Methods,
-  MimeTypesWithTemplating
+  MimeTypesWithTemplating,
+  hasRequestHelpers
 } from '@mockoon/commons';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -101,6 +102,8 @@ export class EnvironmentCallbacksComponent {
   public databuckets$: Observable<DropdownItems>;
   public httpMethod = Methods;
   public bodySupportingMethods = [Methods.post, Methods.put, Methods.patch];
+  public callbackDestinationWarning =
+    'This template may allow request data to control the callback destination. Callers could send requests to services accessible from the Mockoon server. Use trusted destinations and restrict outbound network access.';
   public callbackMethods: DropdownItems<Methods> = [
     { value: Methods.get, label: 'GET', classes: 'color-method-get' },
     { value: Methods.post, label: 'POST', classes: 'color-method-post' },
@@ -354,6 +357,23 @@ export class EnvironmentCallbacksComponent {
     this.activeTab$ = callbackSettingsObj.pipe(map((val) => val.activeTab));
     this.activeSpecTab$ = callbackSettingsObj.pipe(
       map((val) => val.activeSpecTab)
+    );
+  }
+
+  public get hasTemplatedCallbackDestination(): boolean {
+    const uri: string = this.activeCallbackForm.get('uri').value || '';
+    const templateIndex = uri.indexOf('{{');
+
+    if (!hasRequestHelpers(uri)) {
+      return false;
+    }
+
+    const literalPrefix = uri.slice(0, templateIndex);
+
+    // Relative callbacks are appended to the server's base URL, not URL-resolved.
+    return (
+      !literalPrefix.startsWith('/') &&
+      !/^https?:\/\/[^/?#\\\s]+[/?#]/i.test(literalPrefix)
     );
   }
 
