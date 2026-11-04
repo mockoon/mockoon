@@ -2419,11 +2419,23 @@ export class EnvironmentsService {
     );
 
     if (log) {
+      // Failed callbacks have no HTTP response to reproduce as a mock.
+      if (log.response?.status === 0) {
+        return;
+      }
+
       let routeResponse: RouteResponse;
       const prefix = targetEnvironment.endpointPrefix;
-      let endpoint = (log.type === 'callback'
-        ? new URL(log.url).pathname
-        : log.url).slice(1); // Remove the initial slash '/'
+      let endpoint = log.url;
+      if (log.type === 'callback') {
+        try {
+          endpoint = new URL(log.url).pathname;
+        } catch (_error) {
+          // Skip malformed URLs without interrupting log recording.
+          return;
+        }
+      }
+      endpoint = endpoint.slice(1); // Remove the initial slash '/'
       const routeType = log.protocol === 'ws' ? RouteType.WS : RouteType.HTTP;
       if (prefix && endpoint.startsWith(prefix)) {
         endpoint = endpoint.slice(prefix.length + 1); // Remove the prefix and the slash
