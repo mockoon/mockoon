@@ -347,6 +347,7 @@ export class ServerService {
         break;
 
       case 'transaction-complete':
+      case 'callback-transaction-complete':
         if (data.transaction) {
           this.zone.run(() => {
             this.eventsService.serverTransaction$.next({

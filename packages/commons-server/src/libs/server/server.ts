@@ -75,6 +75,7 @@ import { TemplateParser } from '../template-parser';
 import {
   appendField,
   CreateCallbackInvocation,
+  CreateCallbackTransaction,
   CreateInFlightRequest,
   CreateTransaction,
   isBodySupportingMethod,
@@ -751,14 +752,7 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
 
       this.emit('transaction-complete', transaction);
 
-      this.transactionLogs.push(transaction);
-
-      // keep only the last n transactions
-      if (this.transactionLogs.length > this.options.maxTransactionLogs) {
-        this.transactionLogs = this.transactionLogs.slice(
-          this.options.maxTransactionLogs * -1
-        );
-      }
+      this.retainTransaction(transaction);
     });
 
     next();
@@ -1766,21 +1760,45 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
                 : undefined
             })
               .then((res) => {
-                this.emitCallbackInvoked(
+                return this.emitCallbackInvoked(
                   res,
                   callback,
                   url,
-                  content instanceof FormData
+                  !isBodySupportingMethod(callback.method)
+                    ? undefined
+                    : content instanceof FormData
                     ? `<buffer of ${callback.filePath}`
                     : content,
-                  sendingHeaders.headers
+                  { ...sendingHeaders.headers, ...extraHeaders }
                 );
               })
-              .catch((e) =>
+              .catch((e) => {
+                const transaction = CreateCallbackTransaction(
+                  {
+                    name: callback.name,
+                    url,
+                    method: callback.method,
+                    requestBody: !isBodySupportingMethod(callback.method)
+                      ? undefined
+                      : content instanceof FormData
+                        ? `<buffer of ${callback.filePath}>`
+                        : content,
+                    requestHeaders: Object.entries({
+                      ...sendingHeaders.headers,
+                      ...extraHeaders
+                    }).map(([key, value]) => ({ key, value })),
+                    status: 0,
+                    responseHeaders: [],
+                    responseBody: e.message
+                  },
+                  'Callback failed'
+                );
+                this.retainTransaction(transaction);
+                this.emit('callback-transaction-complete', transaction);
                 this.emit('error', ServerErrorCodes.CALLBACK_ERROR, e, {
                   callbackName: callback.name
-                })
-              );
+                });
+              });
           }, callbackInvocation.latency);
         } catch (error: any) {
           this.emit('error', ServerErrorCodes.CALLBACK_ERROR, error, {
@@ -2371,22 +2389,32 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
     requestBody: string | null | undefined,
     requestHeaders: Record<string, any>
   ) {
-    res.text().then((respText) => {
+    return res.text().then((respText) => {
       const reqHeaders = Object.keys(requestHeaders).map(
         (k) => ({ key: k, value: requestHeaders[k] }) as Header
       );
-      this.emit(
-        'callback-invoked',
-        CreateCallbackInvocation(
-          callback,
-          url,
-          requestBody,
-          reqHeaders,
-          res,
-          respText
-        )
+      const invocation = CreateCallbackInvocation(
+        callback,
+        url,
+        requestBody,
+        reqHeaders,
+        res,
+        respText
       );
+      this.emit('callback-invoked', invocation);
+      const transaction = CreateCallbackTransaction(invocation, res.statusText);
+      this.retainTransaction(transaction);
+      this.emit('callback-transaction-complete', transaction);
     });
+  }
+
+  private retainTransaction(transaction: Transaction) {
+    this.transactionLogs.push(transaction);
+    if (this.transactionLogs.length > this.options.maxTransactionLogs) {
+      this.transactionLogs = this.transactionLogs.slice(
+        this.options.maxTransactionLogs * -1
+      );
+    }
   }
 
   /**

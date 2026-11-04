@@ -25,6 +25,7 @@ export type EnvironmentLogResponse = {
 export type EnvironmentLogOrigin = 'local' | 'cloud';
 
 export type EnvironmentLog = {
+  type?: 'mock' | 'callback';
   origin: EnvironmentLogOrigin;
   uuid: string;
   routeUUID: string;

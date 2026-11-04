@@ -2421,7 +2421,9 @@ export class EnvironmentsService {
     if (log) {
       let routeResponse: RouteResponse;
       const prefix = targetEnvironment.endpointPrefix;
-      let endpoint = log.url.slice(1); // Remove the initial slash '/'
+      let endpoint = (log.type === 'callback'
+        ? new URL(log.url).pathname
+        : log.url).slice(1); // Remove the initial slash '/'
       const routeType = log.protocol === 'ws' ? RouteType.WS : RouteType.HTTP;
       if (prefix && endpoint.startsWith(prefix)) {
         endpoint = endpoint.slice(prefix.length + 1); // Remove the prefix and the slash
@@ -2901,7 +2903,9 @@ export class EnvironmentsService {
         )?.url ?? baseUrl;
     }
 
-    const url = `${baseUrl}${log.url}${queryParams}`;
+    const url = log.type === 'callback'
+      ? log.url
+      : `${baseUrl}${log.url}${queryParams}`;
 
     const command = new CurlCommandBuilder()
       .withLocation()

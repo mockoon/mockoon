@@ -289,12 +289,47 @@ export function CreateInFlightRequest(
 }
 
 /**
- * Create a Transaction object from express req/res.
- * To be used after the response closes
- *
- * @param request
- * @param response
+ * Adapt an outbound callback invocation to the shared transaction log format.
  */
+export function CreateCallbackTransaction(
+  callback: InvokedCallback,
+  statusMessage: string
+): Transaction {
+  // Invalid rendered URLs can themselves be the cause of a failed callback.
+  let query = '';
+  let queryParams = {};
+  try {
+    query = new URL(callback.url).search.slice(1);
+    queryParams = parseUrl(callback.url, true).query;
+  } catch (_error) {}
+
+  return {
+    type: 'callback',
+    uuid: generateUUID(),
+    timestampMs: Date.now(),
+    routeUUID: '',
+    routeResponseUUID: '',
+    proxied: false,
+    request: {
+      method: callback.method,
+      urlPath: callback.url,
+      route: null,
+      params: [],
+      query,
+      queryParams,
+      body: callback.requestBody,
+      headers: callback.requestHeaders
+    },
+    response: {
+      statusCode: callback.status,
+      statusMessage,
+      headers: callback.responseHeaders,
+      body: callback.responseBody
+    }
+  };
+}
+
+/** Create a transaction from Express req/res after the response closes. */
 export function CreateTransaction(
   request: Request,
   response: Response

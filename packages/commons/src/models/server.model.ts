@@ -58,6 +58,7 @@ export type InFlightRequest = {
  * Transaction object containing req/res information after response is closed
  */
 export type Transaction = {
+  type?: 'mock' | 'callback';
   request: {
     method: keyof typeof Methods;
     // url path without query string (e.g. /users/1)

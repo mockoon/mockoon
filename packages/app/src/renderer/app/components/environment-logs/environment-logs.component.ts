@@ -107,6 +107,12 @@ export class EnvironmentLogsComponent implements OnInit {
   public environmentLogsCount$: Observable<number>;
   public settings$: Observable<Settings>;
   public logsOrigin = new FormControl<'all' | EnvironmentLogOrigin>('all');
+  public logsType = new FormControl<'all' | 'mock' | 'callback'>('all');
+  public logTypes: RadioItems = [
+    { value: 'all', label: 'All' },
+    { value: 'mock', label: 'Mocks', icon: 'input', iconSize: 14 },
+    { value: 'callback', label: 'Callbacks', icon: 'call_made', iconSize: 14 }
+  ];
   public collapseStates: CollapseStates = {
     'request.general': false,
     'request.headers': false,
@@ -212,10 +218,18 @@ export class EnvironmentLogsComponent implements OnInit {
         this.logsOrigin.valueChanges.pipe(
           startWith(this.logsOrigin.value),
           distinctUntilChanged()
+        ),
+        this.logsType.valueChanges.pipe(
+          startWith(this.logsType.value),
+          distinctUntilChanged()
         )
       ),
-      map(([environmentLogs, search, logsOrigin]) => {
+      map(([environmentLogs, search, logsOrigin, logsType]) => {
         let result: EnvironmentLog[] = environmentLogs;
+
+        if (logsType !== 'all') {
+          result = result.filter((log) => (log.type ?? 'mock') === logsType);
+        }
 
         if (logsOrigin !== 'all') {
           result = result.filter((log) => log.origin === logsOrigin);

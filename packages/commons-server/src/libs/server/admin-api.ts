@@ -64,7 +64,9 @@ export const createAdminEndpoint = (
       return [
         ...replayableEvents,
         ...limitedLogs.map((transaction) => ({
-          event: 'transaction-complete',
+          event: transaction.type === 'callback'
+            ? 'callback-transaction-complete'
+            : 'transaction-complete',
           transaction: redactTransaction(transaction)
         }))
       ];
@@ -167,6 +169,13 @@ export const createAdminEndpoint = (
     };
 
     events.send(event);
+  });
+
+  serverInstance.on('callback-transaction-complete', (transaction) => {
+    events.send({
+      event: 'callback-transaction-complete',
+      transaction: redactTransaction(transaction)
+    });
   });
 
   serverInstance.on('data-bucket-processed', (dataBuckets) => {

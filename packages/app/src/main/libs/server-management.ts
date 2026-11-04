@@ -176,6 +176,17 @@ export class ServerInstance {
       }
     });
 
+    server.on('callback-transaction-complete', (transaction: Transaction) => {
+      if (!mainWindow.isDestroyed()) {
+        mainWindow.webContents.send(
+          'APP_SERVER_EVENT',
+          this.environment.uuid,
+          'callback-transaction-complete',
+          { transaction }
+        );
+      }
+    });
+
     server.on('transaction-complete', (transaction: Transaction) => {
       if (!mainWindow.isDestroyed()) {
         mainWindow.webContents.send(
