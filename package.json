@@ -62,6 +62,7 @@
     "package:desktop:mac": "npm run package:mac --workspace=@mockoon/app",
     "package:desktop:mac:unsigned": "npm run package:mac:unsigned --workspace=@mockoon/app",
     "package:desktop:linux": "npm run package:linux --workspace=@mockoon/app",
+    "package:desktop:linux:flathub": "npm run package:linux:flathub --workspace=@mockoon/app",
     "package:desktop:test:win": "npm run package:test:win --workspace=@mockoon/app",
     "package:desktop:test:mac": "npm run package:test:mac --workspace=@mockoon/app",
     "package:desktop:test:linux": "npm run package:test:linux --workspace=@mockoon/app",
