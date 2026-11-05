@@ -5,12 +5,12 @@ import {
   ProcessedDatabucket,
   Route,
   RouteResponse,
-  ServerOptions
+  ServerOptions,
+  hasRequestHelpers
 } from '@mockoon/commons';
 import { Request } from 'express';
 import { fromExpressRequest } from '../requests';
 import { TemplateParser } from '../template-parser';
-import { requestHelperNames } from '../templating-helpers/request-helpers';
 
 /**
  * Generate a databucket with parsed value if it does not contain request helpers
@@ -31,11 +31,7 @@ const generateDatabucket = (
 ) => {
   let newProcessedDatabucket: ProcessedDatabucket;
 
-  if (
-    new RegExp(
-      `{{2,3}[#(~\\s\\w ]*((?<![\\w])${requestHelperNames.join('|')})[)} ~]+`
-    ).exec(databucket.value)
-  ) {
+  if (hasRequestHelpers(databucket.value)) {
     // a request helper was found
     newProcessedDatabucket = {
       uuid: databucket.uuid,

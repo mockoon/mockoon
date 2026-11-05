@@ -1,7 +1,9 @@
-import { strictEqual } from 'node:assert';
+import { requestHelperNames } from '@mockoon/commons';
+import { deepStrictEqual, strictEqual } from 'node:assert';
 import { describe, it } from 'node:test';
 import { EOL } from 'os';
 import { TemplateParser } from '../../../src/libs/template-parser';
+import { RequestHelpers } from '../../../src/libs/templating-helpers/request-helpers';
 
 const requestMock = {
   get: function (headerName: string) {
@@ -14,6 +16,13 @@ const requestMock = {
 } as any;
 
 describe('Request helpers', () => {
+  it('should keep shared request helper names in sync with their implementations', () => {
+    deepStrictEqual(
+      [...requestHelperNames].sort(),
+      Object.keys(RequestHelpers(requestMock, {} as any)).sort()
+    );
+  });
+
   describe('Helper: body', () => {
     it('should return number without quotes', () => {
       const parseResult = TemplateParser({
