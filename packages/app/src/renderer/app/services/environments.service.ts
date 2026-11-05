@@ -444,12 +444,15 @@ export class EnvironmentsService {
   public reloadEnvironment(previousUUID: string, environmentPath: string) {
     const environmentStatus = this.store.getEnvironmentStatus(previousUUID);
 
-    if (environmentStatus.running) {
-      this.serverService.stop(previousUUID);
-    }
-
     return this.storageService.loadEnvironment(environmentPath).pipe(
+      // file can be empty or unparsable (being written, merge conflict markers, etc.)
+      // keep the current environment (and server) untouched until the next valid change
+      filter((newEnvironment) => !!newEnvironment),
       tap((newEnvironment) => {
+        if (environmentStatus.running) {
+          this.serverService.stop(previousUUID);
+        }
+
         // if environment UUID changed, unwatch
         if (newEnvironment.uuid !== previousUUID) {
           this.mainApiService.invoke('APP_UNWATCH_FILE', previousUUID);
