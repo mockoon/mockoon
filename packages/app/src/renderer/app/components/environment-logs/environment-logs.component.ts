@@ -399,4 +399,28 @@ export class EnvironmentLogsComponent implements OnInit {
       log.routeResponseUUID
     );
   }
+
+  public getWebSocketEventLabel(log: EnvironmentLog) {
+    if (log.websocketEvent?.type === 'message') {
+      return 'Message received';
+    }
+
+    if (log.websocketEvent?.type === 'closed') {
+      return 'Connection closed';
+    }
+
+    return 'Connection opened';
+  }
+
+  public getWebSocketCloseCode(log: EnvironmentLog) {
+    return log.websocketEvent?.type === 'closed'
+      ? log.websocketEvent.code
+      : null;
+  }
+
+  public getWebSocketCloseReason(log: EnvironmentLog) {
+    return log.websocketEvent?.type === 'closed'
+      ? log.websocketEvent.reason
+      : null;
+  }
 }

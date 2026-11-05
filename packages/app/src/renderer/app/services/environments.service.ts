@@ -2694,10 +2694,16 @@ export class EnvironmentsService {
             serverTransactionPayload.origin
           );
         } else if (serverTransactionPayload.inflightRequest) {
-          formattedLog = this.dataService.formatLogFromInFlightRequest(
-            serverTransactionPayload.inflightRequest,
-            serverTransactionPayload.origin
-          );
+          formattedLog = serverTransactionPayload.websocketEvent
+            ? this.dataService.formatLogFromWebSocketEvent(
+                serverTransactionPayload.inflightRequest,
+                serverTransactionPayload.origin,
+                serverTransactionPayload.websocketEvent
+              )
+            : this.dataService.formatLogFromInFlightRequest(
+                serverTransactionPayload.inflightRequest,
+                serverTransactionPayload.origin
+              );
         }
 
         if (!formattedLog) {
@@ -2715,6 +2721,8 @@ export class EnvironmentsService {
           this.eventsService.logsRecording$.value[
             serverTransactionPayload.environmentUUID
           ] === true &&
+          (!serverTransactionPayload.websocketEvent ||
+            serverTransactionPayload.websocketEvent.type === 'connection') &&
           this.store.getIsEnvironmentEditable(
             serverTransactionPayload.environmentUUID
           )
