@@ -2726,6 +2726,7 @@ export class EnvironmentsService {
         );
 
         if (
+          formattedLog.type !== 'callback' &&
           this.eventsService.logsRecording$.value[
             serverTransactionPayload.environmentUUID
           ] === true &&

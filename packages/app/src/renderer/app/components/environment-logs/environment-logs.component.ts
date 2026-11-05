@@ -264,6 +264,10 @@ export class EnvironmentLogsComponent implements OnInit {
 
     this.activeEnvironmentLog$ = this.store.selectActiveEnvironmentLog().pipe(
       distinctUntilChanged(),
+      combineLatestWith(this.environmentLogs$),
+      map(([selectedLog, logs]) =>
+        logs.some((log) => log.uuid === selectedLog?.uuid) ? selectedLog : null
+      ),
       map((environmentLog) => {
         const updatedEnvironmentLog: EnvironmentLog & {
           routeResponseLabel?: string;
