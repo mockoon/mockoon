@@ -75,15 +75,28 @@
             />
 
             <div class="col-10 ps-2">
-              <input
-                type="text"
-                class="form-control"
-                [placeholder]="
-                  'Absolute or relative URL (e.g. /path, http://example.com/path). Supports templating (e.g. ' +
-                  '{{getGlobalVar ...}})'
-                "
-                formControlName="uri"
-              />
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  [placeholder]="
+                    'Absolute or relative URL (e.g. /path, http://example.com/path). Supports templating (e.g. ' +
+                    '{{getGlobalVar ...}})'
+                  "
+                  formControlName="uri"
+                />
+                @if (hasTemplatedCallbackDestination) {
+                  <span
+                    id="callback-destination-warning"
+                    class="input-group-text text-warning"
+                    tabindex="0"
+                    [ngbTooltip]="callbackDestinationWarning"
+                    [attr.aria-label]="callbackDestinationWarning"
+                  >
+                    <app-svg icon="warning" />
+                  </span>
+                }
+              </div>
             </div>
           </div>
 
