@@ -147,7 +147,7 @@ export class DataService {
     return {
       origin,
       uuid: transaction.uuid,
-      type: transaction.type ?? 'mock',
+      type: transaction.type ?? 'route',
       routeUUID: transaction.routeUUID,
       routeResponseUUID: transaction.routeResponseUUID,
       timestampMs: transaction.timestampMs,

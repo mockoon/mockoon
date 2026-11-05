@@ -23,9 +23,10 @@ export type EnvironmentLogResponse = {
 };
 
 export type EnvironmentLogOrigin = 'local' | 'cloud';
+export type EnvironmentLogType = 'route' | 'callback';
 
 export type EnvironmentLog = {
-  type?: 'mock' | 'callback';
+  type?: EnvironmentLogType;
   origin: EnvironmentLogOrigin;
   uuid: string;
   routeUUID: string;
