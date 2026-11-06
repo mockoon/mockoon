@@ -1,11 +1,12 @@
-import { strictEqual } from 'node:assert';
+import { deepStrictEqual, strictEqual } from 'node:assert';
 import { describe, it } from 'node:test';
 import {
   escapeHtml,
   IsRemoteHttpsURL,
   express5PathConvert,
   generateSecureToken,
-  parseByteSize
+  parseByteSize,
+  pathMatch
 } from '../../src';
 
 describe('generateSecureToken', () => {
@@ -262,6 +263,34 @@ describe('express5PathConvert', () => {
       express5PathConvert('/api(v2)?/users/:id+/file.:ext?/*'),
       '/api{v2}/users/*id/file{.:ext}/*wildcard0'
     );
+  });
+});
+
+describe('pathMatch', () => {
+  it('should return normalized params with Object.prototype and slash-joined wildcards', () => {
+    const result = pathMatch('/users/:id/*splat')('/users/123/a/b/c');
+
+    strictEqual(result !== false, true);
+
+    if (result) {
+      strictEqual(Object.getPrototypeOf(result.params), Object.prototype);
+      deepStrictEqual(result.params, {
+        id: '123',
+        splat: 'a/b/c'
+      });
+    }
+  });
+
+  it('should preserve __proto__ parameter as an own property while keeping Object.prototype', () => {
+    const result = pathMatch('/:__proto__')('/value');
+
+    strictEqual(result !== false, true);
+
+    if (result) {
+      strictEqual(Object.getPrototypeOf(result.params), Object.prototype);
+      strictEqual(Object.hasOwn(result.params, '__proto__'), true);
+      strictEqual(result.params['__proto__'], 'value');
+    }
   });
 });
 
