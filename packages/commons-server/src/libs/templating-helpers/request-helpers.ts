@@ -59,7 +59,7 @@ export const RequestHelpers = function (
     },
     // get all url parameters as an object
     urlParams: function () {
-      return request.params ?? {};
+      return { ...request.params };
     },
     // use params from query string ?param1=xxx&param2=yyy
     queryParam: function (...args: any[]) {
