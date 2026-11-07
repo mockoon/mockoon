@@ -44,6 +44,14 @@
         [nullable]="false"
       />
     }
+    <app-radio
+      class="ms-3"
+      prefix="log-types"
+      label="Filter by type"
+      [formControl]="logsType"
+      [items]="logTypes"
+      [nullable]="false"
+    />
   </div>
   <div>
     <button
@@ -132,6 +140,14 @@
                     }} me-2"
                     >{{ log.response?.status }}
                   </span>
+                  @if (log.type === 'callback') {
+                    <app-svg
+                      class="text-primary me-2 logs-metadata"
+                      icon="call_made"
+                      size="12"
+                      ngbTooltip="Callback"
+                    />
+                  }
                   @if (log.route && !log.proxied) {
                     <app-svg
                       class="text-success me-2 logs-metadata"
