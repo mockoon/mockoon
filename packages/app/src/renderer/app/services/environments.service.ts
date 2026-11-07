@@ -2916,9 +2916,8 @@ export class EnvironmentsService {
         )?.url ?? baseUrl;
     }
 
-    const url = log.type === 'callback'
-      ? log.url
-      : `${baseUrl}${log.url}${queryParams}`;
+    const url =
+      log.type === 'callback' ? log.url : `${baseUrl}${log.url}${queryParams}`;
 
     const command = new CurlCommandBuilder()
       .withLocation()

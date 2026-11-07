@@ -1767,8 +1767,8 @@ export class MockoonServer extends (EventEmitter as new () => TypedEmitter<Serve
                   !isBodySupportingMethod(callback.method)
                     ? undefined
                     : content instanceof FormData
-                    ? `<buffer of ${callback.filePath}`
-                    : content,
+                      ? `<buffer of ${callback.filePath}`
+                      : content,
                   { ...sendingHeaders.headers, ...extraHeaders }
                 );
               })

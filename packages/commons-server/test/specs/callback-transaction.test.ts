@@ -1,7 +1,10 @@
 import { InvokedCallback } from '@mockoon/commons';
 import { deepStrictEqual, strictEqual } from 'node:assert';
 import { describe, it } from 'node:test';
-import { CreateCallbackTransaction, redactTransaction } from '../../src/libs/utils';
+import {
+  CreateCallbackTransaction,
+  redactTransaction
+} from '../../src/libs/utils';
 
 const invocation: InvokedCallback = {
   name: 'Send email',
@@ -31,12 +34,15 @@ describe('Callback transactions', () => {
   });
 
   it('supports failures without an HTTP response', () => {
-    const transaction = CreateCallbackTransaction({
-      ...invocation,
-      status: 0,
-      responseHeaders: [],
-      responseBody: 'fetch failed'
-    }, 'Callback failed');
+    const transaction = CreateCallbackTransaction(
+      {
+        ...invocation,
+        status: 0,
+        responseHeaders: [],
+        responseBody: 'fetch failed'
+      },
+      'Callback failed'
+    );
 
     strictEqual(transaction.response.statusCode, 0);
     strictEqual(transaction.response.body, 'fetch failed');

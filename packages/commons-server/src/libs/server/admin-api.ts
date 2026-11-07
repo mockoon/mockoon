@@ -64,9 +64,10 @@ export const createAdminEndpoint = (
       return [
         ...replayableEvents,
         ...limitedLogs.map((transaction) => ({
-          event: transaction.type === 'callback'
-            ? 'callback-transaction-complete'
-            : 'transaction-complete',
+          event:
+            transaction.type === 'callback'
+              ? 'callback-transaction-complete'
+              : 'transaction-complete',
           transaction: redactTransaction(transaction)
         }))
       ];
