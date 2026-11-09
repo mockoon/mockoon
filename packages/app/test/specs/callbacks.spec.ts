@@ -617,7 +617,13 @@ describe('Callback usages', () => {
         3000
       );
       await browser.pause(1000);
-      await environmentsLogs.assertCount(3);
+      // Incoming requests and outgoing callbacks are both logged.
+      await environmentsLogs.assertCount(6);
+      await $('#log-types-route').click();
+      await utils.countElements(
+        $$('.environment-logs-column:nth-child(1) .menu-list .nav-item'),
+        3
+      );
       await environmentsLogs.select(1);
       await environmentsLogs.assertLogItem(
         'Request URL: /databucket',
@@ -631,6 +637,7 @@ describe('Callback usages', () => {
         4,
         8
       );
+      await $('#log-types-all').click();
     });
   });
 
