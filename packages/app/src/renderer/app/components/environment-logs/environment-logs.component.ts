@@ -38,7 +38,8 @@ import {
 import { RadioItems } from 'src/renderer/app/models/common.model';
 import {
   EnvironmentLog,
-  EnvironmentLogOrigin
+  EnvironmentLogOrigin,
+  EnvironmentLogType
 } from 'src/renderer/app/models/environment-logs.model';
 import { EnvironmentLogsTabsNameType } from 'src/renderer/app/models/store.model';
 import { EnvironmentsService } from 'src/renderer/app/services/environments.service';
@@ -107,6 +108,12 @@ export class EnvironmentLogsComponent implements OnInit {
   public environmentLogsCount$: Observable<number>;
   public settings$: Observable<Settings>;
   public logsOrigin = new FormControl<'all' | EnvironmentLogOrigin>('all');
+  public logsType = new FormControl<'all' | EnvironmentLogType>('all');
+  public logTypes: RadioItems = [
+    { value: 'all', label: 'All' },
+    { value: 'route', label: 'Routes', icon: 'endpoints', iconSize: 14 },
+    { value: 'callback', label: 'Callbacks', icon: 'call_made', iconSize: 14 }
+  ];
   public collapseStates: CollapseStates = {
     'request.general': false,
     'request.headers': false,
@@ -212,10 +219,18 @@ export class EnvironmentLogsComponent implements OnInit {
         this.logsOrigin.valueChanges.pipe(
           startWith(this.logsOrigin.value),
           distinctUntilChanged()
+        ),
+        this.logsType.valueChanges.pipe(
+          startWith(this.logsType.value),
+          distinctUntilChanged()
         )
       ),
-      map(([environmentLogs, search, logsOrigin]) => {
+      map(([environmentLogs, search, logsOrigin, logsType]) => {
         let result: EnvironmentLog[] = environmentLogs;
+
+        if (logsType !== 'all') {
+          result = result.filter((log) => (log.type ?? 'route') === logsType);
+        }
 
         if (logsOrigin !== 'all') {
           result = result.filter((log) => log.origin === logsOrigin);
@@ -249,6 +264,10 @@ export class EnvironmentLogsComponent implements OnInit {
 
     this.activeEnvironmentLog$ = this.store.selectActiveEnvironmentLog().pipe(
       distinctUntilChanged(),
+      combineLatestWith(this.environmentLogs$),
+      map(([selectedLog, logs]) =>
+        logs.some((log) => log.uuid === selectedLog?.uuid) ? selectedLog : null
+      ),
       map((environmentLog) => {
         const updatedEnvironmentLog: EnvironmentLog & {
           routeResponseLabel?: string;
