@@ -1162,6 +1162,23 @@ describe('Request helpers', () => {
       });
       strictEqual(parseResult, 'id=123&category=books&');
     });
+
+    it('should not throw when request.params has a null prototype and urlParams is used alone', () => {
+      const params = Object.assign(Object.create(null), {
+        id: '123',
+        category: 'books'
+      });
+      const parseResult = TemplateParser({
+        shouldOmitDataHelper: false,
+        content: '{{urlParams}}',
+        environment: {} as any,
+        processedDatabuckets: [],
+        globalVariables: {},
+        request: { params } as any,
+        envVarsPrefix: ''
+      });
+      strictEqual(parseResult, '[object Object]');
+    });
   });
 
   describe('Helper: queryParams', () => {
