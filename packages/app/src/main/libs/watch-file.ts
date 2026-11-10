@@ -115,7 +115,7 @@ export const unwatchEnvironmentFile = async (UUID: string) => {
       environmentUUID: UUID
     });
 
-    // remove it before closing so a watch request made in the meantime is not skipped
+    // remove it synchronously (before closing) so a watch request made in the meantime is not skipped
     const [{ watcher }] = watchers.splice(existingWatcherIndex, 1);
     await watcher.close();
   }
