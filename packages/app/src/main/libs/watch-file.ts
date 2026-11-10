@@ -76,8 +76,13 @@ export const watchEnvironmentFile = (UUID: string, filePath: string) => {
         );
       };
 
-      const watcher = watch(resolve(filePath), { atomic: true })
+      const watcher = watch(resolve(filePath), {
+        atomic: true,
+        ignoreInitial: true
+      })
         .on('change', notifyExternalChange)
+        // file deleted and re-created outside of chokidar's atomic window (unlink + add)
+        .on('add', notifyExternalChange)
         .on('ready', () => {
           // file was modified while it was not watched
           if (getMtime(filePath) !== lastKnownMtime) {
