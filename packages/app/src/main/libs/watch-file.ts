@@ -84,8 +84,11 @@ export const watchEnvironmentFile = (UUID: string, filePath: string) => {
         // file deleted and re-created outside of chokidar's atomic window (unlink + add)
         .on('add', notifyExternalChange)
         .on('ready', () => {
+          const mtime = getMtime(filePath);
+
           // file was modified while it was not watched
-          if (getMtime(filePath) !== lastKnownMtime) {
+          // (if it is missing, the add event will report its restoration)
+          if (mtime !== null && mtime !== lastKnownMtime) {
             notifyExternalChange();
           }
         });
