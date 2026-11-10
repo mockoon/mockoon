@@ -26,6 +26,7 @@ import { MessageParams } from 'src/renderer/app/models/messages.model';
 import { EventsService } from 'src/renderer/app/services/events.service';
 import { LoggerService } from 'src/renderer/app/services/logger-service';
 import { MainApiService } from 'src/renderer/app/services/main-api.service';
+import { SettingsService } from 'src/renderer/app/services/settings.service';
 import {
   updateEnvironmentStatusAction,
   updateProcessedDatabucketsAction
@@ -41,6 +42,7 @@ export class ServerService {
   private mainApiService = inject(MainApiService);
   private loggerService = inject(LoggerService);
   private httpClient = inject(HttpClient);
+  private settingsService = inject(SettingsService);
 
   private activeSseConnections = new Map<
     string,
@@ -124,7 +126,11 @@ export class ServerService {
    * @returns
    */
   public updateRemoteServerEnvironments(environments: Environment[]) {
-    if (environments.length === 0) {
+    if (
+      environments.length === 0 ||
+      !this.store.get('settings') ||
+      this.settingsService.getIsSelfHosted()
+    ) {
       return;
     }
 
@@ -347,6 +353,7 @@ export class ServerService {
         break;
 
       case 'transaction-complete':
+      case 'callback-transaction-complete':
         if (data.transaction) {
           this.zone.run(() => {
             this.eventsService.serverTransaction$.next({

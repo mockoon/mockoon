@@ -600,7 +600,33 @@ export const preparePath = (endpointPrefix: string, endpoint: string) => {
  * @returns
  */
 export const pathMatch = (path: string) => {
-  return match(path);
+  const matcher = match(path);
+
+  return (input: string) => {
+    const result = matcher(input);
+
+    if (!result) {
+      return false;
+    }
+
+    const params: Record<string, string> = {};
+
+    for (const [key, value] of Object.entries(result.params)) {
+      if (value !== undefined) {
+        Object.defineProperty(params, key, {
+          value: Array.isArray(value) ? value.join('/') : value,
+          writable: true,
+          enumerable: true,
+          configurable: true
+        });
+      }
+    }
+
+    return {
+      ...result,
+      params
+    };
+  };
 };
 
 export const pathMatchErrorBuilder = (error: unknown) => {

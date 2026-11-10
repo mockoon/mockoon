@@ -20,6 +20,7 @@ export type ServerEvents = {
   'entering-request': () => void;
   'callback-invoked': (callback: InvokedCallback) => void;
   'transaction-complete': (transaction: Transaction) => void;
+  'callback-transaction-complete': (transaction: Transaction) => void;
 
   /**
    * Web socket related events
