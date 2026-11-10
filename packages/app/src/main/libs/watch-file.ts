@@ -115,8 +115,9 @@ export const unwatchEnvironmentFile = async (UUID: string) => {
       environmentUUID: UUID
     });
 
-    await watchers[existingWatcherIndex].watcher.close();
-    watchers.splice(existingWatcherIndex, 1);
+    // remove it before closing so a watch request made in the meantime is not skipped
+    const [{ watcher }] = watchers.splice(existingWatcherIndex, 1);
+    await watcher.close();
   }
 };
 
@@ -127,13 +128,15 @@ export const unwatchEnvironmentFile = async (UUID: string) => {
 export const unwatchAllEnvironmentFiles = async () => {
   clearAllScheduledWatchers();
 
-  for (const watcherItem of watchers) {
+  // empty the list before closing so watchers added in the meantime are kept
+  const closingWatchers = watchers;
+  watchers = [];
+
+  for (const watcherItem of closingWatchers) {
     logInfo(`${logPrefix}Stop watching environment`, {
       environmentUUID: watcherItem.UUID
     });
 
     await watcherItem.watcher.close();
   }
-
-  watchers = [];
 };
