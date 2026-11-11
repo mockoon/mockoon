@@ -1,4 +1,5 @@
 import { FSWatcher, watch } from 'chokidar';
+import { statSync } from 'fs';
 import { resolve } from 'path';
 import { Config } from 'src/main/config';
 import { logInfo } from 'src/main/libs/logs';
@@ -9,6 +10,14 @@ import { FileWatcherOptions } from 'src/shared/models/settings.model';
 let watchers: { UUID: string; watcher: FSWatcher }[] = [];
 const reWatchTimeouts: Record<string, NodeJS.Timeout> = {};
 const logPrefix = '[MAIN][WATCHER] ';
+
+const getMtime = (filePath: string) => {
+  try {
+    return statSync(filePath).mtimeMs;
+  } catch (_error) {
+    return null;
+  }
+};
 
 const findExistingWatcher = (UUID: string) =>
   watchers.findIndex((watcher) => watcher.UUID === UUID);
@@ -41,30 +50,48 @@ export const watchEnvironmentFile = (UUID: string, filePath: string) => {
   clearScheduledWatcher(UUID);
 
   if (findExistingWatcher(UUID) === -1) {
+    // watching is (re)started right after the app saved the file: keep its mtime
+    // to detect external changes happening before the watcher is ready
+    const lastKnownMtime = getMtime(filePath);
+
     const watchTimeout = setTimeout(() => {
       logInfo(`${logPrefix}Start watching environment`, {
         environmentUUID: UUID,
         environmentPath: filePath
       });
 
-      const watcher = watch(resolve(filePath), { atomic: true }).on(
-        'change',
-        () => {
-          logInfo(
-            `${logPrefix}Environment was modified externally, notifying renderer process`,
-            {
-              environmentUUID: UUID,
-              environmentPath: filePath
-            }
-          );
+      const notifyExternalChange = () => {
+        logInfo(
+          `${logPrefix}Environment was modified externally, notifying renderer process`,
+          {
+            environmentUUID: UUID,
+            environmentPath: filePath
+          }
+        );
 
-          getMainWindow().webContents.send(
-            'APP_FILE_EXTERNAL_CHANGE',
-            UUID,
-            filePath
-          );
-        }
-      );
+        getMainWindow().webContents.send(
+          'APP_FILE_EXTERNAL_CHANGE',
+          UUID,
+          filePath
+        );
+      };
+
+      const watcher = watch(resolve(filePath), {
+        atomic: true,
+        ignoreInitial: true
+      })
+        .on('change', notifyExternalChange)
+        // file deleted and re-created outside of chokidar's atomic window (unlink + add)
+        .on('add', notifyExternalChange)
+        .on('ready', () => {
+          const mtime = getMtime(filePath);
+
+          // file was modified while it was not watched
+          // (if it is missing, the add event will report its restoration)
+          if (mtime !== null && mtime !== lastKnownMtime) {
+            notifyExternalChange();
+          }
+        });
 
       watchers.push({ UUID, watcher });
     }, Config.fileReWatchDelay);
@@ -88,8 +115,9 @@ export const unwatchEnvironmentFile = async (UUID: string) => {
       environmentUUID: UUID
     });
 
-    await watchers[existingWatcherIndex].watcher.close();
-    watchers.splice(existingWatcherIndex, 1);
+    // remove it synchronously (before closing) so a watch request made in the meantime is not skipped
+    const [{ watcher }] = watchers.splice(existingWatcherIndex, 1);
+    await watcher.close();
   }
 };
 
@@ -100,13 +128,15 @@ export const unwatchEnvironmentFile = async (UUID: string) => {
 export const unwatchAllEnvironmentFiles = async () => {
   clearAllScheduledWatchers();
 
-  for (const watcherItem of watchers) {
+  // empty the list before closing so watchers added in the meantime are kept
+  const closingWatchers = watchers;
+  watchers = [];
+
+  for (const watcherItem of closingWatchers) {
     logInfo(`${logPrefix}Stop watching environment`, {
       environmentUUID: watcherItem.UUID
     });
 
     await watcherItem.watcher.close();
   }
-
-  watchers = [];
 };

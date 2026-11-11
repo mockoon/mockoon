@@ -168,7 +168,8 @@ export const initIPCListeners = (mainWindow: BrowserWindow) => {
       storagePrettyPrint?: boolean
     ) => {
       if (!descriptor.cloud) {
-        unwatchEnvironmentFile(data.uuid);
+        // not awaited to keep saves in order, the watcher is removed synchronously
+        void unwatchEnvironmentFile(data.uuid);
       }
 
       await writeJSONData(data, descriptor.path, storagePrettyPrint);
