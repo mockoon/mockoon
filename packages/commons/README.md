@@ -89,8 +89,8 @@ Mockoon Pro is a private, self-hosted platform for teams that need to keep their
 - [Synchronize data and collaborate in real time](https://mockoon.com/pro/docs/features/data-synchronization-team-collaboration/)
 - [Deploy and manage mock API instances](https://mockoon.com/pro/docs/features/api-mock-deployments/)
 - [Use the embedded web application](https://mockoon.com/pro/docs/clients/embedded-web-application/)
-- [Manage users with local authentication or OIDC SSO](https://mockoon.com/pro/docs/misc/authentication/)
-- [Review administrative and workspace events in the audit trail](https://mockoon.com/pro/docs/misc/audit-trail/)
+- [Manage users with local authentication or OIDC SSO](https://mockoon.com/pro/docs/administration/authentication/)
+- [Review administrative and workspace events in the audit trail](https://mockoon.com/pro/docs/administration/audit-trail/)
 
 Start a free trial or learn more about [Mockoon Pro](https://mockoon.com/pro/).
 
