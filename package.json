@@ -84,7 +84,7 @@
     "eslint": "10.14.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.7",
-    "glob": "14.0.3",
+    "glob": "14.0.4",
     "glob-bin": "1.1.0",
     "prettier": "3.9.10",
     "prettier-plugin-organize-imports": "4.3.0",
