@@ -33,6 +33,7 @@ describe('Dockerize command', () => {
     // verify Dockerfile content
     const dockerfile = await readFile('./tmp/Dockerfile');
     const dockerfileContent = dockerfile.toString();
+    ok(dockerfileContent.includes('FROM node:26-alpine'));
     ok(
       dockerfileContent.includes(
         `RUN npm install -g @mockoon/cli@${Config.version}`
