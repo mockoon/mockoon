@@ -68,7 +68,7 @@
     "socket.io-client": "4.8.4"
   },
   "devDependencies": {
-    "@angular/build": "22.2.4",
+    "@angular/build": "22.3.0",
     "@angular/cli": "22.2.4",
     "@angular/common": "22.2.3",
     "@angular/compiler": "22.2.3",
