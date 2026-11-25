@@ -7,6 +7,12 @@ on:
   push:
     tags:
       - libs-v*
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "CLI version to copy to AWS Public ECR (e.g. 9.10.0). Defaults to packages/cli/package.json version."
+        required: false
+        type: string
 
 jobs:
   npm-publish:
@@ -14,6 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     timeout-minutes: 15
+    if: ${{ github.event_name == 'push' }}
     permissions:
       id-token: write # Required for NPM Trusted Publishing
 
@@ -60,6 +67,7 @@ jobs:
     timeout-minutes: 15
 
     needs: npm-publish
+    if: ${{ github.event_name == 'push' && success() }}
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -93,3 +101,60 @@ jobs:
             mockoon/cli:${{steps.app-version.outputs.PACKAGE_MAJOR_VERSION}}
           build-args: |
             version=${{steps.app-version.outputs.PACKAGE_VERSION}}
+
+  cli-docker-ecr:
+    name: Copy Docker image to AWS Public ECR
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write # Required for AWS OIDC authentication
+
+    needs: cli-docker
+    if: ${{ !cancelled() && (github.event_name == 'workflow_dispatch' || needs.cli-docker.result == 'success') }}
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Extract app version
+        id: app-version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          if [ -n "$INPUT_VERSION" ]; then
+            PACKAGE_VERSION="${INPUT_VERSION#libs-v}"
+            PACKAGE_VERSION="${PACKAGE_VERSION#v}"
+          else
+            PACKAGE_VERSION=$(node -p -e "require('./packages/cli/package.json').version")
+          fi
+          PACKAGE_MAJOR_VERSION="${PACKAGE_VERSION%%.*}"
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "PACKAGE_MAJOR_VERSION=$PACKAGE_MAJOR_VERSION" >> "$GITHUB_OUTPUT"
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: ${{ secrets.AWS_ECR_ROLE_ARN }}
+          aws-region: us-east-1
+      - name: Login to Amazon ECR Public
+        uses: aws-actions/amazon-ecr-login@7290e214a610b32bc0eef81748948b6d466a8783 # v2.2.0
+        with:
+          registry-type: public
+      - name: Login to DockerHub
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Set up crane
+        uses: imjasonh/setup-crane@feee3b6bb0d4c68370f256a4502498c9227e5c6b # v0.7
+      - name: Copy Docker image to AWS Public ECR
+        env:
+          PACKAGE_VERSION: ${{ steps.app-version.outputs.PACKAGE_VERSION }}
+          PACKAGE_MAJOR_VERSION: ${{ steps.app-version.outputs.PACKAGE_MAJOR_VERSION }}
+        run: |
+          SOURCE_IMAGE="docker.io/mockoon/cli:${PACKAGE_VERSION}"
+          # Replace 'mockoon' with your AWS Public ECR registry alias if different
+          TARGET_IMAGE="public.ecr.aws/z7j6m9o3/cli"
+
+          crane copy "$SOURCE_IMAGE" "${TARGET_IMAGE}:${PACKAGE_VERSION}"
+          crane tag "${TARGET_IMAGE}:${PACKAGE_VERSION}" "${PACKAGE_MAJOR_VERSION}"
+          crane tag "${TARGET_IMAGE}:${PACKAGE_VERSION}" "latest"
