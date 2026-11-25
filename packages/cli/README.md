@@ -451,13 +451,17 @@ jobs:
 
 ### Using the generic Docker image
 
-A generic Docker image is published on the [Docker Hub Mockoon CLI repository](https://hub.docker.com/r/mockoon/cli). It uses `node:26-alpine` and installs the latest version of Mockoon CLI.
+A generic Docker image is published on the [Docker Hub Mockoon CLI repository](https://hub.docker.com/r/mockoon/cli) (`mockoon/cli`) and mirrored on [AWS Public ECR](https://gallery.ecr.aws/z7j6m9o3/cli) (`public.ecr.aws/z7j6m9o3/cli`). It uses `node:26-alpine` and installs the latest version of Mockoon CLI.
 
 All of `mockoon-cli start` flags (`--port`, etc.) must be provided when running the container.
 
 To load the Mockoon data, you can either mount a local data file and pass `mockoon-cli start` flags at the end of the command:
 
 `docker run -d --mount type=bind,source=/home/your-data-file.json,target=/home/mockoon/data/your-data-file.json,readonly -p 3000:3000 mockoon/cli:latest --data /home/mockoon/data/your-data-file.json --port 3000`
+
+Or pull from AWS Public ECR:
+
+`docker run -d --mount type=bind,source=/home/your-data-file.json,target=/home/mockoon/data/your-data-file.json,readonly -p 3000:3000 public.ecr.aws/z7j6m9o3/cli:latest --data /home/mockoon/data/your-data-file.json --port 3000`
 
 Or directly pass a URL to the `mockoon-cli start` command, without mounting a local data file:
 
@@ -467,7 +471,7 @@ Mockoon CLI's logs will be sent to stdout/stderr (console). File logging is disa
 
 #### Docker compose
 
-You can also use `docker-compose` with a `docker-compose.yml` file:
+You can also use `docker-compose` with a `docker-compose.yml` file (replace `mockoon/cli:latest` with `public.ecr.aws/z7j6m9o3/cli:latest` to pull from AWS Public ECR):
 
 ```
 mock-server:
