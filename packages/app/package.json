@@ -97,7 +97,7 @@
     "joi": "18.3.1",
     "ngx-markdown": "22.1.1",
     "ngx-mask": "22.2.5",
-    "puppeteer-core": "25.16.0",
+    "puppeteer-core": "25.18.1",
     "rxjs": "7.8.2",
     "tslib": "2.9.1",
     "ws": "8.22.0",
